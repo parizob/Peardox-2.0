@@ -4,6 +4,7 @@ import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
 import SavedArticles from './components/SavedArticles';
+import AccountModal from './components/AccountModal';
 import { articles } from './data/articles';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [favorites, setFavorites] = useState(new Set());
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
 
   const categories = useMemo(() => {
     return [...new Set(articles.map(article => article.category))];
@@ -65,6 +67,14 @@ function App() {
     setIsSavedArticlesOpen(false);
   };
 
+  const handleShowAccount = () => {
+    setIsAccountOpen(true);
+  };
+
+  const handleCloseAccount = () => {
+    setIsAccountOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30 relative overflow-hidden">
       {/* Background Elements */}
@@ -81,6 +91,7 @@ function App() {
         onCategoryChange={setSelectedCategory}
         categories={categories}
         onShowSavedArticles={handleShowSavedArticles}
+        onShowAccount={handleShowAccount}
         savedCount={favorites.size}
       />
 
@@ -162,6 +173,11 @@ function App() {
         savedArticles={savedArticles}
         onArticleClick={handleArticleClick}
         onToggleFavorite={handleToggleFavorite}
+      />
+
+      <AccountModal
+        isOpen={isAccountOpen}
+        onClose={handleCloseAccount}
       />
     </div>
   );

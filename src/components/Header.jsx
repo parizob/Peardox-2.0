@@ -8,6 +8,7 @@ const Header = ({
   onCategoryChange, 
   categories,
   onShowSavedArticles,
+  onShowAccount,
   savedCount = 0
 }) => {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
@@ -207,6 +208,7 @@ const Header = ({
               
               {/* Account */}
               <button
+                onClick={onShowAccount}
                 className="p-3 text-gray-600 hover:text-blue-500 hover:bg-blue-50 rounded-2xl transition-all duration-300 group"
                 title="Account"
               >
