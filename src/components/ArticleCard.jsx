@@ -4,77 +4,94 @@ import { ExternalLink, Calendar, Tag, Heart } from 'lucide-react';
 const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
   const getCategoryColor = (category) => {
     const colors = {
-      'Artificial Intelligence': 'bg-blue-100 text-blue-800',
-      'Quantum Computing': 'bg-purple-100 text-purple-800',
-      'Edge Computing': 'bg-green-100 text-green-800',
-      'Computer Vision': 'bg-orange-100 text-orange-800',
-      'Natural Language Processing': 'bg-indigo-100 text-indigo-800',
+      'Artificial Intelligence': 'from-blue-500 to-cyan-400',
+      'Quantum Computing': 'from-purple-500 to-pink-400',
+      'Edge Computing': 'from-green-500 to-emerald-400',
+      'Computer Vision': 'from-orange-500 to-yellow-400',
+      'Natural Language Processing': 'from-indigo-500 to-purple-400',
     };
-    return colors[category] || 'bg-gray-100 text-gray-800';
+    return colors[category] || 'from-gray-500 to-gray-400';
   };
 
   const handleFavoriteClick = (e) => {
-    e.stopPropagation(); // Prevent card click when clicking heart
+    e.stopPropagation();
     onToggleFavorite(article.id);
   };
 
   return (
     <div 
-      className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 p-6 cursor-pointer border border-gray-200 hover:border-primary-300 relative"
+      className="group relative bg-white/70 backdrop-blur-xl border border-white/20 rounded-3xl p-8 cursor-pointer transition-all duration-500 hover:bg-white/80 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-2 hover:scale-[1.02]"
       onClick={() => onClick(article)}
     >
-      {/* Favorite Heart Icon */}
+      {/* Background Glow Effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      
+      {/* Favorite Heart */}
       <button
         onClick={handleFavoriteClick}
-        className={`absolute top-4 right-4 p-2 rounded-full transition-all duration-200 ${
+        className={`absolute top-6 right-6 p-3 rounded-2xl transition-all duration-300 z-10 ${
           isFavorite 
-            ? 'bg-red-50 text-red-600 hover:bg-red-100' 
-            : 'bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-500'
+            ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg shadow-red-500/25 scale-110' 
+            : 'bg-white/60 backdrop-blur-sm text-gray-400 hover:bg-red-50 hover:text-red-500 hover:scale-110'
         }`}
         title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
       >
         <Heart 
-          className={`h-5 w-5 transition-all duration-200 ${
+          className={`h-5 w-5 transition-all duration-300 ${
             isFavorite ? 'fill-current' : ''
           }`} 
         />
       </button>
 
-      <div className="pr-12"> {/* Add right padding to avoid overlap with heart */}
-        <div className="flex items-start justify-between mb-3">
-          <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(article.category)}`}>
-            <Tag className="w-3 h-3 mr-1" />
-            {article.category}
-          </span>
-        </div>
-
-        <h3 className="text-xl font-semibold text-gray-900 mb-3 leading-tight">
-          {article.title}
-        </h3>
-
-        <p className="text-gray-600 mb-4 line-clamp-3 leading-relaxed">
-          {article.shortDescription}
-        </p>
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center text-sm text-gray-500 space-x-4">
-            <span className="flex items-center">
-              <Calendar className="h-4 w-4 mr-1" />
-              {article.publishedDate}
-            </span>
-            <span className="flex items-center">
-              <ExternalLink className="h-4 w-4 mr-1" />
-              {article.arxivId}
-            </span>
-          </div>
-        </div>
-
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <button className="text-primary-600 hover:text-primary-700 font-medium text-sm transition-colors">
-            Read More →
-          </button>
+      {/* Category Badge */}
+      <div className="relative mb-6">
+        <div className={`inline-flex items-center px-4 py-2 rounded-2xl bg-gradient-to-r ${getCategoryColor(article.category)} text-white shadow-lg`}>
+          <Tag className="w-4 h-4 mr-2" />
+          <span className="text-sm font-bold">{article.category}</span>
         </div>
       </div>
+
+      {/* Title */}
+      <h3 className="text-2xl font-bold text-gray-900 mb-4 leading-tight group-hover:text-blue-900 transition-colors duration-300">
+        {article.title}
+      </h3>
+
+      {/* Description */}
+      <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed text-base">
+        {article.shortDescription}
+      </p>
+
+      {/* Meta Information */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-4 text-sm text-gray-500">
+          <div className="flex items-center bg-gray-50/80 backdrop-blur-sm rounded-full px-3 py-1">
+            <Calendar className="h-4 w-4 mr-2" />
+            <span className="font-medium">{article.publishedDate}</span>
+          </div>
+          <div className="flex items-center bg-gray-50/80 backdrop-blur-sm rounded-full px-3 py-1">
+            <ExternalLink className="h-4 w-4 mr-2" />
+            <span className="font-medium">{article.arxivId}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Call to Action */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
+        <div className="relative bg-gradient-to-r from-gray-50 to-white border border-gray-200/50 rounded-2xl p-4 group-hover:from-blue-50 group-hover:to-purple-50 group-hover:border-blue-200/50 transition-all duration-500">
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-gray-700 group-hover:text-blue-700 transition-colors duration-300">
+              Explore Research
+            </span>
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+              <ExternalLink className="h-4 w-4 text-white" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Hover Accent Line */}
+      <div className="absolute bottom-0 left-8 right-8 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
     </div>
   );
 };
