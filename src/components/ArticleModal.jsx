@@ -16,17 +16,17 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg max-w-4xl max-h-[90vh] overflow-y-auto w-full mx-4">
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-start">
-          <div className="flex-1 pr-4">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">{article.title}</h2>
-            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(article.category)}`}>
-              <Tag className="w-4 h-4 mr-1" />
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
+      <div className="bg-white rounded-lg max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto w-full mx-2 sm:mx-4">
+        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 sm:p-6 flex justify-between items-start">
+          <div className="flex-1 pr-3 sm:pr-4 min-w-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 leading-tight">{article.title}</h2>
+            <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getCategoryColor(article.category)}`}>
+              <Tag className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
               {article.category}
             </span>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
             <button
               onClick={() => onToggleFavorite(article.id)}
               className={`p-2 rounded-full transition-all duration-200 ${
@@ -37,7 +37,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
               title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
             >
               <Heart 
-                className={`h-6 w-6 transition-all duration-200 ${
+                className={`h-5 w-5 sm:h-6 sm:w-6 transition-all duration-200 ${
                   isFavorite ? 'fill-current' : ''
                 }`} 
               />
@@ -46,72 +46,72 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors"
             >
-              <X className="h-6 w-6 text-gray-500" />
+              <X className="h-5 w-5 sm:h-6 sm:w-6 text-gray-500" />
             </button>
           </div>
         </div>
 
-        <div className="p-6 space-y-8">
+        <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
           {/* Simplified Overview Section */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 sm:p-6">
             <div className="flex items-center mb-3">
-              <BookOpen className="h-5 w-5 text-blue-600 mr-2" />
-              <h3 className="text-lg font-semibold text-blue-900"> Overview</h3>
+              <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mr-2" />
+              <h3 className="text-base sm:text-lg font-semibold text-blue-900">Overview</h3>
             </div>
-            <p className="text-blue-800 leading-relaxed">{article.shortDescription}</p>
+            <p className="text-blue-800 leading-relaxed text-sm sm:text-base">{article.shortDescription}</p>
           </div>
 
           {/* Technical Details Section */}
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-6">
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
             <div className="flex items-center mb-4">
-              <GraduationCap className="h-5 w-5 text-gray-600 mr-2" />
-              <h3 className="text-lg font-semibold text-gray-900">Technical Details</h3>
+              <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 mr-2" />
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900">Technical Details</h3>
             </div>
             
             <div className="space-y-4">
               <div>
-                <h4 className="font-medium text-gray-700 mb-2">Original Research Title:</h4>
-                <p className="text-gray-900 font-medium">{article.originalTitle}</p>
+                <h4 className="font-medium text-gray-700 mb-2 text-sm sm:text-base">Original Research Title:</h4>
+                <p className="text-gray-900 font-medium text-sm sm:text-base leading-relaxed">{article.originalTitle}</p>
               </div>
               
               <div>
-                <h4 className="font-medium text-gray-700 mb-2">Research Abstract:</h4>
-                <p className="text-gray-800 leading-relaxed">{article.originalAbstract}</p>
+                <h4 className="font-medium text-gray-700 mb-2 text-sm sm:text-base">Research Abstract:</h4>
+                <p className="text-gray-800 leading-relaxed text-sm sm:text-base">{article.originalAbstract}</p>
               </div>
             </div>
           </div>
 
           {/* Article Info Section */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <div className="flex items-center text-gray-600">
-                <User className="h-5 w-5 mr-2" />
-                <div>
-                  <span className="font-medium">Authors:</span>
-                  <p className="text-gray-800">{article.authors}</p>
+              <div className="flex items-start text-gray-600">
+                <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0 mt-0.5" />
+                <div className="min-w-0">
+                  <span className="font-medium text-sm sm:text-base">Authors:</span>
+                  <p className="text-gray-800 text-sm sm:text-base break-words">{article.authors}</p>
                 </div>
               </div>
 
               <div className="flex items-center text-gray-600">
-                <Calendar className="h-5 w-5 mr-2" />
+                <Calendar className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0" />
                 <div>
-                  <span className="font-medium">Published:</span>
-                  <p className="text-gray-800">{article.publishedDate}</p>
+                  <span className="font-medium text-sm sm:text-base">Published:</span>
+                  <p className="text-gray-800 text-sm sm:text-base">{article.publishedDate}</p>
                 </div>
               </div>
 
               <div className="flex items-center text-gray-600">
-                <ExternalLink className="h-5 w-5 mr-2" />
+                <ExternalLink className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0" />
                 <div>
-                  <span className="font-medium">ArXiv ID:</span>
-                  <p className="text-gray-800">{article.arxivId}</p>
+                  <span className="font-medium text-sm sm:text-base">ArXiv ID:</span>
+                  <p className="text-gray-800 text-sm sm:text-base break-all">{article.arxivId}</p>
                 </div>
               </div>
             </div>
 
             <div>
-              <h4 className="font-medium text-gray-700 mb-3">Research Tags:</h4>
-              <div className="flex flex-wrap gap-2">
+              <h4 className="font-medium text-gray-700 mb-3 text-sm sm:text-base">Research Tags:</h4>
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {article.categories && article.categories.length > 0 ? (
                   (() => {
                     // Filter out categories that contain periods or commas
@@ -122,7 +122,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                         {filteredCategories.map((category, index) => (
                           <span 
                             key={index}
-                            className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium"
+                            className="inline-flex items-center px-2 py-0.5 sm:py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium"
                           >
                             {category}
                           </span>
@@ -130,13 +130,13 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                       </>
                     ) : (
                       // Fallback to article.category if no valid categories remain
-                      <span className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
+                      <span className="inline-flex items-center px-2 py-0.5 sm:py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
                         {article.category}
                       </span>
                     );
                   })()
                 ) : (
-                  <span className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
+                  <span className="inline-flex items-center px-2 py-0.5 sm:py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
                     {article.category}
                   </span>
                 )}
@@ -145,14 +145,14 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
           </div>
 
           {/* Action Button */}
-          <div className="pt-6 border-t border-gray-200">
+          <div className="pt-4 sm:pt-6 border-t border-gray-200">
             <a
               href={article.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
             >
-              <ExternalLink className="h-5 w-5 mr-2" />
+              <ExternalLink className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
               Read Full Research Paper
             </a>
           </div>

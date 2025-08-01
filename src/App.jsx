@@ -261,18 +261,18 @@ function App() {
       />
 
       {/* Content Spacer for Fixed Header */}
-      <div className="h-20"></div>
+      <div className="h-16 sm:h-20"></div>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-6 py-12">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
         {/* Loading State */}
         {isLoading && (
-          <div className="text-center py-20">
-            <div className="relative inline-block mb-8">
+          <div className="text-center py-12 sm:py-20">
+            <div className="relative inline-block mb-6 sm:mb-8">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl"></div>
-              <Loader2 className="relative mx-auto h-24 w-24 text-blue-500 animate-spin" />
+              <Loader2 className="relative mx-auto h-16 w-16 sm:h-24 sm:w-24 text-blue-500 animate-spin" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Loading Research Papers</h3>
-            <p className="text-gray-500 max-w-md mx-auto">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Loading Research Papers</h3>
+            <p className="text-gray-500 max-w-md mx-auto text-sm sm:text-base px-4">
               Connecting to database and fetching latest scientific discoveries...
             </p>
           </div>
@@ -280,15 +280,15 @@ function App() {
 
         {/* Error State */}
         {error && (
-          <div className="mb-8 bg-red-50 border border-red-200 rounded-2xl p-6">
-            <div className="flex items-center space-x-3">
-              <AlertCircle className="h-6 w-6 text-red-500" />
-              <div>
-                <h3 className="text-lg font-semibold text-red-900">Connection Error</h3>
-                <p className="text-red-700">{error}</p>
+          <div className="mb-6 sm:mb-8 bg-red-50 border border-red-200 rounded-2xl p-4 sm:p-6 mx-4 sm:mx-0">
+            <div className="flex items-start space-x-3">
+              <AlertCircle className="h-5 w-5 sm:h-6 sm:w-6 text-red-500 flex-shrink-0 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <h3 className="text-base sm:text-lg font-semibold text-red-900">Connection Error</h3>
+                <p className="text-red-700 text-sm sm:text-base mt-1">{error}</p>
                 <button
                   onClick={loadData}
-                  className="mt-3 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  className="mt-3 px-3 sm:px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm sm:text-base"
                 >
                   Try Again
                 </button>
@@ -299,27 +299,27 @@ function App() {
 
         {/* Category Filter Section */}
         {!isLoading && !error && !searchTerm && (
-          <div className="pt-8 pb-20 mb-12">
-            <div className="mx-auto max-w-6xl px-6">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+          <div className="pt-4 sm:pt-8 pb-12 sm:pb-20 mb-8 sm:mb-12">
+            <div className="mx-auto max-w-6xl px-4 sm:px-6">
+              <div className="text-center mb-8 sm:mb-12">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight px-2">
                   Your Daily Dose of Discovery
                 </h2>
-                <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
                   Our platform cuts through the jargon, delivering the most important AI advancements from around the globe directly to you.
                 </p>
               </div>
 
-              <div className="text-center mb-10">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <div className="text-center mb-6 sm:mb-10">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3 px-4">
                   Explore Research Categories
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-sm sm:text-base px-4">
                   Click any category to discover the latest breakthroughs
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 max-w-5xl mx-auto">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6 max-w-5xl mx-auto px-4">
                 {[
                   { name: 'Machine Learning', icon: Brain, color: 'bg-blue-50 hover:bg-blue-100 border-blue-200' },
                   { name: 'Artificial Intelligence', icon: Bot, color: 'bg-purple-50 hover:bg-purple-100 border-purple-200' },
@@ -333,16 +333,16 @@ function App() {
                       const targetCategory = category.name === 'Computer Vision' ? 'Computer Vision and Pattern Recognition' : category.name === 'Natural Language' ? 'Computation and Language' : category.name;
                       setSelectedCategory(selectedCategory === targetCategory ? '' : targetCategory);
                     }}
-                    className={`group p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${category.color} ${
+                    className={`group p-3 sm:p-6 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${category.color} ${
                       selectedCategory === (category.name === 'Computer Vision' ? 'Computer Vision and Pattern Recognition' : category.name === 'Natural Language' ? 'Computation and Language' : category.name) 
                         ? 'ring-2 ring-indigo-500 shadow-lg' : ''
                     }`}
                   >
-                    <div className="flex flex-col items-center space-y-3">
-                      <div className="p-3 rounded-xl bg-white shadow-sm group-hover:shadow-md transition-shadow">
-                        <category.icon className="h-8 w-8 text-indigo-600" />
+                    <div className="flex flex-col items-center space-y-2 sm:space-y-3">
+                      <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-white shadow-sm group-hover:shadow-md transition-shadow">
+                        <category.icon className="h-5 w-5 sm:h-8 sm:w-8 text-indigo-600" />
                       </div>
-                      <span className="text-sm font-semibold text-gray-900 leading-tight text-center">
+                      <span className="text-xs sm:text-sm font-semibold text-gray-900 leading-tight text-center">
                         {category.name}
                       </span>
                     </div>
@@ -355,13 +355,13 @@ function App() {
 
         {/* Results Header */}
         {!isLoading && !error && (
-          <div className="mb-8" ref={resultsRef}>
+          <div className="mb-6 sm:mb-8 px-4 sm:px-0" ref={resultsRef}>
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
                   {selectedCategoryDisplay ? `${categories.find(c => c.category_name === selectedCategoryDisplay)?.category_name || selectedCategoryDisplay}` : 'Latest Research'}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 text-sm sm:text-base">
                   {filteredArticles.length} articles found
                   {searchTerm && ` for "${searchTerm}"`}
                 </p>
@@ -372,8 +372,8 @@ function App() {
 
         {/* Articles Grid */}
         {!isLoading && !error && filteredArticles.length > 0 ? (
-          <div>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="px-4 sm:px-0">
+            <div className="grid gap-4 sm:gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
               {currentArticles.map(article => (
                 <ArticleCard 
                   key={article.id} 
@@ -385,19 +385,19 @@ function App() {
               ))}
             </div>
 
-            {/* Pagination */}
+            {/* Pagination - Mobile optimized */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-center space-x-2 mt-12">
+              <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-2 mt-8 sm:mt-12 px-4">
                 <button
                   onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
-                  className="flex items-center px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="w-full sm:w-auto flex items-center justify-center px-4 py-3 sm:py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronLeft className="h-4 w-4 mr-1" />
                   Previous
                 </button>
 
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center space-x-1 overflow-x-auto py-2 max-w-full">
                   {Array.from({ length: totalPages }, (_, i) => {
                     const pageNum = i + 1;
                     const isActive = pageNum === currentPage;
@@ -408,11 +408,11 @@ function App() {
                                    Math.abs(pageNum - currentPage) <= 1;
                     
                     if (!showPage && pageNum === 2 && currentPage > 4) {
-                      return <span key={pageNum} className="px-2 text-gray-400">...</span>;
+                      return <span key={pageNum} className="px-2 text-gray-400 text-sm">...</span>;
                     }
                     
                     if (!showPage && pageNum === totalPages - 1 && currentPage < totalPages - 3) {
-                      return <span key={pageNum} className="px-2 text-gray-400">...</span>;
+                      return <span key={pageNum} className="px-2 text-gray-400 text-sm">...</span>;
                     }
                     
                     if (!showPage) return null;
@@ -421,7 +421,7 @@ function App() {
                       <button
                         key={pageNum}
                         onClick={() => setCurrentPage(pageNum)}
-                        className={`px-3 py-2 rounded-lg font-medium transition-colors ${
+                        className={`px-3 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base ${
                           isActive
                             ? 'bg-blue-600 text-white'
                             : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -436,7 +436,7 @@ function App() {
                 <button
                   onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                   disabled={currentPage === totalPages}
-                  className="flex items-center px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="w-full sm:w-auto flex items-center justify-center px-4 py-3 sm:py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Next
                   <ChevronRight className="h-4 w-4 ml-1" />
@@ -445,13 +445,13 @@ function App() {
             )}
           </div>
         ) : !isLoading && !error && (
-          <div className="text-center py-20">
-            <div className="relative inline-block mb-8">
+          <div className="text-center py-12 sm:py-20 px-4">
+            <div className="relative inline-block mb-6 sm:mb-8">
               <div className="absolute inset-0 bg-gradient-to-r from-gray-300/20 to-gray-400/20 rounded-2xl blur-xl"></div>
-              <BookOpen className="relative mx-auto h-24 w-24 text-gray-400" />
+              <BookOpen className="relative mx-auto h-16 w-16 sm:h-24 sm:w-24 text-gray-400" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">No Research Found</h3>
-            <p className="text-gray-500 max-w-md mx-auto">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">No Research Found</h3>
+            <p className="text-gray-500 max-w-md mx-auto text-sm sm:text-base">
               Try adjusting your search terms or exploring different categories to discover new research.
             </p>
           </div>

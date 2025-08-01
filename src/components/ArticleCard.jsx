@@ -47,13 +47,13 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
 
   return (
     <div 
-      className="group relative bg-white border border-gray-200 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:shadow-xl hover:border-gray-300 hover:-translate-y-1"
+      className="group relative bg-white border border-gray-200 rounded-xl sm:rounded-2xl p-4 sm:p-6 cursor-pointer transition-all duration-300 hover:shadow-xl hover:border-gray-300 hover:-translate-y-1"
       onClick={() => onClick(article)}
     >
       {/* Favorite Heart */}
       <button
         onClick={handleFavoriteClick}
-        className={`absolute top-4 right-4 p-2 rounded-lg transition-all duration-300 z-10 ${
+        className={`absolute top-3 right-3 sm:top-4 sm:right-4 p-1.5 sm:p-2 rounded-lg transition-all duration-300 z-10 ${
           isFavorite 
             ? 'bg-red-50 text-red-600' 
             : 'bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-500'
@@ -61,39 +61,39 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
         title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
       >
         <Heart 
-          className={`h-4 w-4 transition-all duration-300 ${
+          className={`h-3.5 w-3.5 sm:h-4 sm:w-4 transition-all duration-300 ${
             isFavorite ? 'fill-current' : ''
           }`} 
         />
       </button>
 
       {/* Main Content */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {/* Title - Now the star of the show */}
-        <h3 className="text-xl font-bold text-gray-900 leading-tight pr-8 group-hover:text-blue-900 transition-colors duration-300">
+        <h3 className="text-lg sm:text-xl font-bold text-gray-900 leading-tight pr-6 sm:pr-8 group-hover:text-blue-900 transition-colors duration-300">
           {article.title}
         </h3>
 
         {/* Description - Clean and prominent */}
-        <p className="text-gray-600 leading-relaxed line-clamp-3">
+        <p className="text-gray-600 leading-relaxed line-clamp-3 text-sm sm:text-base">
           {article.shortDescription}
         </p>
 
         {/* Meta Information */}
-        <div className="flex items-center justify-between text-sm text-gray-500 border-t border-gray-100 pt-4">
+        <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 border-t border-gray-100 pt-3 sm:pt-4">
           <div className="flex items-center">
-            <Calendar className="w-4 h-4 mr-2" />
-            <span>{article.publishedDate}</span>
+            <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
+            <span className="truncate">{article.publishedDate}</span>
           </div>
           
-          <div className="flex items-center text-blue-600 group-hover:text-blue-800 transition-colors duration-300">
-            <ExternalLink className="w-4 h-4 mr-1" />
+          <div className="flex items-center text-blue-600 group-hover:text-blue-800 transition-colors duration-300 flex-shrink-0 ml-2">
+            <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1" />
             <span className="font-medium">Read More</span>
           </div>
         </div>
 
         {/* Categories - Now at bottom, subtle */}
-        <div className="flex flex-wrap gap-2 pt-3">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-2 sm:pt-3">
           {article.categories && article.categories.length > 0 ? (
             (() => {
               // Filter out categories that contain periods or commas
@@ -104,26 +104,26 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
                   {filteredCategories.slice(0, 2).map((category, index) => (
                     <span 
                       key={index}
-                      className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium"
+                      className="inline-flex items-center px-2 py-0.5 sm:py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium"
                     >
                       {category}
                     </span>
                   ))}
                   {filteredCategories.length > 2 && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-500 text-xs">
+                    <span className="inline-flex items-center px-2 py-0.5 sm:py-1 rounded-md bg-gray-100 text-gray-500 text-xs">
                       +{filteredCategories.length - 2} more
                     </span>
                   )}
                 </>
               ) : (
                 // Fallback to article.category if no valid categories remain
-                <span className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
+                <span className="inline-flex items-center px-2 py-0.5 sm:py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
                   {article.category}
                 </span>
               );
             })()
           ) : (
-            <span className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
+            <span className="inline-flex items-center px-2 py-0.5 sm:py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
               {article.category}
             </span>
           )}
