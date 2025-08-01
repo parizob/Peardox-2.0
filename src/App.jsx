@@ -261,7 +261,7 @@ function App() {
       />
 
       {/* Content Spacer for Fixed Header */}
-      <div className="h-16 sm:h-20"></div>
+      <div className="h-24 sm:h-20"></div>
 
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
         {/* Loading State */}
@@ -299,7 +299,7 @@ function App() {
 
         {/* Category Filter Section */}
         {!isLoading && !error && !searchTerm && (
-          <div className="pt-4 sm:pt-8 pb-12 sm:pb-20 mb-8 sm:mb-12">
+          <div className="pt-8 sm:pt-8 pb-12 sm:pb-20 mb-8 sm:mb-12">
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
               <div className="text-center mb-8 sm:mb-12">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight px-2">
@@ -326,7 +326,7 @@ function App() {
                   { name: 'Computer Vision', icon: Eye, color: 'bg-green-50 hover:bg-green-100 border-green-200' },
                   { name: 'Robotics', icon: Wrench, color: 'bg-orange-50 hover:bg-orange-100 border-orange-200' },
                   { name: 'Natural Language', icon: Code, color: 'bg-pink-50 hover:bg-pink-100 border-pink-200' },
-                ].map((category) => (
+                ].map((category, index) => (
                   <button
                     key={category.name}
                     onClick={() => {
@@ -336,6 +336,9 @@ function App() {
                     className={`group p-3 sm:p-6 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${category.color} ${
                       selectedCategory === (category.name === 'Computer Vision' ? 'Computer Vision and Pattern Recognition' : category.name === 'Natural Language' ? 'Computation and Language' : category.name) 
                         ? 'ring-2 ring-indigo-500 shadow-lg' : ''
+                    } ${
+                      // Center the 5th item on mobile when it's alone on a row
+                      index === 4 ? 'col-span-2 sm:col-span-1 justify-self-center' : ''
                     }`}
                   >
                     <div className="flex flex-col items-center space-y-2 sm:space-y-3">
