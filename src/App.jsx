@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code } from 'lucide-react';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
@@ -22,10 +22,27 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Ref for scrolling to results
+  const resultsRef = useRef(null);
+
   // Load data from Supabase
   useEffect(() => {
     loadData();
   }, []);
+
+  // Scroll to results when category is selected
+  useEffect(() => {
+    if (selectedCategory && resultsRef.current) {
+      const headerHeight = 80; // Account for fixed header height
+      const elementPosition = resultsRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }, [selectedCategory]);
 
   const loadData = async () => {
     console.log('🚀 Loading data from Supabase...');
@@ -320,7 +337,7 @@ function App() {
 
         {/* Results Header */}
         {!isLoading && !error && (
-          <div className="mb-8">
+          <div className="mb-8" ref={resultsRef}>
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">
