@@ -74,24 +74,39 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
       <div className="relative mb-6">
         <div className="flex flex-wrap gap-2">
           {article.categories && article.categories.length > 0 ? (
-            article.categories.slice(0, 3).map((category, index) => (
-              <div 
-                key={index}
-                className={`inline-flex items-center px-3 py-1.5 rounded-xl bg-gradient-to-r ${getCategoryColor(category)} text-white shadow-md text-xs font-semibold`}
-              >
-                <Tag className="w-3 h-3 mr-1.5" />
-                <span>{category}</span>
-              </div>
-            ))
+            (() => {
+              // Filter out categories that contain periods or commas
+              const filteredCategories = article.categories.filter(category => !category.includes('.') && !category.includes(','));
+              
+              return filteredCategories.length > 0 ? (
+                <>
+                  {filteredCategories.slice(0, 3).map((category, index) => (
+                    <div 
+                      key={index}
+                      className={`inline-flex items-center px-3 py-1.5 rounded-xl bg-gradient-to-r ${getCategoryColor(category)} text-white shadow-md text-xs font-semibold`}
+                    >
+                      <Tag className="w-3 h-3 mr-1.5" />
+                      <span>{category}</span>
+                    </div>
+                  ))}
+                  {filteredCategories.length > 3 && (
+                    <div className="inline-flex items-center px-3 py-1.5 rounded-xl bg-gray-100 text-gray-600 text-xs font-semibold">
+                      +{filteredCategories.length - 3} more
+                    </div>
+                  )}
+                </>
+              ) : (
+                // Fallback to article.category if no valid categories remain
+                <div className={`inline-flex items-center px-3 py-1.5 rounded-xl bg-gradient-to-r ${getCategoryColor(article.category)} text-white shadow-md text-xs font-semibold`}>
+                  <Tag className="w-3 h-3 mr-1.5" />
+                  <span>{article.category}</span>
+                </div>
+              );
+            })()
           ) : (
             <div className={`inline-flex items-center px-3 py-1.5 rounded-xl bg-gradient-to-r ${getCategoryColor(article.category)} text-white shadow-md text-xs font-semibold`}>
               <Tag className="w-3 h-3 mr-1.5" />
               <span>{article.category}</span>
-            </div>
-          )}
-          {article.categories && article.categories.length > 3 && (
-            <div className="inline-flex items-center px-3 py-1.5 rounded-xl bg-gray-100 text-gray-600 text-xs font-semibold">
-              +{article.categories.length - 3} more
             </div>
           )}
         </div>
