@@ -47,90 +47,43 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
 
   return (
     <div 
-      className="group relative bg-white/70 backdrop-blur-xl border border-white/20 rounded-3xl p-8 cursor-pointer transition-all duration-500 hover:bg-white/80 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-2 hover:scale-[1.02]"
+      className="group relative bg-white border border-gray-200 rounded-2xl p-6 cursor-pointer transition-all duration-300 hover:shadow-xl hover:border-gray-300 hover:-translate-y-1"
       onClick={() => onClick(article)}
     >
-      {/* Background Glow Effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-      
       {/* Favorite Heart */}
       <button
         onClick={handleFavoriteClick}
-        className={`absolute top-6 right-6 p-3 rounded-2xl transition-all duration-300 z-10 ${
+        className={`absolute top-4 right-4 p-2 rounded-lg transition-all duration-300 z-10 ${
           isFavorite 
-            ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg shadow-red-500/25 scale-110' 
-            : 'bg-white/60 backdrop-blur-sm text-gray-400 hover:bg-red-50 hover:text-red-500 hover:scale-110'
+            ? 'bg-red-50 text-red-600' 
+            : 'bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-500'
         }`}
         title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
       >
         <Heart 
-          className={`h-5 w-5 transition-all duration-300 ${
+          className={`h-4 w-4 transition-all duration-300 ${
             isFavorite ? 'fill-current' : ''
           }`} 
         />
       </button>
 
-      {/* Categories Section */}
-      <div className="relative mb-6">
-        <div className="flex flex-wrap gap-2">
-          {article.categories && article.categories.length > 0 ? (
-            (() => {
-              // Filter out categories that contain periods or commas
-              const filteredCategories = article.categories.filter(category => !category.includes('.') && !category.includes(','));
-              
-              return filteredCategories.length > 0 ? (
-                <>
-                  {filteredCategories.slice(0, 3).map((category, index) => (
-                    <div 
-                      key={index}
-                      className={`inline-flex items-center px-3 py-1.5 rounded-xl bg-gradient-to-r ${getCategoryColor(category)} text-white shadow-md text-xs font-semibold`}
-                    >
-                      <Tag className="w-3 h-3 mr-1.5" />
-                      <span>{category}</span>
-                    </div>
-                  ))}
-                  {filteredCategories.length > 3 && (
-                    <div className="inline-flex items-center px-3 py-1.5 rounded-xl bg-gray-100 text-gray-600 text-xs font-semibold">
-                      +{filteredCategories.length - 3} more
-                    </div>
-                  )}
-                </>
-              ) : (
-                // Fallback to article.category if no valid categories remain
-                <div className={`inline-flex items-center px-3 py-1.5 rounded-xl bg-gradient-to-r ${getCategoryColor(article.category)} text-white shadow-md text-xs font-semibold`}>
-                  <Tag className="w-3 h-3 mr-1.5" />
-                  <span>{article.category}</span>
-                </div>
-              );
-            })()
-          ) : (
-            <div className={`inline-flex items-center px-3 py-1.5 rounded-xl bg-gradient-to-r ${getCategoryColor(article.category)} text-white shadow-md text-xs font-semibold`}>
-              <Tag className="w-3 h-3 mr-1.5" />
-              <span>{article.category}</span>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="relative space-y-4">
-        {/* Title */}
-        <h3 className="text-xl font-bold text-gray-900 leading-tight group-hover:text-blue-900 transition-colors duration-300">
+      {/* Main Content */}
+      <div className="space-y-4">
+        {/* Title - Now the star of the show */}
+        <h3 className="text-xl font-bold text-gray-900 leading-tight pr-8 group-hover:text-blue-900 transition-colors duration-300">
           {article.title}
         </h3>
 
-        {/* Description */}
+        {/* Description - Clean and prominent */}
         <p className="text-gray-600 leading-relaxed line-clamp-3">
           {article.shortDescription}
         </p>
 
         {/* Meta Information */}
-        <div className="flex items-center justify-between text-sm text-gray-500">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center">
-              <Calendar className="w-4 h-4 mr-2" />
-              <span>{article.publishedDate}</span>
-            </div>
+        <div className="flex items-center justify-between text-sm text-gray-500 border-t border-gray-100 pt-4">
+          <div className="flex items-center">
+            <Calendar className="w-4 h-4 mr-2" />
+            <span>{article.publishedDate}</span>
           </div>
           
           <div className="flex items-center text-blue-600 group-hover:text-blue-800 transition-colors duration-300">
@@ -143,10 +96,44 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
         <div className="text-sm text-gray-500 border-t border-gray-100 pt-3">
           <span className="font-medium text-gray-700">Authors:</span> {article.authors}
         </div>
-      </div>
 
-      {/* Animated Border */}
-      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
+        {/* Categories - Now at bottom, subtle */}
+        <div className="flex flex-wrap gap-2 pt-2">
+          {article.categories && article.categories.length > 0 ? (
+            (() => {
+              // Filter out categories that contain periods or commas
+              const filteredCategories = article.categories.filter(category => !category.includes('.') && !category.includes(','));
+              
+              return filteredCategories.length > 0 ? (
+                <>
+                  {filteredCategories.slice(0, 2).map((category, index) => (
+                    <span 
+                      key={index}
+                      className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium"
+                    >
+                      {category}
+                    </span>
+                  ))}
+                  {filteredCategories.length > 2 && (
+                    <span className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-500 text-xs">
+                      +{filteredCategories.length - 2} more
+                    </span>
+                  )}
+                </>
+              ) : (
+                // Fallback to article.category if no valid categories remain
+                <span className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
+                  {article.category}
+                </span>
+              );
+            })()
+          ) : (
+            <span className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
+              {article.category}
+            </span>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
