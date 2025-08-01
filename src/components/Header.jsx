@@ -1,25 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { Search, User, Heart, ChevronDown, Filter, X } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Search, ChevronDown, Filter, X, Bookmark, User } from 'lucide-react';
 
-const Header = ({ 
-  searchTerm, 
-  onSearchChange, 
-  selectedCategory, 
-  onCategoryChange, 
+const Header = ({
+  searchTerm,
+  onSearchChange,
+  selectedCategory,
+  onCategoryChange,
   categories,
   onShowSavedArticles,
   onShowAccount,
-  savedCount = 0
+  savedCount
 }) => {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [categorySearchTerm, setCategorySearchTerm] = useState('');
   const [scrollY, setScrollY] = useState(0);
+  
+  const dropdownRef = useRef(null);
+  const categorySearchRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsCategoryDropdownOpen(false);
+        setCategorySearchTerm('');
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Focus search input when dropdown opens
+  useEffect(() => {
+    if (isCategoryDropdownOpen && categorySearchRef.current) {
+      setTimeout(() => categorySearchRef.current?.focus(), 100);
+    }
+  }, [isCategoryDropdownOpen]);
 
   const handleSearchClick = () => {
     setIsSearchExpanded(true);
@@ -30,198 +54,200 @@ const Header = ({
     onSearchChange('');
   };
 
-  const handleCategorySelect = (category) => {
-    onCategoryChange(category);
-    setIsCategoryDropdownOpen(false);
+  const handleSearchChange = (e) => {
+    onSearchChange(e.target.value);
   };
 
-  const getCategoryColor = (category) => {
-    const colors = {
-      'Artificial Intelligence': 'from-blue-500 to-cyan-400',
-      'Quantum Computing': 'from-purple-500 to-pink-400',
-      'Edge Computing': 'from-green-500 to-emerald-400',
-      'Computer Vision': 'from-orange-500 to-yellow-400',
-      'Natural Language Processing': 'from-indigo-500 to-purple-400',
-    };
-    return colors[category] || 'from-gray-500 to-gray-400';
+  const handleCategorySelect = (category) => {
+    onCategoryChange(category.category_name);
+    setIsCategoryDropdownOpen(false);
+    setCategorySearchTerm('');
   };
+
+  const handleClearCategory = () => {
+    onCategoryChange('');
+    setIsCategoryDropdownOpen(false);
+    setCategorySearchTerm('');
+  };
+
+  // Filter categories based on search term
+  const filteredCategories = categories.filter(category => 
+    category.category_name?.toLowerCase().includes(categorySearchTerm.toLowerCase()) ||
+    category.subject_class?.toLowerCase().includes(categorySearchTerm.toLowerCase())
+  );
+
+  // Find selected category name for display
+  const selectedCategoryName = categories.find(cat => cat.category_name === selectedCategory)?.category_name || selectedCategory;
 
   return (
-    <>
-      {/* Immersive Search Overlay */}
-      {isSearchExpanded && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center">
-          <div className="w-full max-w-3xl mx-4">
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      scrollY > 10 
+        ? 'bg-white/90 backdrop-blur-lg shadow-lg border-b border-white/20' 
+        : 'bg-white/70 backdrop-blur-sm'
+    }`}>
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          {/* Left: Categories Dropdown */}
+          <div className="flex-none" ref={dropdownRef}>
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl blur-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-2xl border border-white/20 rounded-2xl p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-white">Discover Science</h2>
-                  <button
-                    onClick={handleSearchClose}
-                    className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all"
-                  >
-                    <X className="h-6 w-6" />
-                  </button>
-                </div>
-                <div className="relative">
-                  <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 h-6 w-6 text-white/50" />
-                  <input
-                    type="text"
-                    placeholder="Search for groundbreaking research..."
-                    value={searchTerm}
-                    onChange={(e) => onSearchChange(e.target.value)}
-                    autoFocus
-                    className="w-full pl-16 pr-6 py-6 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 text-lg focus:outline-none focus:ring-2 focus:ring-white/30 focus:border-white/30 backdrop-blur-sm"
-                  />
-                </div>
-                {searchTerm && (
-                  <div className="mt-4 text-white/70 text-sm">
-                    Press Enter to search • ESC to close
+              <button
+                onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                className={`inline-flex items-center px-4 py-2 text-sm font-medium rounded-xl transition-all duration-300 ${
+                  selectedCategory
+                    ? 'bg-blue-100 text-blue-800 border border-blue-200'
+                    : 'bg-white/60 text-gray-700 border border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                <Filter className="h-4 w-4 mr-2" />
+                <span className="max-w-32 truncate">
+                  {selectedCategory ? selectedCategoryName : 'Explore'}
+                </span>
+                <ChevronDown className={`h-4 w-4 ml-2 transition-transform duration-200 ${
+                  isCategoryDropdownOpen ? 'rotate-180' : ''
+                }`} />
+              </button>
+
+              {/* Dropdown Menu */}
+              {isCategoryDropdownOpen && (
+                <div className="absolute top-full left-0 mt-2 w-80 bg-white/95 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl z-50">
+                  {/* Search Input */}
+                  <div className="p-4 border-b border-gray-100">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <input
+                        ref={categorySearchRef}
+                        type="text"
+                        placeholder="Search categories..."
+                        value={categorySearchTerm}
+                        onChange={(e) => setCategorySearchTerm(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
                   </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* Main Header */}
-      <header className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-        scrollY > 10 
-          ? 'bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-xl' 
-          : 'bg-white/95 backdrop-blur-md'
-      }`}>
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            
-            {/* Left - Dynamic Categories */}
-            <div className="flex-1 flex justify-start">
-              <div className="relative">
-                <button
-                  onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
-                  className={`group flex items-center space-x-3 px-6 py-3 rounded-2xl transition-all duration-300 ${
-                    selectedCategory 
-                      ? `bg-gradient-to-r ${getCategoryColor(selectedCategory)} text-white shadow-lg transform hover:scale-105`
-                      : 'bg-gray-50 hover:bg-gray-100 text-gray-700 hover:shadow-md'
-                  }`}
-                >
-                  <Filter className="h-4 w-4" />
-                  <span className="font-medium text-sm">
-                    {selectedCategory || 'Explore'}
-                  </span>
-                  <ChevronDown 
-                    className={`h-4 w-4 transition-transform duration-300 ${
-                      isCategoryDropdownOpen ? 'rotate-180' : ''
-                    }`} 
-                  />
-                </button>
+                  {/* Categories List */}
+                  <div className="max-h-64 overflow-y-auto">
+                    {/* Clear Filter Option */}
+                    {selectedCategory && (
+                      <button
+                        onClick={handleClearCategory}
+                        className="w-full px-4 py-3 text-left hover:bg-blue-50 transition-colors duration-200 border-b border-gray-100"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-blue-600">
+                            Clear Filter
+                          </span>
+                          <X className="h-4 w-4 text-blue-600" />
+                        </div>
+                      </button>
+                    )}
 
-                {/* Sleek Dropdown */}
-                {isCategoryDropdownOpen && (
-                  <>
-                    <div 
-                      className="fixed inset-0 z-10"
-                      onClick={() => setIsCategoryDropdownOpen(false)}
-                    />
-                    <div className="absolute top-full left-0 mt-3 w-80 bg-white/95 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl z-20 overflow-hidden">
-                      <div className="p-2">
+                    {/* Category Options */}
+                    {filteredCategories.length > 0 ? (
+                      filteredCategories.map((category, index) => (
                         <button
-                          onClick={() => handleCategorySelect('')}
-                          className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                            !selectedCategory 
-                              ? 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-900 shadow-sm' 
-                              : 'hover:bg-gray-50 text-gray-700'
+                          key={index}
+                          onClick={() => handleCategorySelect(category)}
+                          className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors duration-200 ${
+                            selectedCategory === category.subject_class ? 'bg-blue-50' : ''
                           }`}
                         >
-                          <div className={`w-3 h-3 rounded-full bg-gradient-to-r from-gray-400 to-gray-300 ${
-                            !selectedCategory ? 'shadow-md' : ''
-                          }`} />
-                          <span className="font-medium">All Categories</span>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium text-gray-900">
+                              {category.category_name}
+                            </span>
+                            <span className="text-xs text-gray-500 mt-0.5">
+                              {category.subject_class}
+                            </span>
+                          </div>
                         </button>
-                        
-                        {categories.map(category => (
-                          <button
-                            key={category}
-                            onClick={() => handleCategorySelect(category)}
-                            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-                              selectedCategory === category 
-                                ? `bg-gradient-to-r ${getCategoryColor(category)} text-white shadow-lg transform scale-[1.02]`
-                                : 'hover:bg-gray-50 text-gray-700 hover:transform hover:scale-[1.01]'
-                            }`}
-                          >
-                            <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${getCategoryColor(category)} ${
-                              selectedCategory === category ? 'bg-white/30 shadow-lg' : 'shadow-md'
-                            }`} />
-                            <span className="font-medium text-sm">{category}</span>
-                          </button>
-                        ))}
+                      ))
+                    ) : (
+                      <div className="px-4 py-6 text-center text-gray-500 text-sm">
+                        No categories found
                       </div>
-                    </div>
-                  </>
-                )}
-              </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
+          </div>
 
-            {/* Center - Premium Branding */}
-            <div className="flex items-center space-x-4 group cursor-pointer">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl blur-md group-hover:blur-lg transition-all"></div>
-                <img 
-                  src="/logo512.png" 
-                  alt="Pearadox Logo" 
-                  className="relative h-12 w-12 rounded-xl shadow-lg transform group-hover:scale-105 transition-all duration-300"
-                />
-              </div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent group-hover:from-blue-600 group-hover:via-purple-600 group-hover:to-blue-600 transition-all duration-500">
+          {/* Center: Logo and Title */}
+          <div className="flex-1 flex justify-center">
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/logo512.png" 
+                alt="Pearadox" 
+                className="h-10 w-10"
+              />
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Pearadox
               </h1>
             </div>
+          </div>
 
-            {/* Right - Action Center */}
-            <div className="flex-1 flex justify-end items-center space-x-4">
-              
-              {/* Search Trigger */}
-              <button
-                onClick={handleSearchClick}
-                className="group flex items-center space-x-3 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-2xl hover:from-blue-600 hover:to-purple-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                <Search className="h-4 w-4" />
-                <span className="font-medium text-sm">Search</span>
-                <div className="w-px h-4 bg-white/30"></div>
-                <span className="text-xs opacity-75">⌘K</span>
-              </button>
-
-              {/* Saved Articles */}
-              <button
-                onClick={onShowSavedArticles}
-                className="relative p-3 text-gray-600 hover:text-red-500 hover:bg-red-50 rounded-2xl transition-all duration-300 group"
-                title="Saved Articles"
-              >
-                <Heart className="h-6 w-6 group-hover:scale-110 transition-transform" />
-                {savedCount > 0 && (
-                  <div className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold shadow-lg animate-pulse">
-                    {savedCount}
-                  </div>
-                )}
-              </button>
-              
-              {/* Account */}
-              <button
-                onClick={onShowAccount}
-                className="p-3 text-gray-600 hover:text-blue-500 hover:bg-blue-50 rounded-2xl transition-all duration-300 group"
-                title="Account"
-              >
-                <User className="h-6 w-6 group-hover:scale-110 transition-transform" />
-              </button>
+          {/* Right: Search and Action Icons */}
+          <div className="flex-none flex items-center space-x-3">
+            {/* Search */}
+            <div className="relative">
+              {isSearchExpanded ? (
+                <div className="flex items-center bg-white/80 backdrop-blur-sm border border-white/30 rounded-2xl px-4 py-2 shadow-lg">
+                  <Search className="h-5 w-5 text-gray-400 mr-3" />
+                  <input
+                    type="text"
+                    placeholder="Search articles..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="bg-transparent placeholder-gray-400 text-gray-900 focus:outline-none w-64"
+                    autoFocus
+                  />
+                  <button
+                    onClick={handleSearchClose}
+                    className="ml-3 p-1 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                  >
+                    <X className="h-4 w-4 text-gray-400" />
+                  </button>
+                  <kbd className="ml-3 px-2 py-1 text-xs text-gray-500 bg-gray-100 rounded">⌘K</kbd>
+                </div>
+              ) : (
+                <button
+                  onClick={handleSearchClick}
+                  className="flex items-center bg-white/60 backdrop-blur-sm text-gray-600 border border-white/30 rounded-2xl px-4 py-2 hover:bg-white/80 transition-all duration-300 shadow-md hover:shadow-lg"
+                >
+                  <Search className="h-5 w-5 mr-2" />
+                  <span className="text-sm">Search</span>
+                  <kbd className="ml-2 px-2 py-1 text-xs text-gray-500 bg-gray-100 rounded">⌘K</kbd>
+                </button>
+              )}
             </div>
+
+            {/* Saved Articles */}
+            <button
+              onClick={onShowSavedArticles}
+              className="relative p-3 bg-white/60 backdrop-blur-sm text-gray-600 border border-white/30 rounded-2xl hover:bg-white/80 transition-all duration-300 shadow-md hover:shadow-lg"
+              title="Saved Articles"
+            >
+              <Bookmark className="h-5 w-5" />
+              {savedCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold">
+                  {savedCount > 99 ? '99+' : savedCount}
+                </span>
+              )}
+            </button>
+
+            {/* Account */}
+            <button
+              onClick={onShowAccount}
+              className="p-3 bg-white/60 backdrop-blur-sm text-gray-600 border border-white/30 rounded-2xl hover:bg-white/80 transition-all duration-300 shadow-md hover:shadow-lg"
+              title="Account"
+            >
+              <User className="h-5 w-5" />
+            </button>
           </div>
         </div>
-      </header>
-
-      {/* Content Spacer */}
-      <div className="h-20"></div>
-    </>
+      </div>
+    </header>
   );
 };
 

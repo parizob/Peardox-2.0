@@ -9,8 +9,35 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
       'Edge Computing': 'from-green-500 to-emerald-400',
       'Computer Vision': 'from-orange-500 to-yellow-400',
       'Natural Language Processing': 'from-indigo-500 to-purple-400',
+      'Machine Learning': 'from-teal-500 to-green-400',
+      'Information Retrieval': 'from-pink-500 to-rose-400',
+      'Computation and Language': 'from-indigo-500 to-blue-400',
+      'Computers and Society': 'from-gray-600 to-gray-500',
     };
-    return colors[category] || 'from-gray-500 to-gray-400';
+    
+    // Hash-based color assignment for categories not in the map
+    if (!colors[category]) {
+      const colorOptions = [
+        'from-blue-500 to-cyan-400',
+        'from-purple-500 to-pink-400', 
+        'from-green-500 to-emerald-400',
+        'from-orange-500 to-yellow-400',
+        'from-indigo-500 to-purple-400',
+        'from-red-500 to-pink-400',
+        'from-teal-500 to-green-400',
+        'from-pink-500 to-rose-400'
+      ];
+      
+      let hash = 0;
+      for (let i = 0; i < category.length; i++) {
+        hash = category.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      hash = Math.abs(hash);
+      
+      return colorOptions[hash % colorOptions.length];
+    }
+    
+    return colors[category];
   };
 
   const handleFavoriteClick = (e) => {
@@ -43,55 +70,68 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
         />
       </button>
 
-      {/* Category Badge */}
+      {/* Categories Section */}
       <div className="relative mb-6">
-        <div className={`inline-flex items-center px-4 py-2 rounded-2xl bg-gradient-to-r ${getCategoryColor(article.category)} text-white shadow-lg`}>
-          <Tag className="w-4 h-4 mr-2" />
-          <span className="text-sm font-bold">{article.category}</span>
+        <div className="flex flex-wrap gap-2">
+          {article.categories && article.categories.length > 0 ? (
+            article.categories.slice(0, 3).map((category, index) => (
+              <div 
+                key={index}
+                className={`inline-flex items-center px-3 py-1.5 rounded-xl bg-gradient-to-r ${getCategoryColor(category)} text-white shadow-md text-xs font-semibold`}
+              >
+                <Tag className="w-3 h-3 mr-1.5" />
+                <span>{category}</span>
+              </div>
+            ))
+          ) : (
+            <div className={`inline-flex items-center px-3 py-1.5 rounded-xl bg-gradient-to-r ${getCategoryColor(article.category)} text-white shadow-md text-xs font-semibold`}>
+              <Tag className="w-3 h-3 mr-1.5" />
+              <span>{article.category}</span>
+            </div>
+          )}
+          {article.categories && article.categories.length > 3 && (
+            <div className="inline-flex items-center px-3 py-1.5 rounded-xl bg-gray-100 text-gray-600 text-xs font-semibold">
+              +{article.categories.length - 3} more
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Title */}
-      <h3 className="text-2xl font-bold text-gray-900 mb-4 leading-tight group-hover:text-blue-900 transition-colors duration-300">
-        {article.title}
-      </h3>
+      {/* Content */}
+      <div className="relative space-y-4">
+        {/* Title */}
+        <h3 className="text-xl font-bold text-gray-900 leading-tight group-hover:text-blue-900 transition-colors duration-300">
+          {article.title}
+        </h3>
 
-      {/* Description */}
-      <p className="text-gray-600 mb-6 line-clamp-3 leading-relaxed text-base">
-        {article.shortDescription}
-      </p>
+        {/* Description */}
+        <p className="text-gray-600 leading-relaxed line-clamp-3">
+          {article.shortDescription}
+        </p>
 
-      {/* Meta Information */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-4 text-sm text-gray-500">
-          <div className="flex items-center bg-gray-50/80 backdrop-blur-sm rounded-full px-3 py-1">
-            <Calendar className="h-4 w-4 mr-2" />
-            <span className="font-medium">{article.publishedDate}</span>
-          </div>
-          <div className="flex items-center bg-gray-50/80 backdrop-blur-sm rounded-full px-3 py-1">
-            <ExternalLink className="h-4 w-4 mr-2" />
-            <span className="font-medium">{article.arxivId}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Call to Action */}
-      <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur-lg opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
-        <div className="relative bg-gradient-to-r from-gray-50 to-white border border-gray-200/50 rounded-2xl p-4 group-hover:from-blue-50 group-hover:to-purple-50 group-hover:border-blue-200/50 transition-all duration-500">
-          <div className="flex items-center justify-between">
-            <span className="font-bold text-gray-700 group-hover:text-blue-700 transition-colors duration-300">
-              Explore Research
-            </span>
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <ExternalLink className="h-4 w-4 text-white" />
+        {/* Meta Information */}
+        <div className="flex items-center justify-between text-sm text-gray-500">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center">
+              <Calendar className="w-4 h-4 mr-2" />
+              <span>{article.publishedDate}</span>
             </div>
           </div>
+          
+          <div className="flex items-center text-blue-600 group-hover:text-blue-800 transition-colors duration-300">
+            <ExternalLink className="w-4 h-4 mr-1" />
+            <span className="font-medium">Read More</span>
+          </div>
+        </div>
+
+        {/* Authors */}
+        <div className="text-sm text-gray-500 border-t border-gray-100 pt-3">
+          <span className="font-medium text-gray-700">Authors:</span> {article.authors}
         </div>
       </div>
 
-      {/* Hover Accent Line */}
-      <div className="absolute bottom-0 left-8 right-8 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+      {/* Animated Border */}
+      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-xl"></div>
     </div>
   );
 };

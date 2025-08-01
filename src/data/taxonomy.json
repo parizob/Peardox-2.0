@@ -1,0 +1,383 @@
+{
+  "categories": {
+    "artificial_intelligence": {
+      "displayName": "Artificial Intelligence",
+      "description": "AI systems, machine learning, and intelligent agents",
+      "color": "from-blue-500 to-cyan-400",
+      "icon": "brain",
+      "arxivCategories": ["cs.AI", "cs.LG", "stat.ML"],
+      "subcategories": [
+        {
+          "name": "Machine Learning",
+          "arxivCategories": ["cs.LG", "stat.ML"],
+          "keywords": ["machine learning", "deep learning", "neural network", "training", "optimization"]
+        },
+        {
+          "name": "Computer Vision",
+          "arxivCategories": ["cs.CV"],
+          "keywords": ["computer vision", "image processing", "visual recognition", "CNN", "object detection"]
+        },
+        {
+          "name": "Natural Language Processing",
+          "arxivCategories": ["cs.CL"],
+          "keywords": ["natural language", "NLP", "text analysis", "language model", "transformer"]
+        }
+      ]
+    },
+    "quantum_computing": {
+      "displayName": "Quantum Computing",
+      "description": "Quantum algorithms, quantum systems, and quantum information",
+      "color": "from-purple-500 to-pink-400",
+      "icon": "atom",
+      "arxivCategories": ["quant-ph", "cs.ET"],
+      "subcategories": [
+        {
+          "name": "Quantum Algorithms",
+          "arxivCategories": ["quant-ph"],
+          "keywords": ["quantum algorithm", "quantum computation", "quantum complexity"]
+        },
+        {
+          "name": "Quantum Hardware",
+          "arxivCategories": ["quant-ph", "physics.atom-ph"],
+          "keywords": ["quantum hardware", "qubit", "quantum device", "quantum error"]
+        },
+        {
+          "name": "Quantum Information",
+          "arxivCategories": ["quant-ph", "cs.IT"],
+          "keywords": ["quantum information", "quantum communication", "quantum cryptography"]
+        }
+      ]
+    },
+    "computing_systems": {
+      "displayName": "Computing Systems",
+      "description": "Distributed systems, edge computing, and system architecture",
+      "color": "from-green-500 to-emerald-400",
+      "icon": "server",
+      "arxivCategories": ["cs.DC", "cs.SY", "cs.AR"],
+      "subcategories": [
+        {
+          "name": "Edge Computing",
+          "arxivCategories": ["cs.DC"],
+          "keywords": ["edge computing", "distributed systems", "IoT", "real-time processing"]
+        },
+        {
+          "name": "Cloud Computing",
+          "arxivCategories": ["cs.DC", "cs.NI"],
+          "keywords": ["cloud computing", "serverless", "microservices", "scalability"]
+        },
+        {
+          "name": "System Architecture",
+          "arxivCategories": ["cs.AR", "cs.SY"],
+          "keywords": ["system architecture", "performance", "optimization", "hardware"]
+        }
+      ]
+    },
+    "robotics_automation": {
+      "displayName": "Robotics & Automation",
+      "description": "Robotics, control systems, and autonomous agents",
+      "color": "from-orange-500 to-yellow-400",
+      "icon": "bot",
+      "arxivCategories": ["cs.RO", "cs.SY"],
+      "subcategories": [
+        {
+          "name": "Autonomous Systems",
+          "arxivCategories": ["cs.RO"],
+          "keywords": ["autonomous", "self-driving", "navigation", "path planning"]
+        },
+        {
+          "name": "Control Systems",
+          "arxivCategories": ["cs.SY", "eess.SY"],
+          "keywords": ["control system", "feedback", "stability", "optimization"]
+        },
+        {
+          "name": "Human-Robot Interaction",
+          "arxivCategories": ["cs.RO", "cs.HC"],
+          "keywords": ["human-robot", "interaction", "collaboration", "interface"]
+        }
+      ]
+    },
+    "data_science": {
+      "displayName": "Data Science & Analytics",
+      "description": "Data mining, analytics, and information retrieval",
+      "color": "from-indigo-500 to-purple-400",
+      "icon": "database",
+      "arxivCategories": ["cs.DB", "cs.IR", "stat.AP"],
+      "subcategories": [
+        {
+          "name": "Data Mining",
+          "arxivCategories": ["cs.DB", "cs.LG"],
+          "keywords": ["data mining", "pattern recognition", "clustering", "classification"]
+        },
+        {
+          "name": "Information Retrieval",
+          "arxivCategories": ["cs.IR"],
+          "keywords": ["information retrieval", "search", "recommendation", "ranking"]
+        },
+        {
+          "name": "Big Data",
+          "arxivCategories": ["cs.DB", "cs.DC"],
+          "keywords": ["big data", "data processing", "analytics", "visualization"]
+        }
+      ]
+    },
+    "security_privacy": {
+      "displayName": "Security & Privacy",
+      "description": "Cybersecurity, cryptography, and privacy protection",
+      "color": "from-red-500 to-pink-400",
+      "icon": "shield",
+      "arxivCategories": ["cs.CR", "cs.CY"],
+      "subcategories": [
+        {
+          "name": "Cryptography",
+          "arxivCategories": ["cs.CR"],
+          "keywords": ["cryptography", "encryption", "security", "blockchain"]
+        },
+        {
+          "name": "Privacy",
+          "arxivCategories": ["cs.CR", "cs.CY"],
+          "keywords": ["privacy", "anonymity", "differential privacy", "GDPR"]
+        },
+        {
+          "name": "Network Security",
+          "arxivCategories": ["cs.CR", "cs.NI"],
+          "keywords": ["network security", "intrusion detection", "firewall", "malware"]
+        }
+      ]
+    },
+    "bioinformatics": {
+      "displayName": "Bioinformatics & Computational Biology",
+      "description": "Computational methods for biological data analysis",
+      "color": "from-teal-500 to-green-400",
+      "icon": "dna",
+      "arxivCategories": ["q-bio", "cs.CE"],
+      "subcategories": [
+        {
+          "name": "Genomics",
+          "arxivCategories": ["q-bio.GN"],
+          "keywords": ["genomics", "DNA", "sequencing", "genome analysis"]
+        },
+        {
+          "name": "Protein Analysis",
+          "arxivCategories": ["q-bio.BM"],
+          "keywords": ["protein", "structure", "folding", "molecular"]
+        },
+        {
+          "name": "Medical Informatics",
+          "arxivCategories": ["cs.CE", "q-bio.QM"],
+          "keywords": ["medical", "healthcare", "diagnosis", "treatment"]
+        }
+      ]
+    },
+    "human_computer_interaction": {
+      "displayName": "Human-Computer Interaction",
+      "description": "User interfaces, usability, and interactive systems",
+      "color": "from-pink-500 to-rose-400",
+      "icon": "users",
+      "arxivCategories": ["cs.HC"],
+      "subcategories": [
+        {
+          "name": "User Interface Design",
+          "arxivCategories": ["cs.HC"],
+          "keywords": ["user interface", "UX", "design", "usability"]
+        },
+        {
+          "name": "Virtual Reality",
+          "arxivCategories": ["cs.HC", "cs.GR"],
+          "keywords": ["virtual reality", "VR", "AR", "immersive"]
+        },
+        {
+          "name": "Accessibility",
+          "arxivCategories": ["cs.HC", "cs.CY"],
+          "keywords": ["accessibility", "assistive technology", "inclusive design"]
+        }
+      ]
+    },
+    "mathematics": {
+      "displayName": "Mathematics",
+      "description": "Pure and applied mathematics, mathematical analysis",
+      "color": "from-emerald-500 to-blue-400",
+      "icon": "calculator",
+      "arxivCategories": ["math.AG", "math.AT", "math.AP", "math.CA", "math.CO", "math.CT", "math.CV", "math.DG", "math.DS", "math.FA", "math.GM", "math.GN", "math.GR", "math.GT", "math.HO", "math.IT", "math.KT", "math.LO", "math.MG", "math.MP", "math.NA", "math.NT", "math.OA", "math.OC", "math.PR", "math.QA", "math.RA", "math.RT", "math.SG", "math.SP", "math.ST"],
+      "subcategories": [
+        {
+          "name": "Number Theory",
+          "arxivCategories": ["math.NT"],
+          "keywords": ["number theory", "prime numbers", "algebraic number theory", "diophantine"]
+        },
+        {
+          "name": "Analysis",
+          "arxivCategories": ["math.AP", "math.CA", "math.CV", "math.FA"],
+          "keywords": ["analysis", "differential equations", "functional analysis", "complex analysis"]
+        },
+        {
+          "name": "Algebra",
+          "arxivCategories": ["math.AG", "math.AC", "math.RA"],
+          "keywords": ["algebra", "algebraic geometry", "representation theory", "group theory"]
+        }
+      ]
+    },
+    "physics": {
+      "displayName": "Physics",
+      "description": "Theoretical and experimental physics across all domains",
+      "color": "from-violet-500 to-indigo-400",
+      "icon": "zap",
+      "arxivCategories": ["physics.acc-ph", "physics.ao-ph", "physics.app-ph", "physics.atm-clus", "physics.atom-ph", "physics.bio-ph", "physics.chem-ph", "physics.class-ph", "physics.comp-ph", "physics.data-an", "physics.ed-ph", "physics.flu-dyn", "physics.gen-ph", "physics.geo-ph", "physics.hist-ph", "physics.ins-det", "physics.med-ph", "physics.optics", "physics.plasm-ph", "physics.pop-ph", "physics.soc-ph", "physics.space-ph"],
+      "subcategories": [
+        {
+          "name": "Condensed Matter",
+          "arxivCategories": ["cond-mat.dis-nn", "cond-mat.mes-hall", "cond-mat.mtrl-sci", "cond-mat.other", "cond-mat.quant-gas", "cond-mat.soft", "cond-mat.stat-mech", "cond-mat.str-el", "cond-mat.supr-con"],
+          "keywords": ["condensed matter", "materials science", "superconductivity", "phase transitions"]
+        },
+        {
+          "name": "High Energy Physics",
+          "arxivCategories": ["hep-ex", "hep-lat", "hep-ph", "hep-th"],
+          "keywords": ["particle physics", "high energy", "quantum field theory", "standard model"]
+        },
+        {
+          "name": "Astrophysics",
+          "arxivCategories": ["astro-ph.CO", "astro-ph.EP", "astro-ph.GA", "astro-ph.HE", "astro-ph.IM", "astro-ph.SR"],
+          "keywords": ["astrophysics", "cosmology", "galaxies", "stellar physics", "exoplanets"]
+        }
+      ]
+    },
+    "computer_graphics": {
+      "displayName": "Computer Graphics & Visualization",
+      "description": "Computer graphics, visualization, and multimedia systems",
+      "color": "from-cyan-500 to-teal-400",
+      "icon": "monitor",
+      "arxivCategories": ["cs.GR", "cs.MM"],
+      "subcategories": [
+        {
+          "name": "3D Graphics",
+          "arxivCategories": ["cs.GR"],
+          "keywords": ["3D graphics", "rendering", "computer graphics", "visualization", "geometry"]
+        },
+        {
+          "name": "Multimedia",
+          "arxivCategories": ["cs.MM"],
+          "keywords": ["multimedia", "video processing", "audio processing", "digital media"]
+        },
+        {
+          "name": "Virtual Reality",
+          "arxivCategories": ["cs.GR", "cs.HC"],
+          "keywords": ["virtual reality", "augmented reality", "immersive systems", "3D interaction"]
+        }
+      ]
+    },
+    "software_engineering": {
+      "displayName": "Software Engineering",
+      "description": "Software development, programming languages, and systems",
+      "color": "from-slate-500 to-gray-400",
+      "icon": "code",
+      "arxivCategories": ["cs.SE", "cs.PL", "cs.OS"],
+      "subcategories": [
+        {
+          "name": "Programming Languages",
+          "arxivCategories": ["cs.PL"],
+          "keywords": ["programming languages", "compilers", "type systems", "language design"]
+        },
+        {
+          "name": "Software Engineering",
+          "arxivCategories": ["cs.SE"],
+          "keywords": ["software engineering", "software development", "testing", "maintenance"]
+        },
+        {
+          "name": "Operating Systems",
+          "arxivCategories": ["cs.OS"],
+          "keywords": ["operating systems", "system software", "kernel", "virtualization"]
+        }
+      ]
+    },
+    "networks_communication": {
+      "displayName": "Networks & Communication",
+      "description": "Computer networks, distributed systems, and communication",
+      "color": "from-blue-600 to-indigo-500",
+      "icon": "network",
+      "arxivCategories": ["cs.NI", "cs.DC"],
+      "subcategories": [
+        {
+          "name": "Computer Networks",
+          "arxivCategories": ["cs.NI"],
+          "keywords": ["computer networks", "networking", "protocols", "internet", "wireless"]
+        },
+        {
+          "name": "Distributed Computing",
+          "arxivCategories": ["cs.DC"],
+          "keywords": ["distributed computing", "parallel processing", "cluster computing", "grid computing"]
+        },
+        {
+          "name": "Communication Systems",
+          "arxivCategories": ["cs.NI", "eess.SP"],
+          "keywords": ["communication systems", "signal processing", "telecommunications", "wireless communication"]
+        }
+      ]
+    },
+    "economics_finance": {
+      "displayName": "Economics & Finance",
+      "description": "Computational economics, algorithmic trading, and financial modeling",
+      "color": "from-yellow-500 to-orange-400",
+      "icon": "trending-up",
+      "arxivCategories": ["econ.EM", "econ.GN", "econ.TH", "q-fin.CP", "q-fin.EC", "q-fin.GN", "q-fin.MF", "q-fin.PM", "q-fin.PR", "q-fin.RM", "q-fin.ST", "q-fin.TR"],
+      "subcategories": [
+        {
+          "name": "Algorithmic Trading",
+          "arxivCategories": ["q-fin.CP", "q-fin.TR"],
+          "keywords": ["algorithmic trading", "quantitative finance", "trading strategies", "market microstructure"]
+        },
+        {
+          "name": "Risk Management",
+          "arxivCategories": ["q-fin.RM", "q-fin.MF"],
+          "keywords": ["risk management", "portfolio optimization", "financial modeling", "derivatives"]
+        },
+        {
+          "name": "Econometrics",
+          "arxivCategories": ["econ.EM"],
+          "keywords": ["econometrics", "economic modeling", "statistical analysis", "time series"]
+        }
+      ]
+    },
+    "statistics": {
+      "displayName": "Statistics",
+      "description": "Statistical methods, probability theory, and data analysis",
+      "color": "from-purple-600 to-pink-500",
+      "icon": "bar-chart",
+      "arxivCategories": ["stat.AP", "stat.CO", "stat.ME", "stat.ML", "stat.TH"],
+      "subcategories": [
+        {
+          "name": "Applied Statistics",
+          "arxivCategories": ["stat.AP"],
+          "keywords": ["applied statistics", "statistical analysis", "data analysis", "experimental design"]
+        },
+        {
+          "name": "Statistical Theory",
+          "arxivCategories": ["stat.TH"],
+          "keywords": ["statistical theory", "probability theory", "inference", "hypothesis testing"]
+        },
+        {
+          "name": "Computational Statistics",
+          "arxivCategories": ["stat.CO"],
+          "keywords": ["computational statistics", "statistical computing", "monte carlo", "simulation"]
+        }
+      ]
+    }
+  },
+  "tags": {
+    "trending": ["transformer", "GPT", "BERT", "neural network", "deep learning", "quantum", "edge computing", "blockchain", "climate", "sustainability"],
+    "emerging": ["federated learning", "differential privacy", "quantum machine learning", "neuromorphic", "explainable AI", "green computing"],
+    "applications": ["healthcare", "autonomous driving", "finance", "climate", "education", "security", "sustainability", "energy"]
+  },
+  "difficulty_levels": {
+    "beginner": {
+      "keywords": ["introduction", "survey", "review", "tutorial", "basics", "overview"],
+      "description": "Introductory and survey papers"
+    },
+    "intermediate": {
+      "keywords": ["method", "approach", "technique", "framework", "algorithm", "analysis"],
+      "description": "Method and technique papers"
+    },
+    "advanced": {
+      "keywords": ["novel", "breakthrough", "state-of-the-art", "cutting-edge", "theoretical", "optimization"],
+      "description": "Cutting-edge research"
+    }
+  }
+} 
