@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { BookOpen, Loader2, AlertCircle } from 'lucide-react';
+import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark } from 'lucide-react';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
@@ -268,14 +268,11 @@ function App() {
         {/* Hero Section */}
         {!isLoading && !error && !searchTerm && !selectedCategory && (
           <div className="text-center mb-16">
-            <div className="relative inline-block">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl blur-xl transform rotate-1"></div>
-              <h2 className="relative text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-6 px-8 py-4">
-                Discover Tomorrow's Science Today
-              </h2>
-            </div>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Explore cutting-edge research and breakthrough discoveries from the world's leading institutions
+            <h2 className="text-5xl font-bold text-gray-900 mb-6">
+              Discover Research
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Explore the latest scientific papers and breakthroughs from top institutions worldwide
             </p>
           </div>
         )}
@@ -284,21 +281,15 @@ function App() {
         {!isLoading && !error && (
           <div className="mb-8">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <h3 className="text-2xl font-bold text-gray-900">
-                  {selectedCategoryDisplay ? `${categories.find(c => c.category_name === selectedCategoryDisplay)?.category_name || selectedCategoryDisplay} Research` : 'Latest Research'}
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  {selectedCategoryDisplay ? `${categories.find(c => c.category_name === selectedCategoryDisplay)?.category_name || selectedCategoryDisplay}` : 'Latest Research'}
                 </h3>
-                <div className="px-4 py-2 bg-white/60 backdrop-blur-sm border border-white/20 rounded-full">
-                  <span className="text-sm font-medium text-gray-600">
-                    {filteredArticles.length} article{filteredArticles.length !== 1 ? 's' : ''}
-                  </span>
-                </div>
+                <p className="text-gray-600">
+                  {filteredArticles.length} articles found
+                  {searchTerm && ` for "${searchTerm}"`}
+                </p>
               </div>
-              {searchTerm && (
-                <div className="text-sm text-gray-500">
-                  Results for "{searchTerm}"
-                </div>
-              )}
             </div>
           </div>
         )}
