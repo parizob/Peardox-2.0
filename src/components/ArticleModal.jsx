@@ -87,7 +87,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
               <div className="flex items-center text-gray-600">
                 <User className="h-5 w-5 mr-2" />
                 <div>
-                  <span className="font-medium">Research Institutions:</span>
+                  <span className="font-medium">Authors:</span>
                   <p className="text-gray-800">{article.authors}</p>
                 </div>
               </div>
@@ -112,14 +112,34 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
             <div>
               <h4 className="font-medium text-gray-700 mb-3">Research Tags:</h4>
               <div className="flex flex-wrap gap-2">
-                {article.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm"
-                  >
-                    {tag}
+                {article.categories && article.categories.length > 0 ? (
+                  (() => {
+                    // Filter out categories that contain periods or commas
+                    const filteredCategories = article.categories.filter(category => !category.includes('.') && !category.includes(','));
+                    
+                    return filteredCategories.length > 0 ? (
+                      <>
+                        {filteredCategories.map((category, index) => (
+                          <span 
+                            key={index}
+                            className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium"
+                          >
+                            {category}
+                          </span>
+                        ))}
+                      </>
+                    ) : (
+                      // Fallback to article.category if no valid categories remain
+                      <span className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
+                        {article.category}
+                      </span>
+                    );
+                  })()
+                ) : (
+                  <span className="inline-flex items-center px-2 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
+                    {article.category}
                   </span>
-                ))}
+                )}
               </div>
             </div>
           </div>
