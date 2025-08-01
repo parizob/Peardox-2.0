@@ -291,7 +291,7 @@ function App() {
                   Your Daily Dose of Discovery
                 </h2>
                 <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                  Our AI-powered platform cuts through the jargon, delivering the most important scientific advancements from around the globe directly to you.
+                  Our platform cuts through the jargon, delivering the most important AI advancements from around the globe directly to you.
                 </p>
               </div>
 
@@ -314,7 +314,10 @@ function App() {
                 ].map((category) => (
                   <button
                     key={category.name}
-                    onClick={() => setSelectedCategory(category.name === 'Computer Vision' ? 'Computer Vision and Pattern Recognition' : category.name === 'Natural Language' ? 'Computation and Language' : category.name)}
+                    onClick={() => {
+                      const targetCategory = category.name === 'Computer Vision' ? 'Computer Vision and Pattern Recognition' : category.name === 'Natural Language' ? 'Computation and Language' : category.name;
+                      setSelectedCategory(selectedCategory === targetCategory ? '' : targetCategory);
+                    }}
                     className={`group p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${category.color} ${
                       selectedCategory === (category.name === 'Computer Vision' ? 'Computer Vision and Pattern Recognition' : category.name === 'Natural Language' ? 'Computation and Language' : category.name) 
                         ? 'ring-2 ring-indigo-500 shadow-lg' : ''
