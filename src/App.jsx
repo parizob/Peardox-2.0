@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark } from 'lucide-react';
+import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code } from 'lucide-react';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
@@ -265,15 +265,46 @@ function App() {
           </div>
         )}
 
-        {/* Hero Section */}
-        {!isLoading && !error && !searchTerm && !selectedCategory && (
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold text-gray-900 mb-6">
-            Your Daily Dose of Discovery
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Our AI-powered platform cuts through the jargon, delivering the most important scientific advancements from around the globe directly to you. Understand the research shaping our world, one easy summary at a time.
-            </p>
+        {/* Category Filter Section */}
+        {!isLoading && !error && !searchTerm && (
+          <div className="bg-white py-16 sm:py-24 mb-16">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8">
+              <div className="mx-auto max-w-2xl text-center">
+                <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+                  Your Daily Dose of Discovery.
+                </h2>
+                <p className="mt-6 text-lg leading-8 text-gray-600">
+                  Our AI-powered platform cuts through the jargon, delivering the most important scientific advancements from around the globe directly to you. Understand the research shaping our world, one easy summary at a time.
+                </p>
+
+                <div className="mt-16">
+                  <h3 className="text-xl font-semibold leading-7 text-gray-900">
+                    Dive into the World of AI Research
+                  </h3>
+                  <p className="mt-2 text-base leading-7 text-gray-500">
+                    Quickly find articles on the topics you care about most.
+                  </p>
+                  <div className="mt-6 grid grid-cols-2 gap-y-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                    {[
+                      { name: 'Machine Learning', icon: Brain },
+                      { name: 'Artificial Intelligence', icon: Bot },
+                      { name: 'Computer Vision and Pattern Recognition', icon: Eye },
+                      { name: 'Robotics', icon: Wrench },
+                      { name: 'Computation and Language', icon: Code },
+                    ].map((category) => (
+                      <button
+                        key={category.name}
+                        onClick={() => setSelectedCategory(category.name)}
+                        className="flex flex-col items-center p-4 transition duration-300 ease-in-out transform hover:scale-105 hover:bg-gray-50 rounded-lg cursor-pointer"
+                      >
+                        <category.icon className="h-8 w-8 text-indigo-600" />
+                        <span className="mt-2 text-sm font-medium text-gray-700 text-center">{category.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
