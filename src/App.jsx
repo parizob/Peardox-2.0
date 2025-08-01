@@ -269,10 +269,10 @@ function App() {
         {!isLoading && !error && !searchTerm && !selectedCategory && (
           <div className="text-center mb-16">
             <h2 className="text-5xl font-bold text-gray-900 mb-6">
-              Discover Research
+            Your Daily Dose of Discovery
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Explore the latest scientific papers and breakthroughs from top institutions worldwide
+            Our AI-powered platform cuts through the jargon, delivering the most important scientific advancements from around the globe directly to you. Understand the research shaping our world, one easy summary at a time.
             </p>
           </div>
         )}
