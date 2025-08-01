@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code } from 'lucide-react';
+import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight } from 'lucide-react';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
@@ -21,6 +21,10 @@ function App() {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 15;
 
   // Ref for scrolling to results
   const resultsRef = useRef(null);
@@ -164,7 +168,7 @@ function App() {
   };
 
   const filteredArticles = useMemo(() => {
-    return articles.filter(article => {
+    const filtered = articles.filter(article => {
       const matchesSearch = searchTerm === '' || 
         article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         article.shortDescription.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -178,7 +182,18 @@ function App() {
       
       return matchesSearch && matchesCategory;
     });
+
+    // Reset to first page when filters change
+    setCurrentPage(1);
+    
+    return filtered;
   }, [articles, searchTerm, selectedCategory]);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
+  const startIndex = (currentPage - 1) * articlesPerPage;
+  const endIndex = startIndex + articlesPerPage;
+  const currentArticles = filteredArticles.slice(startIndex, endIndex);
 
   // Update the results header to show the selected category name
   const selectedCategoryDisplay = selectedCategory ? selectedCategory : null;
@@ -357,16 +372,77 @@ function App() {
 
         {/* Articles Grid */}
         {!isLoading && !error && filteredArticles.length > 0 ? (
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {filteredArticles.map(article => (
-              <ArticleCard 
-                key={article.id} 
-                article={article} 
-                onClick={handleArticleClick}
-                isFavorite={favorites.has(article.id)}
-                onToggleFavorite={handleToggleFavorite}
-              />
-            ))}
+          <div>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {currentArticles.map(article => (
+                <ArticleCard 
+                  key={article.id} 
+                  article={article} 
+                  onClick={handleArticleClick}
+                  isFavorite={favorites.has(article.id)}
+                  onToggleFavorite={handleToggleFavorite}
+                />
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center space-x-2 mt-12">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="flex items-center px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  Previous
+                </button>
+
+                <div className="flex items-center space-x-1">
+                  {Array.from({ length: totalPages }, (_, i) => {
+                    const pageNum = i + 1;
+                    const isActive = pageNum === currentPage;
+                    
+                    // Show first page, last page, current page, and pages around current
+                    const showPage = pageNum === 1 || 
+                                   pageNum === totalPages || 
+                                   Math.abs(pageNum - currentPage) <= 1;
+                    
+                    if (!showPage && pageNum === 2 && currentPage > 4) {
+                      return <span key={pageNum} className="px-2 text-gray-400">...</span>;
+                    }
+                    
+                    if (!showPage && pageNum === totalPages - 1 && currentPage < totalPages - 3) {
+                      return <span key={pageNum} className="px-2 text-gray-400">...</span>;
+                    }
+                    
+                    if (!showPage) return null;
+
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={`px-3 py-2 rounded-lg font-medium transition-colors ${
+                          isActive
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="flex items-center px-3 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4 ml-1" />
+                </button>
+              </div>
+            )}
           </div>
         ) : !isLoading && !error && (
           <div className="text-center py-20">
