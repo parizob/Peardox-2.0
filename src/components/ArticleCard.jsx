@@ -92,13 +92,8 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
           </div>
         </div>
 
-        {/* Authors */}
-        <div className="text-sm text-gray-500 border-t border-gray-100 pt-3">
-          <span className="font-medium text-gray-700">Authors:</span> {article.authors}
-        </div>
-
         {/* Categories - Now at bottom, subtle */}
-        <div className="flex flex-wrap gap-2 pt-2">
+        <div className="flex flex-wrap gap-2 pt-3">
           {article.categories && article.categories.length > 0 ? (
             (() => {
               // Filter out categories that contain periods or commas
