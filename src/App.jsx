@@ -267,10 +267,10 @@ function App() {
 
         {/* Category Filter Section */}
         {!isLoading && !error && !searchTerm && (
-          <div className="py-20 mb-12">
+          <div className="pt-8 pb-20 mb-12">
             <div className="mx-auto max-w-6xl px-6">
-              <div className="text-center mb-16">
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
                   Your Daily Dose of Discovery
                 </h2>
                 <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -278,7 +278,7 @@ function App() {
                 </p>
               </div>
 
-              <div className="text-center mb-12">
+              <div className="text-center mb-10">
                 <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   Explore Research Categories
                 </h3>
