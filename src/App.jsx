@@ -333,7 +333,7 @@ function App() {
                       const targetCategory = category.name === 'Computer Vision' ? 'Computer Vision and Pattern Recognition' : category.name === 'Natural Language' ? 'Computation and Language' : category.name;
                       setSelectedCategory(selectedCategory === targetCategory ? '' : targetCategory);
                     }}
-                    className={`group p-3 sm:p-6 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${category.color} ${
+                    className={`group p-4 sm:p-8 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${category.color} ${
                       selectedCategory === (category.name === 'Computer Vision' ? 'Computer Vision and Pattern Recognition' : category.name === 'Natural Language' ? 'Computation and Language' : category.name) 
                         ? 'ring-2 ring-indigo-500 shadow-lg' : ''
                     } ${
@@ -341,11 +341,11 @@ function App() {
                       index === 4 ? 'col-span-2 sm:col-span-1 justify-self-center' : ''
                     }`}
                   >
-                    <div className="flex flex-col items-center space-y-2 sm:space-y-3">
-                      <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-white shadow-sm group-hover:shadow-md transition-shadow">
+                    <div className="flex flex-col items-center justify-center space-y-2 sm:space-y-3 h-20 sm:h-28">
+                      <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-white shadow-sm group-hover:shadow-md transition-shadow flex-shrink-0">
                         <category.icon className="h-5 w-5 sm:h-8 sm:w-8 text-indigo-600" />
                       </div>
-                      <span className="text-xs sm:text-sm font-semibold text-gray-900 leading-tight text-center">
+                      <span className="text-xs sm:text-sm font-semibold text-gray-900 leading-tight text-center min-h-[2.5rem] sm:min-h-[3rem] flex items-center justify-center px-1">
                         {category.name}
                       </span>
                     </div>
