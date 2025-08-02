@@ -485,7 +485,7 @@ function App() {
                   Your Daily Dose of Discovery
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
-                  Our platform cuts through the jargon, delivering the most important AI advancements from around the globe directly to you.
+                We break down the latest AI breakthroughs into words you can actually understand.
                 </p>
               </div>
 
