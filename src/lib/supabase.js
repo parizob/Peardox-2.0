@@ -281,7 +281,8 @@ export const authAPI = {
       full_name: userData.name || '',
       professional_title: userData.title || '',
       institution: userData.institution || '',
-      research_interests: userData.researchInterests || []
+      research_interests: userData.researchInterests || [],
+      skill_level: userData.skillLevel || 'Beginner'
     };
     
     console.log('📝 Inserting profile data:', profileData);
@@ -330,7 +331,8 @@ export const authAPI = {
       full_name: updates.name,
       professional_title: updates.title,
       institution: updates.institution,
-      research_interests: updates.research_interests
+      research_interests: updates.research_interests,
+      skill_level: updates.skill_level
     };
     
     console.log('📝 Updating with data:', profileUpdates);

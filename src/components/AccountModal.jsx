@@ -36,6 +36,7 @@ const AccountModal = ({ isOpen, onClose }) => {
     title: '',
     institution: '',
     researchInterests: [],
+    skillLevel: 'Beginner', // Add skill level field
     aiPreferences: {
       summaryStyle: 'detailed',
       notificationFrequency: 'daily',
@@ -129,6 +130,7 @@ const AccountModal = ({ isOpen, onClose }) => {
                       'Robotics', 
                       'Computation and Language'
                     ],
+                    skillLevel: profile.skill_level || 'Beginner', // Load skill level
                     aiPreferences: {
                       summaryStyle: 'detailed',
                       notificationFrequency: 'daily',
@@ -198,7 +200,8 @@ const AccountModal = ({ isOpen, onClose }) => {
                       'Computer Vision and Pattern Recognition', 
                       'Robotics', 
                       'Computation and Language'
-                    ]
+                    ],
+                    skillLevel: 'Beginner' // Default skill level for new users
                   });
                   localStorage.removeItem('signupData');
                   if (authAPI.getProfile) {
@@ -222,6 +225,7 @@ const AccountModal = ({ isOpen, onClose }) => {
                     'Robotics', 
                     'Computation and Language'
                   ],
+                  skillLevel: profile.skill_level || 'Beginner', // Load skill level
                   aiPreferences: {
                     summaryStyle: 'detailed',
                     notificationFrequency: 'daily',
@@ -248,6 +252,7 @@ const AccountModal = ({ isOpen, onClose }) => {
               title: '',
               institution: '',
               researchInterests: [],
+              skillLevel: 'Beginner', // Reset skill level on sign out
               aiPreferences: {
                 summaryStyle: 'detailed',
                 notificationFrequency: 'daily',
@@ -328,7 +333,8 @@ const AccountModal = ({ isOpen, onClose }) => {
             'Computer Vision and Pattern Recognition', 
             'Robotics', 
             'Computation and Language'
-          ]
+          ],
+          skillLevel: 'Beginner' // Default skill level for new users
         });
         
         console.log('✅ Signup completed:', signupResult);
@@ -372,14 +378,16 @@ const AccountModal = ({ isOpen, onClose }) => {
         name: userData.name,
         title: userData.title,
         institution: userData.institution,
-        research_interests: userData.researchInterests
+        research_interests: userData.researchInterests,
+        skill_level: userData.skillLevel
       });
 
       await authAPI.updateProfile(user.id, {
         name: userData.name,
         title: userData.title,
         institution: userData.institution,
-        research_interests: userData.researchInterests
+        research_interests: userData.researchInterests,
+        skill_level: userData.skillLevel
       });
 
       setSaveSuccess(true);
@@ -689,76 +697,112 @@ const AccountModal = ({ isOpen, onClose }) => {
                       </div>
                     </div>
 
-                    {/* Research Interests */}
-                    <div className="bg-white/60 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
-                      <h4 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                        <Brain className="h-5 w-5 mr-2 text-purple-500" />
-                        Research Interests
-                        <span className="ml-2 text-sm font-normal text-gray-500">
-                          ({userData.researchInterests?.length || 0}/5)
-                        </span>
-                      </h4>
-                      <div className="space-y-4">
-                        <p className="text-sm text-gray-600">Select up to 5 areas of research interest</p>
-                        
-                        {isEditing && (
-                          <div className="relative">
-                            <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                            <input
-                              type="text"
-                              placeholder="Search research interests..."
-                              value={interestSearch}
-                              onChange={(e) => setInterestSearch(e.target.value)}
-                              className="w-full pl-10 pr-4 py-2 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm"
-                            />
-                          </div>
-                        )}
-
-                        {interestsLoading ? (
-                          <div className="flex items-center justify-center py-8">
-                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-500"></div>
-                            <span className="ml-2 text-sm text-gray-600">Loading interests...</span>
-                          </div>
-                        ) : (
-                          <div className="max-h-48 overflow-y-auto">
-                            <div className="flex flex-wrap gap-2">
-                              {(isEditing ? filteredInterests : availableInterests.filter(interest => 
-                                userData.researchInterests?.includes(interest)
-                              )).map(interest => (
-                                <button
-                                  key={interest}
-                                  onClick={() => toggleResearchInterest(interest)}
-                                  disabled={!isEditing}
-                                  className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                                    userData.researchInterests?.includes(interest)
-                                      ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md'
-                                      : isEditing 
-                                      ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
-                                      : 'bg-gray-100 text-gray-700'
-                                  } ${!isEditing ? 'cursor-default' : 'cursor-pointer hover:scale-105'} ${
-                                    isEditing && !userData.researchInterests?.includes(interest) && userData.researchInterests?.length >= 5
-                                      ? 'opacity-50 cursor-not-allowed'
-                                      : ''
-                                  }`}
-                                >
-                                  {interest}
-                                </button>
-                              ))}
+                    {/* Combined Research & Technical Section */}
+                    <div className="space-y-6">
+                      {/* Research Interests */}
+                      <div className="bg-white/60 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
+                        <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                          <Brain className="h-5 w-5 mr-2 text-purple-500" />
+                          Research Interests
+                          <span className="ml-2 text-sm font-normal text-gray-500">
+                            ({userData.researchInterests?.length || 0}/5)
+                          </span>
+                        </h4>
+                        <div className="space-y-3">
+                          <p className="text-sm text-gray-600">Select up to 5 areas of research interest</p>
+                          
+                          {isEditing && (
+                            <div className="relative">
+                              <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                              <input
+                                type="text"
+                                placeholder="Search research interests..."
+                                value={interestSearch}
+                                onChange={(e) => setInterestSearch(e.target.value)}
+                                className="w-full pl-10 pr-4 py-2 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm"
+                              />
                             </div>
-                            
-                            {isEditing && filteredInterests.length === 0 && interestSearch && (
-                              <div className="text-center py-4 text-gray-500 text-sm">
-                                No interests found matching "{interestSearch}"
-                              </div>
-                            )}
-                          </div>
-                        )}
+                          )}
 
-                        {isEditing && userData.researchInterests?.length >= 5 && (
-                          <div className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg p-2">
-                            ⚠️ You've reached the maximum of 5 research interests. Remove one to add another.
+                          {interestsLoading ? (
+                            <div className="flex items-center justify-center py-4">
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-500"></div>
+                              <span className="ml-2 text-sm text-gray-600">Loading...</span>
+                            </div>
+                          ) : (
+                            <div className="max-h-32 overflow-y-auto">
+                              <div className="flex flex-wrap gap-2">
+                                {(isEditing ? filteredInterests : availableInterests.filter(interest => 
+                                  userData.researchInterests?.includes(interest)
+                                )).map(interest => (
+                                  <button
+                                    key={interest}
+                                    onClick={() => toggleResearchInterest(interest)}
+                                    disabled={!isEditing}
+                                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                                      userData.researchInterests?.includes(interest)
+                                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md'
+                                        : isEditing 
+                                        ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
+                                        : 'bg-gray-100 text-gray-700'
+                                    } ${!isEditing ? 'cursor-default' : 'cursor-pointer hover:scale-105'} ${
+                                      isEditing && !userData.researchInterests?.includes(interest) && userData.researchInterests?.length >= 5
+                                        ? 'opacity-50 cursor-not-allowed'
+                                        : ''
+                                    }`}
+                                  >
+                                    {interest}
+                                  </button>
+                                ))}
+                              </div>
+                              
+                              {isEditing && filteredInterests.length === 0 && interestSearch && (
+                                <div className="text-center py-2 text-gray-500 text-sm">
+                                  No interests found matching "{interestSearch}"
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {isEditing && userData.researchInterests?.length >= 5 && (
+                            <div className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg p-2">
+                              ⚠️ You've reached the maximum of 5 research interests. Remove one to add another.
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Technical Knowledge */}
+                      <div className="bg-white/60 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
+                        <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                          <Sparkles className="h-5 w-5 mr-2 text-yellow-500" />
+                          Technical Knowledge
+                        </h4>
+                        <div className="space-y-3">
+                          <p className="text-sm text-gray-600">Select your technical skill level</p>
+                          <div className="flex gap-3">
+                            {['Beginner', 'Intermediate'].map(level => (
+                              <button
+                                key={level}
+                                onClick={() => isEditing && setUserData(prev => ({ ...prev, skillLevel: level }))}
+                                disabled={!isEditing}
+                                className={`flex-1 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                                  userData.skillLevel === level
+                                    ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-md'
+                                    : isEditing
+                                    ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
+                                    : 'bg-gray-100 text-gray-700'
+                                } ${!isEditing ? 'cursor-default' : 'cursor-pointer'}`}
+                              >
+                                {level}
+                              </button>
+                            ))}
                           </div>
-                        )}
+                          <div className="text-xs text-gray-500 mt-2">
+                            {userData.skillLevel === 'Beginner' && "New to research and technical concepts"}
+                            {userData.skillLevel === 'Intermediate' && "Comfortable with technical terminology and research methods"}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -18,6 +18,9 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   -- An array of strings for research interests.
   research_interests TEXT[],
   
+  -- User's technical skill level
+  skill_level TEXT DEFAULT 'Beginner',
+  
   -- Set the 'id' as the primary key of this table.
   PRIMARY KEY (id)
 );
