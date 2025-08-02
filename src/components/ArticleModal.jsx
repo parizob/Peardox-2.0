@@ -32,10 +32,6 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
           <div className="flex-1 pr-3 sm:pr-4 min-w-0">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 leading-tight">{article.title}</h2>
             <div className="flex flex-wrap items-center gap-2">
-              <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getCategoryColor(article.category)}`}>
-                <Tag className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                {article.category}
-              </span>
               {article.skillLevel && (
                 <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${getSkillLevelColor(article.skillLevel)}`}>
                   <Brain className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
