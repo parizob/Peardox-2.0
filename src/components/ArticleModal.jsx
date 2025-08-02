@@ -76,13 +76,11 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
         </div>
 
         <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
-          {/* Skill-Level Specific Overview Section */}
+          {/* Overview Section */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 sm:p-6">
             <div className="flex items-center mb-3">
               <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mr-2" />
-              <h3 className="text-base sm:text-lg font-semibold text-blue-900">
-                {article.hasSummary ? `${article.skillLevel || 'Simplified'} Overview` : 'Overview'}
-              </h3>
+              <h3 className="text-base sm:text-lg font-semibold text-blue-900">Overview</h3>
             </div>
             <p className="text-blue-800 leading-relaxed text-sm sm:text-base">{article.shortDescription}</p>
           </div>
@@ -92,9 +90,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 sm:p-6">
               <div className="flex items-center mb-3">
                 <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600 mr-2" />
-                <h3 className="text-base sm:text-lg font-semibold text-purple-900">
-                  AI-Generated Summary ({article.skillLevel || 'Beginner'} Level)
-                </h3>
+                <h3 className="text-base sm:text-lg font-semibold text-purple-900">AI-Generated Summary</h3>
               </div>
               <div className="text-purple-800 leading-relaxed text-sm sm:text-base whitespace-pre-wrap">
                 {article.summaryContent}
