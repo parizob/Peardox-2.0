@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, User, Mail, Brain, Sparkles, Settings, Bell, Shield, BookOpen, Target, Zap, Globe, Edit3, Save, Camera, Eye, EyeOff, LogIn, UserPlus, Check, Search } from 'lucide-react';
 import { authAPI, arxivAPI } from '../lib/supabase';
 
-const AccountModal = ({ isOpen, onClose }) => {
+const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [authMode, setAuthMode] = useState('signin');
@@ -370,6 +370,7 @@ const AccountModal = ({ isOpen, onClose }) => {
         throw new Error('Profile update not available');
       }
 
+      const previousSkillLevel = userSkillLevel;
       setAuthLoading(true);
       setSaveSuccess(false);
       setAuthError('');
@@ -389,6 +390,12 @@ const AccountModal = ({ isOpen, onClose }) => {
         research_interests: userData.researchInterests,
         skill_level: userData.skillLevel
       });
+
+      // Notify parent if skill level changed
+      if (previousSkillLevel !== userData.skillLevel && onSkillLevelChange) {
+        console.log('🎯 Skill level changed from', previousSkillLevel, 'to', userData.skillLevel);
+        onSkillLevelChange(userData.skillLevel);
+      }
 
       setSaveSuccess(true);
       setIsEditing(false);

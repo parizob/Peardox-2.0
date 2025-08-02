@@ -69,6 +69,156 @@ export const arxivAPI = {
     console.log(`✅ Retrieved ${data?.length || 0} papers`);
     return data || [];
   },
+
+  // Get summaries by skill level from summary_papers table
+  async getSummariesBySkillLevel(skillLevel = 'Beginner') {
+    console.log('📝 Fetching summaries for skill level:', skillLevel);
+    
+    const { data, error } = await supabase
+      .from('summary_papers')
+      .select('*')
+      .eq('processing_status', 'completed'); // Only get completed summaries
+    
+    if (error) {
+      console.error('❌ Error fetching summaries:', error);
+      throw error;
+    }
+    
+    // Transform the data to match expected format based on skill level
+    const transformedData = (data || []).map(row => {
+      const skillLevelLower = skillLevel.toLowerCase();
+      return {
+        id: row.id,
+        paper_id: row.arxiv_paper_id, // Map to the paper ID field
+        skill_level: skillLevel,
+        title: skillLevelLower === 'beginner' ? row.beginner_title : row.intermediate_title,
+        overview: skillLevelLower === 'beginner' ? row.beginner_overview : row.intermediate_overview,
+        summary: skillLevelLower === 'beginner' ? row.beginner_summary : row.intermediate_summary,
+        created_at: row.created_at,
+        updated_at: row.updated_at
+      };
+    }).filter(item => item.title && item.overview); // Only include items with content
+    
+    console.log(`✅ Retrieved ${transformedData.length} summaries for ${skillLevel} level`);
+    return transformedData;
+  },
+
+  // Get all papers with skill-level specific summaries
+  async getAllPapersWithSummaries(skillLevel = 'Beginner') {
+    console.log('📡 Fetching papers with summaries for skill level:', skillLevel);
+    
+    try {
+      // Get summaries for the specified skill level
+      const summariesData = await this.getSummariesBySkillLevel(skillLevel);
+      
+      if (summariesData.length === 0) {
+        console.log('⚠️ No summaries found, falling back to regular papers');
+        return await this.getAllPapers();
+      }
+      
+      // Get the paper IDs that have summaries
+      const paperIds = summariesData.map(summary => summary.paper_id);
+      
+      // Fetch the corresponding papers from v_arxiv_papers
+      const { data: papersData, error: papersError } = await supabase
+        .from('v_arxiv_papers')
+        .select('*')
+        .in('id', paperIds)
+        .order('created_at', { ascending: false });
+      
+      if (papersError) {
+        console.error('❌ Error fetching papers:', papersError);
+        throw papersError;
+      }
+      
+      // Create a map of summaries by paper ID for quick lookup
+      const summariesMap = new Map();
+      summariesData.forEach(summary => {
+        summariesMap.set(summary.paper_id, summary);
+      });
+      
+      // Merge papers with their corresponding summaries
+      const papersWithSummaries = (papersData || []).map(paper => {
+        const summary = summariesMap.get(paper.id);
+        return {
+          ...paper,
+          // Add summary fields if available
+          summaryTitle: summary?.title || null,
+          summaryOverview: summary?.overview || null,
+          summaryContent: summary?.summary || null,
+          skillLevel: summary?.skill_level || null
+        };
+      });
+      
+      console.log(`✅ Retrieved ${papersWithSummaries.length} papers with summaries for ${skillLevel} level`);
+      return papersWithSummaries;
+      
+    } catch (error) {
+      console.error('❌ Error fetching papers with summaries:', error);
+      // Fallback to regular papers if summaries fail
+      console.log('🔄 Falling back to papers without summaries...');
+      return await this.getAllPapers();
+    }
+  },
+
+  // Get specific paper with summary by ID and skill level
+  async getPaperWithSummary(paperId, skillLevel = 'Beginner') {
+    console.log('📄 Fetching paper with summary - ID:', paperId, 'Skill Level:', skillLevel);
+    
+    try {
+      // Get the paper data
+      const { data: paperData, error: paperError } = await supabase
+        .from('v_arxiv_papers')
+        .select('*')
+        .eq('id', paperId)
+        .single();
+      
+      if (paperError) {
+        console.error('❌ Error fetching paper:', paperError);
+        throw paperError;
+      }
+      
+      // Get the summary for the paper
+      const { data: summaryData, error: summaryError } = await supabase
+        .from('summary_papers')
+        .select('*')
+        .eq('arxiv_paper_id', paperId)
+        .eq('processing_status', 'completed')
+        .single();
+      
+      if (summaryError && summaryError.code !== 'PGRST116') {
+        console.warn('⚠️ Error fetching summary (continuing without):', summaryError);
+      }
+      
+      // Transform summary data based on skill level
+      let transformedSummary = null;
+      if (summaryData) {
+        const skillLevelLower = skillLevel.toLowerCase();
+        transformedSummary = {
+          title: skillLevelLower === 'beginner' ? summaryData.beginner_title : summaryData.intermediate_title,
+          overview: skillLevelLower === 'beginner' ? summaryData.beginner_overview : summaryData.intermediate_overview,
+          summary: skillLevelLower === 'beginner' ? summaryData.beginner_summary : summaryData.intermediate_summary,
+          skill_level: skillLevel
+        };
+      }
+      
+      // Merge paper with summary
+      const paperWithSummary = {
+        ...paperData,
+        summaryTitle: transformedSummary?.title || null,
+        summaryOverview: transformedSummary?.overview || null,
+        summaryContent: transformedSummary?.summary || null,
+        skillLevel: transformedSummary?.skill_level || null
+      };
+      
+      console.log('✅ Retrieved paper with summary');
+      return paperWithSummary;
+      
+    } catch (error) {
+      console.error('❌ Error in getPaperWithSummary:', error);
+      throw error;
+    }
+  },
   
   // Get papers by category using categories_name
   async getPapersByCategory(categoryName) {
@@ -87,6 +237,70 @@ export const arxivAPI = {
     console.log(`✅ Found ${data?.length || 0} papers for category: ${categoryName}`);
     return data || [];
   },
+
+  // Get papers by category with summaries
+  async getPapersByCategoryWithSummaries(categoryName, skillLevel = 'Beginner') {
+    console.log('🏷️ Fetching papers with summaries for category:', categoryName, 'skill level:', skillLevel);
+    
+    try {
+      // Get papers by category
+      const papersData = await this.getPapersByCategory(categoryName);
+      
+      // Get summaries for these papers at the specified skill level
+      const paperIds = papersData.map(paper => paper.id);
+      
+      if (paperIds.length === 0) {
+        return [];
+      }
+      
+      const { data: summariesData, error: summariesError } = await supabase
+        .from('summary_papers')
+        .select('*')
+        .in('arxiv_paper_id', paperIds)
+        .eq('processing_status', 'completed');
+      
+      if (summariesError) {
+        console.warn('⚠️ Error fetching summaries for category (continuing without):', summariesError);
+      }
+      
+      // Transform and create summaries map
+      const summariesMap = new Map();
+      (summariesData || []).forEach(row => {
+        const skillLevelLower = skillLevel.toLowerCase();
+        const transformedSummary = {
+          title: skillLevelLower === 'beginner' ? row.beginner_title : row.intermediate_title,
+          overview: skillLevelLower === 'beginner' ? row.beginner_overview : row.intermediate_overview,
+          summary: skillLevelLower === 'beginner' ? row.beginner_summary : row.intermediate_summary,
+          skill_level: skillLevel
+        };
+        
+        // Only add if there's content
+        if (transformedSummary.title && transformedSummary.overview) {
+          summariesMap.set(row.arxiv_paper_id, transformedSummary);
+        }
+      });
+      
+      // Merge papers with summaries
+      const papersWithSummaries = papersData.map(paper => {
+        const summary = summariesMap.get(paper.id);
+        return {
+          ...paper,
+          summaryTitle: summary?.title || null,
+          summaryOverview: summary?.overview || null,
+          summaryContent: summary?.summary || null,
+          skillLevel: summary?.skill_level || null
+        };
+      });
+      
+      console.log(`✅ Found ${papersWithSummaries.length} papers with summaries for category: ${categoryName}`);
+      return papersWithSummaries;
+      
+    } catch (error) {
+      console.error('❌ Error fetching papers by category with summaries:', error);
+      // Fallback to regular category search
+      return await this.getPapersByCategory(categoryName);
+    }
+  },
   
   // Search papers
   async searchPapers(searchTerm) {
@@ -104,6 +318,70 @@ export const arxivAPI = {
     
     console.log(`✅ Search found ${data?.length || 0} papers`);
     return data || [];
+  },
+
+  // Search papers with summaries
+  async searchPapersWithSummaries(searchTerm, skillLevel = 'Beginner') {
+    console.log('🔍 Searching papers with summaries for:', searchTerm, 'skill level:', skillLevel);
+    
+    try {
+      // Search papers
+      const papersData = await this.searchPapers(searchTerm);
+      
+      // Get summaries for search results
+      const paperIds = papersData.map(paper => paper.id);
+      
+      if (paperIds.length === 0) {
+        return [];
+      }
+      
+      const { data: summariesData, error: summariesError } = await supabase
+        .from('summary_papers')
+        .select('*')
+        .in('arxiv_paper_id', paperIds)
+        .eq('processing_status', 'completed');
+      
+      if (summariesError) {
+        console.warn('⚠️ Error fetching summaries for search (continuing without):', summariesError);
+      }
+      
+      // Transform and create summaries map
+      const summariesMap = new Map();
+      (summariesData || []).forEach(row => {
+        const skillLevelLower = skillLevel.toLowerCase();
+        const transformedSummary = {
+          title: skillLevelLower === 'beginner' ? row.beginner_title : row.intermediate_title,
+          overview: skillLevelLower === 'beginner' ? row.beginner_overview : row.intermediate_overview,
+          summary: skillLevelLower === 'beginner' ? row.beginner_summary : row.intermediate_summary,
+          skill_level: skillLevel
+        };
+        
+        // Only add if there's content
+        if (transformedSummary.title && transformedSummary.overview) {
+          summariesMap.set(row.arxiv_paper_id, transformedSummary);
+        }
+      });
+      
+      // Merge papers with summaries
+      const papersWithSummaries = papersData.map(paper => {
+        const summary = summariesMap.get(paper.id);
+        return {
+          ...paper,
+          summaryTitle: summary?.title || null,
+          summaryOverview: summary?.overview || null,
+          summaryContent: summary?.summary || null,
+          skillLevel: summary?.skill_level || null
+        };
+      });
+      
+      console.log(`✅ Search found ${papersWithSummaries.length} papers with summaries`);
+      return papersWithSummaries;
+      
+    } catch (error) {
+      console.error('❌ Error searching papers with summaries:', error);
+      // Fallback to regular search
+      return await this.searchPapers(searchTerm);
+    }
   },
   
   // Get categories from arxiv_categories table
@@ -383,6 +661,176 @@ export const authAPI = {
     }
     
     console.log('✅ Password reset email sent');
+  }
+};
+
+// Saved Articles API
+export const savedArticlesAPI = {
+  async getUserSavedArticles(userId) {
+    console.log('📚 Getting saved articles for user:', userId);
+    try {
+      const { data, error } = await supabase
+        .from('saved_articles')
+        .select('*')
+        .eq('user_id', userId)
+        .order('saved_at', { ascending: false });
+      
+      if (error) {
+        console.error('❌ Error fetching saved articles:', error);
+        return [];
+      }
+      
+      console.log(`✅ Retrieved ${data?.length || 0} saved articles`);
+      return data || [];
+    } catch (error) {
+      console.error('❌ Exception in getUserSavedArticles:', error);
+      return [];
+    }
+  },
+
+  async getUserSavedArticlesWithDetails(userId) {
+    console.log('📚 Getting saved articles with details for user:', userId);
+    try {
+      // First get the saved articles
+      const savedArticles = await this.getUserSavedArticles(userId);
+      
+      if (savedArticles.length === 0) {
+        return [];
+      }
+      
+      // Get the article IDs
+      const articleIds = savedArticles.map(saved => saved.article_id);
+      
+      // Fetch the full article details from v_arxiv_papers
+      const { data: articlesData, error: articlesError } = await supabase
+        .from('v_arxiv_papers')
+        .select('*')
+        .in('id', articleIds);
+      
+      if (articlesError) {
+        console.error('❌ Error fetching article details:', articlesError);
+        return [];
+      }
+      
+      // Merge saved articles with their details
+      const articlesWithDetails = savedArticles.map(saved => {
+        const articleDetail = articlesData.find(article => article.id === saved.article_id);
+        if (!articleDetail) return null;
+        
+        return {
+          ...articleDetail,
+          savedAt: saved.saved_at,
+          // Transform to match the app's article format
+          title: articleDetail.title || 'Untitled',
+          shortDescription: articleDetail.abstract?.substring(0, 200) + '...' || 'No description available',
+          originalTitle: articleDetail.title || 'Untitled',
+          originalAbstract: articleDetail.abstract || 'No abstract available',
+          category: Array.isArray(articleDetail.categories_name) && articleDetail.categories_name.length > 0 
+            ? articleDetail.categories_name[0] 
+            : 'General',
+          categories: Array.isArray(articleDetail.categories_name) ? articleDetail.categories_name : [articleDetail.categories_name || 'General'],
+          arxivId: articleDetail.arxiv_id || '',
+          url: articleDetail.pdf_url || articleDetail.abstract_url || `https://arxiv.org/pdf/${articleDetail.arxiv_id}`,
+          authors: Array.isArray(articleDetail.authors) ? articleDetail.authors.join(', ') : (articleDetail.authors || 'Unknown Authors'),
+          publishedDate: articleDetail.published_date || articleDetail.created_at,
+          tags: Array.isArray(articleDetail.categories_name) ? articleDetail.categories_name : []
+        };
+      }).filter(Boolean);
+      
+      console.log(`✅ Retrieved ${articlesWithDetails.length} saved articles with details`);
+      return articlesWithDetails;
+      
+    } catch (error) {
+      console.error('❌ Exception in getUserSavedArticlesWithDetails:', error);
+      return [];
+    }
+  },
+
+  async saveArticle(userId, articleId) {
+    console.log('💾 Saving article:', articleId, 'for user:', userId);
+    try {
+      const { data, error } = await supabase
+        .from('saved_articles')
+        .insert({
+          user_id: userId,
+          article_id: articleId
+        })
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('❌ Error saving article:', error);
+        throw error;
+      }
+      
+      console.log('✅ Article saved successfully:', data);
+      return data;
+    } catch (error) {
+      console.error('❌ Exception in saveArticle:', error);
+      throw error;
+    }
+  },
+
+  async unsaveArticle(userId, articleId) {
+    console.log('🗑️ Unsaving article:', articleId, 'for user:', userId);
+    try {
+      const { error } = await supabase
+        .from('saved_articles')
+        .delete()
+        .eq('user_id', userId)
+        .eq('article_id', articleId);
+      
+      if (error) {
+        console.error('❌ Error unsaving article:', error);
+        throw error;
+      }
+      
+      console.log('✅ Article unsaved successfully');
+      return true;
+    } catch (error) {
+      console.error('❌ Exception in unsaveArticle:', error);
+      throw error;
+    }
+  },
+
+  async isArticleSaved(userId, articleId) {
+    try {
+      const { data, error } = await supabase
+        .from('saved_articles')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('article_id', articleId)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        console.error('❌ Error checking if article is saved:', error);
+        return false;
+      }
+      
+      return !!data;
+    } catch (error) {
+      console.error('❌ Exception in isArticleSaved:', error);
+      return false;
+    }
+  },
+
+  async getSavedArticlesCount(userId) {
+    try {
+      const { count, error } = await supabase
+        .from('saved_articles')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId);
+      
+      if (error) {
+        console.error('❌ Error getting saved articles count:', error);
+        return 0;
+      }
+      
+      return count || 0;
+    } catch (error) {
+      console.error('❌ Exception in getSavedArticlesCount:', error);
+      return 0;
+    }
   }
 };
 

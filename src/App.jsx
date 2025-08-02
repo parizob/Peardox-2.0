@@ -5,7 +5,7 @@ import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
 import SavedArticles from './components/SavedArticles';
 import AccountModal from './components/AccountModal';
-import { arxivAPI } from './lib/supabase';
+import { arxivAPI, authAPI, savedArticlesAPI } from './lib/supabase';
 
 function App() {
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -16,11 +16,16 @@ function App() {
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   
+  // User state for authentication and skill level
+  const [user, setUser] = useState(null);
+  const [userSkillLevel, setUserSkillLevel] = useState('Beginner');
+  
   // Data state
   const [articles, setArticles] = useState([]);
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [savedArticlesFromDB, setSavedArticlesFromDB] = useState([]);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,10 +34,54 @@ function App() {
   // Ref for scrolling to results
   const resultsRef = useRef(null);
 
-  // Load data from Supabase
+  // Check user authentication and load their skill level
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        if (authAPI && typeof authAPI.getCurrentSession === 'function') {
+          const { data: { session } } = await authAPI.getCurrentSession();
+          if (session?.user) {
+            setUser(session.user);
+            
+            // Load user profile to get skill level
+            try {
+              if (authAPI.getProfile) {
+                const profile = await authAPI.getProfile(session.user.id);
+                if (profile) {
+                  const skillLevel = profile.skill_level || 'Beginner';
+                  setUserSkillLevel(skillLevel);
+                  console.log('👤 User skill level:', skillLevel);
+                }
+              }
+            } catch (profileError) {
+              console.error('Error loading user profile:', profileError);
+              setUserSkillLevel('Beginner'); // Default fallback
+            }
+          } else {
+            setUser(null);
+            setUserSkillLevel('Beginner'); // Default for non-authenticated users
+          }
+        }
+      } catch (error) {
+        console.error('Auth check error:', error);
+        setUser(null);
+        setUserSkillLevel('Beginner');
+      }
+    };
+    checkAuth();
+  }, []);
+
+  // Load data from Supabase with skill-level specific summaries
   useEffect(() => {
     loadData();
-  }, []);
+  }, [userSkillLevel]); // Reload when skill level changes
+
+  // Load user's saved articles
+  useEffect(() => {
+    if (user) {
+      loadUserSavedArticles();
+    }
+  }, [user]);
 
   // Scroll to results when category is selected
   useEffect(() => {
@@ -49,24 +98,37 @@ function App() {
   }, [selectedCategory]);
 
   const loadData = async () => {
-    console.log('🚀 Loading data from Supabase...');
+    console.log('🚀 Loading data from Supabase with skill level:', userSkillLevel);
     setIsLoading(true);
     setError(null);
     
     try {
-      // Load articles and categories from Supabase
-      const [papersData, categoriesData] = await Promise.all([
-        arxivAPI.getAllPapers(),
+      // Create a timeout to prevent infinite loading
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout')), 15000)
+      );
+      
+      // Load articles with summaries and categories from Supabase
+      const dataPromise = Promise.all([
+        arxivAPI.getAllPapersWithSummaries(userSkillLevel),
         arxivAPI.getCategories()
       ]);
+      
+      const [papersData, categoriesData] = await Promise.race([dataPromise, timeoutPromise]);
       
       // Transform papers to article format
       const transformedArticles = papersData.map(paper => ({
         id: paper.id,
-        title: simplifyTitle(paper.title || 'Untitled'),
-        shortDescription: simplifyDescription(paper.abstract || 'No description available'),
+        // Use summary title if available, otherwise simplify original title
+        title: paper.summaryTitle || simplifyTitle(paper.title || 'Untitled'),
+        // Use summary overview if available, otherwise simplify abstract
+        shortDescription: paper.summaryOverview || simplifyDescription(paper.abstract || 'No description available'),
         originalTitle: paper.title || 'Untitled',
         originalAbstract: paper.abstract || 'No abstract available',
+        // Add summary content for detailed view
+        summaryContent: paper.summaryContent || null,
+        hasSummary: !!(paper.summaryTitle || paper.summaryOverview || paper.summaryContent),
+        skillLevel: paper.skillLevel || userSkillLevel,
         // Keep the first category name for backwards compatibility
         category: Array.isArray(paper.categories_name) && paper.categories_name.length > 0 
           ? paper.categories_name[0] 
@@ -89,14 +151,89 @@ function App() {
       setArticles(transformedArticles);
       setCategories(categoriesData);
       
-      console.log(`✅ Loaded ${transformedArticles.length} articles from Supabase`);
+      console.log(`✅ Loaded ${transformedArticles.length} articles with summaries for ${userSkillLevel} level`);
       console.log(`📋 Found ${categoriesData.length} categories`);
+      console.log(`📝 Articles with summaries: ${transformedArticles.filter(a => a.hasSummary).length}`);
       
     } catch (err) {
       console.error('💥 Error loading data:', err);
       setError('Failed to load articles from database. Please try again.');
+      
+      // Fallback: try to load without summaries
+      try {
+        console.log('🔄 Attempting fallback to basic articles...');
+        const [papersData, categoriesData] = await Promise.all([
+          arxivAPI.getAllPapers(),
+          arxivAPI.getCategories()
+        ]);
+        
+        const transformedArticles = papersData.map(paper => ({
+          id: paper.id,
+          title: simplifyTitle(paper.title || 'Untitled'),
+          shortDescription: simplifyDescription(paper.abstract || 'No description available'),
+          originalTitle: paper.title || 'Untitled',
+          originalAbstract: paper.abstract || 'No abstract available',
+          summaryContent: null,
+          hasSummary: false,
+          skillLevel: userSkillLevel,
+          category: Array.isArray(paper.categories_name) && paper.categories_name.length > 0 
+            ? paper.categories_name[0] 
+            : 'General',
+          categories: Array.isArray(paper.categories_name) ? paper.categories_name : [paper.categories_name || 'General'],
+          subjectClasses: Array.isArray(paper.categories) ? paper.categories : [paper.categories || 'general'],
+          categoriesName: Array.isArray(paper.categories_name) && paper.categories_name.length > 0 
+            ? paper.categories_name[0] 
+            : 'General',
+          arxivId: paper.arxiv_id || '',
+          url: paper.pdf_url || paper.abstract_url || `https://arxiv.org/pdf/${paper.arxiv_id}`,
+          authors: Array.isArray(paper.authors) ? paper.authors.join(', ') : (paper.authors || 'Unknown Authors'),
+          publishedDate: formatDate(paper.published_date || paper.created_at),
+          tags: generateTags(paper.categories_name, paper.title, paper.abstract),
+          _original: paper
+        }));
+        
+        setArticles(transformedArticles);
+        setCategories(categoriesData);
+        setError(null); // Clear error if fallback succeeds
+        console.log(`✅ Fallback successful: Loaded ${transformedArticles.length} basic articles`);
+        
+      } catch (fallbackErr) {
+        console.error('💥 Fallback also failed:', fallbackErr);
+        setError('Unable to load articles. Please check your connection and try again.');
+      }
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadUserSavedArticles = async () => {
+    if (!user || !savedArticlesAPI) {
+      console.log('❌ Cannot load saved articles: no user or API');
+      return;
+    }
+
+    try {
+      console.log('📚 Loading saved articles for user:', user.id);
+      
+      // Create timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Saved articles timeout')), 10000)
+      );
+      
+      const savedPromise = savedArticlesAPI.getUserSavedArticlesWithDetails(user.id);
+      const savedArticlesWithDetails = await Promise.race([savedPromise, timeoutPromise]);
+      
+      console.log('📚 Loaded saved articles:', savedArticlesWithDetails?.length || 0);
+      
+      setSavedArticlesFromDB(savedArticlesWithDetails || []);
+      
+      // Update favorites set for UI
+      const savedIds = new Set((savedArticlesWithDetails || []).map(article => article.id));
+      setFavorites(savedIds);
+      
+    } catch (error) {
+      console.error('❌ Error loading saved articles:', error);
+      setSavedArticlesFromDB([]);
     }
   };
 
@@ -174,7 +311,9 @@ function App() {
         article.shortDescription.toLowerCase().includes(searchTerm.toLowerCase()) ||
         article.originalTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
         article.authors.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        article.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+        article.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        // Also search in summary content if available
+        (article.summaryContent && article.summaryContent.toLowerCase().includes(searchTerm.toLowerCase()));
       
       // Check if selected category matches any of the article's categories_name
       const matchesCategory = selectedCategory === '' || 
@@ -199,8 +338,8 @@ function App() {
   const selectedCategoryDisplay = selectedCategory ? selectedCategory : null;
 
   const savedArticles = useMemo(() => {
-    return articles.filter(article => favorites.has(article.id));
-  }, [articles, favorites]);
+    return savedArticlesFromDB;
+  }, [savedArticlesFromDB]);
 
   const handleArticleClick = (article) => {
     setSelectedArticle(article);
@@ -212,16 +351,47 @@ function App() {
     setSelectedArticle(null);
   };
 
-  const handleToggleFavorite = (articleId) => {
-    setFavorites(prev => {
-      const newFavorites = new Set(prev);
-      if (newFavorites.has(articleId)) {
-        newFavorites.delete(articleId);
+  const handleToggleFavorite = async (articleId) => {
+    if (!user) {
+      console.log('❌ User not authenticated, cannot save article');
+      // Keep the local favorites behavior for non-authenticated users
+      setFavorites(prev => {
+        const newFavorites = new Set(prev);
+        if (newFavorites.has(articleId)) {
+          newFavorites.delete(articleId);
+        } else {
+          newFavorites.add(articleId);
+        }
+        return newFavorites;
+      });
+      return;
+    }
+
+    try {
+      const isFavorited = favorites.has(articleId);
+      
+      if (isFavorited) {
+        // Remove from database
+        await savedArticlesAPI.unsaveArticle(user.id, articleId);
+        
+        setFavorites(prev => {
+          const newFavorites = new Set(prev);
+          newFavorites.delete(articleId);
+          return newFavorites;
+        });
       } else {
-        newFavorites.add(articleId);
+        // Save to database
+        await savedArticlesAPI.saveArticle(user.id, articleId);
+        
+        setFavorites(prev => {
+          const newFavorites = new Set(prev);
+          newFavorites.add(articleId);
+          return newFavorites;
+        });
       }
-      return newFavorites;
-    });
+    } catch (error) {
+      console.error('❌ Error toggling favorite:', error);
+    }
   };
 
   const handleShowSavedArticles = () => {
@@ -238,6 +408,13 @@ function App() {
 
   const handleCloseAccount = () => {
     setIsAccountOpen(false);
+  };
+
+  // Handle skill level changes from account modal
+  const handleSkillLevelChange = (newSkillLevel) => {
+    console.log('🎯 Skill level changed to:', newSkillLevel);
+    setUserSkillLevel(newSkillLevel);
+    // loadData will be triggered automatically by the useEffect dependency
   };
 
   return (
@@ -257,7 +434,9 @@ function App() {
         categories={categories}
         onShowSavedArticles={handleShowSavedArticles}
         onShowAccount={handleShowAccount}
-        savedCount={favorites.size}
+        savedCount={savedArticlesFromDB.length}
+        user={user}
+        userSkillLevel={userSkillLevel}
       />
 
       {/* Content Spacer for Fixed Header */}
@@ -475,11 +654,15 @@ function App() {
         savedArticles={savedArticles}
         onArticleClick={handleArticleClick}
         onToggleFavorite={handleToggleFavorite}
+        isLoading={isLoading}
+        user={user}
       />
 
       <AccountModal
         isOpen={isAccountOpen}
         onClose={handleCloseAccount}
+        userSkillLevel={userSkillLevel}
+        onSkillLevelChange={handleSkillLevelChange}
       />
     </div>
   );
