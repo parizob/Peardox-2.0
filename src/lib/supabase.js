@@ -3,7 +3,13 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = 'https://ullqyuvcyvaaiihmntnw.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsbHF5dXZjeXZhYWlpaG1udG53Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5OTU4MDgsImV4cCI6MjA2OTU3MTgwOH0.RpUtrcaY3QIDl66Be5XG1PzK3gJkN3B0KLw40U2bQpA';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true
+  }
+});
 
 console.log('🔗 Supabase client initialized');
 
@@ -147,6 +153,234 @@ export const arxivAPI = {
     
     console.log('📋 Extracted categories from papers:', categories.length);
     return categories;
+  }
+};
+
+// Authentication API
+export const authAPI = {
+  async signUp(email, password, userData = {}) {
+    console.log('🔐 Signing up user:', email, 'with userData:', userData);
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    
+    if (error) {
+      console.error('❌ Signup error:', error);
+      throw error;
+    }
+    
+    console.log('✅ Signup successful:', data);
+    console.log('🔍 User object:', data.user);
+    console.log('🔍 Session object:', data.session);
+    
+    // Store userData for profile creation after email verification
+    if (data.user && userData.name) {
+      try {
+        console.log('📝 Creating profile for user:', data.user.id);
+        console.log('📝 Profile data to be saved:', {
+          name: userData.name,
+          title: userData.title,
+          institution: userData.institution,
+          researchInterests: userData.researchInterests
+        });
+        
+        const profileResult = await this.createProfile(data.user.id, userData);
+        console.log('✅ Profile created successfully during signup:', profileResult);
+      } catch (profileError) {
+        console.error('❌ Error creating profile during signup:', profileError);
+        console.error('❌ Profile error details:', profileError.message);
+        console.error('❌ Profile error code:', profileError.code);
+        
+        // Store signup data for later profile creation
+        try {
+          const signupData = {
+            userId: data.user.id,
+            name: userData.name,
+            title: userData.title,
+            institution: userData.institution,
+            researchInterests: userData.researchInterests,
+            timestamp: Date.now()
+          };
+          localStorage.setItem(`pendingProfile_${data.user.id}`, JSON.stringify(signupData));
+          console.log('💾 Stored signup data for later profile creation:', signupData);
+        } catch (storageError) {
+          console.error('❌ Error storing signup data:', storageError);
+        }
+      }
+    } else {
+      console.log('⚠️ No userData.name provided or no user created, skipping profile creation');
+      console.log('⚠️ data.user:', !!data.user);
+      console.log('⚠️ userData.name:', userData.name);
+    }
+    
+    return data;
+  },
+
+  async signIn(email, password) {
+    console.log('🔐 Signing in user:', email);
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    
+    if (error) {
+      console.error('❌ Sign in error:', error);
+      throw error;
+    }
+    
+    console.log('✅ Sign in successful:', data);
+    return data;
+  },
+
+  async signOut() {
+    console.log('🔐 Signing out user');
+    const { error } = await supabase.auth.signOut();
+    
+    if (error) {
+      console.error('❌ Sign out error:', error);
+      throw error;
+    }
+    
+    console.log('✅ Sign out successful');
+  },
+
+  async getCurrentUser() {
+    try {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      
+      if (error) {
+        console.error('❌ Error getting current user:', error);
+        return null;
+      }
+      
+      console.log('👤 Current user:', user?.email || 'None');
+      return user;
+    } catch (error) {
+      console.error('❌ Error in getCurrentUser:', error);
+      return null;
+    }
+  },
+
+  async getCurrentSession() {
+    try {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      
+      if (error) {
+        console.error('❌ Error getting current session:', error);
+        return { data: { session: null } };
+      }
+      
+      console.log('🎫 Current session:', session?.user?.email || 'None');
+      return { data: { session } };
+    } catch (error) {
+      console.error('❌ Error in getCurrentSession:', error);
+      return { data: { session: null } };
+    }
+  },
+
+  async createProfile(userId, userData) {
+    console.log('📝 Creating profile for userId:', userId, 'with data:', userData);
+    
+    const profileData = {
+      id: userId,
+      full_name: userData.name || '',
+      professional_title: userData.title || '',
+      institution: userData.institution || '',
+      research_interests: userData.researchInterests || []
+    };
+    
+    console.log('📝 Inserting profile data:', profileData);
+    
+    const { data, error } = await supabase
+      .from('profiles')
+      .insert(profileData)
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('❌ Profile creation error:', error);
+      throw error;
+    }
+    
+    console.log('✅ Profile created:', data);
+    return data;
+  },
+
+  async getProfile(userId) {
+    console.log('📋 Getting profile for userId:', userId);
+    
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single();
+    
+    if (error) {
+      if (error.code === 'PGRST116') {
+        console.log('📋 No profile found for user:', userId);
+        return null;
+      }
+      console.error('❌ Error getting profile:', error);
+      throw error;
+    }
+    
+    console.log('✅ Profile found:', data);
+    return data;
+  },
+
+  async updateProfile(userId, updates) {
+    console.log('📝 Updating profile for userId:', userId, 'with updates:', updates);
+    
+    const profileUpdates = {
+      full_name: updates.name,
+      professional_title: updates.title,
+      institution: updates.institution,
+      research_interests: updates.research_interests
+    };
+    
+    console.log('📝 Updating with data:', profileUpdates);
+    
+    const { data, error } = await supabase
+      .from('profiles')
+      .update(profileUpdates)
+      .eq('id', userId)
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('❌ Profile update error:', error);
+      throw error;
+    }
+    
+    console.log('✅ Profile updated:', data);
+    return data;
+  },
+
+  async ensureProfile(userId, userData) {
+    try {
+      let profile = await this.getProfile(userId);
+      
+      if (!profile) {
+        profile = await this.createProfile(userId, userData);
+      }
+      
+      return profile;
+    } catch (error) {
+      console.error('❌ Error ensuring profile:', error);
+      throw error;
+    }
+  },
+
+  onAuthStateChange(callback) {
+    console.log('👂 Setting up auth state change listener');
+    return supabase.auth.onAuthStateChange(callback);
+  },
+
+  async resetPassword(email) {
+    console.log('🔄 Resetting password for:', email);
+    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    
+    if (error) {
+      console.error('❌ Password reset error:', error);
+      throw error;
+    }
+    
+    console.log('✅ Password reset email sent');
   }
 };
 
