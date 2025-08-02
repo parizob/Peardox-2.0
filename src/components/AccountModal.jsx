@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, Mail, Brain, Sparkles, Settings, Bell, Shield, BookOpen, Target, Zap, Globe, Edit3, Save, Camera, Eye, EyeOff, LogIn, UserPlus, Check } from 'lucide-react';
-import { authAPI } from '../lib/supabase';
+import { X, User, Mail, Brain, Sparkles, Settings, Bell, Shield, BookOpen, Target, Zap, Globe, Edit3, Save, Camera, Eye, EyeOff, LogIn, UserPlus, Check, Search } from 'lucide-react';
+import { authAPI, arxivAPI } from '../lib/supabase';
 
 const AccountModal = ({ isOpen, onClose }) => {
   const [user, setUser] = useState(null);
@@ -12,6 +12,11 @@ const AccountModal = ({ isOpen, onClose }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
   const [saveSuccess, setSaveSuccess] = useState(false);
+
+  // Research interests state
+  const [availableInterests, setAvailableInterests] = useState([]);
+  const [interestsLoading, setInterestsLoading] = useState(false);
+  const [interestSearch, setInterestSearch] = useState('');
 
   // Auth form state
   const [authForm, setAuthForm] = useState({
@@ -42,6 +47,42 @@ const AccountModal = ({ isOpen, onClose }) => {
       insightsGenerated: 42
     }
   });
+
+  // Load research interests from database
+  const loadResearchInterests = async () => {
+    try {
+      setInterestsLoading(true);
+      console.log('Loading research interests from v_arxiv_categories...');
+      
+      if (arxivAPI && typeof arxivAPI.getCategories === 'function') {
+        const categories = await arxivAPI.getCategories();
+        console.log('Loaded categories:', categories?.length || 0);
+        
+        if (categories && Array.isArray(categories)) {
+          // Extract unique category names and sort them
+          const categoryNames = categories
+            .map(cat => cat.category_name)
+            .filter(name => name && typeof name === 'string')
+            .sort();
+          
+          // Remove duplicates
+          const uniqueCategories = [...new Set(categoryNames)];
+          console.log('Unique categories:', uniqueCategories.length);
+          
+          setAvailableInterests(uniqueCategories);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading research interests:', error);
+      // Fallback to default categories if database fails
+      setAvailableInterests([
+        'Machine Learning', 'Quantum Computing', 'Neural Networks', 'Computer Vision',
+        'Natural Language Processing', 'Robotics', 'Bioinformatics', 'Edge Computing'
+      ]);
+    } finally {
+      setInterestsLoading(false);
+    }
+  };
 
   // Check authentication on modal open
   useEffect(() => {
@@ -114,6 +155,9 @@ const AccountModal = ({ isOpen, onClose }) => {
 
     setLoading(true);
     checkAuth();
+    
+    // Load research interests when modal opens
+    loadResearchInterests();
 
     // Set up auth listener
     if (authAPI && typeof authAPI.onAuthStateChange === 'function') {
@@ -322,13 +366,38 @@ const AccountModal = ({ isOpen, onClose }) => {
 
   const toggleResearchInterest = (interest) => {
     if (!isEditing) return;
-    setUserData(prev => ({
-      ...prev,
-      researchInterests: prev.researchInterests.includes(interest)
-        ? prev.researchInterests.filter(i => i !== interest)
-        : [...prev.researchInterests, interest]
-    }));
+    
+    setUserData(prev => {
+      const currentInterests = prev.researchInterests || [];
+      const isSelected = currentInterests.includes(interest);
+      
+      if (isSelected) {
+        // Remove the interest
+        return {
+          ...prev,
+          researchInterests: currentInterests.filter(i => i !== interest)
+        };
+      } else {
+        // Add the interest only if under the limit
+        if (currentInterests.length < 5) {
+          return {
+            ...prev,
+            researchInterests: [...currentInterests, interest]
+          };
+        } else {
+          // Show a message about the limit (optional)
+          setAuthError('You can select a maximum of 5 research interests.');
+          setTimeout(() => setAuthError(''), 3000);
+          return prev;
+        }
+      }
+    });
   };
+
+  // Filter interests based on search
+  const filteredInterests = availableInterests.filter(interest =>
+    interest.toLowerCase().includes(interestSearch.toLowerCase())
+  );
 
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },
@@ -523,25 +592,71 @@ const AccountModal = ({ isOpen, onClose }) => {
                       <h4 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
                         <Brain className="h-5 w-5 mr-2 text-purple-500" />
                         Research Interests
+                        <span className="ml-2 text-sm font-normal text-gray-500">
+                          ({userData.researchInterests?.length || 0}/5)
+                        </span>
                       </h4>
                       <div className="space-y-4">
-                        <p className="text-sm text-gray-600">Select your areas of research interest</p>
-                        <div className="flex flex-wrap gap-2">
-                          {researchInterests.map(interest => (
-                            <button
-                              key={interest}
-                              onClick={() => toggleResearchInterest(interest)}
-                              disabled={!isEditing}
-                              className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                                userData.researchInterests.includes(interest)
-                                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md'
-                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                              } ${!isEditing ? 'cursor-default' : 'cursor-pointer hover:scale-105'}`}
-                            >
-                              {interest}
-                            </button>
-                          ))}
-                        </div>
+                        <p className="text-sm text-gray-600">Select up to 5 areas of research interest</p>
+                        
+                        {isEditing && (
+                          <div className="relative">
+                            <Search className="h-4 w-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <input
+                              type="text"
+                              placeholder="Search research interests..."
+                              value={interestSearch}
+                              onChange={(e) => setInterestSearch(e.target.value)}
+                              className="w-full pl-10 pr-4 py-2 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm"
+                            />
+                          </div>
+                        )}
+
+                        {interestsLoading ? (
+                          <div className="flex items-center justify-center py-8">
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-500"></div>
+                            <span className="ml-2 text-sm text-gray-600">Loading interests...</span>
+                          </div>
+                        ) : (
+                          <div className="max-h-48 overflow-y-auto">
+                            <div className="flex flex-wrap gap-2">
+                              {(isEditing ? filteredInterests : availableInterests.filter(interest => 
+                                userData.researchInterests?.includes(interest)
+                              )).map(interest => (
+                                <button
+                                  key={interest}
+                                  onClick={() => toggleResearchInterest(interest)}
+                                  disabled={!isEditing}
+                                  className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                                    userData.researchInterests?.includes(interest)
+                                      ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md'
+                                      : isEditing 
+                                      ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
+                                      : 'bg-gray-100 text-gray-700'
+                                  } ${!isEditing ? 'cursor-default' : 'cursor-pointer hover:scale-105'} ${
+                                    isEditing && !userData.researchInterests?.includes(interest) && userData.researchInterests?.length >= 5
+                                      ? 'opacity-50 cursor-not-allowed'
+                                      : ''
+                                  }`}
+                                >
+                                  {interest}
+                                </button>
+                              ))}
+                            </div>
+                            
+                            {isEditing && filteredInterests.length === 0 && interestSearch && (
+                              <div className="text-center py-4 text-gray-500 text-sm">
+                                No interests found matching "{interestSearch}"
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {isEditing && userData.researchInterests?.length >= 5 && (
+                          <div className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg p-2">
+                            ⚠️ You've reached the maximum of 5 research interests. Remove one to add another.
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
