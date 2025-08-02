@@ -17,6 +17,7 @@ const AccountModal = ({ isOpen, onClose }) => {
   const [availableInterests, setAvailableInterests] = useState([]);
   const [interestsLoading, setInterestsLoading] = useState(false);
   const [interestSearch, setInterestSearch] = useState('');
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   // Auth form state
   const [authForm, setAuthForm] = useState({
@@ -427,6 +428,66 @@ const AccountModal = ({ isOpen, onClose }) => {
     });
   };
 
+  const resetToDefaultInterests = async () => {
+    const defaultInterests = [
+      'Machine Learning', 
+      'Artificial Intelligence', 
+      'Computer Vision and Pattern Recognition', 
+      'Robotics', 
+      'Computation and Language'
+    ];
+    
+    try {
+      // Clear any previous errors
+      setAuthError('');
+      
+      // Close the confirmation modal immediately
+      setShowResetConfirm(false);
+      
+      // Update local state first
+      setUserData(prev => ({
+        ...prev,
+        researchInterests: [...defaultInterests]
+      }));
+      
+      // Save to Supabase if user is authenticated
+      if (user && authAPI && typeof authAPI.updateProfile === 'function') {
+        console.log('Saving reset research interests to database:', defaultInterests);
+        
+        // Show loading state briefly
+        setAuthLoading(true);
+        
+        await authAPI.updateProfile(user.id, {
+          research_interests: defaultInterests
+        });
+        
+        console.log('✅ Research interests reset and saved to database');
+        
+        // Show success with save indicator
+        setSaveSuccess(true);
+        setAuthError('Research interests reset to default categories and saved to your profile.');
+        
+        // Clear success state after a moment
+        setTimeout(() => {
+          setSaveSuccess(false);
+        }, 2000);
+        
+      } else {
+        console.log('⚠️ User not authenticated or authAPI not available');
+        setAuthError('Research interests reset to default categories (not saved - please sign in).');
+      }
+      
+      setTimeout(() => setAuthError(''), 4000);
+      
+    } catch (error) {
+      console.error('❌ Error saving reset research interests:', error);
+      setAuthError(`Failed to save reset to database: ${error.message}`);
+      setTimeout(() => setAuthError(''), 5000);
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
   // Filter interests based on search
   const filteredInterests = availableInterests.filter(interest =>
     interest.toLowerCase().includes(interestSearch.toLowerCase())
@@ -701,6 +762,16 @@ const AccountModal = ({ isOpen, onClose }) => {
                       </div>
                     </div>
                   </div>
+
+                  {/* Reset Research Interests Button - Outside the section */}
+                  <div className="mt-6 text-center">
+                    <button
+                      onClick={() => setShowResetConfirm(true)}
+                      className="px-6 py-3 text-purple-600 hover:text-purple-800 font-medium transition-colors rounded-lg hover:bg-purple-50 border border-purple-200 hover:border-purple-300 shadow-sm hover:shadow-md"
+                    >
+                      Reset to Default Categories
+                    </button>
+                  </div>
                 </div>
               )}
 
@@ -784,6 +855,39 @@ const AccountModal = ({ isOpen, onClose }) => {
             </div>
           </div>
         </div>
+        
+        {/* Reset Confirmation Modal */}
+        {showResetConfirm && (
+          <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Reset Research Interests?</h3>
+              <p className="text-gray-600 mb-6">
+                This will replace your current research interests with the default 5 categories:
+              </p>
+              <ul className="text-sm text-gray-700 mb-6 space-y-1">
+                <li>• Machine Learning</li>
+                <li>• Artificial Intelligence</li>
+                <li>• Computer Vision and Pattern Recognition</li>
+                <li>• Robotics</li>
+                <li>• Natural Language (Computation and Language)</li>
+              </ul>
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setShowResetConfirm(false)}
+                  className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={resetToDefaultInterests}
+                  className="flex-1 px-4 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-xl font-medium transition-colors"
+                >
+                  Reset to Default
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -952,6 +1056,39 @@ const AccountModal = ({ isOpen, onClose }) => {
           </form>
         </div>
       </div>
+      
+      {/* Reset Confirmation Modal */}
+      {showResetConfirm && (
+        <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Reset Research Interests?</h3>
+            <p className="text-gray-600 mb-6">
+              This will replace your current research interests with the default 5 categories:
+            </p>
+            <ul className="text-sm text-gray-700 mb-6 space-y-1">
+              <li>• Machine Learning</li>
+              <li>• Artificial Intelligence</li>
+              <li>• Computer Vision and Pattern Recognition</li>
+              <li>• Robotics</li>
+              <li>• Natural Language (Computation and Language)</li>
+            </ul>
+            <div className="flex space-x-3">
+              <button
+                onClick={() => setShowResetConfirm(false)}
+                className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={resetToDefaultInterests}
+                className="flex-1 px-4 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-xl font-medium transition-colors"
+              >
+                Reset to Default
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
