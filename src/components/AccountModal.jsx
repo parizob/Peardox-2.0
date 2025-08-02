@@ -310,12 +310,27 @@ const AccountModal = ({ isOpen, onClose }) => {
           throw new Error('Sign up not available');
         }
 
-        await authAPI.signUp(authForm.email, authForm.password, {
+        console.log('🚀 Starting signup process with data:', {
+          email: authForm.email,
           name: authForm.name,
           title: authForm.title,
           institution: authForm.institution
         });
+
+        const signupResult = await authAPI.signUp(authForm.email, authForm.password, {
+          name: authForm.name,
+          title: authForm.title,
+          institution: authForm.institution,
+          researchInterests: [
+            'Machine Learning', 
+            'Artificial Intelligence', 
+            'Computer Vision and Pattern Recognition', 
+            'Robotics', 
+            'Computation and Language'
+          ]
+        });
         
+        console.log('✅ Signup completed:', signupResult);
         setAuthError('Account created successfully! Please check your email to verify your account.');
       } else {
         if (typeof authAPI.signIn !== 'function') {
