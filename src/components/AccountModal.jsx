@@ -398,20 +398,20 @@ const AccountModal = ({ isOpen, onClose }) => {
             </div>
 
             {/* Navigation Tabs */}
-            <nav className="space-y-2">
+            <nav className="space-y-1">
               {tabs.map(tab => {
                 const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-2xl transition-all duration-300 ${
+                    className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-300 text-sm ${
                       activeTab === tab.id
                         ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 text-white shadow-lg border border-white/20'
                         : 'text-white/70 hover:text-white hover:bg-white/10'
                     }`}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="h-4 w-4 flex-shrink-0" />
                     <span className="font-medium">{tab.label}</span>
                   </button>
                 );
@@ -555,55 +555,20 @@ const AccountModal = ({ isOpen, onClose }) => {
                     Research Dashboard
                   </h3>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {Object.entries(userData.achievements).map(([key, value]) => {
-                      const icons = {
-                        articlesRead: BookOpen,
-                        papersSaved: Sparkles,
-                        researchHours: Zap,
-                        insightsGenerated: Brain
-                      };
-                      const Icon = icons[key];
-                      const labels = {
-                        articlesRead: 'Articles Read',
-                        papersSaved: 'Papers Saved',
-                        researchHours: 'Research Hours',
-                        insightsGenerated: 'AI Insights'
-                      };
-
-                      return (
-                        <div key={key} className="relative">
-                          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-2xl blur-lg"></div>
-                          <div className="relative bg-white/80 backdrop-blur-sm border border-white/20 rounded-2xl p-6 text-center">
-                            <Icon className="h-8 w-8 mx-auto mb-3 text-blue-500" />
-                            <div className="text-3xl font-bold text-gray-900 mb-1">{value}</div>
-                            <div className="text-sm text-gray-600 font-medium">{labels[key]}</div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  <div className="bg-white/60 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
-                    <h4 className="text-xl font-bold text-gray-900 mb-4">Recent Activity</h4>
-                    <div className="space-y-3">
-                      {[
-                        { action: 'Read paper on Quantum Machine Learning', time: '2 hours ago', icon: BookOpen },
-                        { action: 'Saved research on Neural Network Optimization', time: '5 hours ago', icon: Sparkles },
-                        { action: 'Generated AI summary for Computer Vision paper', time: '1 day ago', icon: Brain },
-                        { action: 'Completed weekly research goal', time: '2 days ago', icon: Target }
-                      ].map((activity, index) => {
-                        const Icon = activity.icon;
-                        return (
-                          <div key={index} className="flex items-center space-x-3 p-3 bg-white/40 rounded-xl">
-                            <Icon className="h-5 w-5 text-blue-500" />
-                            <div className="flex-1">
-                              <p className="text-sm font-medium text-gray-900">{activity.action}</p>
-                              <p className="text-xs text-gray-500">{activity.time}</p>
-                            </div>
-                          </div>
-                        );
-                      })}
+                  <div className="flex items-center justify-center min-h-[400px]">
+                    <div className="text-center">
+                      <div className="w-24 h-24 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <Brain className="h-12 w-12 text-purple-500" />
+                      </div>
+                      <h4 className="text-2xl font-bold text-gray-900 mb-4">Research Hub Coming Soon</h4>
+                      <p className="text-gray-600 max-w-md mx-auto leading-relaxed">
+                        We're building powerful research analytics, paper recommendations, and collaboration tools. 
+                        Stay tuned for insights that will revolutionize your research workflow!
+                      </p>
+                      <div className="mt-6 inline-flex items-center px-4 py-2 bg-purple-50 text-purple-700 rounded-full text-sm font-medium">
+                        <Sparkles className="h-4 w-4 mr-2" />
+                        Coming Soon
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -616,62 +581,19 @@ const AccountModal = ({ isOpen, onClose }) => {
                     AI Preferences
                   </h3>
 
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="bg-white/60 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
-                      <h4 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                        <Brain className="h-5 w-5 mr-2 text-green-500" />
-                        AI Assistant Settings
-                      </h4>
-                      <div className="space-y-6">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-3">Summary Style</label>
-                          <div className="space-y-2">
-                            {['brief', 'detailed', 'technical'].map(style => (
-                              <label key={style} className="flex items-center space-x-3 p-3 bg-white/40 rounded-xl cursor-pointer hover:bg-white/60 transition-colors">
-                                <input
-                                  type="radio"
-                                  name="summaryStyle"
-                                  value={style}
-                                  checked={userData.aiPreferences.summaryStyle === style}
-                                  className="text-blue-500 focus:ring-blue-500"
-                                />
-                                <span className="text-sm font-medium text-gray-900 capitalize">{style}</span>
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-3">Research Level</label>
-                          <select className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <option value="beginner">Beginner</option>
-                            <option value="intermediate">Intermediate</option>
-                            <option value="expert" selected>Expert</option>
-                          </select>
-                        </div>
+                  <div className="flex items-center justify-center min-h-[400px]">
+                    <div className="text-center">
+                      <div className="w-24 h-24 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <Settings className="h-12 w-12 text-green-500" />
                       </div>
-                    </div>
-
-                    <div className="bg-white/60 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
-                      <h4 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                        <Bell className="h-5 w-5 mr-2 text-yellow-500" />
-                        Notifications
-                      </h4>
-                      <div className="space-y-4">
-                        {[
-                          { label: 'New research alerts', checked: true },
-                          { label: 'AI-generated insights', checked: true },
-                          { label: 'Weekly research digest', checked: false },
-                          { label: 'Trending papers', checked: true },
-                          { label: 'Collaboration invites', checked: false }
-                        ].map((setting, index) => (
-                          <label key={index} className="flex items-center justify-between p-3 bg-white/40 rounded-xl cursor-pointer hover:bg-white/60 transition-colors">
-                            <span className="text-sm font-medium text-gray-900">{setting.label}</span>
-                            <div className={`w-12 h-6 rounded-full transition-colors ${setting.checked ? 'bg-blue-500' : 'bg-gray-300'}`}>
-                              <div className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${setting.checked ? 'translate-x-6' : 'translate-x-0.5'} mt-0.5`}></div>
-                            </div>
-                          </label>
-                        ))}
+                      <h4 className="text-2xl font-bold text-gray-900 mb-4">AI Preferences Coming Soon</h4>
+                      <p className="text-gray-600 max-w-md mx-auto leading-relaxed">
+                        Customize your AI assistant, set notification preferences, and tailor your research experience. 
+                        Advanced AI personalization features are in development!
+                      </p>
+                      <div className="mt-6 inline-flex items-center px-4 py-2 bg-green-50 text-green-700 rounded-full text-sm font-medium">
+                        <Zap className="h-4 w-4 mr-2" />
+                        Coming Soon
                       </div>
                     </div>
                   </div>
@@ -685,36 +607,21 @@ const AccountModal = ({ isOpen, onClose }) => {
                     Research Achievements
                   </h3>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[
-                      { title: 'Research Pioneer', description: 'Read 100+ research papers', icon: BookOpen, earned: true },
-                      { title: 'Knowledge Curator', description: 'Saved 50+ papers to library', icon: Sparkles, earned: true },
-                      { title: 'AI Collaborator', description: 'Generated 25+ AI insights', icon: Brain, earned: true },
-                      { title: 'Domain Expert', description: 'Specialized in 3+ research areas', icon: Target, earned: false },
-                      { title: 'Research Marathon', description: 'Spent 200+ hours researching', icon: Zap, earned: false },
-                      { title: 'Global Scholar', description: 'Explored papers from 10+ countries', icon: Globe, earned: false }
-                    ].map((achievement, index) => {
-                      const Icon = achievement.icon;
-                      return (
-                        <div key={index} className={`relative ${achievement.earned ? '' : 'opacity-60'}`}>
-                          <div className={`absolute inset-0 rounded-2xl blur-lg ${achievement.earned ? 'bg-gradient-to-r from-yellow-400/20 to-orange-400/20' : 'bg-gray-200/20'}`}></div>
-                          <div className={`relative border rounded-2xl p-6 text-center ${achievement.earned ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-yellow-200' : 'bg-white/60 border-gray-200'}`}>
-                            <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center ${achievement.earned ? 'bg-gradient-to-r from-yellow-400 to-orange-400' : 'bg-gray-300'}`}>
-                              <Icon className="h-8 w-8 text-white" />
-                            </div>
-                            <h4 className="text-lg font-bold text-gray-900 mb-2">{achievement.title}</h4>
-                            <p className="text-sm text-gray-600">{achievement.description}</p>
-                            {achievement.earned && (
-                              <div className="mt-3">
-                                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800">
-                                  ✓ Earned
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })}
+                  <div className="flex items-center justify-center min-h-[400px]">
+                    <div className="text-center">
+                      <div className="w-24 h-24 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <Target className="h-12 w-12 text-yellow-500" />
+                      </div>
+                      <h4 className="text-2xl font-bold text-gray-900 mb-4">Achievements Coming Soon</h4>
+                      <p className="text-gray-600 max-w-md mx-auto leading-relaxed">
+                        Track your research milestones, earn badges, and celebrate your scientific journey. 
+                        Gamified research progress tracking is being crafted with care!
+                      </p>
+                      <div className="mt-6 inline-flex items-center px-4 py-2 bg-yellow-50 text-yellow-700 rounded-full text-sm font-medium">
+                        <Globe className="h-4 w-4 mr-2" />
+                        Coming Soon
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
