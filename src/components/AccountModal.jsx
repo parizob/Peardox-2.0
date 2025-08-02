@@ -74,10 +74,10 @@ const AccountModal = ({ isOpen, onClose }) => {
       }
     } catch (error) {
       console.error('Error loading research interests:', error);
-      // Fallback to default categories if database fails
+      // Fallback to default categories if database fails - using the 5 main page categories
       setAvailableInterests([
-        'Machine Learning', 'Quantum Computing', 'Neural Networks', 'Computer Vision',
-        'Natural Language Processing', 'Robotics', 'Bioinformatics', 'Edge Computing'
+        'Machine Learning', 'Artificial Intelligence', 'Computer Vision and Pattern Recognition', 'Robotics', 
+        'Computation and Language', 'Quantum Computing', 'Neural Networks', 'Bioinformatics', 'Edge Computing'
       ]);
     } finally {
       setInterestsLoading(false);
@@ -121,7 +121,13 @@ const AccountModal = ({ isOpen, onClose }) => {
                     email: session.user.email || '',
                     title: profile.professional_title || '',
                     institution: profile.institution || '',
-                    researchInterests: profile.research_interests || [],
+                    researchInterests: profile.research_interests || [
+                      'Machine Learning', 
+                      'Artificial Intelligence', 
+                      'Computer Vision and Pattern Recognition', 
+                      'Robotics', 
+                      'Computation and Language'
+                    ],
                     aiPreferences: {
                       summaryStyle: 'detailed',
                       notificationFrequency: 'daily',
@@ -185,7 +191,13 @@ const AccountModal = ({ isOpen, onClose }) => {
                     name: signupData.name || session.user.email?.split('@')[0] || '',
                     title: signupData.title || '',
                     institution: signupData.institution || '',
-                    researchInterests: []
+                    researchInterests: [
+                      'Machine Learning', 
+                      'Artificial Intelligence', 
+                      'Computer Vision and Pattern Recognition', 
+                      'Robotics', 
+                      'Computation and Language'
+                    ]
                   });
                   localStorage.removeItem('signupData');
                   if (authAPI.getProfile) {
@@ -202,7 +214,13 @@ const AccountModal = ({ isOpen, onClose }) => {
                   email: session.user.email || '',
                   title: profile.professional_title || '',
                   institution: profile.institution || '',
-                  researchInterests: profile.research_interests || [],
+                  researchInterests: profile.research_interests || [
+                    'Machine Learning', 
+                    'Artificial Intelligence', 
+                    'Computer Vision and Pattern Recognition', 
+                    'Robotics', 
+                    'Computation and Language'
+                  ],
                   aiPreferences: {
                     summaryStyle: 'detailed',
                     notificationFrequency: 'daily',
