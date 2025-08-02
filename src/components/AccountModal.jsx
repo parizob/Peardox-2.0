@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, Mail, Brain, Sparkles, Settings, Bell, Shield, BookOpen, Target, Zap, Globe, Edit3, Save, Camera, Eye, EyeOff, LogIn, UserPlus } from 'lucide-react';
+import { X, User, Mail, Brain, Sparkles, Settings, Bell, Shield, BookOpen, Target, Zap, Globe, Edit3, Save, Camera, Eye, EyeOff, LogIn, UserPlus, Check } from 'lucide-react';
 import { authAPI } from '../lib/supabase';
 
 const AccountModal = ({ isOpen, onClose }) => {
@@ -11,6 +11,7 @@ const AccountModal = ({ isOpen, onClose }) => {
   const [authLoading, setAuthLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
   // Auth form state
   const [authForm, setAuthForm] = useState({
@@ -286,16 +287,33 @@ const AccountModal = ({ isOpen, onClose }) => {
       }
 
       setAuthLoading(true);
+      setSaveSuccess(false);
+      setAuthError('');
+
+      console.log('Saving profile data:', {
+        name: userData.name,
+        title: userData.title,
+        institution: userData.institution,
+        research_interests: userData.researchInterests
+      });
+
       await authAPI.updateProfile(user.id, {
         name: userData.name,
         title: userData.title,
         institution: userData.institution,
         research_interests: userData.researchInterests
       });
+
+      setSaveSuccess(true);
       setIsEditing(false);
-      setAuthError('Profile updated successfully!');
-      setTimeout(() => setAuthError(''), 3000);
+      
+      // Show success message briefly
+      setTimeout(() => {
+        setSaveSuccess(false);
+      }, 2000);
+
     } catch (error) {
+      console.error('Profile update error:', error);
       setAuthError('Failed to update profile: ' + error.message);
     } finally {
       setAuthLoading(false);
@@ -416,29 +434,37 @@ const AccountModal = ({ isOpen, onClose }) => {
                       onClick={() => isEditing ? handleSave() : setIsEditing(!isEditing)}
                       disabled={authLoading}
                       className={`flex items-center space-x-2 px-6 py-3 rounded-2xl transition-all duration-300 disabled:opacity-50 ${
-                        isEditing
+                        saveSuccess
                           ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
+                          : isEditing
+                          ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:shadow-xl'
                           : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:shadow-xl'
                       }`}
                     >
                       {authLoading ? (
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      ) : saveSuccess ? (
+                        <Check className="h-4 w-4" />
                       ) : isEditing ? (
                         <Save className="h-4 w-4" />
                       ) : (
                         <Edit3 className="h-4 w-4" />
                       )}
-                      <span>{isEditing ? 'Save Changes' : 'Edit Profile'}</span>
+                      <span>
+                        {saveSuccess ? 'Saved!' : isEditing ? 'Save Changes' : 'Edit Profile'}
+                      </span>
                     </button>
                   </div>
 
                   {authError && (
-                    <div className={`p-4 rounded-xl ${
-                      authError.includes('successfully')
-                        ? 'bg-green-50 text-green-800 border border-green-200'
-                        : 'bg-red-50 text-red-800 border border-red-200'
-                    }`}>
+                    <div className="p-4 rounded-xl bg-red-50 text-red-800 border border-red-200">
                       {authError}
+                    </div>
+                  )}
+
+                  {saveSuccess && !authError && (
+                    <div className="p-4 rounded-xl bg-green-50 text-green-800 border border-green-200">
+                      Profile updated successfully!
                     </div>
                   )}
 
