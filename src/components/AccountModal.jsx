@@ -537,10 +537,53 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
     const initials = userData.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U';
     
     return (
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-6xl h-[90vh] flex">
-          {/* Sidebar */}
-          <div className="w-80 bg-white/10 backdrop-blur-2xl border border-white/20 rounded-l-3xl p-6">
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-2 sm:p-4">
+        <div className="w-full max-w-6xl h-[95vh] sm:h-[90vh] flex flex-col lg:flex-row overflow-hidden">
+          
+          {/* Mobile Header - Only visible on mobile */}
+          <div className="lg:hidden bg-white/10 backdrop-blur-2xl border border-white/20 rounded-t-3xl p-4 flex-shrink-0">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center text-white text-lg font-bold shadow-lg">
+                  {initials}
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">{userData.name}</h3>
+                  <p className="text-white/70 text-sm">{userData.title}</p>
+                </div>
+              </div>
+              <button
+                onClick={onClose}
+                className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            
+            {/* Mobile Navigation */}
+            <nav className="flex space-x-1 bg-white/10 rounded-xl p-1">
+              {tabs.map(tab => {
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex-1 flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-300 text-xs ${
+                      activeTab === tab.id
+                        ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 text-white shadow-lg border border-white/20'
+                        : 'text-white/70 hover:text-white hover:bg-white/10'
+                    }`}
+                  >
+                    <Icon className="h-4 w-4 flex-shrink-0" />
+                    <span className="font-medium">{tab.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* Desktop Sidebar - Only visible on desktop */}
+          <div className="hidden lg:flex lg:w-80 bg-white/10 backdrop-blur-2xl border border-white/20 rounded-l-3xl p-6 flex-col">
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-bold text-white">Account Hub</h2>
               <button
@@ -595,20 +638,32 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 bg-white/95 backdrop-blur-xl border border-white/20 rounded-r-3xl">
-            <div className="h-full overflow-y-auto p-8">
+          <div className="flex-1 bg-white/95 backdrop-blur-xl border border-white/20 lg:rounded-r-3xl rounded-b-3xl lg:rounded-bl-none flex flex-col min-h-0">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+              
+              {/* Mobile Sign Out Button - Only show on Profile tab */}
+              {activeTab === 'profile' && (
+                <div className="lg:hidden mb-6">
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl font-medium transition-colors hover:from-red-600 hover:to-red-700"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
               
               {/* Profile Tab */}
               {activeTab === 'profile' && (
-                <div className="space-y-8">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent">
+                <div className="space-y-6 lg:space-y-8">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+                    <h3 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent">
                       Profile Settings
                     </h3>
                     <button
                       onClick={() => isEditing ? handleSave() : setIsEditing(!isEditing)}
                       disabled={authLoading}
-                      className={`flex items-center space-x-2 px-6 py-3 rounded-2xl transition-all duration-300 disabled:opacity-50 ${
+                      className={`flex items-center justify-center space-x-2 px-4 lg:px-6 py-3 rounded-xl lg:rounded-2xl transition-all duration-300 disabled:opacity-50 text-sm lg:text-base ${
                         saveSuccess
                           ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
                           : isEditing
@@ -632,25 +687,25 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
                   </div>
 
                   {authError && (
-                    <div className="p-4 rounded-xl bg-red-50 text-red-800 border border-red-200">
+                    <div className="p-3 lg:p-4 rounded-xl bg-red-50 text-red-800 border border-red-200 text-sm lg:text-base">
                       {authError}
                     </div>
                   )}
 
                   {saveSuccess && !authError && (
-                    <div className="p-4 rounded-xl bg-green-50 text-green-800 border border-green-200">
+                    <div className="p-3 lg:p-4 rounded-xl bg-green-50 text-green-800 border border-green-200 text-sm lg:text-base">
                       Profile updated successfully!
                     </div>
                   )}
 
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="space-y-6 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-8">
                     {/* Basic Information */}
-                    <div className="bg-white/60 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
-                      <h4 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                        <User className="h-5 w-5 mr-2 text-blue-500" />
+                    <div className="bg-white/60 backdrop-blur-sm border border-white/20 rounded-2xl p-4 lg:p-6">
+                      <h4 className="text-lg lg:text-xl font-bold text-gray-900 mb-4 lg:mb-6 flex items-center">
+                        <User className="h-4 w-4 lg:h-5 lg:w-5 mr-2 text-blue-500" />
                         Basic Information
                       </h4>
-                      <div className="space-y-4">
+                      <div className="space-y-3 lg:space-y-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                           <input
@@ -664,7 +719,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
                             }}
                             disabled={!isEditing}
                             maxLength={24}
-                            className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50"
+                            className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 text-sm lg:text-base"
                           />
                           {isEditing && userData.name?.length === 24 && (
                             <div className="text-xs text-amber-600 mt-1">
@@ -678,7 +733,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
                             type="email"
                             value={userData.email}
                             disabled
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-500"
+                            className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-500 text-sm lg:text-base"
                           />
                         </div>
                         <div>
@@ -688,7 +743,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
                             value={userData.title}
                             onChange={(e) => setUserData(prev => ({ ...prev, title: e.target.value }))}
                             disabled={!isEditing}
-                            className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50"
+                            className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 text-sm lg:text-base"
                           />
                         </div>
                         <div>
@@ -698,25 +753,25 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
                             value={userData.institution}
                             onChange={(e) => setUserData(prev => ({ ...prev, institution: e.target.value }))}
                             disabled={!isEditing}
-                            className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50"
+                            className="w-full px-3 lg:px-4 py-2 lg:py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 text-sm lg:text-base"
                           />
                         </div>
                       </div>
                     </div>
 
                     {/* Combined Research & Technical Section */}
-                    <div className="space-y-6">
+                    <div className="space-y-4 lg:space-y-6">
                       {/* Research Interests */}
-                      <div className="bg-white/60 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
-                        <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                          <Brain className="h-5 w-5 mr-2 text-purple-500" />
+                      <div className="bg-white/60 backdrop-blur-sm border border-white/20 rounded-2xl p-4 lg:p-6">
+                        <h4 className="text-lg lg:text-xl font-bold text-gray-900 mb-3 lg:mb-4 flex items-center">
+                          <Brain className="h-4 w-4 lg:h-5 lg:w-5 mr-2 text-purple-500" />
                           Research Interests
-                          <span className="ml-2 text-sm font-normal text-gray-500">
+                          <span className="ml-2 text-xs lg:text-sm font-normal text-gray-500">
                             ({userData.researchInterests?.length || 0}/5)
                           </span>
                         </h4>
                         <div className="space-y-3">
-                          <p className="text-sm text-gray-600">Select up to 5 areas of research interest</p>
+                          <p className="text-xs lg:text-sm text-gray-600">Select up to 5 areas of research interest</p>
                           
                           {isEditing && (
                             <div className="relative">
@@ -726,19 +781,19 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
                                 placeholder="Search research interests..."
                                 value={interestSearch}
                                 onChange={(e) => setInterestSearch(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm"
+                                className="w-full pl-10 pr-4 py-2 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-xs lg:text-sm"
                               />
                             </div>
                           )}
 
                           {interestsLoading ? (
                             <div className="flex items-center justify-center py-4">
-                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-500"></div>
-                              <span className="ml-2 text-sm text-gray-600">Loading...</span>
+                              <div className="animate-spin rounded-full h-4 w-4 lg:h-5 lg:w-5 border-b-2 border-purple-500"></div>
+                              <span className="ml-2 text-xs lg:text-sm text-gray-600">Loading...</span>
                             </div>
                           ) : (
-                            <div className="max-h-32 overflow-y-auto">
-                              <div className="flex flex-wrap gap-2">
+                            <div className="max-h-24 lg:max-h-32 overflow-y-auto">
+                              <div className="flex flex-wrap gap-1.5 lg:gap-2">
                                 {(isEditing ? filteredInterests : availableInterests.filter(interest => 
                                   userData.researchInterests?.includes(interest)
                                 )).map(interest => (
@@ -746,7 +801,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
                                     key={interest}
                                     onClick={() => toggleResearchInterest(interest)}
                                     disabled={!isEditing}
-                                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                                    className={`px-2 lg:px-3 py-1 lg:py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
                                       userData.researchInterests?.includes(interest)
                                         ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md'
                                         : isEditing 
@@ -764,7 +819,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
                               </div>
                               
                               {isEditing && filteredInterests.length === 0 && interestSearch && (
-                                <div className="text-center py-2 text-gray-500 text-sm">
+                                <div className="text-center py-2 text-gray-500 text-xs lg:text-sm">
                                   No interests found matching "{interestSearch}"
                                 </div>
                               )}
@@ -780,20 +835,20 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
                       </div>
 
                       {/* Technical Knowledge */}
-                      <div className="bg-white/60 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
-                        <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                          <Sparkles className="h-5 w-5 mr-2 text-yellow-500" />
+                      <div className="bg-white/60 backdrop-blur-sm border border-white/20 rounded-2xl p-4 lg:p-6">
+                        <h4 className="text-lg lg:text-xl font-bold text-gray-900 mb-3 lg:mb-4 flex items-center">
+                          <Sparkles className="h-4 w-4 lg:h-5 lg:w-5 mr-2 text-yellow-500" />
                           Technical Knowledge
                         </h4>
                         <div className="space-y-3">
-                          <p className="text-sm text-gray-600">Select your technical skill level</p>
-                          <div className="flex gap-3">
+                          <p className="text-xs lg:text-sm text-gray-600">Select your technical skill level</p>
+                          <div className="flex gap-2 lg:gap-3">
                             {['Beginner', 'Intermediate'].map(level => (
                               <button
                                 key={level}
                                 onClick={() => isEditing && setUserData(prev => ({ ...prev, skillLevel: level }))}
                                 disabled={!isEditing}
-                                className={`flex-1 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                                className={`flex-1 px-3 lg:px-4 py-2 lg:py-3 rounded-lg lg:rounded-xl text-xs lg:text-sm font-medium transition-all duration-200 ${
                                   userData.skillLevel === level
                                     ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-md'
                                     : isEditing
@@ -815,10 +870,10 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
                   </div>
 
                   {/* Reset Research Interests Button - Outside the section */}
-                  <div className="mt-6 text-center">
+                  <div className="mt-4 lg:mt-6 text-center">
                     <button
                       onClick={() => setShowResetConfirm(true)}
-                      className="px-6 py-3 text-purple-600 hover:text-purple-800 font-medium transition-colors rounded-lg hover:bg-purple-50 border border-purple-200 hover:border-purple-300 shadow-sm hover:shadow-md"
+                      className="px-4 lg:px-6 py-2 lg:py-3 text-purple-600 hover:text-purple-800 font-medium transition-colors rounded-lg hover:bg-purple-50 border border-purple-200 hover:border-purple-300 shadow-sm hover:shadow-md text-sm lg:text-base"
                     >
                       Reset to Default Categories
                     </button>
@@ -828,23 +883,23 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
 
               {/* Research Hub Tab */}
               {activeTab === 'research' && (
-                <div className="space-y-8">
-                  <h3 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-purple-900 bg-clip-text text-transparent">
+                <div className="space-y-6 lg:space-y-8">
+                  <h3 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-gray-900 to-purple-900 bg-clip-text text-transparent">
                     Research Dashboard
                   </h3>
 
-                  <div className="flex items-center justify-center min-h-[400px]">
-                    <div className="text-center">
-                      <div className="w-24 h-24 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <Brain className="h-12 w-12 text-purple-500" />
+                  <div className="flex items-center justify-center min-h-[300px] lg:min-h-[400px]">
+                    <div className="text-center px-4">
+                      <div className="w-16 h-16 lg:w-24 lg:h-24 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4 lg:mb-6">
+                        <Brain className="h-8 w-8 lg:h-12 lg:w-12 text-purple-500" />
                       </div>
-                      <h4 className="text-2xl font-bold text-gray-900 mb-4">Research Hub Coming Soon</h4>
-                      <p className="text-gray-600 max-w-md mx-auto leading-relaxed">
+                      <h4 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3 lg:mb-4">Research Hub Coming Soon</h4>
+                      <p className="text-gray-600 max-w-md mx-auto leading-relaxed text-sm lg:text-base">
                         We're building powerful research analytics, paper recommendations, and collaboration tools. 
                         Stay tuned for insights that will revolutionize your research workflow!
                       </p>
-                      <div className="mt-6 inline-flex items-center px-4 py-2 bg-purple-50 text-purple-700 rounded-full text-sm font-medium">
-                        <Sparkles className="h-4 w-4 mr-2" />
+                      <div className="mt-4 lg:mt-6 inline-flex items-center px-3 lg:px-4 py-2 bg-purple-50 text-purple-700 rounded-full text-xs lg:text-sm font-medium">
+                        <Sparkles className="h-3 w-3 lg:h-4 lg:w-4 mr-2" />
                         Coming Soon
                       </div>
                     </div>
@@ -854,23 +909,23 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
 
               {/* AI Preferences Tab */}
               {activeTab === 'preferences' && (
-                <div className="space-y-8">
-                  <h3 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-green-900 bg-clip-text text-transparent">
+                <div className="space-y-6 lg:space-y-8">
+                  <h3 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-gray-900 to-green-900 bg-clip-text text-transparent">
                     AI Preferences
                   </h3>
 
-                  <div className="flex items-center justify-center min-h-[400px]">
-                    <div className="text-center">
-                      <div className="w-24 h-24 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <Settings className="h-12 w-12 text-green-500" />
+                  <div className="flex items-center justify-center min-h-[300px] lg:min-h-[400px]">
+                    <div className="text-center px-4">
+                      <div className="w-16 h-16 lg:w-24 lg:h-24 bg-gradient-to-r from-green-500/20 to-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-4 lg:mb-6">
+                        <Settings className="h-8 w-8 lg:h-12 lg:w-12 text-green-500" />
                       </div>
-                      <h4 className="text-2xl font-bold text-gray-900 mb-4">AI Preferences Coming Soon</h4>
-                      <p className="text-gray-600 max-w-md mx-auto leading-relaxed">
+                      <h4 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3 lg:mb-4">AI Preferences Coming Soon</h4>
+                      <p className="text-gray-600 max-w-md mx-auto leading-relaxed text-sm lg:text-base">
                         Customize your AI assistant, set notification preferences, and tailor your research experience. 
                         Advanced AI personalization features are in development!
                       </p>
-                      <div className="mt-6 inline-flex items-center px-4 py-2 bg-green-50 text-green-700 rounded-full text-sm font-medium">
-                        <Zap className="h-4 w-4 mr-2" />
+                      <div className="mt-4 lg:mt-6 inline-flex items-center px-3 lg:px-4 py-2 bg-green-50 text-green-700 rounded-full text-xs lg:text-sm font-medium">
+                        <Zap className="h-3 w-3 lg:h-4 lg:w-4 mr-2" />
                         Coming Soon
                       </div>
                     </div>
@@ -880,23 +935,23 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
 
               {/* Achievements Tab */}
               {activeTab === 'achievements' && (
-                <div className="space-y-8">
-                  <h3 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-yellow-900 bg-clip-text text-transparent">
+                <div className="space-y-6 lg:space-y-8">
+                  <h3 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-gray-900 to-yellow-900 bg-clip-text text-transparent">
                     Research Achievements
                   </h3>
 
-                  <div className="flex items-center justify-center min-h-[400px]">
-                    <div className="text-center">
-                      <div className="w-24 h-24 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <Target className="h-12 w-12 text-yellow-500" />
+                  <div className="flex items-center justify-center min-h-[300px] lg:min-h-[400px]">
+                    <div className="text-center px-4">
+                      <div className="w-16 h-16 lg:w-24 lg:h-24 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-full flex items-center justify-center mx-auto mb-4 lg:mb-6">
+                        <Target className="h-8 w-8 lg:h-12 lg:w-12 text-yellow-500" />
                       </div>
-                      <h4 className="text-2xl font-bold text-gray-900 mb-4">Achievements Coming Soon</h4>
-                      <p className="text-gray-600 max-w-md mx-auto leading-relaxed">
+                      <h4 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3 lg:mb-4">Achievements Coming Soon</h4>
+                      <p className="text-gray-600 max-w-md mx-auto leading-relaxed text-sm lg:text-base">
                         Track your research milestones, earn badges, and celebrate your scientific journey. 
                         Gamified research progress tracking is being crafted with care!
                       </p>
-                      <div className="mt-6 inline-flex items-center px-4 py-2 bg-yellow-50 text-yellow-700 rounded-full text-sm font-medium">
-                        <Globe className="h-4 w-4 mr-2" />
+                      <div className="mt-4 lg:mt-6 inline-flex items-center px-3 lg:px-4 py-2 bg-yellow-50 text-yellow-700 rounded-full text-xs lg:text-sm font-medium">
+                        <Globe className="h-3 w-3 lg:h-4 lg:w-4 mr-2" />
                         Coming Soon
                       </div>
                     </div>
