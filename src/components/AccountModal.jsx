@@ -468,9 +468,6 @@ const AccountModal = ({ isOpen, onClose }) => {
                   <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
                     {initials}
                   </div>
-                  <button className="absolute -bottom-1 -right-1 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
-                    <Camera className="h-4 w-4 text-gray-600" />
-                  </button>
                 </div>
                 <h3 className="text-xl font-bold text-white mb-1">{userData.name}</h3>
                 <p className="text-white/70 text-sm mb-2">{userData.title}</p>
@@ -568,10 +565,21 @@ const AccountModal = ({ isOpen, onClose }) => {
                           <input
                             type="text"
                             value={userData.name}
-                            onChange={(e) => setUserData(prev => ({ ...prev, name: e.target.value }))}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value.length <= 24) {
+                                setUserData(prev => ({ ...prev, name: value }));
+                              }
+                            }}
                             disabled={!isEditing}
+                            maxLength={24}
                             className="w-full px-4 py-3 bg-white/80 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50"
                           />
+                          {isEditing && userData.name?.length === 24 && (
+                            <div className="text-xs text-amber-600 mt-1">
+                              {userData.name?.length || 0}/24 characters (limit reached)
+                            </div>
+                          )}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
