@@ -834,6 +834,62 @@ export const savedArticlesAPI = {
   }
 };
 
+// Email API for contact form
+export const emailAPI = {
+  async sendContactEmail(name, email, subject, message) {
+    console.log('📧 Sending contact email...');
+    
+    try {
+      const response = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer re_8tSL5LVu_NzKMMq9B9i8cWgQfzXK6fgft'
+        },
+        body: JSON.stringify({
+          from: 'Pearadox Contact <contact@pearadox.app>',
+          to: ['pearadoxapp@gmail.com'],
+          subject: `Contact Form: ${subject}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #3b82f6;">New Contact Form Submission</h2>
+              
+              <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Subject:</strong> ${subject}</p>
+              </div>
+              
+              <div style="background: white; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                <h3 style="margin-top: 0;">Message:</h3>
+                <p style="white-space: pre-wrap;">${message}</p>
+              </div>
+              
+              <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 14px;">
+                <p>This email was sent from the Pearadox contact form.</p>
+                <p>Sent at: ${new Date().toLocaleString()}</p>
+              </div>
+            </div>
+          `
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to send email');
+      }
+
+      const result = await response.json();
+      console.log('✅ Email sent successfully:', result);
+      return result;
+      
+    } catch (error) {
+      console.error('❌ Error sending email:', error);
+      throw error;
+    }
+  }
+};
+
 // Run initial test
 testConnection().then(result => {
   if (result.success) {

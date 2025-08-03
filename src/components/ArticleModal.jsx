@@ -44,6 +44,12 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                   AI Summary
                 </span>
               )}
+              {isFavorite && (
+                <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-red-100 text-red-800 border border-red-200">
+                  <Heart className="w-3 h-3 sm:w-4 sm:h-4 mr-1 fill-current" />
+                  Favorite
+                </span>
+              )}
             </div>
           </div>
           <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">

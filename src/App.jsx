@@ -5,6 +5,8 @@ import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
 import SavedArticles from './components/SavedArticles';
 import AccountModal from './components/AccountModal';
+import Footer from './components/Footer';
+import ContactModal from './components/ContactModal';
 import { arxivAPI, authAPI, savedArticlesAPI } from './lib/supabase';
 
 function App() {
@@ -15,6 +17,7 @@ function App() {
   const [favorites, setFavorites] = useState(new Set());
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
   
   // User state for authentication and skill level
   const [user, setUser] = useState(null);
@@ -410,6 +413,14 @@ function App() {
     setIsAccountOpen(false);
   };
 
+  const handleShowContact = () => {
+    setIsContactOpen(true);
+  };
+
+  const handleCloseContact = () => {
+    setIsContactOpen(false);
+  };
+
   // Handle skill level changes from account modal
   const handleSkillLevelChange = (newSkillLevel) => {
     console.log('🎯 Skill level changed to:', newSkillLevel);
@@ -664,6 +675,13 @@ function App() {
         userSkillLevel={userSkillLevel}
         onSkillLevelChange={handleSkillLevelChange}
       />
+
+      <ContactModal
+        isOpen={isContactOpen}
+        onClose={handleCloseContact}
+      />
+
+      <Footer onContactClick={handleShowContact} />
     </div>
   );
 }
