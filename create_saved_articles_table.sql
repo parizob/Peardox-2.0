@@ -1,46 +1,49 @@
+-- =====================================
+-- SAVED ARTICLES TABLE FOR PEARADOX
+-- =====================================
+
+-- Drop existing table if it exists (for clean restart)
+DROP TABLE IF EXISTS public.saved_articles CASCADE;
+
 -- Create the saved_articles table
-CREATE TABLE IF NOT EXISTS public.saved_articles (
-  -- Unique identifier for each saved article record
+CREATE TABLE public.saved_articles (
+  -- Primary key
   id UUID NOT NULL DEFAULT gen_random_uuid(),
-  -- Reference to the user who saved the article
+  
+  -- Foreign keys
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  -- Reference to the article from v_arxiv_papers
   article_id TEXT NOT NULL,
-  -- Additional metadata about when the article was saved
+  
+  -- Metadata
   saved_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  -- Set composite primary key
+  
+  -- Constraints
   PRIMARY KEY (id),
-  -- Ensure a user can't save the same article multiple times
   UNIQUE(user_id, article_id)
 );
 
--- Create indexes for better query performance
-CREATE INDEX IF NOT EXISTS idx_saved_articles_user_id ON public.saved_articles(user_id);
-CREATE INDEX IF NOT EXISTS idx_saved_articles_article_id ON public.saved_articles(article_id);
-CREATE INDEX IF NOT EXISTS idx_saved_articles_saved_at ON public.saved_articles(saved_at DESC);
+-- Create indexes for performance
+CREATE INDEX idx_saved_articles_user_id ON public.saved_articles(user_id);
+CREATE INDEX idx_saved_articles_article_id ON public.saved_articles(article_id);
+CREATE INDEX idx_saved_articles_saved_at ON public.saved_articles(saved_at DESC);
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE public.saved_articles ENABLE ROW LEVEL SECURITY;
 
 -- Drop existing policies if they exist
-DROP POLICY IF EXISTS "Users can view their own saved articles" ON public.saved_articles;
-DROP POLICY IF EXISTS "Users can insert their own saved articles" ON public.saved_articles;
-DROP POLICY IF EXISTS "Users can update their own saved articles" ON public.saved_articles;
-DROP POLICY IF EXISTS "Users can delete their own saved articles" ON public.saved_articles;
+DROP POLICY IF EXISTS "Users can manage their own saved articles" ON public.saved_articles;
 
--- Create RLS policies
-CREATE POLICY "Users can view their own saved articles" ON public.saved_articles
-  FOR SELECT USING (auth.uid() = user_id);
+-- Create a single comprehensive RLS policy
+CREATE POLICY "Users can manage their own saved articles" ON public.saved_articles
+  FOR ALL USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Users can insert their own saved articles" ON public.saved_articles
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can update their own saved articles" ON public.saved_articles
-  FOR UPDATE USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can delete their own saved articles" ON public.saved_articles
-  FOR DELETE USING (auth.uid() = user_id);
-
--- Grant necessary permissions
+-- Grant permissions
 GRANT ALL ON public.saved_articles TO authenticated;
-GRANT SELECT ON public.saved_articles TO anon; 
+GRANT USAGE ON SCHEMA public TO authenticated;
+
+-- Verify table creation
+SELECT 
+  'saved_articles table created successfully' as status,
+  COUNT(*) as initial_count 
+FROM public.saved_articles; 

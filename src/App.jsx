@@ -29,6 +29,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [savedArticlesFromDB, setSavedArticlesFromDB] = useState([]);
+  const [isLoadingSavedArticles, setIsLoadingSavedArticles] = useState(false);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -83,8 +84,12 @@ function App() {
   useEffect(() => {
     if (user) {
       loadUserSavedArticles();
+    } else {
+      // Clear saved articles when user logs out
+      setSavedArticlesFromDB([]);
+      setFavorites(new Set());
     }
-  }, [user]);
+  }, [user, userSkillLevel, articles]); // Reload when user, skill level, or articles change
 
   // Scroll to results when category is selected
   useEffect(() => {
@@ -212,31 +217,34 @@ function App() {
   const loadUserSavedArticles = async () => {
     if (!user || !savedArticlesAPI) {
       console.log('❌ Cannot load saved articles: no user or API');
+      setSavedArticlesFromDB([]);
+      setFavorites(new Set());
+      setIsLoadingSavedArticles(false);
       return;
     }
 
+    setIsLoadingSavedArticles(true);
     try {
       console.log('📚 Loading saved articles for user:', user.id);
       
-      // Create timeout to prevent hanging
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Saved articles timeout')), 10000)
-      );
+      // Get saved article IDs
+      const savedArticleIds = await savedArticlesAPI.getUserSavedArticleIds(user.id);
+      console.log('📚 Saved article IDs:', savedArticleIds);
       
-      const savedPromise = savedArticlesAPI.getUserSavedArticlesWithDetails(user.id);
-      const savedArticlesWithDetails = await Promise.race([savedPromise, timeoutPromise]);
+      // Update favorites Set for heart icons
+      setFavorites(new Set(savedArticleIds));
       
-      console.log('📚 Loaded saved articles:', savedArticlesWithDetails?.length || 0);
+      // Filter main articles to get saved ones for the saved articles panel
+      const savedArticles = articles.filter(article => savedArticleIds.includes(article.id));
+      console.log('📚 Found saved articles in main feed:', savedArticles.length);
       
-      setSavedArticlesFromDB(savedArticlesWithDetails || []);
-      
-      // Update favorites set for UI
-      const savedIds = new Set((savedArticlesWithDetails || []).map(article => article.id));
-      setFavorites(savedIds);
+      setSavedArticlesFromDB(savedArticles);
       
     } catch (error) {
       console.error('❌ Error loading saved articles:', error);
       setSavedArticlesFromDB([]);
+    } finally {
+      setIsLoadingSavedArticles(false);
     }
   };
 
@@ -355,45 +363,49 @@ function App() {
   };
 
   const handleToggleFavorite = async (articleId) => {
+    console.log('💛 handleToggleFavorite called with articleId:', articleId);
+    
     if (!user) {
       console.log('❌ User not authenticated, cannot save article');
-      // Keep the local favorites behavior for non-authenticated users
-      setFavorites(prev => {
-        const newFavorites = new Set(prev);
-        if (newFavorites.has(articleId)) {
-          newFavorites.delete(articleId);
-        } else {
-          newFavorites.add(articleId);
-        }
-        return newFavorites;
-      });
       return;
     }
 
     try {
       const isFavorited = favorites.has(articleId);
+      console.log('💖 Article currently favorited:', isFavorited);
       
       if (isFavorited) {
         // Remove from database
         await savedArticlesAPI.unsaveArticle(user.id, articleId);
+        console.log('✅ Article removed from saved');
         
+        // Update local state
         setFavorites(prev => {
           const newFavorites = new Set(prev);
           newFavorites.delete(articleId);
           return newFavorites;
         });
+        
       } else {
         // Save to database
         await savedArticlesAPI.saveArticle(user.id, articleId);
+        console.log('✅ Article saved');
         
+        // Update local state
         setFavorites(prev => {
           const newFavorites = new Set(prev);
           newFavorites.add(articleId);
           return newFavorites;
         });
       }
+      
+      // Reload saved articles for the panel
+      await loadUserSavedArticles();
+      
     } catch (error) {
       console.error('❌ Error toggling favorite:', error);
+      // Show user-friendly error message
+      alert(`Failed to ${favorites.has(articleId) ? 'remove' : 'save'} article. Please try again.`);
     }
   };
 
@@ -665,7 +677,7 @@ function App() {
         savedArticles={savedArticles}
         onArticleClick={handleArticleClick}
         onToggleFavorite={handleToggleFavorite}
-        isLoading={isLoading}
+        isLoading={isLoadingSavedArticles}
         user={user}
       />
 
