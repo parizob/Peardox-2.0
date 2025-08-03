@@ -11,6 +11,7 @@ const ContactModal = ({ isOpen, onClose }) => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -18,28 +19,47 @@ const ContactModal = ({ isOpen, onClose }) => {
       ...prev,
       [name]: value
     }));
+    
+    // Clear error when user starts typing
+    if (submitStatus === 'error') {
+      setSubmitStatus(null);
+      setErrorMessage('');
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Basic validation
-    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+    // Basic validation with trimming
+    if (!formData.name.trim() || !formData.email.trim() || !formData.subject || !formData.message.trim()) {
       setSubmitStatus('error');
+      setErrorMessage('Please fill in all fields');
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      setSubmitStatus('error');
+      setErrorMessage('Please enter a valid email address');
       return;
     }
 
     setIsSubmitting(true);
     setSubmitStatus(null);
+    setErrorMessage('');
 
     try {
+      console.log('📧 Submitting contact form...');
+      
       await emailAPI.sendContactEmail(
-        formData.name,
-        formData.email,
+        formData.name.trim(),
+        formData.email.trim(),
         formData.subject,
-        formData.message
+        formData.message.trim()
       );
       
+      console.log('✅ Email sent successfully');
       setSubmitStatus('success');
       
       // Clear form after successful submission
@@ -54,11 +74,23 @@ const ContactModal = ({ isOpen, onClose }) => {
       setTimeout(() => {
         onClose();
         setSubmitStatus(null);
+        setErrorMessage('');
       }, 2000);
       
     } catch (error) {
-      console.error('Error submitting contact form:', error);
+      console.error('❌ Error submitting contact form:', error);
       setSubmitStatus('error');
+      
+      // Provide specific error messages
+      if (error.message.includes('Invalid email')) {
+        setErrorMessage('Please enter a valid email address');
+      } else if (error.message.includes('Missing required fields')) {
+        setErrorMessage('Please fill in all fields');
+      } else if (error.message.includes('Failed to send email')) {
+        setErrorMessage('Unable to send email at this time. Please try again later or contact us directly at pearadoxapp@gmail.com');
+      } else {
+        setErrorMessage(error.message || 'Failed to send message. Please try again later.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -68,6 +100,7 @@ const ContactModal = ({ isOpen, onClose }) => {
     if (!isSubmitting) {
       onClose();
       setSubmitStatus(null);
+      setErrorMessage('');
     }
   };
 
@@ -118,10 +151,15 @@ const ContactModal = ({ isOpen, onClose }) => {
 
             {submitStatus === 'error' && (
               <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-3">
-                <AlertCircle className="h-5 w-5 text-red-600" />
+                <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
                 <div>
-                  <p className="text-red-800 font-medium">Please fill in all fields</p>
-                  <p className="text-red-600 text-sm">All fields are required.</p>
+                  <p className="text-red-800 font-medium">{errorMessage}</p>
+                  <p className="text-red-600 text-sm">
+                    {errorMessage.includes('contact us directly') 
+                      ? '' 
+                      : 'Please check your information and try again.'
+                    }
+                  </p>
                 </div>
               </div>
             )}
@@ -224,8 +262,9 @@ const ContactModal = ({ isOpen, onClose }) => {
 
             <div className="mt-4 text-center">
               <p className="text-xs text-gray-500">
-                Your message will be sent directly to our team at{' '}
-                <span className="font-medium">pearadoxapp@gmail.com</span>
+                Your message will be sent securely to our team.{' '}
+                <br />
+                We typically respond within 24 hours.
               </p>
             </div>
           </div>
