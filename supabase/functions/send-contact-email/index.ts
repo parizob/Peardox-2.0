@@ -92,7 +92,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'onboarding@resend.dev',
+        from: 'noreply@feedback.pearadox.app',
         to: ['pearadoxapp@gmail.com'],
         subject: `Contact Form: ${sanitizedData.subject}`,
         html: `
