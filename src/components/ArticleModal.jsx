@@ -1,8 +1,48 @@
 import React from 'react';
-import { X, ExternalLink, Calendar, User, Tag, BookOpen, GraduationCap, Heart, Brain, Sparkles } from 'lucide-react';
+import { X, Heart, ExternalLink, Calendar, Users, Tag, Share2, Brain, Sparkles, BookOpen, GraduationCap, User } from 'lucide-react';
 
 const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }) => {
   if (!isOpen || !article) return null;
+
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/article/${article.id}`;
+    const shareData = {
+      title: `${article.title} | Pearadox`,
+      text: `Check out this research: ${article.shortDescription}`,
+      url: shareUrl
+    };
+
+    try {
+      // Try native sharing first (mobile devices)
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback to clipboard
+        await navigator.clipboard.writeText(shareUrl);
+        
+        // Show temporary feedback
+        const button = document.querySelector('[data-share-button]');
+        if (button) {
+          const originalText = button.innerHTML;
+          button.innerHTML = '✓ Link Copied!';
+          setTimeout(() => {
+            button.innerHTML = originalText;
+          }, 2000);
+        }
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        alert('Link copied to clipboard!');
+      } catch (clipboardError) {
+        console.error('Clipboard error:', clipboardError);
+        // Final fallback: show URL in prompt
+        prompt('Copy this link to share:', shareUrl);
+      }
+    }
+  };
 
   const getCategoryColor = (category) => {
     const colors = {
@@ -183,17 +223,28 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
             </div>
           </div>
 
-          {/* Action Button */}
+          {/* Action Buttons */}
           <div className="pt-4 sm:pt-6 border-t border-gray-200">
-            <a
-              href={article.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
-            >
-              <ExternalLink className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-              Read Full Research Paper
-            </a>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <a
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+              >
+                <ExternalLink className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                Read Full Research Paper
+              </a>
+              
+              <button
+                onClick={handleShare}
+                data-share-button
+                className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-gray-900 font-medium rounded-lg hover:bg-gray-200 transition-colors text-sm sm:text-base border border-gray-300"
+              >
+                <Share2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                Share Article
+              </button>
+            </div>
           </div>
         </div>
       </div>

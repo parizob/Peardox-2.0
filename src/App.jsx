@@ -254,6 +254,91 @@ function App() {
   // Ref for scrolling to results
   const resultsRef = useRef(null);
 
+  // Handle shared article URLs
+  useEffect(() => {
+    const handleSharedArticle = () => {
+      const path = window.location.pathname;
+      const articleMatch = path.match(/\/article\/(\d+)/);
+      
+      if (articleMatch) {
+        const articleId = parseInt(articleMatch[1]);
+        console.log('📤 Shared article ID detected:', articleId);
+        
+        // Wait for articles to load, then open the modal
+        const checkArticles = () => {
+          if (articles.length > 0) {
+            const sharedArticle = articles.find(article => article.id === articleId);
+            if (sharedArticle) {
+              console.log('📖 Opening shared article:', sharedArticle.title);
+              setSelectedArticle(sharedArticle);
+              setIsModalOpen(true);
+              
+              // Update page title and meta tags
+              updatePageMeta(sharedArticle);
+            } else {
+              console.warn('⚠️ Shared article not found:', articleId);
+            }
+          } else if (!isLoading) {
+            console.warn('⚠️ No articles loaded and not loading');
+          }
+        };
+        
+        if (articles.length > 0) {
+          checkArticles();
+        } else {
+          // Check again after a short delay if articles are still loading
+          const timer = setTimeout(checkArticles, 1000);
+          return () => clearTimeout(timer);
+        }
+      }
+    };
+
+    handleSharedArticle();
+  }, [articles, isLoading]);
+
+  // Update page meta tags for shared articles
+  const updatePageMeta = (article) => {
+    if (article) {
+      // Update page title
+      document.title = `${article.title} | Pearadox`;
+      
+      // Update or create meta tags
+      const updateMetaTag = (property, content, isName = false) => {
+        const selector = isName ? `meta[name="${property}"]` : `meta[property="${property}"]`;
+        let meta = document.querySelector(selector);
+        
+        if (!meta) {
+          meta = document.createElement('meta');
+          if (isName) {
+            meta.setAttribute('name', property);
+          } else {
+            meta.setAttribute('property', property);
+          }
+          document.head.appendChild(meta);
+        }
+        
+        meta.setAttribute('content', content);
+      };
+
+      // Update Open Graph tags
+      updateMetaTag('og:title', `${article.title} | Pearadox`);
+      updateMetaTag('og:description', article.shortDescription);
+      updateMetaTag('og:url', `${window.location.origin}/article/${article.id}`);
+      updateMetaTag('og:type', 'article');
+      updateMetaTag('og:site_name', 'Pearadox');
+      
+      // Update Twitter Card tags
+      updateMetaTag('twitter:card', 'summary_large_image', true);
+      updateMetaTag('twitter:title', `${article.title} | Pearadox`, true);
+      updateMetaTag('twitter:description', article.shortDescription, true);
+      
+      // Keep the same image as the main site
+      const imageUrl = `${window.location.origin}/logo512.png`;
+      updateMetaTag('og:image', imageUrl);
+      updateMetaTag('twitter:image', imageUrl, true);
+    }
+  };
+
   // Check user authentication and load their skill level
   useEffect(() => {
     const checkAuth = async () => {
@@ -615,6 +700,30 @@ function App() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedArticle(null);
+    
+    // Clean up URL if it was a shared article
+    const path = window.location.pathname;
+    if (path.startsWith('/article/')) {
+      window.history.replaceState(null, '', '/');
+      
+      // Reset page title and meta tags
+      document.title = 'Pearadox | AI Research Hub';
+      
+      // Reset meta tags to default
+      const updateMetaTag = (property, content, isName = false) => {
+        const selector = isName ? `meta[name="${property}"]` : `meta[property="${property}"]`;
+        const meta = document.querySelector(selector);
+        if (meta) {
+          meta.setAttribute('content', content);
+        }
+      };
+
+      updateMetaTag('og:title', 'Pearadox | AI Research Hub');
+      updateMetaTag('og:description', 'We break down the latest AI breakthroughs into words you can actually understand');
+      updateMetaTag('og:url', window.location.origin);
+      updateMetaTag('twitter:title', 'Pearadox | AI Research Hub', true);
+      updateMetaTag('twitter:description', 'We break down the latest AI breakthroughs into words you can actually understand', true);
+    }
   };
 
   const handleToggleFavorite = async (articleId) => {
