@@ -15,7 +15,7 @@ const getCategoryIcon = (categoryName) => {
     // AI & Machine Learning
     'Artificial Intelligence': Bot,
     'Machine Learning': Brain,
-    'Deep Learning': Brain,
+    'Deep Learning': Network,
     'Neural Networks': Network,
     'Reinforcement Learning': TrendingUp,
     'Supervised Learning': BarChart,
@@ -27,6 +27,8 @@ const getCategoryIcon = (categoryName) => {
     'Image Processing': Camera,
     'Computer Graphics': Monitor,
     'Pattern Recognition': Eye,
+    'Graphics': Monitor,
+    'Multimedia': Camera,
     
     // Natural Language & Communication
     'Natural Language Processing': Code,
@@ -35,12 +37,16 @@ const getCategoryIcon = (categoryName) => {
     'Speech Recognition': Smartphone,
     'Text Mining': FileText,
     'Language Models': FileText,
+    'Computational Linguistics': Code,
+    'Information Extraction': FileText,
     
     // Robotics & Systems
     'Robotics': Wrench,
     'Human-Computer Interaction': Users,
     'Systems and Control': Settings,
     'Autonomous Systems': Cpu,
+    'Control Systems': Settings,
+    'Automation': Wrench,
     
     // Computing & Technology
     'Distributed Computing': Network,
@@ -49,12 +55,18 @@ const getCategoryIcon = (categoryName) => {
     'Edge Computing': Zap,
     'Quantum Computing': Atom,
     'High Performance Computing': Cpu,
+    'Grid Computing': Network,
+    'Ubiquitous Computing': Smartphone,
+    'Mobile Computing': Smartphone,
+    'Embedded Systems': Cpu,
     
     // Security & Privacy
     'Cryptography and Security': Shield,
     'Computer Security': Shield,
     'Privacy': Shield,
     'Network Security': Wifi,
+    'Information Security': Shield,
+    'Cybersecurity': Shield,
     
     // Data & Information
     'Information Retrieval': Database,
@@ -62,14 +74,24 @@ const getCategoryIcon = (categoryName) => {
     'Information Theory': FileText,
     'Knowledge Representation': Brain,
     'Databases': Database,
+    'Data Science': BarChart,
+    'Big Data': Database,
+    'Data Analytics': TrendingUp,
+    'Information Systems': Database,
     
-    // Interdisciplinary
+    // Interdisciplinary & Applied
     'Computational Biology': Dna,
     'Bioinformatics': Microscope,
     'Medical Informatics': Activity,
     'Digital Libraries': BookOpen,
     'Social Networks': Users,
     'Human Factors': Users,
+    'E-commerce': Globe,
+    'E-learning': BookOpen,
+    'Digital Humanities': BookOpen,
+    'Computational Finance': TrendingUp,
+    'Computational Physics': Atom,
+    'Computational Chemistry': Atom,
     
     // Theory & Methods
     'Computational Complexity': Brain,
@@ -77,38 +99,100 @@ const getCategoryIcon = (categoryName) => {
     'Data Structures': Database,
     'Mathematical Optimization': TrendingUp,
     'Statistics': BarChart,
+    'Logic': Brain,
+    'Formal Methods': Settings,
+    'Theoretical Computer Science': Brain,
+    'Discrete Mathematics': BarChart,
     
-    // Default fallback
+    // Software & Engineering
+    'Software Engineering': Code,
+    'Programming Languages': Code,
+    'Computer Architecture': Cpu,
+    'Operating Systems': Monitor,
+    'Compilers': Code,
+    'Software Development': Code,
+    'Web Technologies': Globe,
+    'Internet Technologies': Wifi,
+    
+    // Networking & Communications
+    'Computer Networks': Network,
+    'Wireless Networks': Wifi,
+    'Network Protocols': Network,
+    'Telecommunications': Smartphone,
+    'Signal Processing': Activity,
+    'Communications': Wifi,
+    
+    // Specialized Areas
+    'Game Development': Monitor,
+    'Virtual Reality': Eye,
+    'Augmented Reality': Camera,
+    'Simulation': Monitor,
+    'Modeling': BarChart,
+    'Visualization': Eye,
+    'User Interface Design': Users,
+    'Digital Signal Processing': Activity,
+    'Image Analysis': Camera,
+    'Computer Animation': Monitor,
+    
+    // Default fallbacks based on common keywords
     'General': BookOpen,
-    'Other': Lightbulb
+    'Other': Lightbulb,
+    'Technology': Cpu,
+    'Science': Microscope,
+    'Research': BookOpen,
+    'Analysis': BarChart,
+    'Design': Users,
+    'Development': Code,
+    'Management': Settings,
+    'Innovation': Lightbulb
   };
   
-  return iconMap[categoryName] || Brain; // Default to Brain icon
+  // First, try exact match
+  if (iconMap[categoryName]) {
+    return iconMap[categoryName];
+  }
+  
+  // If no exact match, try partial matching for compound categories
+  const lowerCategoryName = categoryName.toLowerCase();
+  
+  // Check for key terms in the category name
+  if (lowerCategoryName.includes('machine learning') || lowerCategoryName.includes('ml')) return Brain;
+  if (lowerCategoryName.includes('artificial intelligence') || lowerCategoryName.includes('ai')) return Bot;
+  if (lowerCategoryName.includes('computer vision') || lowerCategoryName.includes('vision')) return Eye;
+  if (lowerCategoryName.includes('natural language') || lowerCategoryName.includes('nlp') || lowerCategoryName.includes('language')) return Code;
+  if (lowerCategoryName.includes('robotics') || lowerCategoryName.includes('robot')) return Wrench;
+  if (lowerCategoryName.includes('quantum')) return Atom;
+  if (lowerCategoryName.includes('security') || lowerCategoryName.includes('crypto')) return Shield;
+  if (lowerCategoryName.includes('network') || lowerCategoryName.includes('distributed')) return Network;
+  if (lowerCategoryName.includes('database') || lowerCategoryName.includes('data')) return Database;
+  if (lowerCategoryName.includes('image') || lowerCategoryName.includes('graphics')) return Camera;
+  if (lowerCategoryName.includes('web') || lowerCategoryName.includes('internet')) return Globe;
+  if (lowerCategoryName.includes('mobile') || lowerCategoryName.includes('wireless')) return Smartphone;
+  if (lowerCategoryName.includes('algorithm') || lowerCategoryName.includes('optimization')) return Settings;
+  if (lowerCategoryName.includes('statistics') || lowerCategoryName.includes('analytics')) return BarChart;
+  if (lowerCategoryName.includes('bio') || lowerCategoryName.includes('medical')) return Microscope;
+  if (lowerCategoryName.includes('user') || lowerCategoryName.includes('human')) return Users;
+  if (lowerCategoryName.includes('software') || lowerCategoryName.includes('programming')) return Code;
+  if (lowerCategoryName.includes('system') || lowerCategoryName.includes('computing')) return Cpu;
+  
+  // Final fallback: use a variety of icons instead of always Brain
+  const fallbackIcons = [Settings, Database, Code, Network, Cpu, Globe, FileText, TrendingUp, BarChart, Lightbulb];
+  const hash = categoryName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return fallbackIcons[hash % fallbackIcons.length];
 };
 
-// Generate category color based on category name
+// Generate category color based on index (fixed 5 colors)
 const getCategoryColor = (categoryName, index = 0) => {
   const colorSchemes = [
-    'bg-blue-50 hover:bg-blue-100 border-blue-200',
-    'bg-purple-50 hover:bg-purple-100 border-purple-200', 
-    'bg-green-50 hover:bg-green-100 border-green-200',
-    'bg-orange-50 hover:bg-orange-100 border-orange-200',
-    'bg-pink-50 hover:bg-pink-100 border-pink-200',
-    'bg-indigo-50 hover:bg-indigo-100 border-indigo-200',
-    'bg-teal-50 hover:bg-teal-100 border-teal-200',
-    'bg-red-50 hover:bg-red-100 border-red-200',
-    'bg-yellow-50 hover:bg-yellow-100 border-yellow-200',
-    'bg-gray-50 hover:bg-gray-100 border-gray-200'
+    'bg-blue-50 hover:bg-blue-100 border-blue-200',      // Blue
+    'bg-purple-50 hover:bg-purple-100 border-purple-200', // Purple  
+    'bg-green-50 hover:bg-green-100 border-green-200',    // Green
+    'bg-orange-50 hover:bg-orange-100 border-orange-200', // Orange
+    'bg-pink-50 hover:bg-pink-100 border-pink-200'        // Pink/Red
   ];
   
-  // Use category name hash for consistent colors
-  let hash = 0;
-  for (let i = 0; i < categoryName.length; i++) {
-    hash = categoryName.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  hash = Math.abs(hash);
-  
-  return colorSchemes[hash % colorSchemes.length];
+  // Use index to cycle through the 5 colors
+  return colorSchemes[index % 5];
 };
 
 // Shorten category names for display
