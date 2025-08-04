@@ -75,9 +75,6 @@ const Footer = ({ onContactClick }) => {
             </button>
             
             <div className="pt-2">
-              <p className="text-xs text-gray-400">
-                Email: <span className="text-gray-300">pearadoxapp@gmail.com</span>
-              </p>
             </div>
           </div>
         </div>
@@ -94,7 +91,7 @@ const Footer = ({ onContactClick }) => {
             <div className="flex items-center space-x-6">
               <div className="text-xs text-gray-400 text-center sm:text-right">
                 <p>Built for everybody, everywhere</p>
-                <p className="text-gray-500">Version 1.0</p>
+                <p className="text-gray-500">Version 1.0-beta</p>
               </div>
             </div>
           </div>

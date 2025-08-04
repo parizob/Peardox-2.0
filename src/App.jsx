@@ -526,7 +526,7 @@ function App() {
                   Your Daily Dose of Discovery
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
-                We break down the latest AI breakthroughs into words you can actually understand.
+                We break down the latest AI breakthroughs into words you can actually understand
                 </p>
               </div>
 
