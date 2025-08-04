@@ -302,15 +302,25 @@ function App() {
       // Update page title
       document.title = `${article.title} | Pearadox`;
       
-      // Update or create meta tags
-      const updateMetaTag = (property, content, isName = false) => {
-        const selector = isName ? `meta[name="${property}"]` : `meta[property="${property}"]`;
+      // Update or create meta tags with more robust handling
+      const updateMetaTag = (property, content, isName = false, isItemprop = false) => {
+        let selector;
+        if (isName) {
+          selector = `meta[name="${property}"]`;
+        } else if (isItemprop) {
+          selector = `meta[itemprop="${property}"]`;
+        } else {
+          selector = `meta[property="${property}"]`;
+        }
+        
         let meta = document.querySelector(selector);
         
         if (!meta) {
           meta = document.createElement('meta');
           if (isName) {
             meta.setAttribute('name', property);
+          } else if (isItemprop) {
+            meta.setAttribute('itemprop', property);
           } else {
             meta.setAttribute('property', property);
           }
@@ -320,7 +330,11 @@ function App() {
         meta.setAttribute('content', content);
       };
 
-      // Update Open Graph tags
+      // Update page title meta tag
+      updateMetaTag('title', `${article.title} | Pearadox`, true);
+      updateMetaTag('description', article.shortDescription, true);
+
+      // Update Open Graph tags for social media
       updateMetaTag('og:title', `${article.title} | Pearadox`);
       updateMetaTag('og:description', article.shortDescription);
       updateMetaTag('og:url', `${window.location.origin}/article/${article.id}`);
@@ -331,11 +345,21 @@ function App() {
       updateMetaTag('twitter:card', 'summary_large_image', true);
       updateMetaTag('twitter:title', `${article.title} | Pearadox`, true);
       updateMetaTag('twitter:description', article.shortDescription, true);
+      updateMetaTag('twitter:site', '@pearadox', true);
       
       // Keep the same image as the main site
       const imageUrl = `${window.location.origin}/logo512.png`;
       updateMetaTag('og:image', imageUrl);
+      updateMetaTag('og:image:width', '512');
+      updateMetaTag('og:image:height', '512');
+      updateMetaTag('og:image:type', 'image/png');
       updateMetaTag('twitter:image', imageUrl, true);
+      
+      // Additional structured data
+      updateMetaTag('name', `${article.title} | Pearadox`, false, true);
+      updateMetaTag('description', article.shortDescription, false, true);
+      
+      console.log('📄 Updated meta tags for article:', article.title);
     }
   };
 
@@ -706,23 +730,43 @@ function App() {
     if (path.startsWith('/article/')) {
       window.history.replaceState(null, '', '/');
       
-      // Reset page title and meta tags
-      document.title = 'Pearadox | AI Research Hub';
+      // Reset page title and meta tags to defaults
+      document.title = 'Pearadox – AI Research, Simplified';
       
-      // Reset meta tags to default
-      const updateMetaTag = (property, content, isName = false) => {
-        const selector = isName ? `meta[name="${property}"]` : `meta[property="${property}"]`;
+      // Reset meta tags to default with same robust function
+      const updateMetaTag = (property, content, isName = false, isItemprop = false) => {
+        let selector;
+        if (isName) {
+          selector = `meta[name="${property}"]`;
+        } else if (isItemprop) {
+          selector = `meta[itemprop="${property}"]`;
+        } else {
+          selector = `meta[property="${property}"]`;
+        }
         const meta = document.querySelector(selector);
         if (meta) {
           meta.setAttribute('content', content);
         }
       };
 
-      updateMetaTag('og:title', 'Pearadox | AI Research Hub');
-      updateMetaTag('og:description', 'We break down the latest AI breakthroughs into words you can actually understand');
+      // Reset to default meta tags
+      updateMetaTag('title', 'Pearadox – AI Research, Simplified', true);
+      updateMetaTag('description', 'Bite-sized breakdowns of the world\'s most important AI discoveries. Stay ahead without the jargon.', true);
+      
+      updateMetaTag('og:title', 'Pearadox – AI Research, Simplified');
+      updateMetaTag('og:description', 'Bite-sized breakdowns of the world\'s most important AI discoveries. Stay ahead without the jargon.');
       updateMetaTag('og:url', window.location.origin);
-      updateMetaTag('twitter:title', 'Pearadox | AI Research Hub', true);
-      updateMetaTag('twitter:description', 'We break down the latest AI breakthroughs into words you can actually understand', true);
+      updateMetaTag('og:type', 'website');
+      
+      updateMetaTag('twitter:title', 'Pearadox – AI Research, Simplified', true);
+      updateMetaTag('twitter:description', 'Bite-sized breakdowns of the world\'s most important AI discoveries. Stay ahead without the jargon.', true);
+      
+      // Reset to default image
+      const defaultImageUrl = `${window.location.origin}/pearadox-preview.png`;
+      updateMetaTag('og:image', defaultImageUrl);
+      updateMetaTag('twitter:image', defaultImageUrl, true);
+      
+      console.log('🔄 Reset meta tags to defaults');
     }
   };
 
