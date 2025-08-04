@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, User, Mail, Brain, Sparkles, Settings, Bell, Shield, BookOpen, Target, Zap, Globe, Edit3, Save, Camera, Eye, EyeOff, LogIn, UserPlus, Check, Search } from 'lucide-react';
 import { authAPI, arxivAPI } from '../lib/supabase';
 
-const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) => {
+const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onResearchInterestsChange }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [authMode, setAuthMode] = useState('signin');
@@ -397,6 +397,12 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
         onSkillLevelChange(userData.skillLevel);
       }
 
+      // Notify parent if research interests changed
+      if (onResearchInterestsChange) {
+        console.log('🔬 Research interests updated:', userData.researchInterests);
+        onResearchInterestsChange(userData.researchInterests);
+      }
+
       setSaveSuccess(true);
       setIsEditing(false);
       
@@ -477,6 +483,12 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange }) =
         });
         
         console.log('✅ Research interests reset and saved to database');
+        
+        // Notify parent of research interests change
+        if (onResearchInterestsChange) {
+          console.log('🔬 Research interests reset:', defaultInterests);
+          onResearchInterestsChange(defaultInterests);
+        }
         
         // Show success with save indicator
         setSaveSuccess(true);

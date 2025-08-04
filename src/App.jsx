@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight } from 'lucide-react';
+import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi } from 'lucide-react';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
@@ -8,6 +8,128 @@ import AccountModal from './components/AccountModal';
 import Footer from './components/Footer';
 import ContactModal from './components/ContactModal';
 import { arxivAPI, authAPI, savedArticlesAPI } from './lib/supabase';
+
+// Comprehensive category to icon mapping
+const getCategoryIcon = (categoryName) => {
+  const iconMap = {
+    // AI & Machine Learning
+    'Artificial Intelligence': Bot,
+    'Machine Learning': Brain,
+    'Deep Learning': Brain,
+    'Neural Networks': Network,
+    'Reinforcement Learning': TrendingUp,
+    'Supervised Learning': BarChart,
+    'Unsupervised Learning': Lightbulb,
+    
+    // Computer Vision & Graphics
+    'Computer Vision': Eye,
+    'Computer Vision and Pattern Recognition': Eye,
+    'Image Processing': Camera,
+    'Computer Graphics': Monitor,
+    'Pattern Recognition': Eye,
+    
+    // Natural Language & Communication
+    'Natural Language Processing': Code,
+    'Computation and Language': Code,
+    'Natural Language': Code,
+    'Speech Recognition': Smartphone,
+    'Text Mining': FileText,
+    'Language Models': FileText,
+    
+    // Robotics & Systems
+    'Robotics': Wrench,
+    'Human-Computer Interaction': Users,
+    'Systems and Control': Settings,
+    'Autonomous Systems': Cpu,
+    
+    // Computing & Technology
+    'Distributed Computing': Network,
+    'Parallel Computing': Cpu,
+    'Cloud Computing': Globe,
+    'Edge Computing': Zap,
+    'Quantum Computing': Atom,
+    'High Performance Computing': Cpu,
+    
+    // Security & Privacy
+    'Cryptography and Security': Shield,
+    'Computer Security': Shield,
+    'Privacy': Shield,
+    'Network Security': Wifi,
+    
+    // Data & Information
+    'Information Retrieval': Database,
+    'Data Mining': BarChart,
+    'Information Theory': FileText,
+    'Knowledge Representation': Brain,
+    'Databases': Database,
+    
+    // Interdisciplinary
+    'Computational Biology': Dna,
+    'Bioinformatics': Microscope,
+    'Medical Informatics': Activity,
+    'Digital Libraries': BookOpen,
+    'Social Networks': Users,
+    'Human Factors': Users,
+    
+    // Theory & Methods
+    'Computational Complexity': Brain,
+    'Algorithms': Settings,
+    'Data Structures': Database,
+    'Mathematical Optimization': TrendingUp,
+    'Statistics': BarChart,
+    
+    // Default fallback
+    'General': BookOpen,
+    'Other': Lightbulb
+  };
+  
+  return iconMap[categoryName] || Brain; // Default to Brain icon
+};
+
+// Generate category color based on category name
+const getCategoryColor = (categoryName, index = 0) => {
+  const colorSchemes = [
+    'bg-blue-50 hover:bg-blue-100 border-blue-200',
+    'bg-purple-50 hover:bg-purple-100 border-purple-200', 
+    'bg-green-50 hover:bg-green-100 border-green-200',
+    'bg-orange-50 hover:bg-orange-100 border-orange-200',
+    'bg-pink-50 hover:bg-pink-100 border-pink-200',
+    'bg-indigo-50 hover:bg-indigo-100 border-indigo-200',
+    'bg-teal-50 hover:bg-teal-100 border-teal-200',
+    'bg-red-50 hover:bg-red-100 border-red-200',
+    'bg-yellow-50 hover:bg-yellow-100 border-yellow-200',
+    'bg-gray-50 hover:bg-gray-100 border-gray-200'
+  ];
+  
+  // Use category name hash for consistent colors
+  let hash = 0;
+  for (let i = 0; i < categoryName.length; i++) {
+    hash = categoryName.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  hash = Math.abs(hash);
+  
+  return colorSchemes[hash % colorSchemes.length];
+};
+
+// Shorten category names for display
+const shortenCategoryName = (categoryName) => {
+  const shorteningMap = {
+    'Computer Vision and Pattern Recognition': 'Computer Vision',
+    'Computation and Language': 'Natural Language',
+    'Natural Language Processing': 'Natural Language',
+    'Human-Computer Interaction': 'HCI',
+    'Cryptography and Security': 'Security',
+    'Information Retrieval': 'Info Retrieval',
+    'High Performance Computing': 'HPC',
+    'Computational Biology': 'Comp Biology',
+    'Mathematical Optimization': 'Optimization',
+    'Computational Complexity': 'Complexity',
+    'Distributed Computing': 'Distributed',
+    'Machine Learning Theory': 'ML Theory'
+  };
+  
+  return shorteningMap[categoryName] || categoryName;
+};
 
 function App() {
   const [selectedArticle, setSelectedArticle] = useState(null);
@@ -22,6 +144,16 @@ function App() {
   // User state for authentication and skill level
   const [user, setUser] = useState(null);
   const [userSkillLevel, setUserSkillLevel] = useState('Beginner');
+  const [userResearchInterests, setUserResearchInterests] = useState([]);
+  
+  // Default research interests fallback
+  const defaultResearchInterests = [
+    'Machine Learning',
+    'Artificial Intelligence', 
+    'Computer Vision and Pattern Recognition',
+    'Robotics',
+    'Computation and Language'
+  ];
   
   // Data state
   const [articles, setArticles] = useState([]);
@@ -55,15 +187,36 @@ function App() {
                   const skillLevel = profile.skill_level || 'Beginner';
                   setUserSkillLevel(skillLevel);
                   console.log('👤 User skill level:', skillLevel);
+                  
+                  // Load user's research interests (limit to 5)
+                  const researchInterests = profile.research_interests || defaultResearchInterests;
+                  const userInterests = Array.isArray(researchInterests) 
+                    ? researchInterests.slice(0, 5)
+                    : defaultResearchInterests;
+                  
+                  // Ensure we always have exactly 5 interests
+                  while (userInterests.length < 5) {
+                    const remaining = defaultResearchInterests.filter(interest => !userInterests.includes(interest));
+                    if (remaining.length > 0) {
+                      userInterests.push(remaining[0]);
+                    } else {
+                      break;
+                    }
+                  }
+                  
+                  setUserResearchInterests(userInterests);
+                  console.log('🔬 User research interests:', userInterests);
                 }
               }
             } catch (profileError) {
               console.error('Error loading user profile:', profileError);
               setUserSkillLevel('Beginner'); // Default fallback
+              setUserResearchInterests(defaultResearchInterests);
             }
           } else {
             setUser(null);
             setUserSkillLevel('Beginner'); // Default for non-authenticated users
+            setUserResearchInterests(defaultResearchInterests);
           }
         }
       } catch (error) {
@@ -458,6 +611,33 @@ function App() {
     // loadData will be triggered automatically by the useEffect dependency
   };
 
+  // Handle research interests changes from account modal
+  const handleResearchInterestsChange = (newInterests) => {
+    console.log('🔬 Research interests changed to:', newInterests);
+    
+    // Ensure we have exactly 5 interests
+    const updatedInterests = Array.isArray(newInterests) 
+      ? newInterests.slice(0, 5)
+      : defaultResearchInterests;
+    
+    // Fill up to 5 with defaults if needed
+    while (updatedInterests.length < 5) {
+      const remaining = defaultResearchInterests.filter(interest => !updatedInterests.includes(interest));
+      if (remaining.length > 0) {
+        updatedInterests.push(remaining[0]);
+      } else {
+        break;
+      }
+    }
+    
+    setUserResearchInterests(updatedInterests);
+    
+    // Clear selected category if it's no longer in user's interests
+    if (selectedCategory && !updatedInterests.includes(selectedCategory)) {
+      setSelectedCategory('');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30 relative overflow-hidden">
       {/* Background Elements */}
@@ -540,37 +720,37 @@ function App() {
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6 max-w-5xl mx-auto px-4">
-                {[
-                  { name: 'Machine Learning', icon: Brain, color: 'bg-blue-50 hover:bg-blue-100 border-blue-200' },
-                  { name: 'Artificial Intelligence', icon: Bot, color: 'bg-purple-50 hover:bg-purple-100 border-purple-200' },
-                  { name: 'Computer Vision', icon: Eye, color: 'bg-green-50 hover:bg-green-100 border-green-200' },
-                  { name: 'Robotics', icon: Wrench, color: 'bg-orange-50 hover:bg-orange-100 border-orange-200' },
-                  { name: 'Natural Language', icon: Code, color: 'bg-pink-50 hover:bg-pink-100 border-pink-200' },
-                ].map((category, index) => (
-                  <button
-                    key={category.name}
-                    onClick={() => {
-                      const targetCategory = category.name === 'Computer Vision' ? 'Computer Vision and Pattern Recognition' : category.name === 'Natural Language' ? 'Computation and Language' : category.name;
-                      setSelectedCategory(selectedCategory === targetCategory ? '' : targetCategory);
-                    }}
-                    className={`group p-4 sm:p-8 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${category.color} ${
-                      selectedCategory === (category.name === 'Computer Vision' ? 'Computer Vision and Pattern Recognition' : category.name === 'Natural Language' ? 'Computation and Language' : category.name) 
-                        ? 'ring-2 ring-indigo-500 shadow-lg' : ''
-                    } ${
-                      // Center the 5th item on mobile when it's alone on a row
-                      index === 4 ? 'col-span-2 sm:col-span-1 justify-self-center' : ''
-                    }`}
-                  >
-                    <div className="flex flex-col items-center justify-center space-y-2 sm:space-y-3 h-20 sm:h-28">
-                      <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-white shadow-sm group-hover:shadow-md transition-shadow flex-shrink-0">
-                        <category.icon className="h-5 w-5 sm:h-8 sm:w-8 text-indigo-600" />
+                {userResearchInterests.map((researchInterest, index) => {
+                  const Icon = getCategoryIcon(researchInterest);
+                  const colorClass = getCategoryColor(researchInterest, index);
+                  const isSelected = selectedCategory === researchInterest;
+
+                  return (
+                    <button
+                      key={researchInterest}
+                      onClick={() => {
+                        setSelectedCategory(isSelected ? '' : researchInterest);
+                      }}
+                      className={`group p-4 sm:p-8 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg ${colorClass} ${
+                        isSelected
+                          ? 'ring-2 ring-indigo-500 shadow-lg'
+                          : ''
+                      } ${
+                        // Center the 5th item on mobile when it's alone on a row
+                        index === 4 ? 'col-span-2 sm:col-span-1 justify-self-center' : ''
+                      }`}
+                    >
+                      <div className="flex flex-col items-center justify-center space-y-2 sm:space-y-3 h-20 sm:h-28">
+                        <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-white shadow-sm group-hover:shadow-md transition-shadow flex-shrink-0">
+                          <Icon className="h-5 w-5 sm:h-8 sm:w-8 text-indigo-600" />
+                        </div>
+                        <span className="text-xs sm:text-sm font-semibold text-gray-900 leading-tight text-center min-h-[2.5rem] sm:min-h-[3rem] flex items-center justify-center px-1">
+                          {shortenCategoryName(researchInterest)}
+                        </span>
                       </div>
-                      <span className="text-xs sm:text-sm font-semibold text-gray-900 leading-tight text-center min-h-[2.5rem] sm:min-h-[3rem] flex items-center justify-center px-1">
-                        {category.name}
-                      </span>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -704,6 +884,7 @@ function App() {
         onClose={handleCloseAccount}
         userSkillLevel={userSkillLevel}
         onSkillLevelChange={handleSkillLevelChange}
+        onResearchInterestsChange={handleResearchInterestsChange}
       />
 
       <ContactModal
