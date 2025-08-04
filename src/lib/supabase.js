@@ -670,11 +670,14 @@ export const savedArticlesAPI = {
   async saveArticle(userId, articleId) {
     console.log('💾 Saving article:', articleId, 'for user:', userId);
     
+    // Convert articleId to string for consistency with TEXT field
+    const articleIdStr = String(articleId);
+    
     const { data, error } = await supabase
       .from('saved_articles')
       .insert({
         user_id: userId,
-        article_id: articleId
+        article_id: articleIdStr
       })
       .select()
       .single();
@@ -697,11 +700,14 @@ export const savedArticlesAPI = {
   async unsaveArticle(userId, articleId) {
     console.log('🗑️ Removing saved article:', articleId, 'for user:', userId);
     
+    // Convert articleId to string for consistency with TEXT field
+    const articleIdStr = String(articleId);
+    
     const { error } = await supabase
       .from('saved_articles')
       .delete()
       .eq('user_id', userId)
-      .eq('article_id', articleId);
+      .eq('article_id', articleIdStr);
     
     if (error) {
       console.error('❌ Error removing saved article:', error);
@@ -727,18 +733,28 @@ export const savedArticlesAPI = {
       return [];
     }
     
-    const articleIds = (data || []).map(item => item.article_id);
-    console.log('✅ Retrieved saved article IDs:', articleIds);
+    // Convert string IDs back to numbers to match main articles
+    const articleIds = (data || []).map(item => {
+      const id = item.article_id;
+      // Try to convert to number, keep as string if it fails
+      const numId = Number(id);
+      return isNaN(numId) ? id : numId;
+    });
+    
+    console.log('✅ Retrieved and converted saved article IDs:', articleIds);
     return articleIds;
   },
 
   // Check if an article is saved
   async isArticleSaved(userId, articleId) {
+    // Convert articleId to string for consistency with TEXT field
+    const articleIdStr = String(articleId);
+    
     const { data, error } = await supabase
       .from('saved_articles')
       .select('id')
       .eq('user_id', userId)
-      .eq('article_id', articleId)
+      .eq('article_id', articleIdStr)
       .single();
     
     if (error && error.code !== 'PGRST116') {

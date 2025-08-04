@@ -223,6 +223,11 @@ function App() {
       return;
     }
 
+    if (articles.length === 0) {
+      console.log('❌ No main articles loaded yet, skipping saved articles load');
+      return;
+    }
+
     setIsLoadingSavedArticles(true);
     try {
       console.log('📚 Loading saved articles for user:', user.id);
@@ -231,12 +236,25 @@ function App() {
       const savedArticleIds = await savedArticlesAPI.getUserSavedArticleIds(user.id);
       console.log('📚 Saved article IDs:', savedArticleIds);
       
-      // Update favorites Set for heart icons
-      setFavorites(new Set(savedArticleIds));
+      // Update favorites Set for heart icons (ensure same type as article IDs)
+      const favoriteIds = new Set(savedArticleIds.map(id => {
+        // Ensure the ID type matches what the articles use
+        return typeof id === 'string' ? parseInt(id) || id : id;
+      }));
+      setFavorites(favoriteIds);
       
       // Filter main articles to get saved ones for the saved articles panel
-      const savedArticles = articles.filter(article => savedArticleIds.includes(article.id));
+      const savedArticles = articles.filter(article => {
+        // Check both string and number versions for compatibility
+        return savedArticleIds.includes(article.id) || 
+               savedArticleIds.includes(String(article.id)) ||
+               savedArticleIds.includes(Number(article.id));
+      });
+      console.log('📚 Available articles count:', articles.length);
+      console.log('📚 Sample article IDs:', articles.slice(0, 5).map(a => ({ id: a.id, type: typeof a.id })));
+      console.log('📚 Saved article IDs:', savedArticleIds.map(id => ({ id, type: typeof id })));
       console.log('📚 Found saved articles in main feed:', savedArticles.length);
+      console.log('📚 Sample saved articles:', savedArticles.slice(0, 2).map(a => ({ id: a.id, title: a.title?.substring(0, 30) })));
       
       setSavedArticlesFromDB(savedArticles);
       

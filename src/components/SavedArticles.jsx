@@ -2,6 +2,16 @@ import React from 'react';
 import { X, Heart, ExternalLink, Calendar, Tag } from 'lucide-react';
 
 const SavedArticles = ({ isOpen, onClose, savedArticles, onArticleClick, onToggleFavorite }) => {
+  console.log('📚 SavedArticles component props:', {
+    isOpen,
+    savedArticlesCount: savedArticles?.length || 0,
+    sampleArticle: savedArticles?.[0] ? {
+      id: savedArticles[0].id,
+      title: savedArticles[0].title?.substring(0, 30),
+      hasTitle: !!savedArticles[0].title
+    } : null
+  });
+
   const getCategoryColor = (category) => {
     const colors = {
       'Artificial Intelligence': 'bg-blue-100 text-blue-800',
