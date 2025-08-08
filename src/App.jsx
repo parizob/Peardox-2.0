@@ -249,7 +249,7 @@ function App() {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const articlesPerPage = 50; // Show 50 articles per page (30 pages for 1500 articles)
+  const articlesPerPage = 30; // Show 50 articles per page (30 pages for 1500 articles)
 
   // Ref for scrolling to results
   const resultsRef = useRef(null);
@@ -644,16 +644,19 @@ function App() {
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return new Date().toLocaleDateString();
+    if (!dateString) return new Date().toISOString().split('T')[0];
     
     try {
-      return new Date(dateString).toLocaleDateString('en-US', {
+      const date = new Date(dateString);
+      // Format as UTC date to show the actual published date from database
+      return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
-        day: 'numeric'
+        day: 'numeric',
+        timeZone: 'UTC' // Force UTC timezone
       });
     } catch {
-      return new Date().toLocaleDateString();
+      return new Date().toISOString().split('T')[0];
     }
   };
 
@@ -722,8 +725,34 @@ function App() {
   const endIndex = startIndex + articlesPerPage;
   const currentArticles = filteredArticles.slice(startIndex, endIndex);
 
+  // Get the latest published date from all articles (in UTC)
+  const getLatestPublishedDate = () => {
+    if (filteredArticles.length === 0) return null;
+    
+    // Sort articles by published date to find the latest
+    const sortedByDate = [...filteredArticles].sort((a, b) => {
+      const dateA = new Date(a._original?.published_date || a._original?.created_at || '1970-01-01');
+      const dateB = new Date(b._original?.published_date || b._original?.created_at || '1970-01-01');
+      return dateB - dateA; // Newest first
+    });
+    
+    const latestArticle = sortedByDate[0];
+    if (latestArticle && (latestArticle._original?.published_date || latestArticle._original?.created_at)) {
+      const latestDate = new Date(latestArticle._original?.published_date || latestArticle._original?.created_at);
+      return latestDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'UTC' // Force UTC timezone
+      });
+    }
+    
+    return null;
+  };
+
   // Update the results header to show the selected category name
   const selectedCategoryDisplay = selectedCategory ? selectedCategory : null;
+  const latestPublishedDate = getLatestPublishedDate();
 
   const savedArticles = useMemo(() => {
     return savedArticlesFromDB;
@@ -1015,8 +1044,7 @@ function App() {
                   {selectedCategoryDisplay ? `${categories.find(c => c.category_name === selectedCategoryDisplay)?.category_name || selectedCategoryDisplay}` : 'Latest Research'}
                 </h3>
                 <p className="text-gray-600 text-sm sm:text-base">
-                  {filteredArticles.length} articles found
-                  {searchTerm && ` for "${searchTerm}"`}
+                  {latestPublishedDate ? `Latest: ${latestPublishedDate} (UTC)` : 'No articles found'}
                 </p>
               </div>
             </div>
