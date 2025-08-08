@@ -1044,7 +1044,7 @@ function App() {
                   {selectedCategoryDisplay ? `${categories.find(c => c.category_name === selectedCategoryDisplay)?.category_name || selectedCategoryDisplay}` : 'Latest Research'}
                 </h3>
                 <p className="text-gray-600 text-sm sm:text-base">
-                  {latestPublishedDate ? `Latest: ${latestPublishedDate} (UTC)` : 'No articles found'}
+                  {latestPublishedDate ? `Publication Date: ${latestPublishedDate}` : 'No articles found'}
                 </p>
               </div>
             </div>
