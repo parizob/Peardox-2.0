@@ -249,7 +249,7 @@ function App() {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const articlesPerPage = 15;
+  const articlesPerPage = 50; // Show 50 articles per page (30 pages for 1500 articles)
 
   // Ref for scrolling to results
   const resultsRef = useRef(null);
@@ -509,6 +509,14 @@ function App() {
       console.log(`📋 Found ${categoriesData.length} categories`);
       console.log(`📝 Articles with summaries: ${transformedArticles.filter(a => a.hasSummary).length}`);
       
+      // Debug: Show ID range to verify we're getting the highest IDs
+      if (transformedArticles.length > 0) {
+        const sortedByIdDesc = [...transformedArticles].sort((a, b) => b.id - a.id);
+        const highestId = sortedByIdDesc[0]?.id;
+        const lowestId = sortedByIdDesc[sortedByIdDesc.length - 1]?.id;
+        console.log(`📊 ID Range: ${highestId} (highest) to ${lowestId} (lowest) - Total: ${transformedArticles.length} articles`);
+      }
+      
     } catch (err) {
       console.error('💥 Error loading data:', err);
       setError('Failed to load articles from database. Please try again.');
@@ -697,10 +705,15 @@ function App() {
       return matchesSearch && matchesCategory;
     });
 
+    // Sort by ID (highest first) to maintain the order from backend
+    const sortedFiltered = filtered.sort((a, b) => {
+      return b.id - a.id; // Highest ID first
+    });
+
     // Reset to first page when filters change
     setCurrentPage(1);
     
-    return filtered;
+    return sortedFiltered;
   }, [articles, searchTerm, selectedCategory]);
 
   // Calculate pagination

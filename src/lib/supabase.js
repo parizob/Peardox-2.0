@@ -105,35 +105,66 @@ export const arxivAPI = {
 
   // Get all papers with skill-level specific summaries
   async getAllPapersWithSummaries(skillLevel = 'Beginner') {
-    console.log('📡 Fetching papers with summaries for skill level:', skillLevel);
+    console.log('📡 Fetching top 1500 summarized papers for skill level:', skillLevel);
     
     try {
-      // Get summaries for the specified skill level
-      const summariesData = await this.getSummariesBySkillLevel(skillLevel);
+      // Get summaries for the specified skill level, ordered by highest IDs first
+      const { data: summariesData, error: summariesError } = await supabase
+        .from('summary_papers')
+        .select('*')
+        .eq('processing_status', 'completed')
+        .order('arxiv_paper_id', { ascending: false }) // Order by highest paper IDs first
+        .limit(1500); // Get top 1500 summarized papers
       
-      if (summariesData.length === 0) {
+      if (summariesError) {
+        console.error('❌ Error fetching summaries:', summariesError);
+        throw summariesError;
+      }
+      
+      if (!summariesData || summariesData.length === 0) {
         console.log('⚠️ No summaries found, falling back to regular papers');
         return await this.getAllPapers();
       }
       
+      console.log(`📝 Found ${summariesData.length} summaries (top 1500 by ID)`);
+      
+      // Transform summaries based on skill level
+      const transformedSummaries = summariesData.map(row => {
+        const skillLevelLower = skillLevel.toLowerCase();
+        return {
+          id: row.id,
+          paper_id: row.arxiv_paper_id,
+          skill_level: skillLevel,
+          title: skillLevelLower === 'beginner' ? row.beginner_title : row.intermediate_title,
+          overview: skillLevelLower === 'beginner' ? row.beginner_overview : row.intermediate_overview,
+          summary: skillLevelLower === 'beginner' ? row.beginner_summary : row.intermediate_summary,
+          created_at: row.created_at,
+          updated_at: row.updated_at
+        };
+      }).filter(item => item.title && item.overview);
+      
+      console.log(`📝 Transformed ${transformedSummaries.length} summaries with content`);
+      
       // Get the paper IDs that have summaries
-      const paperIds = summariesData.map(summary => summary.paper_id);
+      const paperIds = transformedSummaries.map(summary => summary.paper_id);
       
       // Fetch the corresponding papers from v_arxiv_papers
       const { data: papersData, error: papersError } = await supabase
         .from('v_arxiv_papers')
         .select('*')
         .in('id', paperIds)
-        .order('created_at', { ascending: false });
+        .order('id', { ascending: false }); // Order by highest IDs first
       
       if (papersError) {
         console.error('❌ Error fetching papers:', papersError);
         throw papersError;
       }
       
+      console.log(`📊 Found ${papersData?.length || 0} papers from v_arxiv_papers`);
+      
       // Create a map of summaries by paper ID for quick lookup
       const summariesMap = new Map();
-      summariesData.forEach(summary => {
+      transformedSummaries.forEach(summary => {
         summariesMap.set(summary.paper_id, summary);
       });
       
@@ -150,7 +181,7 @@ export const arxivAPI = {
         };
       });
       
-      console.log(`✅ Retrieved ${papersWithSummaries.length} papers with summaries for ${skillLevel} level`);
+      console.log(`✅ Retrieved ${papersWithSummaries.length} papers with summaries (top 1500 by ID)`);
       return papersWithSummaries;
       
     } catch (error) {
@@ -664,105 +695,173 @@ export const authAPI = {
   }
 };
 
-// Saved Articles API - Clean Implementation
+// Saved Articles API
 export const savedArticlesAPI = {
-  // Save an article for a user
-  async saveArticle(userId, articleId) {
-    console.log('💾 Saving article:', articleId, 'for user:', userId);
-    
-    // Convert articleId to string for consistency with TEXT field
-    const articleIdStr = String(articleId);
-    
-    const { data, error } = await supabase
-      .from('saved_articles')
-      .insert({
-        user_id: userId,
-        article_id: articleIdStr
-      })
-      .select()
-      .single();
-    
-    if (error) {
-      // Handle duplicate key error gracefully
-      if (error.code === '23505') {
-        console.log('ℹ️ Article already saved');
-        return { success: true, message: 'Article already saved' };
+  async getUserSavedArticles(userId) {
+    console.log('📚 Getting saved articles for user:', userId);
+    try {
+      const { data, error } = await supabase
+        .from('saved_articles')
+        .select('*')
+        .eq('user_id', userId)
+        .order('saved_at', { ascending: false });
+      
+      if (error) {
+        console.error('❌ Error fetching saved articles:', error);
+        return [];
       }
-      console.error('❌ Error saving article:', error);
-      throw error;
-    }
-    
-    console.log('✅ Article saved successfully');
-    return { success: true, data };
-  },
-
-  // Remove a saved article
-  async unsaveArticle(userId, articleId) {
-    console.log('🗑️ Removing saved article:', articleId, 'for user:', userId);
-    
-    // Convert articleId to string for consistency with TEXT field
-    const articleIdStr = String(articleId);
-    
-    const { error } = await supabase
-      .from('saved_articles')
-      .delete()
-      .eq('user_id', userId)
-      .eq('article_id', articleIdStr);
-    
-    if (error) {
-      console.error('❌ Error removing saved article:', error);
-      throw error;
-    }
-    
-    console.log('✅ Article removed successfully');
-    return { success: true };
-  },
-
-  // Get all saved article IDs for a user
-  async getUserSavedArticleIds(userId) {
-    console.log('📚 Getting saved article IDs for user:', userId);
-    
-    const { data, error } = await supabase
-      .from('saved_articles')
-      .select('article_id')
-      .eq('user_id', userId)
-      .order('saved_at', { ascending: false });
-    
-    if (error) {
-      console.error('❌ Error fetching saved article IDs:', error);
+      
+      console.log(`✅ Retrieved ${data?.length || 0} saved articles`);
+      return data || [];
+    } catch (error) {
+      console.error('❌ Exception in getUserSavedArticles:', error);
       return [];
     }
-    
-    // Convert string IDs back to numbers to match main articles
-    const articleIds = (data || []).map(item => {
-      const id = item.article_id;
-      // Try to convert to number, keep as string if it fails
-      const numId = Number(id);
-      return isNaN(numId) ? id : numId;
-    });
-    
-    console.log('✅ Retrieved and converted saved article IDs:', articleIds);
-    return articleIds;
   },
 
-  // Check if an article is saved
+  async getUserSavedArticlesWithDetails(userId) {
+    console.log('📚 Getting saved articles with details for user:', userId);
+    try {
+      // First get the saved articles
+      const savedArticles = await this.getUserSavedArticles(userId);
+      
+      if (savedArticles.length === 0) {
+        return [];
+      }
+      
+      // Get the article IDs
+      const articleIds = savedArticles.map(saved => saved.article_id);
+      
+      // Fetch the full article details from v_arxiv_papers
+      const { data: articlesData, error: articlesError } = await supabase
+        .from('v_arxiv_papers')
+        .select('*')
+        .in('id', articleIds);
+      
+      if (articlesError) {
+        console.error('❌ Error fetching article details:', articlesError);
+        return [];
+      }
+      
+      // Merge saved articles with their details
+      const articlesWithDetails = savedArticles.map(saved => {
+        const articleDetail = articlesData.find(article => article.id === saved.article_id);
+        if (!articleDetail) return null;
+        
+        return {
+          ...articleDetail,
+          savedAt: saved.saved_at,
+          // Transform to match the app's article format
+          title: articleDetail.title || 'Untitled',
+          shortDescription: articleDetail.abstract?.substring(0, 200) + '...' || 'No description available',
+          originalTitle: articleDetail.title || 'Untitled',
+          originalAbstract: articleDetail.abstract || 'No abstract available',
+          category: Array.isArray(articleDetail.categories_name) && articleDetail.categories_name.length > 0 
+            ? articleDetail.categories_name[0] 
+            : 'General',
+          categories: Array.isArray(articleDetail.categories_name) ? articleDetail.categories_name : [articleDetail.categories_name || 'General'],
+          arxivId: articleDetail.arxiv_id || '',
+          url: articleDetail.pdf_url || articleDetail.abstract_url || `https://arxiv.org/pdf/${articleDetail.arxiv_id}`,
+          authors: Array.isArray(articleDetail.authors) ? articleDetail.authors.join(', ') : (articleDetail.authors || 'Unknown Authors'),
+          publishedDate: articleDetail.published_date || articleDetail.created_at,
+          tags: Array.isArray(articleDetail.categories_name) ? articleDetail.categories_name : []
+        };
+      }).filter(Boolean);
+      
+      console.log(`✅ Retrieved ${articlesWithDetails.length} saved articles with details`);
+      return articlesWithDetails;
+      
+    } catch (error) {
+      console.error('❌ Exception in getUserSavedArticlesWithDetails:', error);
+      return [];
+    }
+  },
+
+  async saveArticle(userId, articleId) {
+    console.log('💾 Saving article:', articleId, 'for user:', userId);
+    try {
+      const { data, error } = await supabase
+        .from('saved_articles')
+        .insert({
+          user_id: userId,
+          article_id: articleId
+        })
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('❌ Error saving article:', error);
+        throw error;
+      }
+      
+      console.log('✅ Article saved successfully:', data);
+      return data;
+    } catch (error) {
+      console.error('❌ Exception in saveArticle:', error);
+      throw error;
+    }
+  },
+
+  async unsaveArticle(userId, articleId) {
+    console.log('🗑️ Unsaving article:', articleId, 'for user:', userId);
+    try {
+      const { error } = await supabase
+        .from('saved_articles')
+        .delete()
+        .eq('user_id', userId)
+        .eq('article_id', articleId);
+      
+      if (error) {
+        console.error('❌ Error unsaving article:', error);
+        throw error;
+      }
+      
+      console.log('✅ Article unsaved successfully');
+      return true;
+    } catch (error) {
+      console.error('❌ Exception in unsaveArticle:', error);
+      throw error;
+    }
+  },
+
   async isArticleSaved(userId, articleId) {
-    // Convert articleId to string for consistency with TEXT field
-    const articleIdStr = String(articleId);
-    
-    const { data, error } = await supabase
-      .from('saved_articles')
-      .select('id')
-      .eq('user_id', userId)
-      .eq('article_id', articleIdStr)
-      .single();
-    
-    if (error && error.code !== 'PGRST116') {
-      console.error('❌ Error checking if article is saved:', error);
+    try {
+      const { data, error } = await supabase
+        .from('saved_articles')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('article_id', articleId)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        console.error('❌ Error checking if article is saved:', error);
+        return false;
+      }
+      
+      return !!data;
+    } catch (error) {
+      console.error('❌ Exception in isArticleSaved:', error);
       return false;
     }
-    
-    return !!data;
+  },
+
+  async getSavedArticlesCount(userId) {
+    try {
+      const { count, error } = await supabase
+        .from('saved_articles')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId);
+      
+      if (error) {
+        console.error('❌ Error getting saved articles count:', error);
+        return 0;
+      }
+      
+      return count || 0;
+    } catch (error) {
+      console.error('❌ Exception in getSavedArticlesCount:', error);
+      return 0;
+    }
   }
 };
 
@@ -800,4 +899,14 @@ export const emailAPI = {
       throw new Error(error.message || 'Failed to send email. Please try again.');
     }
   }
-}; 
+};
+
+// Run initial test
+testConnection().then(result => {
+  if (result.success) {
+    console.log('🎉 Initial connection test successful!');
+    console.log(`📊 Found ${result.count} papers in v_arxiv_papers view`);
+  } else {
+    console.warn('⚠️ Initial connection test failed:', result.error);
+  }
+}); 
