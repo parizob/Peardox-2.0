@@ -777,25 +777,61 @@ export const savedArticlesAPI = {
     }
   },
 
+  // Get all saved article IDs for a user
+  async getUserSavedArticleIds(userId) {
+    console.log('📚 Getting saved article IDs for user:', userId);
+    
+    const { data, error } = await supabase
+      .from('saved_articles')
+      .select('article_id')
+      .eq('user_id', userId)
+      .order('saved_at', { ascending: false });
+    
+    if (error) {
+      console.error('❌ Error fetching saved article IDs:', error);
+      return [];
+    }
+    
+    // Convert string IDs back to numbers to match main articles
+    const articleIds = (data || []).map(item => {
+      const id = item.article_id;
+      // Try to convert to number, keep as string if it fails
+      const numId = Number(id);
+      return isNaN(numId) ? id : numId;
+    });
+    
+    console.log('✅ Retrieved and converted saved article IDs:', articleIds);
+    return articleIds;
+  },
+
   async saveArticle(userId, articleId) {
     console.log('💾 Saving article:', articleId, 'for user:', userId);
+    
+    // Convert articleId to string for consistency with TEXT field
+    const articleIdStr = String(articleId);
+    
     try {
       const { data, error } = await supabase
         .from('saved_articles')
         .insert({
           user_id: userId,
-          article_id: articleId
+          article_id: articleIdStr
         })
         .select()
         .single();
       
       if (error) {
+        // Handle duplicate key error gracefully
+        if (error.code === '23505') {
+          console.log('ℹ️ Article already saved');
+          return { success: true, message: 'Article already saved' };
+        }
         console.error('❌ Error saving article:', error);
         throw error;
       }
       
       console.log('✅ Article saved successfully:', data);
-      return data;
+      return { success: true, data };
     } catch (error) {
       console.error('❌ Exception in saveArticle:', error);
       throw error;
@@ -804,12 +840,16 @@ export const savedArticlesAPI = {
 
   async unsaveArticle(userId, articleId) {
     console.log('🗑️ Unsaving article:', articleId, 'for user:', userId);
+    
+    // Convert articleId to string for consistency with TEXT field
+    const articleIdStr = String(articleId);
+    
     try {
       const { error } = await supabase
         .from('saved_articles')
         .delete()
         .eq('user_id', userId)
-        .eq('article_id', articleId);
+        .eq('article_id', articleIdStr);
       
       if (error) {
         console.error('❌ Error unsaving article:', error);
@@ -817,7 +857,7 @@ export const savedArticlesAPI = {
       }
       
       console.log('✅ Article unsaved successfully');
-      return true;
+      return { success: true };
     } catch (error) {
       console.error('❌ Exception in unsaveArticle:', error);
       throw error;
@@ -825,12 +865,15 @@ export const savedArticlesAPI = {
   },
 
   async isArticleSaved(userId, articleId) {
+    // Convert articleId to string for consistency with TEXT field
+    const articleIdStr = String(articleId);
+    
     try {
       const { data, error } = await supabase
         .from('saved_articles')
         .select('id')
         .eq('user_id', userId)
-        .eq('article_id', articleId)
+        .eq('article_id', articleIdStr)
         .single();
       
       if (error && error.code !== 'PGRST116') {
