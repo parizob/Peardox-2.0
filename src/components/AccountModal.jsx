@@ -433,18 +433,11 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
           researchInterests: currentInterests.filter(i => i !== interest)
         };
       } else {
-        // Add the interest only if under the limit
-        if (currentInterests.length < 5) {
-          return {
-            ...prev,
-            researchInterests: [...currentInterests, interest]
-          };
-        } else {
-          // Show a message about the limit (optional)
-          setAuthError('You can select a maximum of 5 research interests.');
-          setTimeout(() => setAuthError(''), 3000);
-          return prev;
-        }
+        // Add the interest (no limit check needed since button will be disabled when needed)
+        return {
+          ...prev,
+          researchInterests: [...currentInterests, interest]
+        };
       }
     });
   };
@@ -674,12 +667,12 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                     </h3>
                     <button
                       onClick={() => isEditing ? handleSave() : setIsEditing(!isEditing)}
-                      disabled={authLoading}
+                      disabled={authLoading || (isEditing && userData.researchInterests?.length !== 5)}
                       className={`flex items-center justify-center space-x-2 px-4 lg:px-6 py-3 rounded-xl lg:rounded-2xl transition-all duration-300 disabled:opacity-50 text-sm lg:text-base ${
                         saveSuccess
                           ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg'
                           : isEditing
-                          ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl'
+                          ? (userData.researchInterests?.length === 5 ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl' : 'bg-gray-400 text-white shadow-lg cursor-not-allowed')
                           : 'bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl'
                       }`}
                     >
@@ -783,7 +776,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                           </span>
                         </h4>
                         <div className="space-y-3">
-                          <p className="text-xs lg:text-sm text-gray-600">Select up to 5 areas of research interest</p>
+                          <p className="text-xs lg:text-sm text-gray-600">Select exactly 5 areas of research interest</p>
                           
                           {isEditing && (
                             <div className="relative">
@@ -838,9 +831,16 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                             </div>
                           )}
 
-                          {isEditing && userData.researchInterests?.length >= 5 && (
-                            <div className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg p-2">
-                              ⚠️ You've reached the maximum of 5 research interests. Remove one to add another.
+                          {isEditing && userData.researchInterests?.length !== 5 && (
+                            <div className={`text-xs rounded-lg p-2 ${
+                              userData.researchInterests?.length > 5 
+                                ? 'text-red-600 bg-red-50 border border-red-200'
+                                : 'text-blue-600 bg-blue-50 border border-blue-200'
+                            }`}>
+                              {userData.researchInterests?.length > 5 
+                                ? '⚠️ Please remove some interests. You must have exactly 5 selected.'
+                                : `📌 Please select ${5 - (userData.researchInterests?.length || 0)} more interest${5 - (userData.researchInterests?.length || 0) === 1 ? '' : 's'} to continue.`
+                              }
                             </div>
                           )}
                         </div>
@@ -885,7 +885,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                   <div className="mt-4 lg:mt-6 text-center">
                     <button
                       onClick={() => setShowResetConfirm(true)}
-                      className="px-4 lg:px-6 py-2 lg:py-3 text-purple-600 hover:text-purple-800 font-medium transition-colors rounded-lg hover:bg-purple-50 border border-purple-200 hover:border-purple-300 shadow-sm hover:shadow-md text-sm lg:text-base"
+                      className="px-4 lg:px-6 py-2 lg:py-3 text-red-600 hover:text-red-800 font-medium transition-colors rounded-lg hover:bg-red-50 border border-red-200 hover:border-red-300 shadow-sm hover:shadow-md text-sm lg:text-base"
                     >
                       Reset to Default Categories
                     </button>
@@ -998,7 +998,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                 </button>
                 <button
                   onClick={resetToDefaultInterests}
-                  className="flex-1 px-4 py-2 text-white bg-purple-600 hover:bg-purple-700 rounded-xl font-medium transition-colors"
+                  className="flex-1 px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-xl font-medium transition-colors"
                 >
                   Reset to Default
                 </button>
