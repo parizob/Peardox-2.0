@@ -580,14 +580,14 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex-1 flex flex-col items-center space-y-1 px-2 py-2 rounded-lg transition-all duration-300 text-xs ${
+                    className={`flex-1 flex flex-col items-center justify-center space-y-1 px-1 py-3 min-h-[60px] rounded-lg transition-all duration-300 text-xs ${
                       activeTab === tab.id
                         ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 text-white shadow-lg border border-white/20'
                         : 'text-white/70 hover:text-white hover:bg-white/10'
                     }`}
                   >
                     <Icon className="h-4 w-4 flex-shrink-0" />
-                    <span className="font-medium">{tab.label}</span>
+                    <span className="font-medium text-center leading-tight">{tab.label}</span>
                   </button>
                 );
               })}
@@ -595,12 +595,12 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
           </div>
 
           {/* Desktop Sidebar - Only visible on desktop */}
-          <div className="hidden lg:flex lg:w-80 bg-white/10 backdrop-blur-2xl border border-white/20 rounded-l-3xl p-6 flex-col">
+          <div className="hidden lg:flex lg:w-80 bg-gradient-to-br from-white/95 to-gray-50/95 backdrop-blur-2xl border border-gray-200/50 rounded-l-3xl p-6 flex-col">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl font-bold text-white">Account Hub</h2>
+              <h2 className="text-2xl font-bold text-gray-800">Account Hub</h2>
               <button
                 onClick={onClose}
-                className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all"
+                className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full transition-all"
               >
                 <X className="h-6 w-6" />
               </button>
@@ -608,19 +608,19 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
 
             {/* Profile Summary */}
             <div className="relative mb-8">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl blur-xl"></div>
-              <div className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
+              <div className="absolute inset-0 bg-gradient-to-r from-green-200/30 to-emerald-200/30 rounded-2xl blur-xl"></div>
+              <div className="relative bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-2xl p-6">
                 <div className="relative mb-4">
-                  <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                  <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
                     {initials}
                   </div>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-1">{userData.name}</h3>
-                <p className="text-white/70 text-sm mb-2">{userData.title}</p>
-                <p className="text-white/50 text-xs">{userData.institution}</p>
+                <h3 className="text-xl font-bold text-gray-800 mb-1">{userData.name}</h3>
+                <p className="text-gray-600 text-sm mb-2">{userData.title}</p>
+                <p className="text-gray-500 text-xs">{userData.institution}</p>
                 <button
                   onClick={handleSignOut}
-                  className="mt-4 w-full px-3 py-2 bg-white/20 hover:bg-white/30 rounded-xl text-white text-sm font-medium transition-colors"
+                  className="mt-4 w-full px-3 py-2 bg-red-500 hover:bg-red-600 rounded-xl text-white text-sm font-medium transition-colors"
                 >
                   Sign Out
                 </button>
@@ -637,8 +637,8 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                     onClick={() => setActiveTab(tab.id)}
                     className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-300 text-sm ${
                       activeTab === tab.id
-                        ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 text-white shadow-lg border border-white/20'
-                        : 'text-white/70 hover:text-white hover:bg-white/10'
+                        ? 'bg-white text-green-600 shadow-lg border border-green-100'
+                        : 'text-gray-600 hover:text-gray-800 hover:bg-white/60'
                     }`}
                   >
                     <Icon className="h-4 w-4 flex-shrink-0" />
@@ -669,7 +669,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
               {activeTab === 'profile' && (
                 <div className="space-y-6 lg:space-y-8">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-                    <h3 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent">
+                    <h3 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-gray-800 to-green-700 bg-clip-text text-transparent">
                       Profile Settings
                     </h3>
                     <button
@@ -677,10 +677,10 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                       disabled={authLoading}
                       className={`flex items-center justify-center space-x-2 px-4 lg:px-6 py-3 rounded-xl lg:rounded-2xl transition-all duration-300 disabled:opacity-50 text-sm lg:text-base ${
                         saveSuccess
-                          ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
+                          ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg'
                           : isEditing
-                          ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:shadow-xl'
-                          : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg hover:shadow-xl'
+                          ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl'
+                          : 'bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl'
                       }`}
                     >
                       {authLoading ? (
@@ -815,7 +815,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                                     disabled={!isEditing}
                                     className={`px-2 lg:px-3 py-1 lg:py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
                                       userData.researchInterests?.includes(interest)
-                                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md'
+                                        ? 'bg-green-500 hover:bg-green-600 text-white shadow-md'
                                         : isEditing 
                                         ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
                                         : 'bg-gray-100 text-gray-700'
