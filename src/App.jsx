@@ -1133,8 +1133,8 @@ function App() {
                         
                         <div className="grid grid-cols-3 gap-4 mb-8">
                           <div className="text-center p-3 bg-white/80 rounded-xl border border-green-100">
-                            <div className="text-lg font-bold text-green-600">2K+</div>
-                            <div className="text-xs text-gray-600">Papers</div>
+                            <div className="text-lg font-bold text-green-600">1M+</div>
+                            <div className="text-xs text-gray-600">Authors</div>
                           </div>
                           <div className="text-center p-3 bg-white/80 rounded-xl border border-green-100">
                             <div className="text-lg font-bold text-green-700">Daily</div>
@@ -1283,6 +1283,21 @@ function App() {
                  </div>
                </div>
 
+              {/* Decorative Line Break */}
+              <div className="my-16 sm:my-20">
+                <div className="mx-auto max-w-3xl px-4 sm:px-6">
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-gray-200"></div>
+                    </div>
+                    <div className="relative flex justify-center">
+                      <span className="bg-white px-6 text-gray-400 text-sm font-medium">
+                        •••
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <div id="categories-section" className="text-center mb-6 sm:mb-10">
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3 px-4">
