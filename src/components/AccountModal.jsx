@@ -1015,7 +1015,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
     <div className="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-hidden shadow-2xl">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-6 text-white">
+        <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-6 text-white">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">
               {authMode === 'signin' ? 'Welcome Back' : 'Join Pearadox'}
@@ -1027,7 +1027,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
               <X className="h-5 w-5" />
             </button>
           </div>
-          <p className="text-blue-100 mt-2">
+          <p className="text-green-100 mt-2">
             {authMode === 'signin' 
               ? 'Sign in to access your research hub'
               : 'Create your account to start discovering research'
@@ -1047,7 +1047,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                     required
                     value={authForm.name}
                     onChange={(e) => setAuthForm(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="Dr. Jane Smith"
                   />
                 </div>
@@ -1057,7 +1057,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                     type="text"
                     value={authForm.title}
                     onChange={(e) => setAuthForm(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="Research Scientist"
                   />
                 </div>
@@ -1067,7 +1067,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                     type="text"
                     value={authForm.institution}
                     onChange={(e) => setAuthForm(prev => ({ ...prev, institution: e.target.value }))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="Stanford University"
                   />
                 </div>
@@ -1094,7 +1094,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                   required
                   value={authForm.password}
                   onChange={(e) => setAuthForm(prev => ({ ...prev, password: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 pr-10"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 pr-10"
                   placeholder="••••••••"
                   minLength={6}
                 />
@@ -1136,7 +1136,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
             <button
               type="submit"
               disabled={authLoading}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
             >
               {authLoading ? (
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
@@ -1163,7 +1163,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                     institution: ''
                   });
                 }}
-                className="text-blue-600 hover:text-blue-800 font-medium"
+                className="text-green-600 hover:text-green-800 font-medium"
               >
                 {authMode === 'signin' 
                   ? "Don't have an account? Sign up"
