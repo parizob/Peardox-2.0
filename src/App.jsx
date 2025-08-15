@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, User, UserPlus } from 'lucide-react';
+import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon } from 'lucide-react';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
@@ -1112,6 +1112,100 @@ function App() {
                   </div>
                 </div>
               </div>
+
+               {/* Democratizing Discovery Section */}
+               <div className="mb-12 sm:mb-16">
+                 <div className="mx-auto max-w-6xl px-4 sm:px-6">
+                   <div className="relative bg-gradient-to-br from-gray-900 to-blue-900 rounded-3xl shadow-2xl p-8 sm:p-12 overflow-hidden">
+                     {/* Background decoration */}
+                     <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-blue-400/20 to-transparent rounded-full blur-3xl"></div>
+                     <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-purple-400/20 to-transparent rounded-full blur-3xl"></div>
+                     
+                     <div className="relative">
+                       <div className="text-center mb-10 sm:mb-12">
+                         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl mb-6">
+                           <Users className="h-8 w-8 text-white" />
+                         </div>
+                         <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                           Democratizing Discovery
+                         </h3>
+                         <p className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+                           The future belongs to those who understand it. We're making sure that's everyone.
+                         </p>
+                       </div>
+
+                       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-10">
+                         <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+                           <div className="text-3xl sm:text-4xl font-bold text-white mb-2">1,500+</div>
+                           <div className="text-blue-100 font-medium">Papers Simplified</div>
+                         </div>
+                         
+                         <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+                           <div className="text-3xl sm:text-4xl font-bold text-white mb-2">10K+</div>
+                           <div className="text-blue-100 font-medium">Active Researchers</div>
+                         </div>
+                         
+                         <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+                           <div className="text-3xl sm:text-4xl font-bold text-white mb-2">500+</div>
+                           <div className="text-blue-100 font-medium">Universities</div>
+                         </div>
+                         
+                         <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+                           <div className="text-3xl sm:text-4xl font-bold text-white mb-2">50+</div>
+                           <div className="text-blue-100 font-medium">Countries</div>
+                         </div>
+                       </div>
+
+                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                         <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                           <div className="flex items-center space-x-4 mb-4">
+                             <div className="p-3 rounded-xl bg-blue-500/20 text-blue-300">
+                               <Building2 className="h-6 w-6" />
+                             </div>
+                             <div>
+                               <div className="text-2xl font-bold text-white">Fortune 500</div>
+                               <div className="text-blue-100 text-sm">Trusted By The Best</div>
+                             </div>
+                           </div>
+                           <p className="text-blue-100 leading-relaxed">
+                           Used by employees at 50+ Fortune 500 companies to cut through AI noise and get straight to what matters.
+                           </p>
+                         </div>
+
+                         <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                           <div className="flex items-center space-x-4 mb-4">
+                             <div className="p-3 rounded-xl bg-purple-500/20 text-purple-300">
+                               <Microscope className="h-6 w-6" />
+                             </div>
+                             <div>
+                               <div className="text-2xl font-bold text-white">Top Insights</div>
+                               <div className="text-blue-100 text-sm">From Research to Reality</div>
+                             </div>
+                           </div>
+                           <p className="text-blue-100 leading-relaxed">
+                           Distill breakthroughs from MIT, Stanford, and leading AI labs into plain English—so you can apply them immediately.
+                           </p>
+                         </div>
+
+                         <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                           <div className="flex items-center space-x-4 mb-4">
+                             <div className="p-3 rounded-xl bg-green-500/20 text-green-300">
+                               <TrendingUp className="h-6 w-6" />
+                             </div>
+                             <div>
+                               <div className="text-2xl font-bold text-white">Rapid Growth</div>
+                               <div className="text-blue-100 text-sm">Grow Smarter Every Day</div>
+                             </div>
+                           </div>
+                           <p className="text-blue-100 leading-relaxed">
+                           Our community is exploding because busy people don’t have time to read 40-page papers. We do it for you.
+                           </p>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+               </div>
 
               <div className="text-center mb-6 sm:mb-10">
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3 px-4">
