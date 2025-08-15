@@ -365,18 +365,21 @@ function App() {
 
   // Check user authentication and load their skill level
   useEffect(() => {
+    let mounted = true;
+    let authSubscription = null;
+
     const checkAuth = async () => {
       try {
         if (authAPI && typeof authAPI.getCurrentSession === 'function') {
           const { data: { session } } = await authAPI.getCurrentSession();
-          if (session?.user) {
+          if (session?.user && mounted) {
             setUser(session.user);
             
             // Load user profile to get skill level
             try {
               if (authAPI.getProfile) {
                 const profile = await authAPI.getProfile(session.user.id);
-                if (profile) {
+                if (profile && mounted) {
                   const skillLevel = profile.skill_level || 'Beginner';
                   setUserSkillLevel(skillLevel);
                   console.log('👤 User skill level:', skillLevel);
@@ -403,10 +406,12 @@ function App() {
               }
             } catch (profileError) {
               console.error('Error loading user profile:', profileError);
-              setUserSkillLevel('Beginner'); // Default fallback
-              setUserResearchInterests(defaultResearchInterests);
+              if (mounted) {
+                setUserSkillLevel('Beginner'); // Default fallback
+                setUserResearchInterests(defaultResearchInterests);
+              }
             }
-          } else {
+          } else if (mounted) {
             setUser(null);
             setUserSkillLevel('Beginner'); // Default for non-authenticated users
             setUserResearchInterests(defaultResearchInterests);
@@ -414,11 +419,77 @@ function App() {
         }
       } catch (error) {
         console.error('Auth check error:', error);
-        setUser(null);
-        setUserSkillLevel('Beginner');
+        if (mounted) {
+          setUser(null);
+          setUserSkillLevel('Beginner');
+        }
       }
     };
+
+    // Set up auth listener
+    if (authAPI && typeof authAPI.onAuthStateChange === 'function') {
+      try {
+        const { data: { subscription } } = authAPI.onAuthStateChange(async (event, session) => {
+          console.log('🔄 Auth state changed in App:', event);
+          
+          if (!mounted) return;
+          
+          if (event === 'SIGNED_IN' && session?.user) {
+            console.log('✅ User signed in, updating CTA');
+            setUser(session.user);
+            
+            // Load user profile
+            try {
+              if (authAPI.getProfile) {
+                const profile = await authAPI.getProfile(session.user.id);
+                if (profile && mounted) {
+                  const skillLevel = profile.skill_level || 'Beginner';
+                  setUserSkillLevel(skillLevel);
+                  
+                  const researchInterests = profile.research_interests || defaultResearchInterests;
+                  const userInterests = Array.isArray(researchInterests) 
+                    ? researchInterests.slice(0, 5)
+                    : defaultResearchInterests;
+                  
+                  while (userInterests.length < 5) {
+                    const remaining = defaultResearchInterests.filter(interest => !userInterests.includes(interest));
+                    if (remaining.length > 0) {
+                      userInterests.push(remaining[0]);
+                    } else {
+                      break;
+                    }
+                  }
+                  
+                  setUserResearchInterests(userInterests);
+                }
+              }
+            } catch (profileError) {
+              console.error('Error loading profile after sign in:', profileError);
+            }
+          } else if (event === 'SIGNED_OUT') {
+            console.log('👋 User signed out, updating CTA');
+            setUser(null);
+            setUserSkillLevel('Beginner');
+            setUserResearchInterests(defaultResearchInterests);
+          }
+        });
+        
+        authSubscription = subscription;
+        console.log('👂 Auth listener set up for CTA updates');
+      } catch (error) {
+        console.error('Error setting up auth listener:', error);
+      }
+    }
+
     checkAuth();
+
+    return () => {
+      mounted = false;
+      if (authSubscription) {
+        authSubscription.unsubscribe();
+        console.log('🧹 Auth listener cleaned up');
+      }
+    };
   }, []);
 
   // Load data from Supabase with skill-level specific summaries
