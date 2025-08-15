@@ -719,56 +719,122 @@ export const savedArticlesAPI = {
     }
   },
 
-  async getUserSavedArticlesWithDetails(userId) {
-    console.log('📚 Getting saved articles with details for user:', userId);
+  async getUserSavedArticlesWithDetails(userId, userSkillLevel = 'Beginner') {
+    console.log('📚 Getting saved articles with details for user:', userId, 'skill level:', userSkillLevel);
     try {
-      // First get the saved articles
+      // First, let's check what saved articles we have
       const savedArticles = await this.getUserSavedArticles(userId);
+      console.log(`📚 User has ${savedArticles.length} saved articles:`, savedArticles.map(s => s.article_id));
       
       if (savedArticles.length === 0) {
         return [];
       }
       
-      // Get the article IDs
-      const articleIds = savedArticles.map(saved => saved.article_id);
+      // Join v_summary_papers with v_arxiv_papers to get complete data with summaries
+      console.log('📚 Joining v_summary_papers with v_arxiv_papers...');
       
-      // Fetch the full article details from v_arxiv_papers
-      const { data: articlesData, error: articlesError } = await supabase
-        .from('v_arxiv_papers')
-        .select('*')
-        .in('id', articleIds);
+      // Get summaries without skill level filter (skill level is determined by field names)
+      const { data: summaryResults, error: summaryError } = await supabase
+        .from('v_summary_papers')
+        .select(`
+          *,
+          v_arxiv_papers!inner(*)
+        `)
+        .in('arxiv_paper_id', savedArticles.map(s => Number(s.article_id)));
       
-      if (articlesError) {
-        console.error('❌ Error fetching article details:', articlesError);
-        return [];
+      console.log(`📝 Found ${summaryResults?.length || 0} summary records with article data`);
+      if (summaryError) {
+        console.error('❌ Error fetching summaries with articles:', summaryError);
       }
       
-      // Merge saved articles with their details
-      const articlesWithDetails = savedArticles.map(saved => {
-        const articleDetail = articlesData.find(article => article.id === saved.article_id);
-        if (!articleDetail) return null;
+      // Debug: Show what summary data we actually got
+      if (summaryResults && summaryResults.length > 0) {
+        console.log('🔍 Sample summary record structure:');
+        const sample = summaryResults[0];
+        console.log('Summary keys:', Object.keys(sample));
+        console.log(`Sample summary fields for skill ${userSkillLevel}:`, {
+          [`${userSkillLevel.toLowerCase()}_title`]: sample[`${userSkillLevel.toLowerCase()}_title`]?.substring(0, 50),
+          [`${userSkillLevel.toLowerCase()}_overview`]: sample[`${userSkillLevel.toLowerCase()}_overview`]?.substring(0, 50),
+          arxiv_paper_id: sample.arxiv_paper_id,
+          skill_level: sample.skill_level
+        });
+      }
+      
+      // Fallback: get basic article data from v_arxiv_papers for articles without summaries
+      const { data: basicArticles, error: basicError } = await supabase
+        .from('v_arxiv_papers')
+        .select('*')
+        .in('id', savedArticles.map(s => Number(s.article_id)));
         
+      console.log(`📄 Found ${basicArticles?.length || 0} basic article records`);
+      if (basicError) {
+        console.error('❌ Error fetching basic articles:', basicError);
+      }
+      
+      // Create maps for quick lookup
+      const summaryMap = new Map();
+      (summaryResults || []).forEach(summaryRecord => {
+        summaryMap.set(Number(summaryRecord.arxiv_paper_id), {
+          summary: summaryRecord,
+          article: summaryRecord.v_arxiv_papers
+        });
+      });
+      
+      const basicMap = new Map();
+      (basicArticles || []).forEach(article => {
+        basicMap.set(Number(article.id), article);
+      });
+      
+      // Merge saved articles with their details and summaries
+      const articlesWithDetails = savedArticles.map(saved => {
+        const articleId = Number(saved.article_id);
+        const summaryData = summaryMap.get(articleId);
+        const basicArticle = basicMap.get(articleId);
+        
+        if (!summaryData && !basicArticle) {
+          console.warn(`⚠️ Could not find any data for saved article ID: ${saved.article_id}`);
+          return null;
+        }
+        
+        // Use summary + article data if available, otherwise basic article data
+        const summary = summaryData?.summary;
+        const article = summaryData?.article || basicArticle;
+        
+        // Get the correct field names based on skill level
+        const skillPrefix = userSkillLevel.toLowerCase();
+        const summaryTitle = summary?.[`${skillPrefix}_title`];
+        const summaryOverview = summary?.[`${skillPrefix}_overview`];
+        const summaryContent = summary?.[`${skillPrefix}_summary`];
+        
+        console.log(`🔍 Article ${articleId}: skillLevel=${userSkillLevel}, prefix=${skillPrefix}`);
+        console.log(`🔍 Summary fields: title="${summaryTitle?.substring(0,30)}...", overview="${summaryOverview?.substring(0,30)}..."`);
+        console.log(`🔍 Original title: "${article?.title?.substring(0,30)}..."`);
+
         return {
-          ...articleDetail,
+          id: articleId,
           savedAt: saved.saved_at,
-          // Transform to match the app's article format
-          title: articleDetail.title || 'Untitled',
-          shortDescription: articleDetail.abstract?.substring(0, 200) + '...' || 'No description available',
-          originalTitle: articleDetail.title || 'Untitled',
-          originalAbstract: articleDetail.abstract || 'No abstract available',
-          category: Array.isArray(articleDetail.categories_name) && articleDetail.categories_name.length > 0 
-            ? articleDetail.categories_name[0] 
+          // Use skill-level content if available
+          title: summaryTitle || article?.title || 'Untitled',
+          shortDescription: summaryOverview || (article?.abstract?.substring(0, 200) + '...') || 'No description available',
+          originalTitle: article?.title || 'Untitled',
+          originalAbstract: article?.abstract || 'No abstract available',
+          summaryContent: summaryContent || null,
+          hasSummary: !!(summaryTitle || summaryOverview || summaryContent),
+          skillLevel: userSkillLevel,
+          category: Array.isArray(article?.categories_name) && article.categories_name.length > 0 
+            ? article.categories_name[0] 
             : 'General',
-          categories: Array.isArray(articleDetail.categories_name) ? articleDetail.categories_name : [articleDetail.categories_name || 'General'],
-          arxivId: articleDetail.arxiv_id || '',
-          url: articleDetail.pdf_url || articleDetail.abstract_url || `https://arxiv.org/pdf/${articleDetail.arxiv_id}`,
-          authors: Array.isArray(articleDetail.authors) ? articleDetail.authors.join(', ') : (articleDetail.authors || 'Unknown Authors'),
-          publishedDate: articleDetail.published_date || articleDetail.created_at,
-          tags: Array.isArray(articleDetail.categories_name) ? articleDetail.categories_name : []
+          categories: Array.isArray(article?.categories_name) ? article.categories_name : [article?.categories_name || 'General'],
+          arxivId: article?.arxiv_id || '',
+          url: article?.pdf_url || article?.abstract_url || `https://arxiv.org/pdf/${article?.arxiv_id}`,
+          authors: Array.isArray(article?.authors) ? article.authors.join(', ') : (article?.authors || 'Unknown Authors'),
+          publishedDate: article?.published_date || article?.created_at,
+          tags: Array.isArray(article?.categories_name) ? article.categories_name : []
         };
       }).filter(Boolean);
       
-      console.log(`✅ Retrieved ${articlesWithDetails.length} saved articles with details`);
+      const withSummaries = articlesWithDetails.filter(a => a.hasSummary).length;
+      console.log(`✅ Retrieved ${articlesWithDetails.length} saved articles (${withSummaries} with skill-level summaries, ${articlesWithDetails.length - withSummaries} with basic data)`);
       return articlesWithDetails;
       
     } catch (error) {

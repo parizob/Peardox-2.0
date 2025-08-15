@@ -455,7 +455,7 @@ function App() {
       setSavedArticlesFromDB([]);
       setFavorites(new Set());
     }
-  }, [user]); // Only depend on user to prevent loops
+  }, [user, userSkillLevel]); // Depend on user and skill level
 
   // Scroll to results when category is selected
   useEffect(() => {
@@ -619,18 +619,23 @@ function App() {
       return;
     }
 
-    if (articles.length === 0) {
-      console.log('❌ No main articles loaded yet, skipping saved articles load');
-      return;
-    }
-
     setIsLoadingSavedArticles(true);
     try {
-      console.log('📚 Loading saved articles for user:', user.id);
+      console.log('📚 Loading saved articles for user:', user.id, 'with skill level:', userSkillLevel);
       
-      // Get saved article IDs
-      const savedArticleIds = await savedArticlesAPI.getUserSavedArticleIds(user.id);
-      console.log('📚 Saved article IDs:', savedArticleIds);
+      // Get saved articles with full details directly from database
+      const savedArticlesWithDetails = await savedArticlesAPI.getUserSavedArticlesWithDetails(user.id, userSkillLevel);
+      console.log('📚 Loaded saved articles with details:', savedArticlesWithDetails.length);
+      console.log('📚 Sample article data from API:', savedArticlesWithDetails.slice(0, 1).map(a => ({ 
+        id: a.id, 
+        title: a.title?.substring(0, 50), 
+        shortDescription: a.shortDescription?.substring(0, 50),
+        hasSummary: a.hasSummary,
+        skillLevel: a.skillLevel
+      })));
+      
+      // Get just the IDs for the favorites set (for heart icons in main feed)
+      const savedArticleIds = savedArticlesWithDetails.map(article => article.id);
       
       // Update favorites Set for heart icons (ensure same type as article IDs)
       const favoriteIds = new Set(savedArticleIds.map(id => {
@@ -639,20 +644,20 @@ function App() {
       }));
       setFavorites(favoriteIds);
       
-      // Filter main articles to get saved ones for the saved articles panel
-      const savedArticles = articles.filter(article => {
-        // Check both string and number versions for compatibility
-        return savedArticleIds.includes(article.id) || 
-               savedArticleIds.includes(String(article.id)) ||
-               savedArticleIds.includes(Number(article.id));
-      });
-      console.log('📚 Available articles count:', articles.length);
-      console.log('📚 Sample article IDs:', articles.slice(0, 5).map(a => ({ id: a.id, type: typeof a.id })));
-      console.log('📚 Saved article IDs:', savedArticleIds.map(id => ({ id, type: typeof id })));
-      console.log('📚 Found saved articles in main feed:', savedArticles.length);
-      console.log('📚 Sample saved articles:', savedArticles.slice(0, 2).map(a => ({ id: a.id, title: a.title?.substring(0, 30) })));
+      // The savedArticlesWithDetails already comes properly formatted from the API
+      // Just need to add missing fields that the UI expects without overriding skill-level content
+      const formattedSavedArticles = savedArticlesWithDetails.map(article => ({
+        ...article,
+        // Only add missing fields, don't override existing skill-level content
+        subjectClasses: Array.isArray(article.categories) ? article.categories : [article.categories || 'general'],
+        tags: article.tags || generateTags(article.categories_name, article.title, article.abstract),
+        _original: article
+      }));
       
-      setSavedArticlesFromDB(savedArticles);
+      console.log('📚 Formatted saved articles:', formattedSavedArticles.length);
+      console.log('📚 Sample saved articles:', formattedSavedArticles.slice(0, 2).map(a => ({ id: a.id, title: a.title?.substring(0, 30), savedAt: a.savedAt })));
+      
+      setSavedArticlesFromDB(formattedSavedArticles);
       
     } catch (error) {
       console.error('❌ Error loading saved articles:', error);
@@ -891,7 +896,8 @@ function App() {
         });
       }
       
-      // Note: We update local state above, so no need to reload from database immediately
+      // Reload saved articles panel to reflect the change
+      await loadUserSavedArticles();
       
     } catch (error) {
       console.error('❌ Error toggling favorite:', error);
