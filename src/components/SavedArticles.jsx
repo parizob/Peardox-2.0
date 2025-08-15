@@ -13,14 +13,8 @@ const SavedArticles = ({ isOpen, onClose, savedArticles, onArticleClick, onToggl
   });
 
   const getCategoryColor = (category) => {
-    const colors = {
-      'Artificial Intelligence': 'bg-blue-100 text-blue-800',
-      'Quantum Computing': 'bg-purple-100 text-purple-800',
-      'Edge Computing': 'bg-green-100 text-green-800',
-      'Computer Vision': 'bg-orange-100 text-orange-800',
-      'Natural Language Processing': 'bg-indigo-100 text-indigo-800',
-    };
-    return colors[category] || 'bg-gray-100 text-gray-800';
+    // Always return gray styling for consistent appearance
+    return 'bg-gray-100 text-gray-800';
   };
 
   const handleRemoveFavorite = (e, articleId) => {
