@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon } from 'lucide-react';
+import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle } from 'lucide-react';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
@@ -227,6 +227,7 @@ function App() {
   
   // User state for authentication and skill level
   const [user, setUser] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const [userSkillLevel, setUserSkillLevel] = useState('Beginner');
   const [userResearchInterests, setUserResearchInterests] = useState([]);
   
@@ -377,6 +378,7 @@ function App() {
               if (authAPI.getProfile) {
                 const profile = await authAPI.getProfile(session.user.id);
                 if (profile) {
+                  setUserProfile(profile); // Store the full profile
                   const skillLevel = profile.skill_level || 'Beginner';
                   setUserSkillLevel(skillLevel);
                   console.log('👤 User skill level:', skillLevel);
@@ -433,6 +435,7 @@ function App() {
         setUser(session.user);
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
+        setUserProfile(null);
       }
     });
 
@@ -470,6 +473,21 @@ function App() {
       });
     }
   }, [selectedCategory]);
+
+  // Function to scroll to articles section
+  const scrollToArticles = () => {
+    const categoriesSection = document.getElementById('categories-section');
+    if (categoriesSection) {
+      const headerHeight = 80; // Account for fixed header height
+      const elementPosition = categoriesSection.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   const loadData = async () => {
     console.log('🚀 Loading data from Supabase with skill level:', userSkillLevel);
@@ -1036,55 +1054,111 @@ function App() {
                 </p>
               </div>
 
-   {/* CTA Section */}
-   <div className="mb-6 sm:mb-10">
-                <div className="mx-auto max-w-xl">
-                  <div className="relative bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-4 sm:p-6 border border-blue-100 shadow-sm">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-green-500/5 rounded-xl"></div>
-                    <div className="relative text-center">
-                      {user ? (
-                        // Authenticated user CTA
-                        <>
-                          <div className="inline-flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg mb-3">
-                            <User className="w-5 h-5 text-blue-600" />
+
+
+              {/* Side-by-side CTA and Ready to Explore Sections */}
+              <div className="mb-12 sm:mb-16">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    
+                    {/* Left Side - Enhanced CTA Section */}
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-3xl shadow-xl border border-blue-200 p-8 sm:p-10 h-full flex flex-col justify-between">
+                      <div>
+                        <div className="text-center mb-8">
+                          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl mb-6">
+                            <UserPlus className="h-8 w-8 text-white" />
                           </div>
-                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-                            Welcome back! Customize your experience
+                          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+                            Join the Revolution
                           </h3>
-                          <p className="text-gray-600 text-sm mb-3">
-                            Adjust your skill level and research interests for personalized content
+                          <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+                            Get instant access to AI research that matches your expertise level. Start your journey today.
                           </p>
+                        </div>
+                        
+                        <div className="space-y-4 mb-8">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
+                            <span>Personalized content for your skill level</span>
+                          </div>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
+                            <span>Save and organize your favorite papers</span>
+                          </div>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
+                            <span>Weekly digest of breakthrough research</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="text-center">
+                        {user ? (
+                          <div className="flex items-center justify-center text-green-600 font-medium">
+                            <CheckCircle className="w-5 h-5 mr-2" />
+                            Welcome back, {userProfile?.full_name || user.email?.split('@')[0] || 'there'}!
+                          </div>
+                        ) : (
                           <button
                             onClick={handleShowAccount}
-                            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-md group text-sm"
-                          >
-                            Customize Experience
-                            <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                          </button>
-                        </>
-                      ) : (
-                        // Non-authenticated user CTA
-                        <>
-                          <div className="inline-flex items-center justify-center w-10 h-10 bg-green-100 rounded-lg mb-3">
-                            <UserPlus className="w-5 h-5" style={{ color: '#1db954' }} />
-                          </div>
-                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
-                            Get personalized AI research summaries
-                          </h3>
-                          <p className="text-gray-600 text-sm mb-3">
-                            Set your skill level and interests for content tailored to you
-                          </p>
-                          <button
-                            onClick={handleShowAccount}
-                            className="inline-flex items-center px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-all duration-200 shadow-sm hover:shadow-md group text-sm"
-                            style={{ backgroundColor: '#1db954' }}
+                            className="w-full inline-flex items-center justify-center px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-blue-700 hover:to-indigo-700"
                           >
                             Create Free Account
-                            <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                            <ArrowRight className="ml-3 w-5 h-5" />
                           </button>
-                        </>
-                      )}
+                        )}
+                      </div>
                     </div>
+
+                    {/* Right Side - Ready to Explore Section */}
+                    <div className="bg-gradient-to-br from-orange-50 to-red-100 rounded-3xl shadow-xl border border-orange-200 p-8 sm:p-10 h-full flex flex-col justify-between">
+                      <div>
+                        <div className="text-center mb-8">
+                          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl mb-6">
+                            <Zap className="h-8 w-8 text-white" />
+                          </div>
+                          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+                            Ready to Explore?
+                          </h3>
+                          <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+                            Jump straight into cutting-edge AI research. No signup required to start exploring.
+                          </p>
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-4 mb-8">
+                          <div className="text-center p-3 bg-white/60 rounded-xl">
+                            <div className="text-lg font-bold text-orange-600">2K+</div>
+                            <div className="text-xs text-gray-600">Papers</div>
+                          </div>
+                          <div className="text-center p-3 bg-white/60 rounded-xl">
+                            <div className="text-lg font-bold text-red-600">Daily</div>
+                            <div className="text-xs text-gray-600">Updates</div>
+                          </div>
+                          <div className="text-center p-3 bg-white/60 rounded-xl">
+                            <div className="text-lg font-bold text-orange-600">AI</div>
+                            <div className="text-xs text-gray-600">Summarized</div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="text-center">
+                        <button
+                          onClick={scrollToArticles}
+                          className="w-full group inline-flex items-center justify-center px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-orange-600 hover:to-red-600"
+                        >
+                          <span>See Latest Breakthroughs</span>
+                          <svg 
+                            className="ml-3 w-5 h-5 transform group-hover:translate-y-1 transition-transform duration-300" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                    
                   </div>
                 </div>
               </div>
@@ -1198,7 +1272,8 @@ function App() {
                  </div>
                </div>
 
-              <div className="text-center mb-6 sm:mb-10">
+
+              <div id="categories-section" className="text-center mb-6 sm:mb-10">
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3 px-4">
                   Pick a Category 
                 </h3>
