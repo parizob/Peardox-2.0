@@ -982,19 +982,19 @@ function App() {
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
               <div className="text-center mb-8 sm:mb-12">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight px-2">
-                  Your Daily Dose of Discovery
+                  AI Research, Simplified
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
-                We break down the latest AI breakthroughs into words you can actually understand
+                  From beginner to expert: explore AI breakthroughs at the level you need, in minutes
                 </p>
               </div>
 
               <div className="text-center mb-6 sm:mb-10">
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3 px-4">
-                  Explore Research Categories
+                  Pick a Category 
                 </h3>
                 <p className="text-gray-600 text-sm sm:text-base px-4">
-                  Click any category to discover the latest breakthroughs
+                  Explore Breakthroughs Shaping the Future
                 </p>
               </div>
 
