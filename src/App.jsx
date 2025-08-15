@@ -1131,18 +1131,18 @@ function App() {
                           </p>
                         </div>
                         
-                        <div className="grid grid-cols-3 gap-4 mb-8">
-                          <div className="text-center p-3 bg-white/80 rounded-xl border border-green-100">
-                            <div className="text-lg font-bold text-green-600">1M+</div>
+                        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-8">
+                          <div className="text-center p-2 sm:p-3 bg-white/80 rounded-xl border border-green-100">
+                            <div className="text-sm sm:text-lg font-bold text-green-600">1M+</div>
                             <div className="text-xs text-gray-600">Authors</div>
                           </div>
-                          <div className="text-center p-3 bg-white/80 rounded-xl border border-green-100">
-                            <div className="text-lg font-bold text-green-700">Daily</div>
+                          <div className="text-center p-2 sm:p-3 bg-white/80 rounded-xl border border-green-100">
+                            <div className="text-sm sm:text-lg font-bold text-green-600">Daily</div>
                             <div className="text-xs text-gray-600">Updates</div>
                           </div>
-                          <div className="text-center p-3 bg-white/80 rounded-xl border border-green-100">
-                            <div className="text-lg font-bold text-green-600">AI</div>
-                            <div className="text-xs text-gray-600">Summarized</div>
+                          <div className="text-center p-2 sm:p-3 bg-white/80 rounded-xl border border-green-100">
+                            <div className="text-sm sm:text-lg font-bold text-green-600">AI</div>
+                            <div className="text-xs text-gray-600">Centric</div>
                           </div>
                         </div>
                       </div>
