@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi } from 'lucide-react';
+import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, User, UserPlus } from 'lucide-react';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
@@ -976,7 +976,7 @@ function App() {
           </div>
         )}
 
-        {/* Category Filter Section */}
+        {/* Main Hero Section with CTA */}
         {!isLoading && !error && !searchTerm && (
           <div className="pt-8 sm:pt-8 pb-12 sm:pb-20 mb-8 sm:mb-12">
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
@@ -987,6 +987,59 @@ function App() {
                 <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
                   From beginner to expert: explore AI breakthroughs at the level you need, in minutes
                 </p>
+              </div>
+
+   {/* CTA Section */}
+   <div className="mb-6 sm:mb-10">
+                <div className="mx-auto max-w-xl">
+                  <div className="relative bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-4 sm:p-6 border border-blue-100 shadow-sm">
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-green-500/5 rounded-xl"></div>
+                    <div className="relative text-center">
+                      {user ? (
+                        // Authenticated user CTA
+                        <>
+                          <div className="inline-flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg mb-3">
+                            <User className="w-5 h-5 text-blue-600" />
+                          </div>
+                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+                            Welcome back! Customize your experience
+                          </h3>
+                          <p className="text-gray-600 text-sm mb-3">
+                            Adjust your skill level and research interests for personalized content
+                          </p>
+                          <button
+                            onClick={handleShowAccount}
+                            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-all duration-200 shadow-sm hover:shadow-md group text-sm"
+                          >
+                            Customize Experience
+                            <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                          </button>
+                        </>
+                      ) : (
+                        // Non-authenticated user CTA
+                        <>
+                          <div className="inline-flex items-center justify-center w-10 h-10 bg-green-100 rounded-lg mb-3">
+                            <UserPlus className="w-5 h-5" style={{ color: '#1db954' }} />
+                          </div>
+                          <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
+                            Get personalized AI research summaries
+                          </h3>
+                          <p className="text-gray-600 text-sm mb-3">
+                            Set your skill level and interests for content tailored to you
+                          </p>
+                          <button
+                            onClick={handleShowAccount}
+                            className="inline-flex items-center px-4 py-2 text-white rounded-lg font-medium hover:opacity-90 transition-all duration-200 shadow-sm hover:shadow-md group text-sm"
+                            style={{ backgroundColor: '#1db954' }}
+                          >
+                            Create Free Account
+                            <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="text-center mb-6 sm:mb-10">
@@ -1175,4 +1228,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
