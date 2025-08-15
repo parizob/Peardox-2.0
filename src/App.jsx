@@ -422,6 +422,25 @@ function App() {
     checkAuth();
   }, []);
 
+  // Simple auth listener for CTA updates only
+  useEffect(() => {
+    if (!authAPI || typeof authAPI.onAuthStateChange !== 'function') return;
+
+    const { data: { subscription } } = authAPI.onAuthStateChange((event, session) => {
+      console.log('🔄 Auth changed for CTA:', event);
+      
+      if (event === 'SIGNED_IN' && session?.user) {
+        setUser(session.user);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+      }
+    });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, []);
+
   // Load data from Supabase with skill-level specific summaries
   useEffect(() => {
     loadData();
