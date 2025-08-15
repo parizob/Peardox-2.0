@@ -477,32 +477,61 @@ function App() {
     setError(null);
     
     try {
-      // Start with a very simple, fast query to get the app working
-      console.log('📡 Loading basic articles directly...');
+      // Calculate date 2 weeks ago
+      const twoWeeksAgo = new Date();
+      twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+      const twoWeeksAgoISO = twoWeeksAgo.toISOString();
       
-      const { data: basicData, error: basicError } = await supabase
-        .from('v_arxiv_papers')
-        .select('id, title, abstract, categories_name, authors, created_at, published_date, arxiv_id')
-        .order('id', { ascending: false })
-        .limit(50); // Start with just 50 articles
+      console.log('📡 Loading articles from last 2 weeks with skill-level summaries...');
+      console.log('📅 Fetching articles published after:', twoWeeksAgoISO);
       
-      if (basicError) {
-        console.error('❌ Error loading basic data:', basicError);
-        throw basicError;
+      // Try to get papers with skill-level summaries first
+      let papersData;
+      try {
+        papersData = await arxivAPI.getAllPapersWithSummaries(userSkillLevel);
+        console.log(`📝 Loaded ${papersData.length} papers with summaries`);
+      } catch (summaryError) {
+        console.log('⚠️ Failed to load summaries, falling back to basic papers');
+        papersData = await arxivAPI.getAllPapers();
       }
       
-      console.log(`✅ Loaded ${basicData?.length || 0} basic articles`);
+      // Filter for papers from last 2 weeks
+      const recentPapers = papersData.filter(paper => {
+        const paperDate = paper.published_date || paper.created_at;
+        if (!paperDate) return false;
+        
+        const publishedDate = new Date(paperDate);
+        return publishedDate >= twoWeeksAgo;
+      });
       
-      // Transform to the expected format
-      const transformedArticles = (basicData || []).map(paper => ({
+      console.log(`📅 Found ${recentPapers.length} papers from last 2 weeks`);
+      
+      if (recentPapers.length === 0) {
+        console.log('⚠️ No recent papers found, showing latest available papers');
+        // If no papers from last 2 weeks, show the most recent ones
+        const sortedPapers = papersData.sort((a, b) => {
+          const dateA = new Date(a.published_date || a.created_at || 0);
+          const dateB = new Date(b.published_date || b.created_at || 0);
+          return dateB - dateA;
+        });
+        papersData = sortedPapers.slice(0, 500); // Show latest 500 papers
+      } else {
+        papersData = recentPapers;
+      }
+      
+      // Transform papers to article format with skill-level aware content
+      const transformedArticles = papersData.map(paper => ({
         id: paper.id,
-        title: simplifyTitle(paper.title || 'Untitled'),
-        shortDescription: simplifyDescription(paper.abstract || 'No description available'),
+        // Use skill-level specific title if available, otherwise simplify original
+        title: paper.summaryTitle || simplifyTitle(paper.title || 'Untitled'),
+        // Use skill-level specific overview if available, otherwise simplify abstract  
+        shortDescription: paper.summaryOverview || simplifyDescription(paper.abstract || 'No description available'),
         originalTitle: paper.title || 'Untitled',
         originalAbstract: paper.abstract || 'No abstract available',
-        summaryContent: null,
-        hasSummary: false,
-        skillLevel: userSkillLevel,
+        // Add skill-level specific summary content
+        summaryContent: paper.summaryContent || null,
+        hasSummary: !!(paper.summaryTitle || paper.summaryOverview || paper.summaryContent),
+        skillLevel: paper.skillLevel || userSkillLevel,
         category: Array.isArray(paper.categories_name) && paper.categories_name.length > 0 
           ? paper.categories_name[0] 
           : 'General',
@@ -521,20 +550,29 @@ function App() {
       
       setArticles(transformedArticles);
       
-      // Set basic categories from the loaded articles
-      const categorySet = new Set();
-      transformedArticles.forEach(article => {
-        article.categories.forEach(cat => categorySet.add(cat));
-      });
+      // Load categories
+      try {
+        const categoriesData = await arxivAPI.getCategories();
+        setCategories(categoriesData);
+        console.log(`📋 Loaded ${categoriesData.length} categories`);
+      } catch (categoryError) {
+        console.log('⚠️ Failed to load categories, generating from articles');
+        // Generate categories from articles as fallback
+        const categorySet = new Set();
+        transformedArticles.forEach(article => {
+          article.categories.forEach(cat => categorySet.add(cat));
+        });
+        
+        const basicCategories = Array.from(categorySet).map(categoryName => ({
+          subject_class: categoryName.toLowerCase().replace(/\s+/g, '_'),
+          category_name: categoryName
+        }));
+        
+        setCategories(basicCategories);
+      }
       
-      const basicCategories = Array.from(categorySet).map(categoryName => ({
-        subject_class: categoryName.toLowerCase().replace(/\s+/g, '_'),
-        category_name: categoryName
-      }));
-      
-      setCategories(basicCategories);
-      
-      console.log(`✅ App loaded successfully with ${transformedArticles.length} articles and ${basicCategories.length} categories`);
+      console.log(`✅ App loaded successfully with ${transformedArticles.length} articles`);
+      console.log(`📝 Articles with skill-level summaries: ${transformedArticles.filter(a => a.hasSummary).length}`);
       
     } catch (err) {
       console.error('💥 Error loading data:', err);
