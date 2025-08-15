@@ -379,6 +379,8 @@ function App() {
                 const profile = await authAPI.getProfile(session.user.id);
                 if (profile) {
                   setUserProfile(profile); // Store the full profile
+                  console.log('👤 User profile loaded:', profile);
+                  console.log('👤 User full_name:', profile.full_name);
                   const skillLevel = profile.skill_level || 'Beginner';
                   setUserSkillLevel(skillLevel);
                   console.log('👤 User skill level:', skillLevel);
@@ -571,7 +573,7 @@ function App() {
       // Load categories
       try {
         const categoriesData = await arxivAPI.getCategories();
-        setCategories(categoriesData);
+      setCategories(categoriesData);
         console.log(`📋 Loaded ${categoriesData.length} categories`);
       } catch (categoryError) {
         console.log('⚠️ Failed to load categories, generating from articles');
@@ -1062,13 +1064,13 @@ function App() {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     
                     {/* Left Side - Enhanced CTA Section */}
-                    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-3xl shadow-xl border border-blue-200 p-8 sm:p-10 h-full flex flex-col justify-between">
+                    <div className="bg-gradient-to-br from-white to-blue-50 rounded-3xl shadow-lg border border-blue-100 p-8 sm:p-10 h-full flex flex-col justify-between">
                       <div>
                         <div className="text-center mb-8">
-                          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl mb-6">
+                          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl mb-6 shadow-md">
                             <UserPlus className="h-8 w-8 text-white" />
                           </div>
-                          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+                          <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">
                             Join the Revolution
                           </h3>
                           <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
@@ -1096,28 +1098,32 @@ function App() {
                         {user ? (
                           <div className="flex items-center justify-center text-green-600 font-medium">
                             <CheckCircle className="w-5 h-5 mr-2" />
-                            Welcome back, {userProfile?.full_name || user.email?.split('@')[0] || 'there'}!
+                            Welcome back, {(() => {
+                              const displayName = userProfile?.full_name || user.email?.split('@')[0] || 'there';
+                              console.log('👤 CTA Display name:', displayName, 'from profile:', userProfile?.full_name, 'from email:', user.email?.split('@')[0]);
+                              return displayName;
+                            })()}!
                           </div>
                         ) : (
                           <button
                             onClick={handleShowAccount}
-                            className="w-full inline-flex items-center justify-center px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-blue-700 hover:to-indigo-700"
+                            className="w-full inline-flex items-center justify-center px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 hover:from-blue-600 hover:to-blue-700"
                           >
                             Create Free Account
                             <ArrowRight className="ml-3 w-5 h-5" />
                           </button>
                         )}
-                      </div>
+                          </div>
                     </div>
 
                     {/* Right Side - Ready to Explore Section */}
-                    <div className="bg-gradient-to-br from-orange-50 to-red-100 rounded-3xl shadow-xl border border-orange-200 p-8 sm:p-10 h-full flex flex-col justify-between">
+                    <div className="bg-gradient-to-br from-white to-green-50 rounded-3xl shadow-lg border border-green-100 p-8 sm:p-10 h-full flex flex-col justify-between">
                       <div>
                         <div className="text-center mb-8">
-                          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl mb-6">
+                          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 shadow-md" style={{ backgroundColor: '#1db954' }}>
                             <Zap className="h-8 w-8 text-white" />
                           </div>
-                          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+                          <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">
                             Ready to Explore?
                           </h3>
                           <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
@@ -1126,25 +1132,30 @@ function App() {
                         </div>
                         
                         <div className="grid grid-cols-3 gap-4 mb-8">
-                          <div className="text-center p-3 bg-white/60 rounded-xl">
-                            <div className="text-lg font-bold text-orange-600">2K+</div>
+                          <div className="text-center p-3 bg-white/80 rounded-xl border border-green-100">
+                            <div className="text-lg font-bold text-green-600">2K+</div>
                             <div className="text-xs text-gray-600">Papers</div>
                           </div>
-                          <div className="text-center p-3 bg-white/60 rounded-xl">
-                            <div className="text-lg font-bold text-red-600">Daily</div>
+                          <div className="text-center p-3 bg-white/80 rounded-xl border border-green-100">
+                            <div className="text-lg font-bold text-green-700">Daily</div>
                             <div className="text-xs text-gray-600">Updates</div>
                           </div>
-                          <div className="text-center p-3 bg-white/60 rounded-xl">
-                            <div className="text-lg font-bold text-orange-600">AI</div>
+                          <div className="text-center p-3 bg-white/80 rounded-xl border border-green-100">
+                            <div className="text-lg font-bold text-green-600">AI</div>
                             <div className="text-xs text-gray-600">Summarized</div>
                           </div>
                         </div>
                       </div>
                       
                       <div className="text-center">
-                        <button
+                          <button
                           onClick={scrollToArticles}
-                          className="w-full group inline-flex items-center justify-center px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-orange-500 to-red-500 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-orange-600 hover:to-red-600"
+                          className="w-full group inline-flex items-center justify-center px-6 py-4 text-lg font-semibold text-white rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                          style={{ 
+                            backgroundColor: '#1db954'
+                          }}
+                          onMouseEnter={(e) => e.target.style.backgroundColor = '#16a14a'}
+                          onMouseLeave={(e) => e.target.style.backgroundColor = '#1db954'}
                         >
                           <span>See Latest Breakthroughs</span>
                           <svg 
@@ -1155,8 +1166,8 @@ function App() {
                           >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                           </svg>
-                        </button>
-                      </div>
+                          </button>
+                    </div>
                     </div>
                     
                   </div>
@@ -1166,17 +1177,17 @@ function App() {
                {/* Democratizing Discovery Section */}
                <div className="mb-12 sm:mb-16">
                  <div className="mx-auto max-w-6xl px-4 sm:px-6">
-                   <div className="relative bg-gradient-to-br from-white to-green-50/30 rounded-3xl shadow-xl border border-green-100 p-8 sm:p-12 overflow-hidden">
+                   <div className="relative bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-lg border border-gray-100 p-8 sm:p-12 overflow-hidden">
                      {/* Background decoration */}
-                     <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-green-400/10 to-transparent rounded-full blur-2xl"></div>
-                     <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-blue-400/10 to-transparent rounded-full blur-2xl"></div>
+                     <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-gray-200/20 to-transparent rounded-full blur-2xl"></div>
+                     <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-gray-300/20 to-transparent rounded-full blur-2xl"></div>
                      
                      <div className="relative">
                        <div className="text-center mb-10 sm:mb-12">
-                         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl mb-6">
+                         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-gray-600 to-gray-700 rounded-2xl mb-6 shadow-md">
                            <Users className="h-8 w-8 text-white" />
                          </div>
-                         <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+                         <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4 leading-tight">
                            Democratizing Discovery
                          </h3>
                          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -1185,23 +1196,23 @@ function App() {
                        </div>
 
                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
-                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-green-100 shadow-lg">
-                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">1.5K+</div>
+                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
+                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">1.5K+</div>
                            <div className="text-gray-600 font-medium text-sm sm:text-base">Papers Simplified</div>
                          </div>
                          
-                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-green-100 shadow-lg">
-                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">200+</div>
+                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
+                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">200+</div>
                            <div className="text-gray-600 font-medium text-sm sm:text-base">Active Users</div>
                          </div>
                          
-                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-green-100 shadow-lg">
-                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">50+</div>
+                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
+                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">50+</div>
                            <div className="text-gray-600 font-medium text-sm sm:text-base">Universities</div>
                          </div>
                          
-                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-green-100 shadow-lg">
-                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">50+</div>
+                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
+                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">50+</div>
                            <div className="text-gray-600 font-medium text-sm sm:text-base">Countries</div>
                          </div>
                        </div>
@@ -1254,16 +1265,16 @@ function App() {
                        </div>
 
                        {/* Trust badge section */}
-                       <div className="mt-10 pt-8 border-t border-green-100">
+                       <div className="mt-10 pt-8 border-t border-gray-200">
                          <div className="text-center">
                            <p className="text-gray-500 text-sm mb-4">Trusted by professionals at</p>
-                           <div className="flex flex-wrap justify-center items-center gap-6 text-gray-400 text-sm font-medium">
-                             <span className="bg-gray-50 px-4 py-2 rounded-lg">Google</span>
-                             <span className="bg-gray-50 px-4 py-2 rounded-lg">Microsoft</span>
-                             <span className="bg-gray-50 px-4 py-2 rounded-lg">Verizon</span>
-                             <span className="bg-gray-50 px-4 py-2 rounded-lg">Leidos</span>
-                             <span className="bg-gray-50 px-4 py-2 rounded-lg">MIT</span>
-                             <span className="bg-gray-50 px-4 py-2 rounded-lg">Cresta</span>
+                           <div className="flex flex-wrap justify-center items-center gap-6 text-gray-500 text-sm font-medium">
+                             <span className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">Google</span>
+                             <span className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">Microsoft</span>
+                             <span className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">Verizon</span>
+                             <span className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">Leidos</span>
+                             <span className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">MIT</span>
+                             <span className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">Cresta</span>
                            </div>
                          </div>
                        </div>
