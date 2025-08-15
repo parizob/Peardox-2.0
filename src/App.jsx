@@ -7,7 +7,7 @@ import SavedArticles from './components/SavedArticles';
 import AccountModal from './components/AccountModal';
 import Footer from './components/Footer';
 import ContactModal from './components/ContactModal';
-import { arxivAPI, authAPI, savedArticlesAPI } from './lib/supabase';
+import { arxivAPI, authAPI, savedArticlesAPI, supabase } from './lib/supabase';
 
 // Comprehensive category to icon mapping
 const getCategoryIcon = (categoryName) => {
@@ -365,21 +365,18 @@ function App() {
 
   // Check user authentication and load their skill level
   useEffect(() => {
-    let mounted = true;
-    let authSubscription = null;
-
     const checkAuth = async () => {
       try {
         if (authAPI && typeof authAPI.getCurrentSession === 'function') {
           const { data: { session } } = await authAPI.getCurrentSession();
-          if (session?.user && mounted) {
+          if (session?.user) {
             setUser(session.user);
             
             // Load user profile to get skill level
             try {
               if (authAPI.getProfile) {
                 const profile = await authAPI.getProfile(session.user.id);
-                if (profile && mounted) {
+                if (profile) {
                   const skillLevel = profile.skill_level || 'Beginner';
                   setUserSkillLevel(skillLevel);
                   console.log('👤 User skill level:', skillLevel);
@@ -406,12 +403,10 @@ function App() {
               }
             } catch (profileError) {
               console.error('Error loading user profile:', profileError);
-              if (mounted) {
-                setUserSkillLevel('Beginner'); // Default fallback
-                setUserResearchInterests(defaultResearchInterests);
-              }
+              setUserSkillLevel('Beginner'); // Default fallback
+              setUserResearchInterests(defaultResearchInterests);
             }
-          } else if (mounted) {
+          } else {
             setUser(null);
             setUserSkillLevel('Beginner'); // Default for non-authenticated users
             setUserResearchInterests(defaultResearchInterests);
@@ -419,77 +414,12 @@ function App() {
         }
       } catch (error) {
         console.error('Auth check error:', error);
-        if (mounted) {
-          setUser(null);
-          setUserSkillLevel('Beginner');
-        }
+        setUser(null);
+        setUserSkillLevel('Beginner');
       }
     };
-
-    // Set up auth listener
-    if (authAPI && typeof authAPI.onAuthStateChange === 'function') {
-      try {
-        const { data: { subscription } } = authAPI.onAuthStateChange(async (event, session) => {
-          console.log('🔄 Auth state changed in App:', event);
-          
-          if (!mounted) return;
-          
-          if (event === 'SIGNED_IN' && session?.user) {
-            console.log('✅ User signed in, updating CTA');
-            setUser(session.user);
-            
-            // Load user profile
-            try {
-              if (authAPI.getProfile) {
-                const profile = await authAPI.getProfile(session.user.id);
-                if (profile && mounted) {
-                  const skillLevel = profile.skill_level || 'Beginner';
-                  setUserSkillLevel(skillLevel);
-                  
-                  const researchInterests = profile.research_interests || defaultResearchInterests;
-                  const userInterests = Array.isArray(researchInterests) 
-                    ? researchInterests.slice(0, 5)
-                    : defaultResearchInterests;
-                  
-                  while (userInterests.length < 5) {
-                    const remaining = defaultResearchInterests.filter(interest => !userInterests.includes(interest));
-                    if (remaining.length > 0) {
-                      userInterests.push(remaining[0]);
-                    } else {
-                      break;
-                    }
-                  }
-                  
-                  setUserResearchInterests(userInterests);
-                }
-              }
-            } catch (profileError) {
-              console.error('Error loading profile after sign in:', profileError);
-            }
-          } else if (event === 'SIGNED_OUT') {
-            console.log('👋 User signed out, updating CTA');
-            setUser(null);
-            setUserSkillLevel('Beginner');
-            setUserResearchInterests(defaultResearchInterests);
-          }
-        });
-        
-        authSubscription = subscription;
-        console.log('👂 Auth listener set up for CTA updates');
-      } catch (error) {
-        console.error('Error setting up auth listener:', error);
-      }
-    }
 
     checkAuth();
-
-    return () => {
-      mounted = false;
-      if (authSubscription) {
-        authSubscription.unsubscribe();
-        console.log('🧹 Auth listener cleaned up');
-      }
-    };
   }, []);
 
   // Load data from Supabase with skill-level specific summaries
@@ -506,7 +436,7 @@ function App() {
       setSavedArticlesFromDB([]);
       setFavorites(new Set());
     }
-  }, [user, userSkillLevel, articles]); // Reload when user, skill level, or articles change
+  }, [user]); // Only depend on user to prevent loops
 
   // Scroll to results when category is selected
   useEffect(() => {
@@ -528,39 +458,36 @@ function App() {
     setError(null);
     
     try {
-      // Create a timeout to prevent infinite loading
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Request timeout')), 15000)
-      );
+      // Start with a very simple, fast query to get the app working
+      console.log('📡 Loading basic articles directly...');
       
-      // Load articles with summaries and categories from Supabase
-      const dataPromise = Promise.all([
-        arxivAPI.getAllPapersWithSummaries(userSkillLevel),
-        arxivAPI.getCategories()
-      ]);
+      const { data: basicData, error: basicError } = await supabase
+        .from('v_arxiv_papers')
+        .select('id, title, abstract, categories_name, authors, created_at, published_date, arxiv_id')
+        .order('id', { ascending: false })
+        .limit(50); // Start with just 50 articles
       
-      const [papersData, categoriesData] = await Promise.race([dataPromise, timeoutPromise]);
+      if (basicError) {
+        console.error('❌ Error loading basic data:', basicError);
+        throw basicError;
+      }
       
-      // Transform papers to article format
-      const transformedArticles = papersData.map(paper => ({
+      console.log(`✅ Loaded ${basicData?.length || 0} basic articles`);
+      
+      // Transform to the expected format
+      const transformedArticles = (basicData || []).map(paper => ({
         id: paper.id,
-        // Use summary title if available, otherwise simplify original title
-        title: paper.summaryTitle || simplifyTitle(paper.title || 'Untitled'),
-        // Use summary overview if available, otherwise simplify abstract
-        shortDescription: paper.summaryOverview || simplifyDescription(paper.abstract || 'No description available'),
+        title: simplifyTitle(paper.title || 'Untitled'),
+        shortDescription: simplifyDescription(paper.abstract || 'No description available'),
         originalTitle: paper.title || 'Untitled',
         originalAbstract: paper.abstract || 'No abstract available',
-        // Add summary content for detailed view
-        summaryContent: paper.summaryContent || null,
-        hasSummary: !!(paper.summaryTitle || paper.summaryOverview || paper.summaryContent),
-        skillLevel: paper.skillLevel || userSkillLevel,
-        // Keep the first category name for backwards compatibility
+        summaryContent: null,
+        hasSummary: false,
+        skillLevel: userSkillLevel,
         category: Array.isArray(paper.categories_name) && paper.categories_name.length > 0 
           ? paper.categories_name[0] 
           : 'General',
-        // Store all categories from the array
         categories: Array.isArray(paper.categories_name) ? paper.categories_name : [paper.categories_name || 'General'],
-        // Store subject classes for filtering
         subjectClasses: Array.isArray(paper.categories) ? paper.categories : [paper.categories || 'general'],
         categoriesName: Array.isArray(paper.categories_name) && paper.categories_name.length > 0 
           ? paper.categories_name[0] 
@@ -574,66 +501,53 @@ function App() {
       }));
       
       setArticles(transformedArticles);
-      setCategories(categoriesData);
       
-      console.log(`✅ Loaded ${transformedArticles.length} articles with summaries for ${userSkillLevel} level`);
-      console.log(`📋 Found ${categoriesData.length} categories`);
-      console.log(`📝 Articles with summaries: ${transformedArticles.filter(a => a.hasSummary).length}`);
+      // Set basic categories from the loaded articles
+      const categorySet = new Set();
+      transformedArticles.forEach(article => {
+        article.categories.forEach(cat => categorySet.add(cat));
+      });
       
-      // Debug: Show ID range to verify we're getting the highest IDs
-      if (transformedArticles.length > 0) {
-        const sortedByIdDesc = [...transformedArticles].sort((a, b) => b.id - a.id);
-        const highestId = sortedByIdDesc[0]?.id;
-        const lowestId = sortedByIdDesc[sortedByIdDesc.length - 1]?.id;
-        console.log(`📊 ID Range: ${highestId} (highest) to ${lowestId} (lowest) - Total: ${transformedArticles.length} articles`);
-      }
+      const basicCategories = Array.from(categorySet).map(categoryName => ({
+        subject_class: categoryName.toLowerCase().replace(/\s+/g, '_'),
+        category_name: categoryName
+      }));
+      
+      setCategories(basicCategories);
+      
+      console.log(`✅ App loaded successfully with ${transformedArticles.length} articles and ${basicCategories.length} categories`);
       
     } catch (err) {
       console.error('💥 Error loading data:', err);
-      setError('Failed to load articles from database. Please try again.');
+      setError('Unable to connect to the database. Please check your internet connection and try again.');
       
-      // Fallback: try to load without summaries
-      try {
-        console.log('🔄 Attempting fallback to basic articles...');
-        const [papersData, categoriesData] = await Promise.all([
-          arxivAPI.getAllPapers(),
-          arxivAPI.getCategories()
-        ]);
-        
-        const transformedArticles = papersData.map(paper => ({
-          id: paper.id,
-          title: simplifyTitle(paper.title || 'Untitled'),
-          shortDescription: simplifyDescription(paper.abstract || 'No description available'),
-          originalTitle: paper.title || 'Untitled',
-          originalAbstract: paper.abstract || 'No abstract available',
+      // Ultimate fallback: show some demo data so the app isn't completely broken
+      const demoArticles = [
+        {
+          id: 1,
+          title: 'Demo Article: AI Research Loading...',
+          shortDescription: 'We are currently loading the latest AI research papers. Please check your internet connection and try refreshing the page.',
+          originalTitle: 'Demo Article',
+          originalAbstract: 'Demo abstract',
           summaryContent: null,
           hasSummary: false,
           skillLevel: userSkillLevel,
-          category: Array.isArray(paper.categories_name) && paper.categories_name.length > 0 
-            ? paper.categories_name[0] 
-            : 'General',
-          categories: Array.isArray(paper.categories_name) ? paper.categories_name : [paper.categories_name || 'General'],
-          subjectClasses: Array.isArray(paper.categories) ? paper.categories : [paper.categories || 'general'],
-          categoriesName: Array.isArray(paper.categories_name) && paper.categories_name.length > 0 
-            ? paper.categories_name[0] 
-            : 'General',
-          arxivId: paper.arxiv_id || '',
-          url: paper.pdf_url || paper.abstract_url || `https://arxiv.org/pdf/${paper.arxiv_id}`,
-          authors: Array.isArray(paper.authors) ? paper.authors.join(', ') : (paper.authors || 'Unknown Authors'),
-          publishedDate: formatDate(paper.published_date || paper.created_at),
-          tags: generateTags(paper.categories_name, paper.title, paper.abstract),
-          _original: paper
-        }));
-        
-        setArticles(transformedArticles);
-        setCategories(categoriesData);
-        setError(null); // Clear error if fallback succeeds
-        console.log(`✅ Fallback successful: Loaded ${transformedArticles.length} basic articles`);
-        
-      } catch (fallbackErr) {
-        console.error('💥 Fallback also failed:', fallbackErr);
-        setError('Unable to load articles. Please check your connection and try again.');
-      }
+          category: 'Machine Learning',
+          categories: ['Machine Learning'],
+          subjectClasses: ['machine_learning'],
+          categoriesName: 'Machine Learning',
+          arxivId: 'demo',
+          url: '#',
+          authors: 'Pearadox Team',
+          publishedDate: formatDate(new Date().toISOString()),
+          tags: ['Demo'],
+          _original: {}
+        }
+      ];
+      
+      setArticles(demoArticles);
+      setCategories([{ subject_class: 'machine_learning', category_name: 'Machine Learning' }]);
+      
     } finally {
       setIsLoading(false);
     }
@@ -920,8 +834,7 @@ function App() {
         });
       }
       
-      // Reload saved articles for the panel
-      await loadUserSavedArticles();
+      // Note: We update local state above, so no need to reload from database immediately
       
     } catch (error) {
       console.error('❌ Error toggling favorite:', error);
@@ -1116,90 +1029,105 @@ function App() {
                {/* Democratizing Discovery Section */}
                <div className="mb-12 sm:mb-16">
                  <div className="mx-auto max-w-6xl px-4 sm:px-6">
-                   <div className="relative bg-gradient-to-br from-gray-900 to-blue-900 rounded-3xl shadow-2xl p-8 sm:p-12 overflow-hidden">
+                   <div className="relative bg-gradient-to-br from-white to-green-50/30 rounded-3xl shadow-xl border border-green-100 p-8 sm:p-12 overflow-hidden">
                      {/* Background decoration */}
-                     <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-blue-400/20 to-transparent rounded-full blur-3xl"></div>
-                     <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-purple-400/20 to-transparent rounded-full blur-3xl"></div>
+                     <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-green-400/10 to-transparent rounded-full blur-2xl"></div>
+                     <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-blue-400/10 to-transparent rounded-full blur-2xl"></div>
                      
                      <div className="relative">
                        <div className="text-center mb-10 sm:mb-12">
-                         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl mb-6">
+                         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl mb-6">
                            <Users className="h-8 w-8 text-white" />
                          </div>
-                         <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                         <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
                            Democratizing Discovery
                          </h3>
-                         <p className="text-lg sm:text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+                         <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                            The future belongs to those who understand it. We're making sure that's everyone.
                          </p>
                        </div>
 
-                       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-10">
-                         <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-                           <div className="text-3xl sm:text-4xl font-bold text-white mb-2">1,500+</div>
-                           <div className="text-blue-100 font-medium">Papers Simplified</div>
+                       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
+                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-green-100 shadow-lg">
+                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">1.5K+</div>
+                           <div className="text-gray-600 font-medium text-sm sm:text-base">Papers Simplified</div>
                          </div>
                          
-                         <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-                           <div className="text-3xl sm:text-4xl font-bold text-white mb-2">10K+</div>
-                           <div className="text-blue-100 font-medium">Active Researchers</div>
+                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-green-100 shadow-lg">
+                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">200+</div>
+                           <div className="text-gray-600 font-medium text-sm sm:text-base">Active Users</div>
                          </div>
                          
-                         <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-                           <div className="text-3xl sm:text-4xl font-bold text-white mb-2">500+</div>
-                           <div className="text-blue-100 font-medium">Universities</div>
+                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-green-100 shadow-lg">
+                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">50+</div>
+                           <div className="text-gray-600 font-medium text-sm sm:text-base">Universities</div>
                          </div>
                          
-                         <div className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
-                           <div className="text-3xl sm:text-4xl font-bold text-white mb-2">50+</div>
-                           <div className="text-blue-100 font-medium">Countries</div>
+                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-green-100 shadow-lg">
+                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">50+</div>
+                           <div className="text-gray-600 font-medium text-sm sm:text-base">Countries</div>
                          </div>
                        </div>
 
                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-                         <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                         <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300 group">
                            <div className="flex items-center space-x-4 mb-4">
-                             <div className="p-3 rounded-xl bg-blue-500/20 text-blue-300">
+                             <div className="p-3 rounded-xl bg-green-100 text-green-600 group-hover:scale-110 transition-transform duration-300">
                                <Building2 className="h-6 w-6" />
                              </div>
                              <div>
-                               <div className="text-2xl font-bold text-white">Fortune 500</div>
-                               <div className="text-blue-100 text-sm">Trusted By The Best</div>
+                               <div className="text-xl font-bold text-gray-900">Fortune 500</div>
+                               <div className="text-gray-600 text-sm">Trusted By The Best</div>
                              </div>
                            </div>
-                           <p className="text-blue-100 leading-relaxed">
-                           Used by employees at 50+ Fortune 500 companies to cut through AI noise and get straight to what matters.
+                           <p className="text-gray-600 leading-relaxed">
+                             Used by employees at 50+ Fortune 500 companies to cut through AI noise and get straight to what matters.
                            </p>
                          </div>
 
-                         <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                         <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300 group">
                            <div className="flex items-center space-x-4 mb-4">
-                             <div className="p-3 rounded-xl bg-purple-500/20 text-purple-300">
+                             <div className="p-3 rounded-xl bg-blue-100 text-blue-600 group-hover:scale-110 transition-transform duration-300">
                                <Microscope className="h-6 w-6" />
                              </div>
                              <div>
-                               <div className="text-2xl font-bold text-white">Top Insights</div>
-                               <div className="text-blue-100 text-sm">From Research to Reality</div>
+                               <div className="text-xl font-bold text-gray-900">Top Insights</div>
+                               <div className="text-gray-600 text-sm">From Research to Reality</div>
                              </div>
                            </div>
-                           <p className="text-blue-100 leading-relaxed">
-                           Distill breakthroughs from MIT, Stanford, and leading AI labs into plain English—so you can apply them immediately.
+                           <p className="text-gray-600 leading-relaxed">
+                             Distill breakthroughs from MIT, Stanford, and leading AI labs into plain English—so you can apply them immediately.
                            </p>
                          </div>
 
-                         <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                         <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300 group">
                            <div className="flex items-center space-x-4 mb-4">
-                             <div className="p-3 rounded-xl bg-green-500/20 text-green-300">
+                             <div className="p-3 rounded-xl bg-purple-100 text-purple-600 group-hover:scale-110 transition-transform duration-300">
                                <TrendingUp className="h-6 w-6" />
                              </div>
                              <div>
-                               <div className="text-2xl font-bold text-white">Rapid Growth</div>
-                               <div className="text-blue-100 text-sm">Grow Smarter Every Day</div>
+                               <div className="text-xl font-bold text-gray-900">Rapid Growth</div>
+                               <div className="text-gray-600 text-sm">Grow Smarter Every Day</div>
                              </div>
                            </div>
-                           <p className="text-blue-100 leading-relaxed">
-                           Our community is exploding because busy people don’t have time to read 40-page papers. We do it for you.
+                           <p className="text-gray-600 leading-relaxed">
+                             Our community is exploding because busy people don't have time to read 40-page papers. We do it for you.
                            </p>
+                         </div>
+                       </div>
+
+                       {/* Trust badge section */}
+                       <div className="mt-10 pt-8 border-t border-green-100">
+                         <div className="text-center">
+                           <p className="text-gray-500 text-sm mb-4">Trusted by professionals at</p>
+                           <div className="flex flex-wrap justify-center items-center gap-6 text-gray-400 text-sm font-medium">
+                             <span className="bg-gray-50 px-4 py-2 rounded-lg">Google</span>
+                             <span className="bg-gray-50 px-4 py-2 rounded-lg">Microsoft</span>
+                             <span className="bg-gray-50 px-4 py-2 rounded-lg">Verizon</span>
+                             <span className="bg-gray-50 px-4 py-2 rounded-lg">Leidos</span>
+                             <span className="bg-gray-50 px-4 py-2 rounded-lg">MIT</span>
+                             <span className="bg-gray-50 px-4 py-2 rounded-lg">Cresta</span>
+                           </div>
                          </div>
                        </div>
                      </div>
