@@ -1052,7 +1052,7 @@ function App() {
                   AI Research, Simplified
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
-                  From beginner to expert: explore AI breakthroughs at the level you need, in minutes
+                From learning the basics to mastering the latest — AI research made clear in minutes.
                 </p>
               </div>
 
