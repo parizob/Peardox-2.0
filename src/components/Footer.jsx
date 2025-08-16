@@ -133,7 +133,7 @@ const Footer = ({ onContactClick }) => {
             <div className="flex items-center space-x-6">
               <div className="text-xs text-gray-500 text-center sm:text-right">
                 <p>Built for everybody, everywhere</p>
-                <p className="text-gray-400">Version 1.0-beta</p>
+                <p className="text-gray-400">Version 1.1-beta</p>
               </div>
             </div>
           </div>
