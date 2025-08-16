@@ -120,15 +120,20 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
     }
   };
 
-  // Process viewing data for weekly chart
+  // Process viewing data for weekly chart (Sunday to Saturday)
   const processWeeklyData = (recentViews) => {
-    const last7Days = [];
+    const weekDays = [];
     const today = new Date();
     
-    // Create array of last 7 days
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
+    // Get the start of current week (Sunday)
+    const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - currentDay);
+    
+    // Create array for current week (Sunday to Saturday)
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(startOfWeek);
+      date.setDate(startOfWeek.getDate() + i);
       const dateStr = date.toISOString().split('T')[0];
       
       // Count views for this day
@@ -137,14 +142,16 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
         return viewDate === dateStr;
       }).length || 0;
       
-      last7Days.push({
+      weekDays.push({
         date: dateStr,
-        day: date.toLocaleDateString('en-US', { weekday: 'short' }),
-        views: viewsCount
+        day: date.toLocaleDateString('en-US', { weekday: 'long' }), // Full day name
+        dayShort: date.toLocaleDateString('en-US', { weekday: 'short' }), // Short day name
+        views: viewsCount,
+        isToday: dateStr === today.toISOString().split('T')[0]
       });
     }
     
-    return last7Days;
+    return weekDays;
   };
 
   // Process category data for breakdown
@@ -1061,19 +1068,20 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                           {weeklyData.map((day, index) => {
                             const maxViews = Math.max(...weeklyData.map(d => d.views), 1);
                             const percentage = (day.views / maxViews) * 100;
+                            const hasViews = day.views > 0;
                             
                             return (
                               <div key={index} className="flex items-center space-x-3">
-                                <div className="w-8 text-sm text-gray-600 font-medium">
+                                <div className={`w-20 text-sm font-medium ${day.isToday ? 'text-green-600' : 'text-gray-600'}`}>
                                   {day.day}
                                 </div>
-                                <div className="flex-1 bg-gray-100 rounded-full h-6 relative overflow-hidden">
+                                <div className="flex-1 bg-gray-100 rounded-full h-7 relative overflow-hidden">
                                   <div 
                                     className="bg-gradient-to-r from-green-500 to-emerald-500 h-full rounded-full transition-all duration-500 ease-out"
                                     style={{ width: `${percentage}%` }}
                                   ></div>
                                   <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="text-xs font-medium text-gray-700">
+                                    <span className={`text-xs font-medium ${hasViews ? 'text-white' : 'text-gray-600'}`}>
                                       {day.views}
                                     </span>
                                   </div>
