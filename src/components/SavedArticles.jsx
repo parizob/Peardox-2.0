@@ -17,6 +17,23 @@ const SavedArticles = ({ isOpen, onClose, savedArticles, onArticleClick, onToggl
     return 'bg-gray-100 text-gray-800';
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Unknown Date';
+    
+    try {
+      const date = new Date(dateString);
+      // Format as UTC date to show the actual published date from database
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'UTC' // Force UTC timezone
+      });
+    } catch {
+      return 'Unknown Date';
+    }
+  };
+
   const handleRemoveFavorite = (e, articleId) => {
     e.stopPropagation();
     onToggleFavorite(articleId);
@@ -118,7 +135,7 @@ const SavedArticles = ({ isOpen, onClose, savedArticles, onArticleClick, onToggl
                       <div className="flex items-center space-x-3">
                         <span className="flex items-center">
                           <Calendar className="h-3 w-3 mr-1" />
-                          {article.publishedDate}
+                          {formatDate(article.publishedDate)}
                         </span>
                         <span className="flex items-center">
                           <ExternalLink className="h-3 w-3 mr-1" />
