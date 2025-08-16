@@ -1010,6 +1010,231 @@ export const emailAPI = {
   }
 };
 
+// Viewed Articles API - for tracking and analytics (supports both authenticated and anonymous users)
+export const viewedArticlesAPI = {
+  // Generate or retrieve session ID for anonymous users
+  getSessionId() {
+    let sessionId = localStorage.getItem('pearadox_session_id');
+    if (!sessionId) {
+      sessionId = `anon_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem('pearadox_session_id', sessionId);
+    }
+    return sessionId;
+  },
+
+  // Generate anonymous user ID (persists across sessions)
+  getAnonymousId() {
+    let anonymousId = localStorage.getItem('pearadox_anonymous_id');
+    if (!anonymousId) {
+      anonymousId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem('pearadox_anonymous_id', anonymousId);
+    }
+    return anonymousId;
+  },
+
+  // Get basic device/browser info for analytics
+  getUserAgent() {
+    return navigator.userAgent || 'Unknown';
+  },
+
+  async recordArticleView(userId, article, userSkillLevel = 'Beginner') {
+    const isAuthenticated = !!userId;
+    const sessionId = this.getSessionId();
+    const anonymousId = isAuthenticated ? null : this.getAnonymousId();
+    
+    console.log('👁️ Recording article view:', {
+      userId: userId || 'anonymous',
+      articleId: article.id,
+      arxivId: article.arxivId,
+      category: article.category,
+      skillLevel: userSkillLevel,
+      isAuthenticated,
+      sessionId: sessionId.substring(0, 20) + '...' // Log partial session ID
+    });
+    
+    try {
+      const viewData = {
+        user_id: userId || null,
+        article_id: String(article.id), // Ensure it's a string
+        arxiv_id: article.arxivId || null,
+        category: article.category || 'General',
+        skill_level: userSkillLevel,
+        session_id: sessionId,
+        source: 'web',
+        is_authenticated: isAuthenticated,
+        anonymous_id: anonymousId,
+        user_agent: this.getUserAgent()
+      };
+      
+      const { data, error } = await supabase
+        .from('viewed_articles')
+        .insert([viewData])
+        .select()
+        .single();
+      
+      if (error) {
+        // Check if it's a duplicate entry (unique constraint violation)
+        if (error.code === '23505') {
+          console.log('ℹ️ Article view already recorded for this hour, skipping...');
+          return { success: true, isDuplicate: true };
+        }
+        console.error('❌ Error recording article view:', error);
+        throw error;
+      }
+      
+      console.log('✅ Article view recorded successfully:', data);
+      return { success: true, data, isDuplicate: false };
+    } catch (error) {
+      console.error('❌ Exception in recordArticleView:', error);
+      // Don't throw the error - we don't want to break the user experience
+      // if analytics tracking fails
+      return { success: false, error: error.message };
+    }
+  },
+
+  async getUserViewedArticles(userId, limit = 50, offset = 0) {
+    console.log('📊 Getting viewed articles for user:', userId);
+    
+    try {
+      const { data, error } = await supabase
+        .from('v_article_analytics')
+        .select('*')
+        .eq('user_id', userId)
+        .order('viewed_at', { ascending: false })
+        .range(offset, offset + limit - 1);
+      
+      if (error) {
+        console.error('❌ Error getting viewed articles:', error);
+        throw error;
+      }
+      
+      console.log('✅ Retrieved viewed articles:', data?.length || 0);
+      return { success: true, data: data || [] };
+    } catch (error) {
+      console.error('❌ Exception in getUserViewedArticles:', error);
+      throw error;
+    }
+  },
+
+  async getUserViewingStats(userId) {
+    console.log('📈 Getting viewing stats for user:', userId);
+    
+    try {
+      const { data, error } = await supabase
+        .from('viewed_articles')
+        .select('category, skill_level, viewed_at')
+        .eq('user_id', userId);
+      
+      if (error) {
+        console.error('❌ Error getting viewing stats:', error);
+        throw error;
+      }
+      
+      // Calculate statistics
+      const stats = {
+        totalViews: data.length,
+        categoriesViewed: [...new Set(data.map(item => item.category))],
+        skillLevelsUsed: [...new Set(data.map(item => item.skill_level))],
+        viewsByCategory: {},
+        viewsBySkillLevel: {},
+        recentViews: data.slice(0, 10),
+        firstView: data.length > 0 ? new Date(Math.min(...data.map(item => new Date(item.viewed_at)))) : null,
+        lastView: data.length > 0 ? new Date(Math.max(...data.map(item => new Date(item.viewed_at)))) : null
+      };
+      
+      // Count views by category
+      data.forEach(item => {
+        stats.viewsByCategory[item.category] = (stats.viewsByCategory[item.category] || 0) + 1;
+      });
+      
+      // Count views by skill level
+      data.forEach(item => {
+        stats.viewsBySkillLevel[item.skill_level] = (stats.viewsBySkillLevel[item.skill_level] || 0) + 1;
+      });
+      
+      console.log('✅ Calculated viewing stats:', stats);
+      return { success: true, data: stats };
+    } catch (error) {
+      console.error('❌ Exception in getUserViewingStats:', error);
+      throw error;
+    }
+  },
+
+  async getGlobalViewingStats() {
+    console.log('🌍 Getting global viewing stats');
+    
+    try {
+      const { data, error } = await supabase
+        .from('viewed_articles')
+        .select('category, skill_level, viewed_at, user_id, session_id, is_authenticated, anonymous_id');
+      
+      if (error) {
+        console.error('❌ Error getting global viewing stats:', error);
+        throw error;
+      }
+      
+      // Calculate global statistics
+      const authenticatedUsers = [...new Set(data.filter(item => item.is_authenticated && item.user_id).map(item => item.user_id))];
+      const anonymousUsers = [...new Set(data.filter(item => !item.is_authenticated && item.anonymous_id).map(item => item.anonymous_id))];
+      const uniqueSessions = [...new Set(data.map(item => item.session_id))];
+      
+      const stats = {
+        totalViews: data.length,
+        authenticatedViews: data.filter(item => item.is_authenticated).length,
+        anonymousViews: data.filter(item => !item.is_authenticated).length,
+        uniqueUsers: authenticatedUsers.length,
+        uniqueAnonymousUsers: anonymousUsers.length,
+        totalUniqueVisitors: authenticatedUsers.length + anonymousUsers.length,
+        uniqueSessions: uniqueSessions.length,
+        categoriesViewed: [...new Set(data.map(item => item.category))],
+        skillLevelsUsed: [...new Set(data.map(item => item.skill_level))],
+        viewsByCategory: {},
+        viewsBySkillLevel: {},
+        viewsByUserType: {
+          authenticated: data.filter(item => item.is_authenticated).length,
+          anonymous: data.filter(item => !item.is_authenticated).length
+        },
+        viewsLast7Days: 0,
+        viewsLast30Days: 0,
+        authConversionRate: 0 // percentage of sessions that resulted in authentication
+      };
+      
+      const now = new Date();
+      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      
+      data.forEach(item => {
+        const viewDate = new Date(item.viewed_at);
+        
+        // Count by category
+        stats.viewsByCategory[item.category] = (stats.viewsByCategory[item.category] || 0) + 1;
+        
+        // Count by skill level
+        stats.viewsBySkillLevel[item.skill_level] = (stats.viewsBySkillLevel[item.skill_level] || 0) + 1;
+        
+        // Count recent views
+        if (viewDate >= sevenDaysAgo) {
+          stats.viewsLast7Days++;
+        }
+        if (viewDate >= thirtyDaysAgo) {
+          stats.viewsLast30Days++;
+        }
+      });
+      
+      // Calculate conversion rate (authenticated users / total unique visitors)
+      if (stats.totalUniqueVisitors > 0) {
+        stats.authConversionRate = ((stats.uniqueUsers / stats.totalUniqueVisitors) * 100).toFixed(2);
+      }
+      
+      console.log('✅ Calculated global viewing stats:', stats);
+      return { success: true, data: stats };
+    } catch (error) {
+      console.error('❌ Exception in getGlobalViewingStats:', error);
+      throw error;
+    }
+  }
+};
+
 // Run initial test
 testConnection().then(result => {
   if (result.success) {

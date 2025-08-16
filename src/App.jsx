@@ -7,7 +7,7 @@ import SavedArticles from './components/SavedArticles';
 import AccountModal from './components/AccountModal';
 import Footer from './components/Footer';
 import ContactModal from './components/ContactModal';
-import { arxivAPI, authAPI, savedArticlesAPI, supabase } from './lib/supabase';
+import { arxivAPI, authAPI, savedArticlesAPI, viewedArticlesAPI, supabase } from './lib/supabase';
 
 // Comprehensive category to icon mapping
 const getCategoryIcon = (categoryName) => {
@@ -825,9 +825,18 @@ function App() {
     return savedArticlesFromDB;
   }, [savedArticlesFromDB]);
 
-  const handleArticleClick = (article) => {
+  const handleArticleClick = async (article) => {
     setSelectedArticle(article);
     setIsModalOpen(true);
+    
+    // Record article view for analytics (for both authenticated and anonymous users)
+    try {
+      await viewedArticlesAPI.recordArticleView(user?.id, article, userSkillLevel);
+      console.log('📊 Article view recorded for analytics');
+    } catch (error) {
+      console.warn('⚠️ Failed to record article view (non-critical):', error);
+      // Don't block the user experience if analytics fails
+    }
   };
 
   const handleCloseModal = () => {
