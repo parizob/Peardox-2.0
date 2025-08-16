@@ -1099,7 +1099,25 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                             <BarChart3 className="h-5 w-5 text-gray-600 mr-2" />
                             <h4 className="text-lg font-semibold text-gray-800">Top Research Categories</h4>
                           </div>
-                          <div className="space-y-3">
+                          
+                          {/* Column Headers */}
+                          <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
+                            <div className="flex items-center space-x-2 flex-1">
+                              <div className="w-6 text-xs font-medium text-gray-500 text-center">
+                                #
+                              </div>
+                              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                                Category
+                              </span>
+                            </div>
+                            <div className="flex-shrink-0 ml-2">
+                              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                                Articles
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-4">
                             {categoryStats.map((category, index) => {
                               const maxViews = Math.max(...categoryStats.map(c => c.views), 1);
                               const percentage = (category.views / maxViews) * 100;
@@ -1112,25 +1130,32 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                               ];
                               
                               return (
-                                <div key={index} className="flex items-center space-x-3">
-                                  <div className="w-4 text-sm text-gray-600 font-medium">
-                                    #{index + 1}
-                                  </div>
-                                  <div className="flex-1">
-                                    <div className="flex justify-between items-center mb-1">
+                                <div key={index} className="space-y-2">
+                                  {/* Category header with rank and count */}
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center space-x-2 flex-1 min-w-0">
+                                      <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <span className="text-xs font-bold text-gray-600">
+                                          {index + 1}
+                                        </span>
+                                      </div>
                                       <span className="text-sm font-medium text-gray-800 truncate">
                                         {category.category}
                                       </span>
-                                      <span className="text-sm text-gray-600">
-                                        {category.views} article{category.views !== 1 ? 's' : ''}
+                                    </div>
+                                    <div className="flex-shrink-0 ml-2">
+                                      <span className="text-sm font-semibold text-gray-700 bg-gray-50 px-2 py-1 rounded-full">
+                                        {category.views}
                                       </span>
                                     </div>
-                                    <div className="bg-gray-100 rounded-full h-3 overflow-hidden">
-                                      <div 
-                                        className={`bg-gradient-to-r ${colors[index]} h-full rounded-full transition-all duration-500 ease-out`}
-                                        style={{ width: `${percentage}%` }}
-                                      ></div>
-                                    </div>
+                                  </div>
+                                  
+                                  {/* Progress bar */}
+                                  <div className="bg-gray-100 rounded-full h-3 overflow-hidden">
+                                    <div 
+                                      className={`bg-gradient-to-r ${colors[index]} h-full rounded-full transition-all duration-500 ease-out`}
+                                      style={{ width: `${percentage}%` }}
+                                    ></div>
                                   </div>
                                 </div>
                               );
