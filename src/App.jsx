@@ -1019,20 +1019,6 @@ function App() {
       <div className="h-24 sm:h-20"></div>
 
       <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-12">
-        {/* Loading State */}
-        {isLoading && (
-          <div className="text-center py-12 sm:py-20">
-            <div className="relative inline-block mb-6 sm:mb-8">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl"></div>
-              <Loader2 className="relative mx-auto h-16 w-16 sm:h-24 sm:w-24 text-blue-500 animate-spin" />
-            </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Loading Research Papers</h3>
-            <p className="text-gray-500 max-w-md mx-auto text-sm sm:text-base px-4">
-              Connecting to database and fetching latest scientific discoveries...
-            </p>
-          </div>
-        )}
-
         {/* Error State */}
         {error && (
           <div className="mb-6 sm:mb-8 bg-red-50 border border-red-200 rounded-2xl p-4 sm:p-6 mx-4 sm:mx-0">
@@ -1053,7 +1039,7 @@ function App() {
         )}
 
         {/* Main Hero Section with CTA */}
-        {!isLoading && !error && !searchTerm && (
+        {!error && !searchTerm && (
           <div className="pt-8 sm:pt-8 pb-12 sm:pb-20 mb-8 sm:mb-12">
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
               <div className="text-center mb-8 sm:mb-12">
@@ -1351,6 +1337,20 @@ function App() {
                 })}
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Loading State - Appears below Pick a Category */}
+        {isLoading && (
+          <div className="text-center py-12 sm:py-16">
+            <div className="relative inline-block mb-6 sm:mb-8">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl"></div>
+              <Loader2 className="relative mx-auto h-16 w-16 sm:h-20 sm:w-20 text-blue-500 animate-spin" />
+            </div>
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Loading Research Papers</h3>
+            <p className="text-gray-500 max-w-md mx-auto text-sm sm:text-base px-4">
+              Connecting to database and fetching latest scientific discoveries...
+            </p>
           </div>
         )}
 
