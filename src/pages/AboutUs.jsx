@@ -92,7 +92,7 @@ const AboutUs = () => {
     {
       name: "UX Team",
       role: "User Experience",
-      description: "Designers focused on making complex research accessible to everyone",
+      description: "AI designer focused on making complex research accessible to everyone",
       icon: Heart,
       color: "from-pink-500 to-rose-600"
     }
@@ -355,7 +355,7 @@ const AboutUs = () => {
 
               <blockquote className="text-xl sm:text-2xl text-white/90 italic max-w-4xl mx-auto mb-8">
                 "By breaking down the barriers between complex research and everyday understanding, 
-                we're not just sharing knowledge—we're accelerating human progress."
+                we're not just sharing knowledge — we're accelerating human progress."
               </blockquote>
               
               <Link 
