@@ -5,7 +5,9 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SavedArticles from '../components/SavedArticles';
 import AccountModal from '../components/AccountModal';
+import ArticleModal from '../components/ArticleModal';
 import { useUser } from '../contexts/UserContext';
+import { viewedArticlesAPI } from '../lib/supabase';
 
 const AboutUs = () => {
   const [isVisible, setIsVisible] = useState({});
@@ -13,6 +15,8 @@ const AboutUs = () => {
   // Modal states
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState(null);
+  const [isArticleModalOpen, setIsArticleModalOpen] = useState(false);
   
   // Get user state from context
   const {
@@ -22,6 +26,7 @@ const AboutUs = () => {
     userResearchInterests,
     savedArticlesFromDB,
     isLoadingSavedArticles,
+    favorites,
     loadUserSavedArticles,
     handleSkillLevelChange,
     handleResearchInterestsChange,
@@ -69,9 +74,23 @@ const AboutUs = () => {
   };
 
   // Article click handler for saved articles
-  const handleArticleClick = (article) => {
-    // Could implement article modal here if needed
-    console.log('Article clicked:', article);
+  const handleArticleClick = async (article) => {
+    setSelectedArticle(article);
+    setIsArticleModalOpen(true);
+    
+    // Record article view
+    if (viewedArticlesAPI && article) {
+      try {
+        await viewedArticlesAPI.recordArticleView(user?.id, article, userSkillLevel);
+      } catch (error) {
+        console.error('Error recording article view:', error);
+      }
+    }
+  };
+
+  const handleCloseArticleModal = () => {
+    setIsArticleModalOpen(false);
+    setSelectedArticle(null);
   };
 
   const teamMembers = [
@@ -418,6 +437,14 @@ const AboutUs = () => {
       <Footer />
 
       {/* Modals */}
+      <ArticleModal
+        isOpen={isArticleModalOpen}
+        onClose={handleCloseArticleModal}
+        article={selectedArticle}
+        isFavorite={selectedArticle ? favorites.has(selectedArticle.id) : false}
+        onToggleFavorite={handleToggleFavorite}
+      />
+
       <SavedArticles
         isOpen={isSavedArticlesOpen}
         onClose={handleCloseSavedArticles}

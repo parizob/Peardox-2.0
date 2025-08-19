@@ -5,7 +5,9 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SavedArticles from '../components/SavedArticles';
 import AccountModal from '../components/AccountModal';
+import ArticleModal from '../components/ArticleModal';
 import { useUser } from '../contexts/UserContext';
+import { viewedArticlesAPI } from '../lib/supabase';
 
 const BlogPost = () => {
   const { slug } = useParams();
@@ -14,6 +16,8 @@ const BlogPost = () => {
   // Modal states
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [selectedArticle, setSelectedArticle] = useState(null);
+  const [isArticleModalOpen, setIsArticleModalOpen] = useState(false);
   
   // Get user state from context
   const {
@@ -23,6 +27,7 @@ const BlogPost = () => {
     userResearchInterests,
     savedArticlesFromDB,
     isLoadingSavedArticles,
+    favorites,
     loadUserSavedArticles,
     handleSkillLevelChange,
     handleResearchInterestsChange,
@@ -56,8 +61,23 @@ const BlogPost = () => {
     setIsAccountOpen(false);
   };
 
-  const handleArticleClick = (article) => {
-    console.log('Article clicked:', article);
+  const handleArticleClick = async (article) => {
+    setSelectedArticle(article);
+    setIsArticleModalOpen(true);
+    
+    // Record article view
+    if (viewedArticlesAPI && article) {
+      try {
+        await viewedArticlesAPI.recordArticleView(user?.id, article, userSkillLevel);
+      } catch (error) {
+        console.error('Error recording article view:', error);
+      }
+    }
+  };
+
+  const handleCloseArticleModal = () => {
+    setIsArticleModalOpen(false);
+    setSelectedArticle(null);
   };
 
   // Blog post data - in a real app, this would come from an API
@@ -416,6 +436,14 @@ const BlogPost = () => {
       <Footer />
 
       {/* Modals */}
+      <ArticleModal
+        isOpen={isArticleModalOpen}
+        onClose={handleCloseArticleModal}
+        article={selectedArticle}
+        isFavorite={selectedArticle ? favorites.has(selectedArticle.id) : false}
+        onToggleFavorite={handleToggleFavorite}
+      />
+
       <SavedArticles
         isOpen={isSavedArticlesOpen}
         onClose={handleCloseSavedArticles}
