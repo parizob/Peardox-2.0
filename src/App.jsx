@@ -7,6 +7,7 @@ import SavedArticles from './components/SavedArticles';
 import AccountModal from './components/AccountModal';
 import Footer from './components/Footer';
 import ContactModal from './components/ContactModal';
+import { useUser } from './contexts/UserContext';
 import { arxivAPI, authAPI, savedArticlesAPI, viewedArticlesAPI, supabase } from './lib/supabase';
 
 // Comprehensive category to icon mapping
@@ -220,16 +221,24 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [favorites, setFavorites] = useState(new Set());
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
   
-  // User state for authentication and skill level
-  const [user, setUser] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
-  const [userSkillLevel, setUserSkillLevel] = useState('Beginner');
-  const [userResearchInterests, setUserResearchInterests] = useState([]);
+  // Get user state from context
+  const {
+    user,
+    userProfile,
+    userSkillLevel,
+    userResearchInterests,
+    savedArticlesFromDB,
+    isLoadingSavedArticles,
+    favorites,
+    loadUserSavedArticles,
+    handleSkillLevelChange,
+    handleResearchInterestsChange,
+    handleToggleFavorite
+  } = useUser();
   
   // Default research interests fallback
   const defaultResearchInterests = [
@@ -245,8 +254,6 @@ function App() {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [savedArticlesFromDB, setSavedArticlesFromDB] = useState([]);
-  const [isLoadingSavedArticles, setIsLoadingSavedArticles] = useState(false);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -452,15 +459,7 @@ function App() {
   }, [userSkillLevel]); // Reload when skill level changes
 
   // Load user's saved articles
-  useEffect(() => {
-    if (user) {
-      loadUserSavedArticles();
-    } else {
-      // Clear saved articles when user logs out
-      setSavedArticlesFromDB([]);
-      setFavorites(new Set());
-    }
-  }, [user, userSkillLevel]); // Depend on user and skill level
+  // The user context now handles loading saved articles
 
   // Scroll to results when category is selected
   useEffect(() => {
@@ -630,62 +629,7 @@ function App() {
     }
   };
 
-  const loadUserSavedArticles = async () => {
-    if (!user || !savedArticlesAPI) {
-      console.log('❌ Cannot load saved articles: no user or API');
-      setSavedArticlesFromDB([]);
-      setFavorites(new Set());
-      setIsLoadingSavedArticles(false);
-      return;
-    }
-
-    setIsLoadingSavedArticles(true);
-    try {
-      console.log('📚 Loading saved articles for user:', user.id, 'with skill level:', userSkillLevel);
-      
-      // Get saved articles with full details directly from database
-      const savedArticlesWithDetails = await savedArticlesAPI.getUserSavedArticlesWithDetails(user.id, userSkillLevel);
-      console.log('📚 Loaded saved articles with details:', savedArticlesWithDetails.length);
-      console.log('📚 Sample article data from API:', savedArticlesWithDetails.slice(0, 1).map(a => ({ 
-        id: a.id, 
-        title: a.title?.substring(0, 50), 
-        shortDescription: a.shortDescription?.substring(0, 50),
-        hasSummary: a.hasSummary,
-        skillLevel: a.skillLevel
-      })));
-      
-      // Get just the IDs for the favorites set (for heart icons in main feed)
-      const savedArticleIds = savedArticlesWithDetails.map(article => article.id);
-      
-      // Update favorites Set for heart icons (ensure same type as article IDs)
-      const favoriteIds = new Set(savedArticleIds.map(id => {
-        // Ensure the ID type matches what the articles use
-        return typeof id === 'string' ? parseInt(id) || id : id;
-      }));
-      setFavorites(favoriteIds);
-      
-      // The savedArticlesWithDetails already comes properly formatted from the API
-      // Just need to add missing fields that the UI expects without overriding skill-level content
-      const formattedSavedArticles = savedArticlesWithDetails.map(article => ({
-        ...article,
-        // Only add missing fields, don't override existing skill-level content
-        subjectClasses: Array.isArray(article.categories) ? article.categories : [article.categories || 'general'],
-        tags: article.tags || generateTags(article.categories_name, article.title, article.abstract),
-        _original: article
-      }));
-      
-      console.log('📚 Formatted saved articles:', formattedSavedArticles.length);
-      console.log('📚 Sample saved articles:', formattedSavedArticles.slice(0, 2).map(a => ({ id: a.id, title: a.title?.substring(0, 30), savedAt: a.savedAt })));
-      
-      setSavedArticlesFromDB(formattedSavedArticles);
-      
-    } catch (error) {
-      console.error('❌ Error loading saved articles:', error);
-      setSavedArticlesFromDB([]);
-    } finally {
-      setIsLoadingSavedArticles(false);
-    }
-  };
+  // loadUserSavedArticles is now provided by UserContext
 
   // Helper functions
   const simplifyTitle = (title) => {
@@ -888,52 +832,7 @@ function App() {
     }
   };
 
-  const handleToggleFavorite = async (articleId) => {
-    console.log('💛 handleToggleFavorite called with articleId:', articleId);
-    
-    if (!user) {
-      console.log('❌ User not authenticated, cannot save article');
-      return;
-    }
-
-    try {
-      const isFavorited = favorites.has(articleId);
-      console.log('💖 Article currently favorited:', isFavorited);
-      
-      if (isFavorited) {
-        // Remove from database
-        await savedArticlesAPI.unsaveArticle(user.id, articleId);
-        console.log('✅ Article removed from saved');
-        
-        // Update local state
-        setFavorites(prev => {
-          const newFavorites = new Set(prev);
-          newFavorites.delete(articleId);
-          return newFavorites;
-        });
-        
-      } else {
-        // Save to database
-        await savedArticlesAPI.saveArticle(user.id, articleId);
-        console.log('✅ Article saved');
-        
-        // Update local state
-        setFavorites(prev => {
-          const newFavorites = new Set(prev);
-          newFavorites.add(articleId);
-          return newFavorites;
-        });
-      }
-      
-      // Reload saved articles panel to reflect the change
-      await loadUserSavedArticles();
-      
-    } catch (error) {
-      console.error('❌ Error toggling favorite:', error);
-      // Show user-friendly error message
-      alert(`Failed to ${favorites.has(articleId) ? 'remove' : 'save'} article. Please try again.`);
-    }
-  };
+  // handleToggleFavorite is now provided by UserContext
 
   const handleShowSavedArticles = () => {
     setIsSavedArticlesOpen(true);
@@ -959,39 +858,7 @@ function App() {
     setIsContactOpen(false);
   };
 
-  // Handle skill level changes from account modal
-  const handleSkillLevelChange = (newSkillLevel) => {
-    console.log('🎯 Skill level changed to:', newSkillLevel);
-    setUserSkillLevel(newSkillLevel);
-    // loadData will be triggered automatically by the useEffect dependency
-  };
-
-  // Handle research interests changes from account modal
-  const handleResearchInterestsChange = (newInterests) => {
-    console.log('🔬 Research interests changed to:', newInterests);
-    
-    // Ensure we have exactly 5 interests
-    const updatedInterests = Array.isArray(newInterests) 
-      ? newInterests.slice(0, 5)
-      : defaultResearchInterests;
-    
-    // Fill up to 5 with defaults if needed
-    while (updatedInterests.length < 5) {
-      const remaining = defaultResearchInterests.filter(interest => !updatedInterests.includes(interest));
-      if (remaining.length > 0) {
-        updatedInterests.push(remaining[0]);
-      } else {
-        break;
-      }
-    }
-    
-    setUserResearchInterests(updatedInterests);
-    
-    // Clear selected category if it's no longer in user's interests
-    if (selectedCategory && !updatedInterests.includes(selectedCategory)) {
-      setSelectedCategory('');
-    }
-  };
+  // handleSkillLevelChange and handleResearchInterestsChange are now provided by UserContext
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30 relative overflow-hidden">

@@ -3,9 +3,30 @@ import { ArrowLeft, Users, Target, Heart, Brain, Lightbulb, Globe, Rocket, Check
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import SavedArticles from '../components/SavedArticles';
+import AccountModal from '../components/AccountModal';
+import { useUser } from '../contexts/UserContext';
 
 const AboutUs = () => {
   const [isVisible, setIsVisible] = useState({});
+  
+  // Modal states
+  const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
+  
+  // Get user state from context
+  const {
+    user,
+    userProfile,
+    userSkillLevel,
+    userResearchInterests,
+    savedArticlesFromDB,
+    isLoadingSavedArticles,
+    loadUserSavedArticles,
+    handleSkillLevelChange,
+    handleResearchInterestsChange,
+    handleToggleFavorite
+  } = useUser();
 
   // Handle scroll animations
   useEffect(() => {
@@ -25,6 +46,33 @@ const AboutUs = () => {
       contact: true
     });
   }, []);
+
+  // Modal handlers
+  const handleShowSavedArticles = () => {
+    setIsSavedArticlesOpen(true);
+    // Refresh saved articles when opening the modal
+    if (user) {
+      loadUserSavedArticles();
+    }
+  };
+
+  const handleCloseSavedArticles = () => {
+    setIsSavedArticlesOpen(false);
+  };
+
+  const handleShowAccount = () => {
+    setIsAccountOpen(true);
+  };
+
+  const handleCloseAccount = () => {
+    setIsAccountOpen(false);
+  };
+
+  // Article click handler for saved articles
+  const handleArticleClick = (article) => {
+    // Could implement article modal here if needed
+    console.log('Article clicked:', article);
+  };
 
   const teamMembers = [
     {
@@ -88,9 +136,9 @@ const AboutUs = () => {
         selectedCategory=""
         onCategoryChange={() => {}}
         categories={[]}
-        onShowSavedArticles={() => {}}
-        onShowAccount={() => {}}
-        savedCount={0}
+        onShowSavedArticles={handleShowSavedArticles}
+        onShowAccount={handleShowAccount}
+        savedCount={savedArticlesFromDB.length}
         isAboutPage={true}
       />
       
@@ -368,6 +416,25 @@ const AboutUs = () => {
       </main>
 
       <Footer />
+
+      {/* Modals */}
+      <SavedArticles
+        isOpen={isSavedArticlesOpen}
+        onClose={handleCloseSavedArticles}
+        savedArticles={savedArticlesFromDB}
+        onArticleClick={handleArticleClick}
+        onToggleFavorite={handleToggleFavorite}
+        isLoading={isLoadingSavedArticles}
+        user={user}
+      />
+
+      <AccountModal
+        isOpen={isAccountOpen}
+        onClose={handleCloseAccount}
+        userSkillLevel={userSkillLevel}
+        onSkillLevelChange={handleSkillLevelChange}
+        onResearchInterestsChange={handleResearchInterestsChange}
+      />
     </div>
   );
 };
