@@ -313,6 +313,10 @@ const AboutUs = () => {
               <Link 
                 to="/"
                 className="inline-flex items-center px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                onClick={() => {
+                  // Scroll to top when navigating to home page
+                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                }}
               >
                 Start Exploring Research
                 <ArrowRight className="h-5 w-5 ml-2" />
@@ -349,6 +353,10 @@ const AboutUs = () => {
                 <Link 
                   to="/"
                   className="inline-flex items-center px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-blue-500 hover:text-blue-600 transition-all duration-300"
+                  onClick={() => {
+                    // Scroll to top when navigating to home page
+                    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                  }}
                 >
                   Explore Research
                   <BookOpen className="h-5 w-5 ml-2" />
