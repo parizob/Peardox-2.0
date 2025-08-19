@@ -351,6 +351,21 @@ The knowledge exists. The tools are available. The only question is: are you rea
         </section>
       </main>
 
+      {/* Back to Research Hub */}
+      <div className="flex items-center justify-center mb-8">
+                <Link 
+                  to="/"
+                  className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors group"
+                  onClick={() => {
+                    // Scroll to top when navigating to home page
+                    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                  }}
+                >
+                  <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
+                  Back to Research Hub
+                </Link>
+              </div>
+
       <Footer />
 
       {/* Modals */}
