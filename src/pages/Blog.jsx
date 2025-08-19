@@ -343,7 +343,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
                   <span className="font-medium">More insights coming soon...</span>
                 </div>
                 <p className="text-gray-500 mt-4">
-                  Stay tuned for more posts about AI research, democratization, and making science accessible to everyone.
+                  Stay tuned for more posts about AI research, decentralization, and making science accessible to everyone.
                 </p>
               </div>
             </div>
