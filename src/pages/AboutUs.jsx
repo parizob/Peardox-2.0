@@ -91,6 +91,7 @@ const AboutUs = () => {
         onShowSavedArticles={() => {}}
         onShowAccount={() => {}}
         savedCount={0}
+        isAboutPage={true}
       />
       
       {/* Content Spacer for Fixed Header */}

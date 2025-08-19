@@ -10,7 +10,8 @@ const Header = ({
   categories,
   onShowSavedArticles,
   onShowAccount,
-  savedCount
+  savedCount,
+  isAboutPage = false
 }) => {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
@@ -92,10 +93,10 @@ const Header = ({
         : 'bg-white/90 backdrop-blur-sm'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between min-w-0">
           
           {/* Left side - Categories and About Us */}
-          <div className="hidden md:flex items-center space-x-3 flex-1" ref={dropdownRef}>
+          <div className="hidden md:flex items-center space-x-3 flex-1 min-w-0" ref={dropdownRef}>
             <div className="relative">
               <button
                 onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
@@ -175,7 +176,11 @@ const Header = ({
               to="/aboutus"
               className="flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
               onClick={() => {
-                // Scroll to top when navigating to about page
+                // Close any expanded search first
+                if (isSearchExpanded) {
+                  setIsSearchExpanded(false);
+                }
+                // Let React Router handle navigation naturally
                 setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
               }}
               title="About Pearadox"
@@ -200,8 +205,8 @@ const Header = ({
           </div>
 
           {/* Actions */}
-          <div className="flex-1 md:flex-1 flex justify-end">
-            <div className="flex items-center space-x-2 sm:space-x-3">
+          <div className="flex justify-end min-w-0" style={{ minWidth: 'fit-content' }}>
+            <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
               
               {/* Search - Desktop only */}
               <div className="hidden md:block w-48 md:w-64">
@@ -237,9 +242,13 @@ const Header = ({
               {/* About Us - Mobile only */}
               <Link
                 to="/aboutus"
-                className="md:hidden flex items-center justify-center p-2 bg-gray-100 text-gray-700 rounded-lg hover:text-blue-600 hover:bg-gray-200 transition-colors"
+                className="md:hidden flex items-center justify-center p-2 bg-gray-100 text-gray-700 rounded-lg hover:text-blue-600 hover:bg-gray-200 transition-colors flex-shrink-0"
                 onClick={() => {
-                  // Scroll to top when navigating to about page
+                  // Close any expanded search first
+                  if (isSearchExpanded) {
+                    setIsSearchExpanded(false);
+                  }
+                  // Let React Router handle navigation naturally
                   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                 }}
                 title="About Pearadox"
@@ -272,7 +281,8 @@ const Header = ({
         </div>
 
         {/* Mobile Categories and Search - Same row below header */}
-        <div className="md:hidden mt-3 pt-3 border-t border-gray-100" ref={mobileDropdownRef}>
+        {!isAboutPage && (
+          <div className="md:hidden mt-3 pt-3 border-t border-gray-100" ref={mobileDropdownRef}>
           <div className="flex items-center gap-2 overflow-hidden">
             {/* Categories Button - Shrinks when search is expanded */}
             <button
@@ -392,6 +402,7 @@ const Header = ({
             </div>
           )}
         </div>
+        )}
       </div>
     </header>
   );
