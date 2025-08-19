@@ -273,40 +273,40 @@ const Header = ({
 
         {/* Mobile Categories and Search - Same row below header */}
         <div className="md:hidden mt-3 pt-3 border-t border-gray-100" ref={mobileDropdownRef}>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center gap-2 overflow-hidden">
             {/* Categories Button - Shrinks when search is expanded */}
             <button
               onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
-              className={`${isSearchExpanded ? 'flex-none w-32' : 'flex-1'} flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
+              className={`${isSearchExpanded ? 'flex-none w-28' : 'flex-1'} flex items-center justify-between px-3 py-3 rounded-lg text-sm font-medium transition-all duration-300 min-w-0 ${
                 selectedCategory
                   ? 'bg-blue-600 text-white'
                   : 'bg-gray-100 text-gray-700'
               }`}
             >
-              <div className="flex items-center space-x-2 min-w-0">
+              <div className="flex items-center space-x-1 min-w-0">
                 <Filter className="h-4 w-4 flex-shrink-0" />
                 <span className="truncate">
                   {isSearchExpanded 
-                    ? (selectedCategory ? 'Filtered' : 'All') 
+                    ? (selectedCategory ? 'All' : 'All') 
                     : (selectedCategory ? selectedCategoryName : 'Categories')
                   }
                 </span>
               </div>
               {!isSearchExpanded && (
-                <ChevronDown className={`h-4 w-4 transition-transform ${
+                <ChevronDown className={`h-4 w-4 transition-transform flex-shrink-0 ${
                   isCategoryDropdownOpen ? 'rotate-180' : ''
                 }`} />
               )}
             </button>
             
             {/* Search - Mobile - Expands when active */}
-            <div className={`transition-all duration-300 ease-in-out ${isSearchExpanded ? 'flex-1' : 'w-12'}`}>
+            <div className={`transition-all duration-300 ease-in-out min-w-0 ${isSearchExpanded ? 'flex-1' : 'w-12 flex-shrink-0'}`}>
               {isSearchExpanded ? (
-                <div className="flex items-center bg-white border border-gray-200 rounded-lg px-3 py-3 shadow-md">
+                <div className="flex items-center bg-white border border-gray-200 rounded-lg px-2 py-3 shadow-md min-w-0">
                   <Search className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
                   <input
                     type="text"
-                    placeholder="Search articles..."
+                    placeholder="Search..."
                     value={searchTerm}
                     onChange={handleSearchChange}
                     className="bg-transparent flex-1 text-sm focus:outline-none min-w-0"
@@ -320,7 +320,7 @@ const Header = ({
                   />
                   <button
                     onClick={handleSearchClose}
-                    className="ml-2 p-1 hover:bg-gray-100 rounded flex-shrink-0"
+                    className="ml-1 p-1 hover:bg-gray-100 rounded flex-shrink-0"
                   >
                     <X className="h-4 w-4 text-gray-400" />
                   </button>
