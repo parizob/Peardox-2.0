@@ -96,8 +96,10 @@ const Header = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="relative flex items-center justify-between min-w-0">
           
-          {/* Left side - Categories and About Us */}
-          <div className="hidden md:flex items-center space-x-3 min-w-0" ref={dropdownRef}>
+          {/* Left side - Desktop and Mobile Navigation */}
+          <div className="flex items-center space-x-3 min-w-0">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-3" ref={dropdownRef}>
             <div className="relative">
               <button
                 onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
@@ -207,6 +209,44 @@ const Header = ({
               <BookOpen className="h-4 w-4" />
               <span>Blog</span>
             </Link>
+            </div>
+            
+            {/* Mobile Navigation */}
+            <div className="md:hidden flex items-center space-x-2">
+              {/* About Us - Mobile */}
+              <Link
+                to="/aboutus"
+                className="flex items-center justify-center p-2 bg-gray-100 text-gray-700 rounded-lg hover:text-blue-600 hover:bg-gray-200 transition-colors flex-shrink-0"
+                onClick={() => {
+                  // Close any expanded search first
+                  if (isSearchExpanded) {
+                    setIsSearchExpanded(false);
+                  }
+                  // Let React Router handle navigation naturally
+                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                }}
+                title="About Pearadox"
+              >
+                <Info className="h-4 w-4" />
+              </Link>
+
+              {/* Blog - Mobile */}
+              <Link
+                to="/blog"
+                className="flex items-center justify-center p-2 bg-gray-100 text-gray-700 rounded-lg hover:text-blue-600 hover:bg-gray-200 transition-colors flex-shrink-0"
+                onClick={() => {
+                  // Close any expanded search first
+                  if (isSearchExpanded) {
+                    setIsSearchExpanded(false);
+                  }
+                  // Let React Router handle navigation naturally
+                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                }}
+                title="Pearadox Blog"
+              >
+                <BookOpen className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
 
           {/* Logo - Absolutely centered */}
@@ -256,40 +296,6 @@ const Header = ({
                   </button>
                 )}
               </div>
-
-              {/* About Us - Mobile only */}
-              <Link
-                to="/aboutus"
-                className="md:hidden flex items-center justify-center p-2 bg-gray-100 text-gray-700 rounded-lg hover:text-blue-600 hover:bg-gray-200 transition-colors flex-shrink-0"
-                onClick={() => {
-                  // Close any expanded search first
-                  if (isSearchExpanded) {
-                    setIsSearchExpanded(false);
-                  }
-                  // Let React Router handle navigation naturally
-                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-                }}
-                title="About Pearadox"
-              >
-                <Info className="h-4 w-4" />
-              </Link>
-
-              {/* Blog - Mobile only */}
-              <Link
-                to="/blog"
-                className="md:hidden flex items-center justify-center p-2 bg-gray-100 text-gray-700 rounded-lg hover:text-blue-600 hover:bg-gray-200 transition-colors flex-shrink-0"
-                onClick={() => {
-                  // Close any expanded search first
-                  if (isSearchExpanded) {
-                    setIsSearchExpanded(false);
-                  }
-                  // Let React Router handle navigation naturally
-                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-                }}
-                title="Pearadox Blog"
-              >
-                <BookOpen className="h-4 w-4" />
-              </Link>
 
               {/* Saved Articles */}
               <button
