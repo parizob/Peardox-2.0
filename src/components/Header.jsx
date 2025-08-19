@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ChevronDown, Filter, X, Bookmark, User } from 'lucide-react';
+import { Search, ChevronDown, Filter, X, Bookmark, User, Info } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Header = ({
@@ -94,9 +94,9 @@ const Header = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="flex items-center justify-between">
           
-          {/* Categories - Hidden on mobile, shown on tablet+ */}
-          <div className="hidden md:block flex-1" ref={dropdownRef}>
-            <div className="relative w-fit">
+          {/* Left side - Categories and About Us */}
+          <div className="hidden md:flex items-center space-x-3 flex-1" ref={dropdownRef}>
+            <div className="relative">
               <button
                 onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
                 className={`flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all ${
@@ -169,6 +169,20 @@ const Header = ({
                 </div>
               )}
             </div>
+            
+            {/* About Us Link */}
+            <Link
+              to="/aboutus"
+              className="flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+              onClick={() => {
+                // Scroll to top when navigating to about page
+                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+              }}
+              title="About Pearadox"
+            >
+              <Info className="h-4 w-4" />
+              <span>About Us</span>
+            </Link>
           </div>
 
           {/* Logo - Responsive sizing */}

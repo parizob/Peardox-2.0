@@ -37,7 +37,14 @@ const Footer = ({ onContactClick }) => {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold">Quick Links</h4>
             <div className="space-y-2">
-              <Link to="/aboutus" className="block text-gray-600 hover:text-gray-900 transition-colors text-sm">
+              <Link 
+                to="/aboutus" 
+                className="block text-gray-600 hover:text-gray-900 transition-colors text-sm"
+                onClick={() => {
+                  // Scroll to top when navigating to about page
+                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                }}
+              >
                 About Pearadox
               </Link>
               <a href="#" className="block text-gray-600 hover:text-gray-900 transition-colors text-sm">
