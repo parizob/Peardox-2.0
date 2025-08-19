@@ -94,10 +94,10 @@ const Header = ({
         : 'bg-white/90 backdrop-blur-sm'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-        <div className="flex items-center justify-between min-w-0">
+        <div className="relative flex items-center justify-between min-w-0">
           
           {/* Left side - Categories and About Us */}
-          <div className="hidden md:flex items-center space-x-3 flex-1 min-w-0" ref={dropdownRef}>
+          <div className="hidden md:flex items-center space-x-3 min-w-0" ref={dropdownRef}>
             <div className="relative">
               <button
                 onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
@@ -209,8 +209,8 @@ const Header = ({
             </Link>
           </div>
 
-          {/* Logo - Responsive sizing */}
-          <div className="flex-1 md:flex-1 flex justify-center md:justify-center">
+          {/* Logo - Absolutely centered */}
+          <div className="absolute left-1/2 transform -translate-x-1/2">
             <Link to="/" className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity">
               <img 
                 src="/logo512.png" 
@@ -224,8 +224,7 @@ const Header = ({
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end min-w-0" style={{ minWidth: 'fit-content' }}>
-            <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+          <div className="flex items-center space-x-2 sm:space-x-3 ml-auto">
               
               {/* Search - Desktop only */}
               <div className="hidden md:block w-48 md:w-64">
@@ -312,7 +311,6 @@ const Header = ({
               >
                 <User className="h-4 w-4" />
               </button>
-            </div>
           </div>
         </div>
 
