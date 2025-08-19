@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, ChevronDown, Filter, X, Bookmark, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Header = ({
   searchTerm,
@@ -172,7 +173,7 @@ const Header = ({
 
           {/* Logo - Responsive sizing */}
           <div className="flex-1 md:flex-1 flex justify-center md:justify-center">
-            <div className="flex items-center space-x-2 sm:space-x-3">
+            <Link to="/" className="flex items-center space-x-2 sm:space-x-3 hover:opacity-80 transition-opacity">
               <img 
                 src="/logo512.png" 
                 alt="Pearadox" 
@@ -181,7 +182,7 @@ const Header = ({
               <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
                 Pearadox
               </h1>
-            </div>
+            </Link>
           </div>
 
           {/* Actions - Mobile optimized */}

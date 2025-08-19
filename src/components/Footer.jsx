@@ -1,5 +1,6 @@
 import React from 'react';
 import { Mail, Heart, ExternalLink, Twitter, Instagram, Linkedin, Facebook } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer = ({ onContactClick }) => {
   return (
@@ -36,9 +37,9 @@ const Footer = ({ onContactClick }) => {
           <div className="space-y-4">
             <h4 className="text-lg font-semibold">Quick Links</h4>
             <div className="space-y-2">
-              <a href="#" className="block text-gray-600 hover:text-gray-900 transition-colors text-sm">
+              <Link to="/aboutus" className="block text-gray-600 hover:text-gray-900 transition-colors text-sm">
                 About Pearadox
-              </a>
+              </Link>
               <a href="#" className="block text-gray-600 hover:text-gray-900 transition-colors text-sm">
                 How It Works
               </a>
