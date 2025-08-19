@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ChevronDown, Filter, X, Bookmark, User, Info } from 'lucide-react';
+import { Search, ChevronDown, Filter, X, Bookmark, User, Info, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Header = ({
@@ -11,7 +11,8 @@ const Header = ({
   onShowSavedArticles,
   onShowAccount,
   savedCount,
-  isAboutPage = false
+  isAboutPage = false,
+  isBlogPage = false
 }) => {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
@@ -188,6 +189,24 @@ const Header = ({
               <Info className="h-4 w-4" />
               <span>About Us</span>
             </Link>
+            
+            {/* Blog Link */}
+            <Link
+              to="/blog"
+              className="flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+              onClick={() => {
+                // Close any expanded search first
+                if (isSearchExpanded) {
+                  setIsSearchExpanded(false);
+                }
+                // Let React Router handle navigation naturally
+                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+              }}
+              title="Pearadox Blog"
+            >
+              <BookOpen className="h-4 w-4" />
+              <span>Blog</span>
+            </Link>
           </div>
 
           {/* Logo - Responsive sizing */}
@@ -256,6 +275,23 @@ const Header = ({
                 <Info className="h-4 w-4" />
               </Link>
 
+              {/* Blog - Mobile only */}
+              <Link
+                to="/blog"
+                className="md:hidden flex items-center justify-center p-2 bg-gray-100 text-gray-700 rounded-lg hover:text-blue-600 hover:bg-gray-200 transition-colors flex-shrink-0"
+                onClick={() => {
+                  // Close any expanded search first
+                  if (isSearchExpanded) {
+                    setIsSearchExpanded(false);
+                  }
+                  // Let React Router handle navigation naturally
+                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                }}
+                title="Pearadox Blog"
+              >
+                <BookOpen className="h-4 w-4" />
+              </Link>
+
               {/* Saved Articles */}
               <button
                 onClick={onShowSavedArticles}
@@ -281,7 +317,7 @@ const Header = ({
         </div>
 
         {/* Mobile Categories and Search - Same row below header */}
-        {!isAboutPage && (
+        {!isAboutPage && !isBlogPage && (
           <div className="md:hidden mt-3 pt-3 border-t border-gray-100" ref={mobileDropdownRef}>
           <div className="flex items-center gap-2 overflow-hidden">
             {/* Categories Button - Shrinks when search is expanded */}

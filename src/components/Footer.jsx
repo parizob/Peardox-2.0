@@ -47,9 +47,16 @@ const Footer = ({ onContactClick }) => {
               >
                 About Pearadox
               </Link>
-              <a href="#" className="block text-gray-600 hover:text-gray-900 transition-colors text-sm">
-                How It Works
-              </a>
+              <Link 
+                to="/blog"
+                className="block text-gray-600 hover:text-gray-900 transition-colors text-sm"
+                onClick={() => {
+                  // Scroll to top when navigating to blog page
+                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                }}
+              >
+                Pearadox Blog
+              </Link>
               <a href="#" className="block text-gray-600 hover:text-gray-900 transition-colors text-sm">
                 Privacy Policy
               </a>
