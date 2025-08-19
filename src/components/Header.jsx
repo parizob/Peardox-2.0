@@ -199,12 +199,12 @@ const Header = ({
             </Link>
           </div>
 
-          {/* Actions - Mobile optimized */}
+          {/* Actions */}
           <div className="flex-1 md:flex-1 flex justify-end">
             <div className="flex items-center space-x-2 sm:space-x-3">
               
-              {/* Search - Mobile responsive */}
-              <div className="w-32 sm:w-48 md:w-64">
+              {/* Search - Desktop only */}
+              <div className="hidden md:block w-48 md:w-64">
                 {isSearchExpanded ? (
                   <div className="flex items-center bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2 shadow-md w-full">
                     <Search className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
@@ -234,7 +234,20 @@ const Header = ({
                 )}
               </div>
 
-              {/* Saved - Mobile optimized */}
+              {/* About Us - Mobile only */}
+              <Link
+                to="/aboutus"
+                className="md:hidden flex items-center justify-center p-2 bg-gray-100 text-gray-700 rounded-lg hover:text-blue-600 hover:bg-gray-200 transition-colors"
+                onClick={() => {
+                  // Scroll to top when navigating to about page
+                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                }}
+                title="About Pearadox"
+              >
+                <Info className="h-4 w-4" />
+              </Link>
+
+              {/* Saved Articles */}
               <button
                 onClick={onShowSavedArticles}
                 className="relative p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
@@ -247,7 +260,7 @@ const Header = ({
                 )}
               </button>
 
-              {/* Account - Mobile optimized */}
+              {/* Account */}
               <button
                 onClick={onShowAccount}
                 className="p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
@@ -258,26 +271,71 @@ const Header = ({
           </div>
         </div>
 
-        {/* Mobile Categories - Full width below header */}
+        {/* Mobile Categories and Search - Same row below header */}
         <div className="md:hidden mt-3 pt-3 border-t border-gray-100" ref={mobileDropdownRef}>
-          <button
-            onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
-            className={`w-full flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all ${
-              selectedCategory
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-100 text-gray-700'
-            }`}
-          >
-            <div className="flex items-center space-x-2">
-              <Filter className="h-4 w-4" />
-              <span className="truncate">
-                {selectedCategory ? selectedCategoryName : 'Explore Categories'}
-              </span>
+          <div className="flex items-center space-x-3">
+            {/* Categories Button - Shrinks when search is expanded */}
+            <button
+              onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+              className={`${isSearchExpanded ? 'flex-none w-32' : 'flex-1'} flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
+                selectedCategory
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700'
+              }`}
+            >
+              <div className="flex items-center space-x-2 min-w-0">
+                <Filter className="h-4 w-4 flex-shrink-0" />
+                <span className="truncate">
+                  {isSearchExpanded 
+                    ? (selectedCategory ? 'Filtered' : 'All') 
+                    : (selectedCategory ? selectedCategoryName : 'Categories')
+                  }
+                </span>
+              </div>
+              {!isSearchExpanded && (
+                <ChevronDown className={`h-4 w-4 transition-transform ${
+                  isCategoryDropdownOpen ? 'rotate-180' : ''
+                }`} />
+              )}
+            </button>
+            
+            {/* Search - Mobile - Expands when active */}
+            <div className={`transition-all duration-300 ease-in-out ${isSearchExpanded ? 'flex-1' : 'w-12'}`}>
+              {isSearchExpanded ? (
+                <div className="flex items-center bg-white border border-gray-200 rounded-lg px-3 py-3 shadow-md">
+                  <Search className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="Search articles..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="bg-transparent flex-1 text-sm focus:outline-none min-w-0"
+                    autoFocus
+                    onBlur={(e) => {
+                      // Only close if clicking outside and no search term
+                      if (!searchTerm.trim()) {
+                        setTimeout(() => setIsSearchExpanded(false), 150);
+                      }
+                    }}
+                  />
+                  <button
+                    onClick={handleSearchClose}
+                    className="ml-2 p-1 hover:bg-gray-100 rounded flex-shrink-0"
+                  >
+                    <X className="h-4 w-4 text-gray-400" />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={handleSearchClick}
+                  className="flex items-center justify-center bg-gray-100 text-gray-700 rounded-lg p-3 hover:bg-gray-200 transition-all duration-300 w-full h-full"
+                  title="Search articles"
+                >
+                  <Search className="h-4 w-4" />
+                </button>
+              )}
             </div>
-            <ChevronDown className={`h-4 w-4 transition-transform ${
-              isCategoryDropdownOpen ? 'rotate-180' : ''
-            }`} />
-          </button>
+          </div>
 
           {isCategoryDropdownOpen && (
             <div className="mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
