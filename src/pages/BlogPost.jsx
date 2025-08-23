@@ -473,7 +473,7 @@ const BlogPost = () => {
                 </p>
 
                 <p className="text-gray-700 leading-relaxed mb-8">
-                  No computer science degree. No development team. No massive budget. Just you, your ideas, and $30 to turn them into reality. Let me show you exactly how to unlock your creative potential and join the ranks of solo app creators changing the world.
+                  No computer science degree. No development team. No massive budget. Just you, your ideas, and $20 to turn them into reality. Let me show you exactly how to unlock your creative potential and join the ranks of solo app creators changing the world.
                 </p>
 
                 <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Your Creative Freedom Toolkit</h2>
@@ -528,7 +528,7 @@ const BlogPost = () => {
                   <div className="flex items-start">
                     <Target className="h-6 w-6 text-yellow-600 mr-3 mt-1 flex-shrink-0" />
                     <div>
-                      <h3 className="font-semibold text-yellow-800 mb-2">The $30 Breakdown</h3>
+                      <h3 className="font-semibold text-yellow-800 mb-2">The $20 Breakdown</h3>
                       <ul className="text-yellow-700 space-y-1 text-sm">
                         <li>• Cursor subscription: $20/month</li>
                         <li>• Vercel hosting: $0 (free tier)</li>
@@ -607,20 +607,24 @@ const BlogPost = () => {
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-r from-orange-50 to-red-50 p-8 rounded-xl mb-12">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                    <CheckCircle className="h-6 w-6 mr-3 text-orange-600" />
+                <div className="bg-gradient-to-r from-orange-50 to-red-50 p-4 sm:p-8 rounded-xl mb-12 overflow-hidden">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
+                    <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 text-orange-600 flex-shrink-0" />
                     Step 4: Create Your First App (10 minutes)
                   </h3>
                   <div className="space-y-4 text-gray-700">
                     <p><strong>The magic moment:</strong> Watch your idea become reality in real-time.</p>
-                    <div className="bg-white p-4 rounded-lg">
+                    <div className="bg-white p-3 sm:p-4 rounded-lg overflow-hidden">
                       <p className="font-medium mb-2">Action steps:</p>
                       <ol className="list-decimal list-inside space-y-2 text-sm">
-                        <li><strong>In Cursor:</strong> Press <span className="font-mono bg-gray-100 px-2 py-1 rounded">Ctrl+Shift+P</span> (or Cmd on Mac)</li>
-                        <li>Type "Clone Repository" and paste: <span className="font-mono bg-gray-100 px-2 py-1 rounded text-xs">https://github.com/vercel/next.js/tree/canary/examples/hello-world</span></li>
+                        <li><strong>In Cursor:</strong> Press <span className="font-mono bg-gray-100 px-2 py-1 rounded text-xs sm:text-sm">Ctrl+Shift+P</span> (or Cmd on Mac)</li>
+                        <li className="break-words">Type "Clone Repository" and paste: 
+                          <div className="mt-1">
+                            <span className="font-mono bg-gray-100 px-2 py-1 rounded text-xs break-all block sm:inline">https://github.com/vercel/next.js/tree/canary/examples/hello-world</span>
+                          </div>
+                        </li>
                         <li><strong>Start building:</strong> In the chat, type: <em>"Turn this into a simple todo app with a clean design"</em></li>
-                        <li><strong>Save to GitHub:</strong> Press <span className="font-mono bg-gray-100 px-2 py-1 rounded">Ctrl+Shift+G</span>, commit your changes</li>
+                        <li><strong>Save to GitHub:</strong> Press <span className="font-mono bg-gray-100 px-2 py-1 rounded text-xs sm:text-sm">Ctrl+Shift+G</span>, commit your changes</li>
                         <li><strong>Deploy:</strong> Go to Vercel, import your repository, click deploy</li>
                       </ol>
                     </div>
