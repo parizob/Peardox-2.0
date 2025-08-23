@@ -41,6 +41,50 @@ const BlogPost = () => {
     });
   }, []);
 
+  // Blog posts data - in a real app, this would come from an API
+  const blogPosts = {
+    "building-an-app-with-AI": {
+      id: 2,
+      title: "Building an AI-Powered App for Just $20: A Complete Guide",
+      slug: "building-an-app-with-AI",
+      excerpt: "Think you need thousands of dollars and a team of developers to build an AI-powered app? Think again. With modern tools like Cursor, Vercel, GitHub, and Resend, you can create and deploy a sophisticated AI application for less than the cost of a dinner out.",
+      author: "The Pearadox Team",
+      date: "2025-08-24",
+      readTime: "12 min read",
+      tags: ["AI Development", "Cursor", "Vercel", "Indie Development", "Tutorial", "Low-Cost"],
+      featured: true
+    },
+    "democratizing-ai-research": {
+      id: 1,
+      title: "Democratizing AI Research: Why Everyone Deserves to Understand the Future",
+      slug: "democratizing-ai-research",
+      excerpt: "AI research is reshaping our world at unprecedented speed. But what happens when this transformative knowledge remains locked behind academic walls? We believe everyone deserves access to the insights that are defining our collective future.",
+      author: "The Pearadox Team",
+      date: "2025-08-19",
+      readTime: "8 min read",
+      tags: ["AI Research", "Democratization", "Innovation", "Education", "Accessibility"],
+      featured: true
+    }
+  };
+
+  const blogPost = blogPosts[slug];
+
+  // Track blog post view
+  useEffect(() => {
+    const trackBlogPostView = async () => {
+      if (blogPost) {
+        try {
+          await viewedArticlesAPI.recordBlogPostView(user?.id, blogPost, 'blog_post');
+        } catch (error) {
+          console.error('Error recording blog post view:', error);
+        }
+      }
+    };
+
+    trackBlogPostView();
+  }, [slug, user?.id, blogPost]);
+
+
   // Modal handlers
   const handleShowSavedArticles = () => {
     setIsSavedArticlesOpen(true);
@@ -80,33 +124,7 @@ const BlogPost = () => {
     setSelectedArticle(null);
   };
 
-  // Blog posts data - in a real app, this would come from an API
-  const blogPosts = {
-    "building-an-app-with-AI": {
-      id: 2,
-      title: "Building an AI-Powered App for Just $20: A Complete Guide",
-      slug: "building-an-app-with-AI",
-      excerpt: "Think you need thousands of dollars and a team of developers to build an AI-powered app? Think again. With modern tools like Cursor, Vercel, GitHub, and Resend, you can create and deploy a sophisticated AI application for less than the cost of a dinner out.",
-      author: "The Pearadox Team",
-      date: "2025-01-15",
-      readTime: "12 min read",
-      tags: ["AI Development", "Cursor", "Vercel", "Indie Development", "Tutorial", "Low-Cost"],
-      featured: true
-    },
-    "democratizing-ai-research": {
-      id: 1,
-      title: "Democratizing AI Research: Why Everyone Deserves to Understand the Future",
-      slug: "democratizing-ai-research",
-      excerpt: "AI research is reshaping our world at unprecedented speed. But what happens when this transformative knowledge remains locked behind academic walls? We believe everyone deserves access to the insights that are defining our collective future.",
-      author: "The Pearadox Team",
-      date: "2025-08-19",
-      readTime: "8 min read",
-      tags: ["AI Research", "Democratization", "Innovation", "Education", "Accessibility"],
-      featured: true
-    }
-  };
 
-  const blogPost = blogPosts[slug];
 
   // Return 404 if post not found
   if (!blogPost) {

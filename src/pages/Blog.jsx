@@ -87,17 +87,17 @@ const Blog = () => {
   const blogPosts = [
     {
       id: 2,
-      title: "Building an AI-Powered App for Just $30: A Complete Guide",
+      title: "Building an AI-Powered App for Just $20: A Complete Guide",
       slug: "building-an-app-with-AI",
       excerpt: "Think you need thousands of dollars and a team of developers to build an AI-powered app? Think again. With modern tools like Cursor, Vercel, GitHub, and Resend, you can create and deploy a sophisticated AI application for less than the cost of a dinner out.",
       content: `
-# Building an AI-Powered App for Just $30: A Complete Guide
+# Building an AI-Powered App for Just $20: A Complete Guide
 
 *How modern development tools are democratizing app creation*
 
 Remember when building a software application required a computer science degree, months of development time, and thousands of dollars in infrastructure costs? Those days are over. Today, with the right combination of modern tools and a bit of creativity, you can build and deploy a sophisticated AI-powered application for less than the cost of a nice dinner.
 
-Let me show you exactly how to do it for just $30.
+Let me show you exactly how to do it for just $20.
 
 ## The Modern Development Stack: Powerful and Affordable
 
@@ -238,7 +238,7 @@ Let's tally up our costs:
 - **Resend email**: $0 (100 emails/month free, upgrade later)
 - **Custom domain**: $10/year
 
-**Total first-month cost**: $30
+**Total first-month cost**: $20
 **Total ongoing monthly cost**: $20 (assuming you keep building!)
 
 ## Beyond the Basics: Scaling Your Success
@@ -334,7 +334,7 @@ The only question remaining is: what problem will you solve?
 
 Whether you're a teacher who wants to create better learning tools, a healthcare worker who sees inefficiencies that technology could address, an entrepreneur with a vision for a better way, or simply someone curious about what you could build—the barriers have never been lower.
 
-**Your $30 investment isn't just buying tools—it's buying the possibility of creating something that matters.**
+**Your $20 investment isn't just buying tools—it's buying the possibility of creating something that matters.**
 
 Ready to get started? The future of app development isn't in the hands of big tech companies or venture-funded startups. It's in your hands.
 
@@ -345,7 +345,7 @@ Ready to get started? The future of app development isn't in the hands of big te
 **Ready to dive deeper?** Check out our step-by-step video tutorial series where we build a complete AI app from scratch, sharing every line of code and every decision along the way. Because when we democratize development, we democratize opportunity.
       `,
       author: "The Pearadox Team",
-      date: "2025-01-15",
+      date: "2025-08-24",
       readTime: "12 min read",
       tags: ["AI Development", "Cursor", "Vercel", "Indie Development", "Tutorial", "Low-Cost"],
       featured: true
@@ -589,7 +589,13 @@ The knowledge exists. The tools are available. The only question is: are you rea
                     <Link 
                       to={`/blog/${post.slug}`}
                       className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                      onClick={() => {
+                      onClick={async () => {
+                        // Track blog post preview click
+                        try {
+                          await viewedArticlesAPI.recordBlogPostView(user?.id, post, 'blog_preview');
+                        } catch (error) {
+                          console.error('Error recording blog post preview view:', error);
+                        }
                         // Scroll to top when navigating to blog post
                         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                       }}

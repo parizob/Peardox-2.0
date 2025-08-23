@@ -1092,6 +1092,60 @@ export const viewedArticlesAPI = {
     }
   },
 
+  async recordBlogPostView(userId, blogPost, source = 'blog') {
+    const isAuthenticated = !!userId;
+    const sessionId = this.getSessionId();
+    const anonymousId = isAuthenticated ? null : this.getAnonymousId();
+    
+    console.log('📝 Recording blog post view:', {
+      userId: userId || 'anonymous',
+      blogTitle: blogPost.title,
+      blogSlug: blogPost.slug,
+      isAuthenticated,
+      source,
+      sessionId: sessionId.substring(0, 20) + '...' // Log partial session ID
+    });
+    
+    try {
+      const viewData = {
+        user_id: userId || null,
+        article_id: 'blog', // Set article_id as 'blog'
+        arxiv_id: 'blog', // Set arxiv_id as 'blog'
+        category: blogPost.title, // Store blog title in category field
+        skill_level: 'Beginner', // Use valid skill level (Beginner or Intermediate)
+        session_id: sessionId,
+        source: source, // 'blog' for preview clicks, 'blog_post' for full article views
+        is_authenticated: isAuthenticated,
+        anonymous_id: anonymousId,
+        user_agent: this.getUserAgent()
+      };
+      
+      const { data, error } = await supabase
+        .from('viewed_articles')
+        .insert([viewData])
+        .select()
+        .single();
+      
+      if (error) {
+        // Check if it's a duplicate entry (unique constraint violation)
+        if (error.code === '23505') {
+          console.log('ℹ️ Blog post view already recorded for this hour, skipping...');
+          return { success: true, isDuplicate: true };
+        }
+        console.error('❌ Error recording blog post view:', error);
+        throw error;
+      }
+      
+      console.log('✅ Blog post view recorded successfully:', data);
+      return { success: true, data, isDuplicate: false };
+    } catch (error) {
+      console.error('❌ Exception in recordBlogPostView:', error);
+      // Don't throw the error - we don't want to break the user experience
+      // if analytics tracking fails
+      return { success: false, error: error.message };
+    }
+  },
+
   async getUserViewedArticles(userId, limit = 50, offset = 0) {
     console.log('📊 Getting viewed articles for user:', userId);
     
