@@ -483,13 +483,14 @@ function App() {
     }
   }, [selectedCategory]);
 
-  // Function to scroll to articles section
+  // Function to scroll to articles section (including quiz button)
   const scrollToArticles = () => {
-    const categoriesSection = document.getElementById('categories-section');
-    if (categoriesSection) {
+    const quizSection = document.getElementById('quiz-section');
+    if (quizSection) {
       const headerHeight = 80; // Account for fixed header height
-      const elementPosition = categoriesSection.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+      const additionalOffset = 20; // Add some padding above the quiz button
+      const elementPosition = quizSection.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight - additionalOffset;
 
       window.scrollTo({
         top: offsetPosition,
@@ -1252,7 +1253,9 @@ function App() {
               </div>
 
               {/* Field Quiz Button */}
-              <FieldQuizButton onClick={handleOpenFieldQuiz} />
+              <div id="quiz-section">
+                <FieldQuizButton onClick={handleOpenFieldQuiz} />
+              </div>
 
               <div id="categories-section" className="text-center mb-6 sm:mb-10">
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3 px-4">
@@ -1279,9 +1282,6 @@ function App() {
                         isSelected
                           ? 'ring-2 ring-indigo-500 shadow-lg'
                           : ''
-                      } ${
-                        // Center the 5th item on mobile when it's alone on a row
-                        index === 4 ? 'col-span-2 sm:col-span-1 justify-self-center' : ''
                       }`}
                     >
                       <div className="flex flex-col items-center justify-center space-y-2 sm:space-y-3 h-20 sm:h-28">
