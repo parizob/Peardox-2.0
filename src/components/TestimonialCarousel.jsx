@@ -30,7 +30,7 @@ const TestimonialCarousel = () => {
       name: "Zoe Zimmerman",
       role: "Stenographer",
       company: "U.S. Legal Support",
-      content: "As a stenographer, I have to be on top of every detail, and that includes staying current with technology. Pearadox has been a total game-changer for me. It's the best way to keep up with and actually understand the latest AI research, which is coming up in legal cases more and more.",
+      content: "As a stenographer, I have to be on top of every detail, and that includes staying current with technology. Pearadox has been a total game-changer for me.",
       rating: 5,
       avatar: "ZZ"
     },

@@ -8,6 +8,8 @@ import AccountModal from './components/AccountModal';
 import Footer from './components/Footer';
 import ContactModal from './components/ContactModal';
 import TestimonialCarousel from './components/TestimonialCarousel';
+import FieldQuiz from './components/FieldQuiz';
+import FieldQuizButton from './components/FieldQuizButton';
 import { useUser } from './contexts/UserContext';
 import { arxivAPI, authAPI, savedArticlesAPI, viewedArticlesAPI, supabase } from './lib/supabase';
 
@@ -225,6 +227,11 @@ function App() {
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isContactOpen, setIsContactOpen] = useState(false);
+  
+  // Field quiz state
+  const [selectedField, setSelectedField] = useState(null);
+  const [sessionResearchInterests, setSessionResearchInterests] = useState(null);
+  const [isFieldQuizOpen, setIsFieldQuizOpen] = useState(false);
   
   // Get user state from context
   const {
@@ -859,6 +866,85 @@ function App() {
     setIsContactOpen(false);
   };
 
+  // Field quiz handlers
+  const handleOpenFieldQuiz = () => {
+    setIsFieldQuizOpen(true);
+  };
+
+  const handleCloseFieldQuiz = () => {
+    setIsFieldQuizOpen(false);
+  };
+
+  const handleFieldSelect = (fieldId) => {
+    setSelectedField(fieldId);
+    
+    if (fieldId) {
+      // Define field-specific categories
+      const fieldCategories = {
+        medicine: [
+          'Computational Biology',
+          'Medical Informatics', 
+          'Computer Vision and Pattern Recognition',
+          'Machine Learning',
+          'Natural Language Processing'
+        ],
+        finance: [
+          'Machine Learning',
+          'Data Mining',
+          'Statistics',
+          'Natural Language Processing',
+          'Computational Economics'
+        ],
+        education: [
+          'Human-Computer Interaction',
+          'Natural Language Processing',
+          'Machine Learning',
+          'Educational Technology',
+          'Cognitive Science'
+        ],
+        tech: [
+          'Machine Learning',
+          'Artificial Intelligence',
+          'Computer Vision and Pattern Recognition',
+          'Natural Language Processing',
+          'Robotics'
+        ]
+      };
+
+      // Only update session interests for authenticated users
+      if (user) {
+        // For authenticated users, session interests can override their profile
+        // This allows temporary preview before saving
+      } else {
+        // For unauthenticated users, don't update session interests
+        // Categories will always remain as defaults
+      }
+    } else {
+      // Reset session interests when no field selected (only for authenticated users)
+      if (user) {
+        setSessionResearchInterests(null);
+      }
+    }
+  };
+
+  const handleSaveFieldCategoriesToProfile = async (categories) => {
+    if (!user) return;
+    
+    try {
+      await handleResearchInterestsChange(categories);
+      console.log('✅ Field quiz categories saved to profile:', categories);
+    } catch (error) {
+      console.error('❌ Failed to save field quiz categories:', error);
+      throw error;
+    }
+  };
+
+  // For authenticated users: use session interests if available, otherwise user interests or defaults
+  // For unauthenticated users: ALWAYS use default categories (never session interests)
+  const displayResearchInterests = user 
+    ? (sessionResearchInterests || userResearchInterests || defaultResearchInterests)
+    : defaultResearchInterests;
+
   // handleSkillLevelChange and handleResearchInterestsChange are now provided by UserContext
 
   return (
@@ -1165,6 +1251,9 @@ function App() {
                 </div>
               </div>
 
+              {/* Field Quiz Button */}
+              <FieldQuizButton onClick={handleOpenFieldQuiz} />
+
               <div id="categories-section" className="text-center mb-6 sm:mb-10">
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3 px-4">
                   Pick a Category 
@@ -1175,7 +1264,7 @@ function App() {
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6 max-w-5xl mx-auto px-4">
-                {userResearchInterests.map((researchInterest, index) => {
+                {displayResearchInterests.map((researchInterest, index) => {
                   const Icon = getCategoryIcon(researchInterest);
                   const colorClass = getCategoryColor(researchInterest, index);
                   const isSelected = selectedCategory === researchInterest;
@@ -1358,6 +1447,16 @@ function App() {
       <ContactModal
         isOpen={isContactOpen}
         onClose={handleCloseContact}
+      />
+
+      <FieldQuiz 
+        onFieldSelect={handleFieldSelect}
+        selectedField={selectedField}
+        user={user}
+        onSaveToProfile={handleSaveFieldCategoriesToProfile}
+        isOpen={isFieldQuizOpen}
+        onClose={handleCloseFieldQuiz}
+        onOpenAccount={handleShowAccount}
       />
 
       <Footer onContactClick={handleShowContact} />
