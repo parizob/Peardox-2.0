@@ -7,6 +7,7 @@ import SavedArticles from './components/SavedArticles';
 import AccountModal from './components/AccountModal';
 import Footer from './components/Footer';
 import ContactModal from './components/ContactModal';
+import TestimonialCarousel from './components/TestimonialCarousel';
 import { useUser } from './contexts/UserContext';
 import { arxivAPI, authAPI, savedArticlesAPI, viewedArticlesAPI, supabase } from './lib/supabase';
 
@@ -1144,6 +1145,9 @@ function App() {
                    </div>
                  </div>
                </div>
+
+              {/* What Our Readers Say - Testimonial Carousel */}
+              <TestimonialCarousel />
 
               {/* Decorative Line Break */}
               <div className="my-16 sm:my-20">
