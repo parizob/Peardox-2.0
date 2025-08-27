@@ -3,16 +3,15 @@ import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react';
 
 const TestimonialCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   // Sample testimonial data - 6 tiles (shortened for better fit)
   const testimonials = [
     {
       id: 1,
-      name: "Matt Cohen",
+      name: "Matthew Cohen",
       role: "VP of Credit",
       company: "Atlantic Pacific Credit Partners",
-      content: "Pearadox has become my go-to source for staying current with AI research. The simplified explanations help me quickly assess which papers are worth diving deeper into.",
+      content: "Pearadox has become my go-to source for staying ahead in AI research. The simplified explanations save me time and help me quickly decide which breakthroughs are worth look into.",
       rating: 5,
       avatar: "MC"
     },
@@ -21,7 +20,7 @@ const TestimonialCarousel = () => {
         name: "Brandon Parizo",
         role: "Technical Product Manager",
         company: "Verizon",
-        content: "Staying on top of AI developments is crucial for product decisions. Pearadox saves me hours each week by distilling key insights.",
+        content: "Staying on top of AI developments is crucial for product strategy. Pearadox makes it easy by breaking down complex papers into clear insights I can act on right away.",
         rating: 5,
         avatar: "BP"
       },
@@ -30,7 +29,7 @@ const TestimonialCarousel = () => {
       name: "Zoe Zimmerman",
       role: "Stenographer",
       company: "U.S. Legal Support",
-      content: "As a stenographer, I have to be on top of every detail, and that includes staying current with technology. Pearadox has been a total game-changer for me.",
+      content: "As a stenographer, being detail-oriented is everything; including keeping up with new tech. Pearadox makes advanced AI research understandable and useful in my daily work.",
       rating: 5,
       avatar: "ZZ"
     },
@@ -39,48 +38,27 @@ const TestimonialCarousel = () => {
         name: "Jon Mohr",
         role: "Field Service Engineer",
         company: "Boston Scientific",
-        content: "Pearadox is solid. It's a great product, and I'm even considering starting my own business after seeing it.",
+        content:  "Pearadox is an incredible resource for cutting through the noise in AI. It’s not only helping me at work but also inspiring me to explore ideas for my own business.",
         rating: 5,
         avatar: "JM"
       },
   ];
 
-  // Auto-play functionality
-  useEffect(() => {
-    let interval;
-    if (isAutoPlaying) {
-      interval = setInterval(() => {
-        setCurrentIndex((prevIndex) => 
-          prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
-        );
-      }, 5000); // Change every 5 seconds
-    }
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, testimonials.length]);
+  // Auto-play functionality removed - manual navigation only
 
   const goToPrevious = () => {
-    setIsAutoPlaying(false);
     setCurrentIndex(currentIndex === 0 ? testimonials.length - 1 : currentIndex - 1);
   };
 
   const goToNext = () => {
-    setIsAutoPlaying(false);
     setCurrentIndex(currentIndex === testimonials.length - 1 ? 0 : currentIndex + 1);
   };
 
   const goToSlide = (index) => {
-    setIsAutoPlaying(false);
     setCurrentIndex(index);
   };
 
-  // Resume auto-play after user interaction
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsAutoPlaying(true);
-    }, 10000); // Resume auto-play after 10 seconds of no interaction
-
-    return () => clearTimeout(timer);
-  }, [currentIndex]);
+  // Auto-play resume functionality removed - manual navigation only
 
   return (
     <div className="mb-8 sm:mb-12">
