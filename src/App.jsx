@@ -1057,10 +1057,12 @@ function App() {
                         ) : (
                           <button
                             onClick={handleShowAccount}
-                            className="w-full inline-flex items-center justify-center px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 hover:from-blue-600 hover:to-blue-700"
+                            className="w-full inline-flex items-center justify-center px-6 py-4 text-lg font-semibold text-blue-600 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 hover:from-blue-100 hover:to-blue-200 border border-blue-200 hover:border-blue-300 relative overflow-hidden group"
                           >
-                            Create Free Account
-                            <ArrowRight className="ml-3 w-5 h-5" />
+                            {/* Shimmer effect */}
+                            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                            <span className="relative z-10">Create Free Account</span>
+                            <ArrowRight className="ml-3 w-5 h-5 relative z-10" />
                           </button>
                         )}
                           </div>

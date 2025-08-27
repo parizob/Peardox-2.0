@@ -128,9 +128,11 @@ const FieldQuiz = ({ onFieldSelect, selectedField, user, onSaveToProfile, isOpen
                       onClose();
                       if (onOpenAccount) onOpenAccount();
                     }}
-                    className="mt-3 inline-flex items-center px-3 py-1.5 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium text-sm transition-colors"
+                    className="mt-3 inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-600 rounded-lg hover:from-blue-100 hover:to-blue-200 font-medium text-sm transition-all border border-blue-200 hover:border-blue-300 relative overflow-hidden group"
                   >
-                    Create Free Account
+                    {/* Mini shimmer effect */}
+                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                    <span className="relative z-10">Create Free Account</span>
                   </button>
                 </div>
               </div>
