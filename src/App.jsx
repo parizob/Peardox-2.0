@@ -887,18 +887,18 @@ function App() {
           'Medical Informatics', 
           'Computer Vision and Pattern Recognition',
           'Machine Learning',
-          'Natural Language Processing'
+          'Computation and Language'
         ],
         finance: [
           'Machine Learning',
           'Data Mining',
           'Statistics',
-          'Natural Language Processing',
+          'Computation and Language',
           'Computational Economics'
         ],
         education: [
           'Human-Computer Interaction',
-          'Natural Language Processing',
+          'Computation and Language',
           'Machine Learning',
           'Educational Technology',
           'Cognitive Science'
@@ -907,7 +907,7 @@ function App() {
           'Machine Learning',
           'Artificial Intelligence',
           'Computer Vision and Pattern Recognition',
-          'Natural Language Processing',
+          'Computation and Language',
           'Robotics'
         ]
       };
