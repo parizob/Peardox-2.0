@@ -136,10 +136,10 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
       date.setDate(startOfWeek.getDate() + i);
       const dateStr = date.toISOString().split('T')[0];
       
-      // Count views for this day
+      // Count views for this day (exclude blog entries)
       const viewsCount = recentViews?.filter(view => {
         const viewDate = new Date(view.viewed_at).toISOString().split('T')[0];
-        return viewDate === dateStr;
+        return viewDate === dateStr && view.article_id !== 'blog';
       }).length || 0;
       
       weekDays.push({
@@ -1095,13 +1095,16 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                                 </div>
                                 <div className="flex-1 bg-gray-100 rounded-full h-7 relative overflow-hidden">
                                   <div 
-                                    className="bg-gradient-to-r from-green-500 to-emerald-500 h-full rounded-full transition-all duration-500 ease-out"
+                                    className="bg-gradient-to-r from-green-500 to-emerald-500 h-full rounded-full transition-all duration-500 ease-out relative"
                                     style={{ width: `${percentage}%` }}
-                                  ></div>
-                                  <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className={`text-xs font-medium ${hasViews ? 'text-white' : 'text-gray-600'}`}>
-                                      {day.views}
-                                    </span>
+                                  >
+                                    {hasViews && (
+                                      <div className="absolute inset-0 flex items-center justify-center">
+                                        <span className="text-xs font-medium text-white">
+                                          {day.views}
+                                        </span>
+                                      </div>
+                                    )}
                                   </div>
                                 </div>
                               </div>

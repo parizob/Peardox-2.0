@@ -1,15 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI, savedArticlesAPI } from '../lib/supabase';
 
-const UserContext = createContext();
-
-export const useUser = () => {
-  const context = useContext(UserContext);
-  if (!context) {
-    throw new Error('useUser must be used within a UserProvider');
-  }
-  return context;
-};
+const UserContext = createContext(undefined);
 
 export const UserProvider = ({ children }) => {
   // User state
@@ -223,4 +215,16 @@ export const UserProvider = ({ children }) => {
       {children}
     </UserContext.Provider>
   );
+};
+
+// Add display name for better debugging and Fast Refresh compatibility
+UserProvider.displayName = 'UserProvider';
+
+// Hook must be defined after the component for Fast Refresh compatibility
+export const useUser = () => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error('useUser must be used within a UserProvider');
+  }
+  return context;
 };

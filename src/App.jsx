@@ -232,6 +232,7 @@ function App() {
   const [selectedField, setSelectedField] = useState(null);
   const [sessionResearchInterests, setSessionResearchInterests] = useState(null);
   const [isFieldQuizOpen, setIsFieldQuizOpen] = useState(false);
+  const [lastRefreshDate, setLastRefreshDate] = useState(null);
   
   // Get user state from context
   const {
@@ -464,6 +465,7 @@ function App() {
   // Load data from Supabase with skill-level specific summaries
   useEffect(() => {
     loadData();
+    loadLastRefreshDate();
   }, [userSkillLevel]); // Reload when skill level changes
 
   // Load user's saved articles
@@ -496,6 +498,15 @@ function App() {
         top: offsetPosition,
         behavior: 'smooth'
       });
+    }
+  };
+
+  const loadLastRefreshDate = async () => {
+    try {
+      const refreshDate = await arxivAPI.getLastRefreshDate();
+      setLastRefreshDate(refreshDate);
+    } catch (error) {
+      console.error('Error loading last refresh date:', error);
     }
   };
 
@@ -1325,7 +1336,7 @@ function App() {
                   {selectedCategoryDisplay ? `${categories.find(c => c.category_name === selectedCategoryDisplay)?.category_name || selectedCategoryDisplay}` : 'Latest Research'}
                 </h3>
                 <p className="text-gray-600 text-sm sm:text-base">
-                  {latestPublishedDate ? `Publication Date: ${latestPublishedDate}` : 'No articles found'}
+                  {lastRefreshDate ? `Last Refresh: ${lastRefreshDate}` : 'Data loading...'}
                 </p>
               </div>
             </div>

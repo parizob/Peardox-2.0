@@ -103,6 +103,39 @@ export const arxivAPI = {
     return transformedData;
   },
 
+  async getLastRefreshDate() {
+    console.log('📅 Getting last refresh date from v_summary_papers');
+    
+    try {
+      const { data, error } = await supabase
+        .from('v_summary_papers')
+        .select('created_at')
+        .order('created_at', { ascending: false })
+        .limit(1);
+      
+      if (error) {
+        console.error('❌ Error getting last refresh date:', error);
+        return null;
+      }
+      
+      if (data && data.length > 0) {
+        const lastRefreshDate = new Date(data[0].created_at);
+        console.log('✅ Last refresh date:', lastRefreshDate);
+        return lastRefreshDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          timeZone: 'UTC'
+        });
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('❌ Exception in getLastRefreshDate:', error);
+      return null;
+    }
+  },
+
   // Get all papers with skill-level specific summaries
   async getAllPapersWithSummaries(skillLevel = 'Beginner') {
     console.log('📡 Fetching top 1500 summarized papers for skill level:', skillLevel);
@@ -1176,7 +1209,7 @@ export const viewedArticlesAPI = {
     try {
       const { data, error } = await supabase
         .from('viewed_articles')
-        .select('category, skill_level, viewed_at')
+        .select('category, skill_level, viewed_at, article_id')
         .eq('user_id', userId);
       
       if (error) {
@@ -1191,14 +1224,16 @@ export const viewedArticlesAPI = {
         skillLevelsUsed: [...new Set(data.map(item => item.skill_level))],
         viewsByCategory: {},
         viewsBySkillLevel: {},
-        recentViews: data.slice(0, 10),
+        recentViews: data, // Return ALL views for weekly chart processing
         firstView: data.length > 0 ? new Date(Math.min(...data.map(item => new Date(item.viewed_at)))) : null,
         lastView: data.length > 0 ? new Date(Math.max(...data.map(item => new Date(item.viewed_at)))) : null
       };
       
-      // Count views by category
+      // Count views by category (exclude blog entries)
       data.forEach(item => {
-        stats.viewsByCategory[item.category] = (stats.viewsByCategory[item.category] || 0) + 1;
+        if (item.article_id !== 'blog') {
+          stats.viewsByCategory[item.category] = (stats.viewsByCategory[item.category] || 0) + 1;
+        }
       });
       
       // Count views by skill level
