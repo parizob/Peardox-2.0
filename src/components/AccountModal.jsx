@@ -434,7 +434,13 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
         await authAPI.signIn(authForm.email, authForm.password);
       }
     } catch (error) {
-      setAuthError(error.message);
+      // Filter out JavaScript reference errors from being shown to users
+      if (error instanceof ReferenceError || error.message.includes('is not defined')) {
+        console.error('Reference error during auth:', error);
+        // Don't set any error message for reference errors
+      } else {
+        setAuthError(error.message);
+      }
     } finally {
       setAuthLoading(false);
     }
@@ -501,7 +507,13 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
 
     } catch (error) {
       console.error('Profile update error:', error);
-      setAuthError('Failed to update profile: ' + error.message);
+      // Filter out JavaScript reference errors from being shown to users
+      if (error instanceof ReferenceError || error.message.includes('is not defined')) {
+        console.error('Reference error during profile update:', error);
+        // Don't set any error message for reference errors
+      } else {
+        setAuthError('Failed to update profile: ' + error.message);
+      }
     } finally {
       setAuthLoading(false);
     }
@@ -589,8 +601,14 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
       
     } catch (error) {
       console.error('❌ Error saving reset research interests:', error);
-      setAuthError(`Failed to save reset to database: ${error.message}`);
-      setTimeout(() => setAuthError(''), 5000);
+      // Filter out JavaScript reference errors from being shown to users
+      if (error instanceof ReferenceError || error.message.includes('is not defined')) {
+        console.error('Reference error during reset:', error);
+        // Don't set any error message for reference errors
+      } else {
+        setAuthError(`Failed to save reset to database: ${error.message}`);
+        setTimeout(() => setAuthError(''), 5000);
+      }
     } finally {
       setAuthLoading(false);
     }
@@ -779,7 +797,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                     </button>
                   </div>
 
-                  {authError && (
+                  {authError && authError.trim() && (
                     <div className="p-3 lg:p-4 rounded-xl bg-red-50 text-red-800 border border-red-200 text-sm lg:text-base">
                       {authError}
                     </div>
@@ -1400,7 +1418,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
               </div>
             )}
 
-            {authError && (
+            {authError && authError.trim() && (
               <div className={`p-3 rounded-lg text-sm ${
                 authError.includes('successfully')
                   ? 'bg-green-50 text-green-800 border border-green-200'
