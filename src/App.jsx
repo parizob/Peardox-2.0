@@ -1413,14 +1413,8 @@ function App() {
                             {spotlightArticle.shortDescription}
                           </p>
                           
-                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-                            <div className="text-sm text-gray-500 order-2 sm:order-1">
-                              {spotlightArticle.authors} • {spotlightArticle.publishedDate}
-                            </div>
-                            <div className="inline-flex items-center px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-700 rounded-lg font-medium text-sm transition-colors order-1 sm:order-2 self-start sm:self-auto">
-                              <span className="mr-2">Read Full Paper</span>
-                              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                            </div>
+                          <div className="text-sm text-gray-500">
+                            {spotlightArticle.authors} • {spotlightArticle.publishedDate}
                           </div>
                         </div>
                         
@@ -1433,6 +1427,14 @@ function App() {
                               <div className="text-xs text-amber-600 font-medium">
                                 TRENDING
                               </div>
+                            </div>
+                          </div>
+                          
+                          {/* Read Full Paper button moved below trending */}
+                          <div className="mt-3 flex justify-center">
+                            <div className="inline-flex items-center px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-700 rounded-lg font-medium text-xs transition-colors">
+                              <span className="mr-1">Jump Right In</span>
+                              <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
                             </div>
                           </div>
                         </div>
