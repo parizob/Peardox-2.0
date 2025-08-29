@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle } from 'lucide-react';
+import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle, Sparkles } from 'lucide-react';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
@@ -233,6 +233,7 @@ function App() {
   const [sessionResearchInterests, setSessionResearchInterests] = useState(null);
   const [isFieldQuizOpen, setIsFieldQuizOpen] = useState(false);
   const [lastRefreshDate, setLastRefreshDate] = useState(null);
+  const [spotlightArticle, setSpotlightArticle] = useState(null);
   
   // Get user state from context
   const {
@@ -468,6 +469,14 @@ function App() {
     loadLastRefreshDate();
   }, [userSkillLevel]); // Reload when skill level changes
 
+  // Select spotlight article when articles are loaded or date changes
+  useEffect(() => {
+    if (articles.length > 0) {
+      // Always run selection to handle date changes
+      selectSpotlightArticle();
+    }
+  }, [articles]);
+
   // Load user's saved articles
   // The user context now handles loading saved articles
 
@@ -485,13 +494,13 @@ function App() {
     }
   }, [selectedCategory]);
 
-  // Function to scroll to articles section (including quiz button)
+  // Function to scroll to articles section (including spotlight)
   const scrollToArticles = () => {
-    const quizSection = document.getElementById('quiz-section');
-    if (quizSection) {
+    const spotlightSection = document.getElementById('spotlight-section');
+    if (spotlightSection) {
       const headerHeight = 80; // Account for fixed header height
-      const additionalOffset = 20; // Add some padding above the quiz button
-      const elementPosition = quizSection.getBoundingClientRect().top;
+      const additionalOffset = 30; // Add some padding above the spotlight
+      const elementPosition = spotlightSection.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - headerHeight - additionalOffset;
 
       window.scrollTo({
@@ -507,6 +516,34 @@ function App() {
       setLastRefreshDate(refreshDate);
     } catch (error) {
       console.error('Error loading last refresh date:', error);
+    }
+  };
+
+  // Select a consistent daily article for the Research Of The Day spotlight
+  // Uses date-based seeding to ensure the same article shows for the entire day
+  // TODO: In the future, replace this with a function that fetches specifically curated/trending articles
+  // For example: await arxivAPI.getSpotlightArticle() or await arxivAPI.getTrendingArticle()
+  const selectSpotlightArticle = () => {
+    if (articles.length > 0) {
+      // Create a date-based seed that changes daily
+      const today = new Date();
+      const dateString = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+      
+      // Simple hash function to convert date string to a number
+      let hash = 0;
+      for (let i = 0; i < dateString.length; i++) {
+        const char = dateString.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32-bit integer
+      }
+      
+      // Use absolute value and modulo to get a consistent index for today
+      const availableArticles = Math.min(articles.length, 50); // Pick from top 50 most recent
+      const dailyIndex = Math.abs(hash) % availableArticles;
+      
+      const selectedArticle = articles[dailyIndex];
+      setSpotlightArticle(selectedArticle);
+      console.log('📌 Selected daily spotlight article:', selectedArticle?.title, `(index: ${dailyIndex} for date: ${dateString})`);
     }
   };
 
@@ -1264,6 +1301,74 @@ function App() {
                   </div>
                 </div>
               </div>
+
+              {/* Research Of The Day Spotlight */}
+              {spotlightArticle && (
+                <div id="spotlight-section" className="mb-16 sm:mb-20">
+                  <div className="mx-auto max-w-4xl px-4 sm:px-6">
+                    <div className="text-center mb-8">
+                      <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl mb-6 shadow-md">
+                        <Sparkles className="h-8 w-8 text-white" />
+                      </div>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                        Research Of The Day
+                      </h3>
+                      <p className="text-gray-600 text-lg">
+                        Today's trending breakthrough worth your attention
+                      </p>
+                    </div>
+
+                    <div 
+                      className="bg-gradient-to-br from-white to-amber-50 rounded-3xl shadow-lg border border-amber-100 p-6 sm:p-8 hover:shadow-xl transition-all duration-300 cursor-pointer group"
+                      onClick={() => handleArticleClick(spotlightArticle)}
+                    >
+                      <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-8">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-4">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                              ⭐ Spotlight
+                            </span>
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                              {spotlightArticle.category}
+                            </span>
+                          </div>
+                          
+                          <h4 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 group-hover:text-amber-700 transition-colors">
+                            {spotlightArticle.title}
+                          </h4>
+                          
+                          <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-4">
+                            {spotlightArticle.shortDescription}
+                          </p>
+                          
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+                            <div className="text-sm text-gray-500 order-2 sm:order-1">
+                              {spotlightArticle.authors} • {spotlightArticle.publishedDate}
+                            </div>
+                            <div className="inline-flex items-center px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-700 rounded-lg font-medium text-sm transition-colors order-1 sm:order-2 self-start sm:self-auto">
+                              <span className="mr-2">Read Full Paper</span>
+                              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="lg:w-32 lg:flex-shrink-0 mt-6 lg:mt-0">
+                          <div className="w-full h-32 lg:h-32 bg-gradient-to-br from-amber-200 to-orange-200 rounded-xl flex items-center justify-center shadow-inner">
+                            <div className="text-center">
+                              <div className="text-2xl lg:text-3xl font-bold text-amber-700 mb-1">
+                                #1
+                              </div>
+                              <div className="text-xs text-amber-600 font-medium">
+                                TRENDING
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Field Quiz Button */}
               <div id="quiz-section">
