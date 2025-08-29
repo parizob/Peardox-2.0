@@ -303,7 +303,7 @@ function App() {
         console.log('📤 Direct navigation to article detected:', arxivId, 'from URL:', path);
         
         // Function to find and display article
-        const findAndDisplayArticle = (articlesArray) => {
+        const findAndDisplayArticle = async (articlesArray) => {
           const sharedArticle = articlesArray.find(article => {
             // More flexible matching to handle version numbers
             return article.arxivId === arxivId || 
@@ -317,6 +317,16 @@ function App() {
             
             // Update page title and meta tags
             updatePageMeta(sharedArticle);
+            
+            // Record article view for analytics (same as regular clicks)
+            try {
+              await viewedArticlesAPI.recordArticleView(user?.id, sharedArticle, userSkillLevel);
+              console.log('📊 Direct article view recorded for analytics');
+            } catch (error) {
+              console.warn('⚠️ Failed to record direct article view (non-critical):', error);
+              // Don't block the user experience if analytics fails
+            }
+            
             return true;
           }
           return false;
@@ -324,7 +334,7 @@ function App() {
         
         // If articles are already loaded, try to find the article
         if (articles.length > 0) {
-          const found = findAndDisplayArticle(articles);
+          const found = await findAndDisplayArticle(articles);
           if (found) return;
         }
         
@@ -336,12 +346,12 @@ function App() {
           const maxAttempts = 10;
           let attempts = 0;
           
-          const checkInterval = setInterval(() => {
+          const checkInterval = setInterval(async () => {
             attempts++;
             console.log(`🔍 Attempt ${attempts}: Checking for article ${arxivId}...`);
             
             if (articles.length > 0) {
-              const found = findAndDisplayArticle(articles);
+              const found = await findAndDisplayArticle(articles);
               if (found) {
                 clearInterval(checkInterval);
                 return;
@@ -434,6 +444,15 @@ function App() {
         setSelectedArticle(transformedArticle);
         setIsModalOpen(true);
         updatePageMeta(transformedArticle);
+        
+        // Record article view for analytics (same as regular clicks)
+        try {
+          await viewedArticlesAPI.recordArticleView(user?.id, transformedArticle, userSkillLevel);
+          console.log('📊 Database-fetched article view recorded for analytics');
+        } catch (error) {
+          console.warn('⚠️ Failed to record database article view (non-critical):', error);
+          // Don't block the user experience if analytics fails
+        }
         
         console.log('🎉 Successfully loaded and displayed article from database');
       } else {
