@@ -1,15 +1,18 @@
 User-agent: *
 Allow: /
 
-# Sitemap
+# Sitemaps
 Sitemap: https://pearadox.app/sitemap.xml
 
-# Allow common crawlers
-User-agent: Googlebot
-Allow: /
+# Block admin areas
+Disallow: /admin/
+Disallow: /api/
 
-User-agent: Bingbot
-Allow: /
+# Allow article pages
+Allow: /article/
 
-User-agent: Slurp
-Allow: /
+# Crawl delay for politeness
+Crawl-delay: 1
+
+# Host
+Host: https://pearadox.app

@@ -6,8 +6,24 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
   
   if (!isOpen || !article) return null;
 
+  // Generate slug from paper title and arxiv ID for URL generation
+  const generateSlug = (title, arxivId) => {
+    const cleanTitle = title
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '') // Remove special characters
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single
+      .trim();
+    
+    // Limit length for better URLs
+    const truncatedTitle = cleanTitle.length > 60 ? cleanTitle.substring(0, 60).replace(/-[^-]*$/, '') : cleanTitle;
+    
+    return `${arxivId}-${truncatedTitle}`;
+  };
+
   const handleShare = async () => {
-    const shareUrl = `${window.location.origin}/article/${article.id}`;
+    const slug = generateSlug(article.title, article.arxivId);
+    const shareUrl = `${window.location.origin}/article/${slug}`;
     const shareData = {
       title: `${article.title} | Pearadox`,
       text: `Check out this research: ${article.shortDescription}`,

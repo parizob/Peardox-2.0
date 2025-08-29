@@ -219,6 +219,21 @@ const shortenCategoryName = (categoryName) => {
   return shorteningMap[categoryName] || categoryName;
 };
 
+// Generate slug from paper title and arxiv ID for URL generation
+function generateSlug(title, arxivId) {
+  const cleanTitle = title
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single
+    .trim();
+  
+  // Limit length for better URLs
+  const truncatedTitle = cleanTitle.length > 60 ? cleanTitle.substring(0, 60).replace(/-[^-]*$/, '') : cleanTitle;
+  
+  return `${arxivId}-${truncatedTitle}`;
+};
+
 function App() {
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -276,16 +291,17 @@ function App() {
   useEffect(() => {
     const handleSharedArticle = () => {
       const path = window.location.pathname;
-      const articleMatch = path.match(/\/article\/(\d+)/);
+      // Updated to match new slug format: /article/arxiv-id-title-slug
+      const articleMatch = path.match(/\/article\/(\d{4}\.\d{4,5})-/);
       
       if (articleMatch) {
-        const articleId = parseInt(articleMatch[1]);
-        console.log('📤 Shared article ID detected:', articleId);
+        const arxivId = articleMatch[1];
+        console.log('📤 Shared article arXiv ID detected:', arxivId);
         
         // Wait for articles to load, then open the modal
         const checkArticles = () => {
           if (articles.length > 0) {
-            const sharedArticle = articles.find(article => article.id === articleId);
+            const sharedArticle = articles.find(article => article.arxivId === arxivId);
             if (sharedArticle) {
               console.log('📖 Opening shared article:', sharedArticle.title);
               setSelectedArticle(sharedArticle);
@@ -294,7 +310,7 @@ function App() {
               // Update page title and meta tags
               updatePageMeta(sharedArticle);
             } else {
-              console.warn('⚠️ Shared article not found:', articleId);
+              console.warn('⚠️ Shared article not found:', arxivId);
             }
           } else if (!isLoading) {
             console.warn('⚠️ No articles loaded and not loading');
@@ -830,6 +846,21 @@ function App() {
     setSelectedArticle(article);
     setIsModalOpen(true);
     
+    // Debug article structure
+    console.log('🔍 Article object for URL generation:', {
+      title: article.title,
+      arxivId: article.arxivId,
+      id: article.id
+    });
+    
+    // Update URL to include article ID and title for SEO and sharing
+    const slug = generateSlug(article.title, article.arxivId);
+    const articleUrl = `/article/${slug}`;
+    window.history.pushState({ articleId: article.id }, '', articleUrl);
+    
+    // Update page meta tags for better SEO and social sharing
+    updatePageMeta(article);
+    
     // Record article view for analytics (for both authenticated and anonymous users)
     try {
       await viewedArticlesAPI.recordArticleView(user?.id, article, userSkillLevel);
@@ -847,7 +878,8 @@ function App() {
     // Clean up URL if it was a shared article
     const path = window.location.pathname;
     if (path.startsWith('/article/')) {
-      window.history.replaceState(null, '', '/');
+      // Simply replace the URL without navigating - this keeps the modal working properly
+      window.history.replaceState(window.history.state, '', '/');
       
       // Reset page title and meta tags to defaults
       document.title = 'Pearadox – AI Research, Simplified';
