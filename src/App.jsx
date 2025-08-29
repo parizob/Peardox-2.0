@@ -1069,7 +1069,7 @@ function App() {
                             <UserPlus className="h-8 w-8 text-white" />
                           </div>
                           <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">
-                            Join the Revolution
+                            Personalize Your Research
                           </h3>
                           <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
                             Get instant access to AI research that matches your expertise level. Start your journey today.
@@ -1087,7 +1087,7 @@ function App() {
                           </div>
                           <div className="flex items-center text-sm text-gray-600">
                             <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                            <span>Weekly digest of breakthrough research</span>
+                            <span>Track your progress and stay motivated</span>
                           </div>
                         </div>
                       </div>
