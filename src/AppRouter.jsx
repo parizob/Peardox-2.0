@@ -12,6 +12,7 @@ const AppRouter = () => {
       <UserProvider>
         <Routes>
           <Route path="/" element={<App />} />
+          <Route path="/article/*" element={<App />} />
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />

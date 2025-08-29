@@ -1,10 +1,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { seoPrerender } from './vite-plugins/seo-prerender.js'
+import { spaFallback } from './vite-plugins/spa-fallback.js'
 
 export default defineConfig({
   plugins: [
     react(),
+    spaFallback(), // Handle SPA routing for /article/* routes
     seoPrerender({
       baseUrl: 'https://pearadox.app',
       generateSitemap: true

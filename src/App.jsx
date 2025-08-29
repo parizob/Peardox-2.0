@@ -249,6 +249,7 @@ function App() {
   const [isFieldQuizOpen, setIsFieldQuizOpen] = useState(false);
   const [lastRefreshDate, setLastRefreshDate] = useState(null);
   const [spotlightArticle, setSpotlightArticle] = useState(null);
+  const [isLoadingSpecificArticle, setIsLoadingSpecificArticle] = useState(false);
   
   // Get user state from context
   const {
@@ -289,46 +290,162 @@ function App() {
 
   // Handle shared article URLs
   useEffect(() => {
-    const handleSharedArticle = () => {
+    const handleSharedArticle = async () => {
       const path = window.location.pathname;
+      const href = window.location.href;
+      console.log('🔄 handleSharedArticle triggered. Path:', path, 'Full URL:', href, 'Articles loaded:', articles.length, 'IsLoading:', isLoading, 'UserSkillLevel:', userSkillLevel);
+      
       // Updated to match new slug format: /article/arxiv-id-title-slug
-      const articleMatch = path.match(/\/article\/(\d{4}\.\d{4,5})-/);
+      const articleMatch = path.match(/\/article\/(\d{4}\.\d{4,5}v?\d*)-/);
       
       if (articleMatch) {
         const arxivId = articleMatch[1];
-        console.log('📤 Shared article arXiv ID detected:', arxivId);
+        console.log('📤 Direct navigation to article detected:', arxivId, 'from URL:', path);
         
-        // Wait for articles to load, then open the modal
-        const checkArticles = () => {
-          if (articles.length > 0) {
-            const sharedArticle = articles.find(article => article.arxivId === arxivId);
-            if (sharedArticle) {
-              console.log('📖 Opening shared article:', sharedArticle.title);
-              setSelectedArticle(sharedArticle);
-              setIsModalOpen(true);
-              
-              // Update page title and meta tags
-              updatePageMeta(sharedArticle);
-            } else {
-              console.warn('⚠️ Shared article not found:', arxivId);
-            }
-          } else if (!isLoading) {
-            console.warn('⚠️ No articles loaded and not loading');
+        // Function to find and display article
+        const findAndDisplayArticle = (articlesArray) => {
+          const sharedArticle = articlesArray.find(article => {
+            // More flexible matching to handle version numbers
+            return article.arxivId === arxivId || 
+                   article.arxivId?.replace(/v\d+$/, '') === arxivId.replace(/v\d+$/, '');
+          });
+          
+          if (sharedArticle) {
+            console.log('📖 Opening shared article:', sharedArticle.title);
+            setSelectedArticle(sharedArticle);
+            setIsModalOpen(true);
+            
+            // Update page title and meta tags
+            updatePageMeta(sharedArticle);
+            return true;
           }
+          return false;
         };
         
+        // If articles are already loaded, try to find the article
         if (articles.length > 0) {
-          checkArticles();
-        } else {
-          // Check again after a short delay if articles are still loading
-          const timer = setTimeout(checkArticles, 1000);
-          return () => clearTimeout(timer);
+          const found = findAndDisplayArticle(articles);
+          if (found) return;
+        }
+        
+        // If articles not loaded yet, or article not found, try to load it directly
+        if (isLoading || articles.length === 0) {
+          console.log('🔄 Articles still loading, waiting...');
+          
+          // Set up a more persistent check
+          const maxAttempts = 10;
+          let attempts = 0;
+          
+          const checkInterval = setInterval(() => {
+            attempts++;
+            console.log(`🔍 Attempt ${attempts}: Checking for article ${arxivId}...`);
+            
+            if (articles.length > 0) {
+              const found = findAndDisplayArticle(articles);
+              if (found) {
+                clearInterval(checkInterval);
+                return;
+              }
+            }
+            
+            // If we've tried enough times and still no luck, try loading from database directly
+            if (attempts >= maxAttempts) {
+              clearInterval(checkInterval);
+              console.log('⚠️ Article not found in current articles, trying direct database fetch...');
+              
+              // Try to fetch the specific article from database
+              fetchSpecificArticle(arxivId);
+            }
+          }, 500); // Check every 500ms
+          
+          // Clean up interval after 10 seconds maximum
+          setTimeout(() => {
+            clearInterval(checkInterval);
+          }, 10000);
+          
+          // Return cleanup function
+          return () => {
+            clearInterval(checkInterval);
+          };
         }
       }
     };
 
     handleSharedArticle();
-  }, [articles, isLoading]);
+  }, [articles, isLoading, userSkillLevel]);
+
+  // Function to fetch a specific article directly from database
+  const fetchSpecificArticle = async (arxivId) => {
+    try {
+      setIsLoadingSpecificArticle(true);
+      console.log('🔍 Fetching specific article from database:', arxivId, 'UserSkillLevel:', userSkillLevel);
+      
+      // Ensure userSkillLevel is valid before proceeding
+      const skillLevel = userSkillLevel || 'Beginner'; // Fallback to default
+      console.log('🎯 Using skill level:', skillLevel);
+      
+      // Try to get the article using the same pattern as getAllPapersWithSummaries
+      const specificPapers = await arxivAPI.getAllPapersWithSummaries(skillLevel);
+      
+      const foundArticle = specificPapers.find(paper => {
+        return paper.arxiv_id === arxivId || 
+               paper.arxiv_id?.replace(/v\d+$/, '') === arxivId.replace(/v\d+$/, '');
+      });
+      
+      if (foundArticle) {
+        console.log('✅ Found article in database:', foundArticle.title);
+        
+        // Transform to match app format
+        const transformedArticle = {
+          id: foundArticle.id,
+          title: foundArticle.summaryTitle || foundArticle.title || 'Untitled',
+          shortDescription: foundArticle.summaryOverview || (foundArticle.abstract?.substring(0, 200) + '...') || 'No description available',
+          originalTitle: foundArticle.title,
+          originalAbstract: foundArticle.abstract,
+          summaryContent: foundArticle.summaryContent,
+          hasSummary: !!(foundArticle.summaryTitle || foundArticle.summaryOverview || foundArticle.summaryContent),
+          skillLevel: skillLevel,
+          category: Array.isArray(foundArticle.categories_name) && foundArticle.categories_name.length > 0 
+            ? foundArticle.categories_name[0] 
+            : 'General',
+          categories: Array.isArray(foundArticle.categories_name) ? foundArticle.categories_name : [foundArticle.categories_name || 'General'],
+          subjectClasses: Array.isArray(foundArticle.categories) ? foundArticle.categories : [foundArticle.categories || 'general'],
+          categoriesName: Array.isArray(foundArticle.categories_name) && foundArticle.categories_name.length > 0 
+            ? foundArticle.categories_name[0] 
+            : 'General',
+          arxivId: foundArticle.arxiv_id,
+          url: foundArticle.pdf_url || foundArticle.abstract_url || `https://arxiv.org/pdf/${foundArticle.arxiv_id}`,
+          authors: Array.isArray(foundArticle.authors) ? foundArticle.authors.join(', ') : (foundArticle.authors || 'Unknown Authors'),
+          publishedDate: formatDate(foundArticle.published_date || foundArticle.created_at),
+          tags: generateTags(foundArticle.categories_name, foundArticle.title, foundArticle.abstract),
+          _original: foundArticle
+        };
+        
+        // Add to articles array if not already there
+        setArticles(prevArticles => {
+          const exists = prevArticles.find(a => a.arxivId === transformedArticle.arxivId);
+          if (!exists) {
+            return [transformedArticle, ...prevArticles];
+          }
+          return prevArticles;
+        });
+        
+        // Open the modal
+        setSelectedArticle(transformedArticle);
+        setIsModalOpen(true);
+        updatePageMeta(transformedArticle);
+        
+        console.log('🎉 Successfully loaded and displayed article from database');
+      } else {
+        console.warn('⚠️ Article not found in database either:', arxivId);
+        // You could show a "article not found" message here
+      }
+    } catch (error) {
+      console.error('❌ Error fetching specific article:', error);
+    } finally {
+      setIsLoadingSpecificArticle(false);
+    }
+  };
 
   // Update page meta tags for shared articles
   const updatePageMeta = (article) => {
@@ -1606,6 +1723,19 @@ function App() {
       />
 
       <Footer onContactClick={handleShowContact} />
+
+      {/* Loading indicator for direct article access */}
+      {isLoadingSpecificArticle && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-8 shadow-2xl max-w-sm w-full mx-4">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Loading Article...</h3>
+              <p className="text-sm text-gray-600">Fetching the latest research content for you.</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
