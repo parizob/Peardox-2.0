@@ -56,13 +56,7 @@ const Footer = ({ onContactClick }) => {
                 }}
               >
                 Pearadox Blog
-              </Link>
-              <a href="#" className="block text-gray-600 hover:text-gray-900 transition-colors text-sm">
-                Privacy Policy
-              </a>
-              <a href="#" className="block text-gray-600 hover:text-gray-900 transition-colors text-sm">
-                Terms of Service
-              </a>
+              </Link> 
               <a 
                 href="https://arxiv.org" 
                 target="_blank" 
