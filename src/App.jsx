@@ -319,13 +319,31 @@ function App() {
             updatePageMeta(sharedArticle);
             
             // Record article view for analytics (same as regular clicks)
-            try {
-              await viewedArticlesAPI.recordArticleView(user?.id, sharedArticle, userSkillLevel);
-              console.log('📊 Direct article view recorded for analytics');
-            } catch (error) {
-              console.warn('⚠️ Failed to record direct article view (non-critical):', error);
-              // Don't block the user experience if analytics fails
-            }
+            // Use a retry mechanism to ensure user authentication is captured
+            const recordViewWithRetry = async (retryCount = 0) => {
+              try {
+                // Get the most current user state or check session directly
+                const sessionData = await authAPI.getCurrentSession();
+                const currentUser = user || sessionData?.data?.session?.user;
+                
+                console.log('🔍 Recording direct article view for user:', currentUser?.id || 'anonymous');
+
+                // If no user found and we haven't retried enough, try again
+                if (!currentUser && retryCount < 3) {
+                  console.log('⏰ No user found, retrying in 1 second...');
+                  setTimeout(() => recordViewWithRetry(retryCount + 1), 1000);
+                  return;
+                }
+
+                await viewedArticlesAPI.recordArticleView(currentUser?.id, sharedArticle, userSkillLevel);
+                console.log('📊 Direct article view recorded for analytics', currentUser ? 'authenticated' : 'anonymous');
+              } catch (error) {
+                console.warn('⚠️ Failed to record direct article view (non-critical):', error);
+              }
+            };
+            
+            // Start the retry process after a small delay
+            setTimeout(() => recordViewWithRetry(), 500);
             
             return true;
           }
@@ -382,7 +400,7 @@ function App() {
     };
 
     handleSharedArticle();
-  }, [articles, isLoading, userSkillLevel]);
+  }, [articles, isLoading, userSkillLevel, user]);
 
   // Function to fetch a specific article directly from database
   const fetchSpecificArticle = async (arxivId) => {
@@ -446,13 +464,31 @@ function App() {
         updatePageMeta(transformedArticle);
         
         // Record article view for analytics (same as regular clicks)
-        try {
-          await viewedArticlesAPI.recordArticleView(user?.id, transformedArticle, userSkillLevel);
-          console.log('📊 Database-fetched article view recorded for analytics');
-        } catch (error) {
-          console.warn('⚠️ Failed to record database article view (non-critical):', error);
-          // Don't block the user experience if analytics fails
-        }
+        // Use a retry mechanism to ensure user authentication is captured
+        const recordViewWithRetry = async (retryCount = 0) => {
+          try {
+            // Get the most current user state or check session directly
+            const sessionData = await authAPI.getCurrentSession();
+            const currentUser = user || sessionData?.data?.session?.user;
+            
+            console.log('🔍 Recording database-fetched article view for user:', currentUser?.id || 'anonymous');
+
+            // If no user found and we haven't retried enough, try again
+            if (!currentUser && retryCount < 3) {
+              console.log('⏰ No user found, retrying in 1 second...');
+              setTimeout(() => recordViewWithRetry(retryCount + 1), 1000);
+              return;
+            }
+
+            await viewedArticlesAPI.recordArticleView(currentUser?.id, transformedArticle, userSkillLevel);
+            console.log('📊 Database-fetched article view recorded for analytics', currentUser ? 'authenticated' : 'anonymous');
+          } catch (error) {
+            console.warn('⚠️ Failed to record database article view (non-critical):', error);
+          }
+        };
+        
+        // Start the retry process after a small delay
+        setTimeout(() => recordViewWithRetry(), 500);
         
         console.log('🎉 Successfully loaded and displayed article from database');
       } else {
