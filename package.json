@@ -8,6 +8,7 @@
     "build": "vite build && npm run generate:sitemap",
     "preview": "vite preview",
     "generate:sitemap": "node scripts/generate-sitemap.js",
+    "test:sitemap": "node -e \"require('./pages/api/sitemap.js').default({}, { status: (code) => ({ json: (data) => console.log('Status:', code, 'Data:', data) })})\"",
     "start": "npm run dev"
   },
   "dependencies": {

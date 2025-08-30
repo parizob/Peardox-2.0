@@ -1,44 +1,23 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "framework": "vite",
-  "installCommand": "npm install",
-  "rewrites": [
+  "functions": {
+    "pages/api/sitemap.js": {
+      "maxDuration": 30
+    }
+  },
+  "crons": [
     {
-      "source": "/article/:id",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/((?!api|_next/static|_next/image|favicon.ico|.*\\.).*)",
-      "destination": "/index.html"
+      "path": "/api/sitemap",
+      "schedule": "0 3 * * *"
     }
   ],
-  "headers": [
+  "rewrites": [
     {
-      "source": "/index.html",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
-        }
-      ]
-    },
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
-      ]
+      "source": "/api/(.*)",
+      "destination": "/pages/api/$1"
     }
-  ]
-} 
+  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev"
+}
