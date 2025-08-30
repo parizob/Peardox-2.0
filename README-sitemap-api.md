@@ -15,7 +15,7 @@ The `/api/sitemap` route automatically generates and updates the `sitemap.xml` f
 
 ## Files Created
 
-1. **`pages/api/sitemap.js`** - Main API route handler
+1. **`api/sitemap.js`** - Main API route handler (Vercel serverless function)
 2. **`vercel.json`** - Vercel configuration with cron job
 3. **`scripts/test-sitemap-api.js`** - Local testing script
 

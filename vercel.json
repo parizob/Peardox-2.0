@@ -1,6 +1,6 @@
 {
   "functions": {
-    "pages/api/sitemap.js": {
+    "api/sitemap.js": {
       "maxDuration": 30
     }
   },
@@ -8,12 +8,6 @@
     {
       "path": "/api/sitemap",
       "schedule": "0 3 * * *"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/pages/api/$1"
     }
   ],
   "buildCommand": "npm run build",

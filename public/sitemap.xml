@@ -5,19 +5,19 @@
         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
     <loc>https://pearadox.app/</loc>
-    <lastmod>2025-08-30T02:19:46.141Z</lastmod>
+    <lastmod>2025-08-30T02:24:17.313Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://pearadox.app/aboutus</loc>
-    <lastmod>2025-08-30T02:19:46.141Z</lastmod>
+    <lastmod>2025-08-30T02:24:17.313Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://pearadox.app/blog</loc>
-    <lastmod>2025-08-30T02:19:46.141Z</lastmod>
+    <lastmod>2025-08-30T02:24:17.313Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
