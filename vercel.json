@@ -10,6 +10,24 @@
       "schedule": "0 3 * * *"
     }
   ],
+  "rewrites": [
+    {
+      "source": "/article/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/aboutus",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/blog",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/blog/(.*)",
+      "destination": "/index.html"
+    }
+  ],
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm install",

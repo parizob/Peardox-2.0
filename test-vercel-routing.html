@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vercel Routing Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-link { display: block; margin: 10px 0; padding: 10px; background: #f0f0f0; text-decoration: none; color: #333; }
+        .test-link:hover { background: #e0e0e0; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Vercel Routing Test for Pearadox</h1>
+    <p>Test these URLs after deployment:</p>
+    
+    <h2>Article Routes (should work):</h2>
+    <a href="https://pearadox.app/article/2508.20417v1-smarter-search-using-connected-facts" class="test-link">
+        📄 Article Example 1
+    </a>
+    <a href="https://pearadox.app/article/2508.20325v1-testing-ai-to-make-sure-it-follows-the-rules" class="test-link">
+        📄 Article Example 2
+    </a>
+    
+    <h2>Other Routes (should work):</h2>
+    <a href="https://pearadox.app/" class="test-link">
+        🏠 Home Page
+    </a>
+    <a href="https://pearadox.app/aboutus" class="test-link">
+        ℹ️ About Us
+    </a>
+    <a href="https://pearadox.app/blog" class="test-link">
+        📝 Blog
+    </a>
+    
+    <h2>API Routes (should work):</h2>
+    <a href="https://pearadox.app/api/sitemap" class="test-link">
+        🗺️ Sitemap API
+    </a>
+    <a href="https://pearadox.app/sitemap.xml" class="test-link">
+        📄 Sitemap XML
+    </a>
+    
+    <h2>Expected Behavior:</h2>
+    <ul>
+        <li class="success">✅ All article URLs should show the main app with the article modal open</li>
+        <li class="success">✅ Static pages should render correctly</li>
+        <li class="success">✅ API routes should return JSON/XML responses</li>
+        <li class="error">❌ No 404 errors should occur</li>
+    </ul>
+    
+    <h2>🚀 Deploy Commands:</h2>
+    <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px;">
+git add .
+git commit -m "Fix Vercel SPA routing for article URLs"
+git push origin main
+    </pre>
+</body>
+</html>
