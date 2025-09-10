@@ -778,29 +778,42 @@ The knowledge exists. The tools are available. The only question is: are you rea
                 isVisible.hero ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
               }`}
             >
-              <div className="flex items-center justify-center mb-6">
-                <BookOpen className="h-8 w-8 text-blue-600 mr-3" />
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900">
-                  Pearadox Blog
-                </h1>
-              </div>
-              
-              <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                Insights, perspectives, and stories about democratizing AI research and making complex science accessible to everyone.
-              </p>
-              
-              <div className="flex items-center justify-center space-x-8 text-sm text-gray-500">
-                <div className="flex items-center">
-                  <Brain className="h-4 w-4 mr-2" />
-                  <span>Research Insights</span>
+              <div className="max-w-5xl mx-auto">
+                {/* Main Header */}
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-green-600 rounded-2xl mb-6 shadow-lg">
+                    <BookOpen className="h-8 w-8 text-white" />
+                  </div>
+                  
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
+                    <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Pearadox</span>
+                    <span className="text-gray-900"> Blog</span>
+                  </h1>
+                  
+                  <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                    Insights, perspectives, and stories about democratizing AI research and making complex science accessible to everyone.
+                  </p>
                 </div>
-                <div className="flex items-center">
-                  <Globe className="h-4 w-4 mr-2" />
-                  <span>Global Impact</span>
-                </div>
-                <div className="flex items-center">
-                  <Users className="h-4 w-4 mr-2" />
-                  <span>Community Stories</span>
+
+                {/* Category Pills */}
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <div className="group flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100 hover:shadow-md hover:border-blue-200 transition-all duration-300 cursor-pointer">
+                    <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mr-3 group-hover:scale-110 transition-transform"></div>
+                    <Brain className="h-4 w-4 text-blue-600 mr-2" />
+                    <span className="text-sm font-medium text-gray-700">Research Insights</span>
+                  </div>
+                  
+                  <div className="group flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100 hover:shadow-md hover:border-green-200 transition-all duration-300 cursor-pointer">
+                    <div className="w-2 h-2 bg-gradient-to-r from-green-500 to-green-600 rounded-full mr-3 group-hover:scale-110 transition-transform"></div>
+                    <Globe className="h-4 w-4 text-green-600 mr-2" />
+                    <span className="text-sm font-medium text-gray-700">Global Impact</span>
+                  </div>
+                  
+                  <div className="group flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100 hover:shadow-md hover:border-purple-200 transition-all duration-300 cursor-pointer">
+                    <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full mr-3 group-hover:scale-110 transition-transform"></div>
+                    <Users className="h-4 w-4 text-purple-600 mr-2" />
+                    <span className="text-sm font-medium text-gray-700">Community Stories</span>
+                  </div>
                 </div>
               </div>
             </div>
