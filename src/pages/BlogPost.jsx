@@ -85,15 +85,22 @@ const BlogPost = () => {
     const trackBlogPostView = async () => {
       if (blogPost) {
         try {
+          console.log('🔍 Tracking blog post view for:', {
+            userId: user?.id || 'anonymous',
+            blogTitle: blogPost.title,
+            blogSlug: blogPost.slug
+          });
           await viewedArticlesAPI.recordBlogPostView(user?.id, blogPost, 'blog_post');
+          console.log('✅ Blog post view tracking completed');
         } catch (error) {
-          console.error('Error recording blog post view:', error);
+          console.error('❌ Error recording blog post view:', error);
         }
       }
     };
 
+    // Track immediately when component mounts, regardless of user state
     trackBlogPostView();
-  }, [slug, user?.id, blogPost]);
+  }, [slug, blogPost]); // Removed user?.id from dependencies to ensure tracking happens for unauthenticated users
 
 
   // Modal handlers
