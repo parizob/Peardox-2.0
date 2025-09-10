@@ -9,7 +9,8 @@ The `/api/sitemap` route automatically generates and updates the `sitemap.xml` f
 - ✅ **Automated Generation**: Fetches latest articles from Supabase
 - ✅ **SEO-Friendly URLs**: Creates clean article URLs with titles
 - ✅ **Fallback Support**: Uses v_arxiv_papers if summaries unavailable
-- ✅ **Performance Optimized**: Limits to 1000 most recent articles
+- ✅ **Performance Optimized**: Limits to 10,000 most recent articles
+- ✅ **Blog Integration**: Automatically includes all blog posts in sitemap
 - ✅ **Vercel Cron Compatible**: Scheduled daily updates at 3 AM UTC
 - ✅ **Error Handling**: Comprehensive logging and error responses
 

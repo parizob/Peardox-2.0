@@ -98,6 +98,28 @@ export default async function handler(req, res) {
       };
     });
 
+    // Blog posts
+    const blogPosts = [
+      {
+        url: 'https://pearadox.app/blog/ai-first-mindset-ferrari-engine',
+        lastmod: '2025-08-30T00:00:00.000Z',
+        changefreq: 'monthly',
+        priority: '0.9'
+      },
+      {
+        url: 'https://pearadox.app/blog/building-an-app-with-AI',
+        lastmod: '2025-08-24T00:00:00.000Z',
+        changefreq: 'monthly',
+        priority: '0.8'
+      },
+      {
+        url: 'https://pearadox.app/blog/democratizing-ai-research',
+        lastmod: '2025-08-19T00:00:00.000Z',
+        changefreq: 'monthly',
+        priority: '0.8'
+      }
+    ];
+
     // Static pages
     const staticPages = [
       {
@@ -121,7 +143,7 @@ export default async function handler(req, res) {
     ];
 
     // Combine all URLs
-    const allUrls = [...staticPages, ...articleUrls];
+    const allUrls = [...staticPages, ...blogPosts, ...articleUrls];
 
     // Generate sitemap XML
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -158,6 +180,7 @@ ${allUrls.map(({ url, lastmod, changefreq, priority }) => `  <url>
       stats: {
         totalUrls: allUrls.length,
         articleUrls: articleUrls.length,
+        blogUrls: blogPosts.length,
         staticUrls: staticPages.length,
         generatedAt: new Date().toISOString()
       }
