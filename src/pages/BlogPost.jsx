@@ -49,7 +49,7 @@ const BlogPost = () => {
       slug: "ai-first-mindset-ferrari-engine",
       excerpt: "Traditional software development approaches are like putting truck engines in racing cars—they work, but they're fundamentally mismatched. When AI is your engine, everything about how you build, design, and think about products must change.",
       author: "The Pearadox Team",
-      date: "2025-08-30",
+      date: "2025-09-10",
       readTime: "15 min read",
       tags: ["AI-First Design", "Product Development", "Architecture", "Strategy", "Innovation", "Technology"],
       featured: true
@@ -440,7 +440,7 @@ const BlogPost = () => {
                           </div>
                           <div>
                             <p className="text-green-700 text-sm mb-2"><strong>Right:</strong></p>
-                            <p className="text-green-600 text-sm italic">"Let's reimagine this problem assuming infinite intelligence"</p>
+                            <p className="text-green-600 text-sm italic">"Let's approach this problem assuming infinite intelligence"</p>
                           </div>
                         </div>
                       </div>
