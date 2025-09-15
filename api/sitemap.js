@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     // Step 1: Get summaries first
     const { data: summariesData, error: summariesError } = await supabase
       .from('summary_papers')
-      .select('*')
+      .select('id, arxiv_paper_id, beginner_title, intermediate_title, beginner_overview, intermediate_overview, beginner_summary, intermediate_summary')
       .eq('processing_status', 'completed')
       .order('arxiv_paper_id', { ascending: false })
       .limit(10000); // Latest 10,000 articles
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
       // Fallback to basic papers
       const { data: basicData, error: basicError } = await supabase
         .from('v_arxiv_papers')
-        .select('*')
+        .select('id, arxiv_paper_id, beginner_title, intermediate_title, beginner_overview, intermediate_overview, beginner_summary, intermediate_summary')
         .order('created_at', { ascending: false })
         .limit(10000);
       

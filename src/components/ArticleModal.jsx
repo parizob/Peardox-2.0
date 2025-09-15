@@ -1,8 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Heart, ExternalLink, Calendar, Users, Tag, Share2, Brain, Sparkles, BookOpen, GraduationCap, User, Check } from 'lucide-react';
+import { arxivAPI } from '../lib/supabase';
 
 const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }) => {
   const [showCopiedPopup, setShowCopiedPopup] = useState(false);
+  const [fullAbstract, setFullAbstract] = useState(null);
+  const [isLoadingAbstract, setIsLoadingAbstract] = useState(false);
+  
+  // Lazy load full abstract when modal opens (only if not already loaded)
+  useEffect(() => {
+    if (isOpen && article && !fullAbstract && !article.originalAbstract) {
+      setIsLoadingAbstract(true);
+      arxivAPI.getPaperDetails(article.id)
+        .then(details => {
+          setFullAbstract(details.abstract);
+        })
+        .catch(error => {
+          console.error('Failed to load paper details:', error);
+        })
+        .finally(() => {
+          setIsLoadingAbstract(false);
+        });
+    }
+  }, [isOpen, article, fullAbstract]);
   
   if (!isOpen || !article) return null;
 
@@ -174,7 +194,13 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                 
                 <div>
                   <h4 className="font-medium text-gray-700 mb-2 text-sm sm:text-base">Research Abstract:</h4>
-                  <p className="text-gray-800 leading-relaxed text-sm sm:text-base">{article.originalAbstract}</p>
+                  {isLoadingAbstract ? (
+                    <div className="text-gray-600 text-sm sm:text-base italic">Loading full abstract...</div>
+                  ) : (
+                    <div className="text-gray-800 leading-relaxed text-sm sm:text-base whitespace-pre-wrap">
+                      {fullAbstract || article.originalAbstract || article.shortDescription}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

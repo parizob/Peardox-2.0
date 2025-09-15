@@ -51,54 +51,110 @@ export const testConnection = async () => {
   }
 };
 
+// Simple in-memory cache with expiration
+const cache = new Map();
+
+const setCache = (key, value, minutesToLive = 15) => {
+  const expiry = new Date().getTime() + (minutesToLive * 60 * 1000);
+  cache.set(key, { value, expiry });
+};
+
+const getFromCache = (key) => {
+  const cached = cache.get(key);
+  if (!cached) return null;
+  
+  if (new Date().getTime() > cached.expiry) {
+    cache.delete(key);
+    return null;
+  }
+  
+  return cached.value;
+};
+
+const clearCache = () => {
+  cache.clear();
+  console.log('🧹 Cache cleared');
+};
+
 // API functions for v_arxiv_papers view
 export const arxivAPI = {
-  // Get all papers
-  async getAllPapers() {
-    console.log('📡 Fetching all papers from v_arxiv_papers...');
+  // Get papers with explicit field selection and pagination
+  async getAllPapers(page = 1, limit = 500, lightweight = false) {
+    console.log(`📡 Fetching papers (page: ${page}, limit: ${limit}, lightweight: ${lightweight})...`);
+    
+    // Check cache first
+    const cacheKey = `papers_${page}_${limit}_${lightweight}`;
+    const cached = getFromCache(cacheKey);
+    if (cached) {
+      console.log('📦 Retrieved papers from cache');
+      return cached;
+    }
+    
+    // Essential fields only - optimized for UI needs
+    const fields = lightweight 
+      ? 'id, title, arxiv_id, categories_name, authors, published_date, created_at'
+      : 'id, title, abstract, arxiv_id, categories_name, authors, published_date, created_at, pdf_url, abstract_url';
+    
     const { data, error } = await supabase
       .from('v_arxiv_papers')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select(fields)
+      .order('created_at', { ascending: false })
+      .range((page - 1) * limit, page * limit - 1);
     
     if (error) {
       console.error('❌ Error fetching papers:', error);
       throw error;
     }
     
+    // Cache the result
+    setCache(cacheKey, data || [], 15);
     console.log(`✅ Retrieved ${data?.length || 0} papers`);
     return data || [];
   },
 
-  // Get summaries by skill level from summary_papers table
-  async getSummariesBySkillLevel(skillLevel = 'Beginner') {
-    console.log('📝 Fetching summaries for skill level:', skillLevel);
+  // Get summaries by skill level - optimized for specific skill level
+  async getSummariesBySkillLevel(skillLevel = 'Beginner', limit = 1000) {
+    console.log(`📝 Fetching summaries for skill level: ${skillLevel} (limit: ${limit})`);
+    
+    const cacheKey = `summaries_${skillLevel}_${limit}`;
+    const cached = getFromCache(cacheKey);
+    if (cached) {
+      console.log('📦 Retrieved summaries from cache');
+      return cached;
+    }
+    
+    // Only select fields for the specific skill level + essential metadata
+    const skillPrefix = skillLevel.toLowerCase();
+    const fields = `id, arxiv_paper_id, ${skillPrefix}_title, ${skillPrefix}_overview, ${skillPrefix}_summary, created_at, updated_at`;
     
     const { data, error } = await supabase
       .from('summary_papers')
-      .select('*')
-      .eq('processing_status', 'completed'); // Only get completed summaries
+      .select(fields)
+      .eq('processing_status', 'completed')
+      .limit(limit);
     
     if (error) {
       console.error('❌ Error fetching summaries:', error);
       throw error;
     }
     
-    // Transform the data to match expected format based on skill level
+    // Transform the data - fields already filtered for skill level
     const transformedData = (data || []).map(row => {
       const skillLevelLower = skillLevel.toLowerCase();
       return {
         id: row.id,
-        paper_id: row.arxiv_paper_id, // Map to the paper ID field
+        paper_id: row.arxiv_paper_id,
         skill_level: skillLevel,
-        title: skillLevelLower === 'beginner' ? row.beginner_title : row.intermediate_title,
-        overview: skillLevelLower === 'beginner' ? row.beginner_overview : row.intermediate_overview,
-        summary: skillLevelLower === 'beginner' ? row.beginner_summary : row.intermediate_summary,
+        title: row[`${skillLevelLower}_title`],
+        overview: row[`${skillLevelLower}_overview`],
+        summary: row[`${skillLevelLower}_summary`],
         created_at: row.created_at,
         updated_at: row.updated_at
       };
-    }).filter(item => item.title && item.overview); // Only include items with content
+    }).filter(item => item.title && item.overview);
     
+    // Cache the result
+    setCache(cacheKey, transformedData, 20);
     console.log(`✅ Retrieved ${transformedData.length} summaries for ${skillLevel} level`);
     return transformedData;
   },
@@ -136,18 +192,28 @@ export const arxivAPI = {
     }
   },
 
-  // Get all papers with skill-level specific summaries
-  async getAllPapersWithSummaries(skillLevel = 'Beginner') {
-    console.log('📡 Fetching top 1500 summarized papers for skill level:', skillLevel);
+  // Get papers with skill-level specific summaries - optimized and paginated
+  async getAllPapersWithSummaries(skillLevel = 'Beginner', page = 1, limit = 500) {
+    console.log(`📡 Fetching summarized papers for skill level: ${skillLevel} (page: ${page}, limit: ${limit})`);
+    
+    const cacheKey = `papers_summaries_${skillLevel}_${page}_${limit}`;
+    const cached = getFromCache(cacheKey);
+    if (cached) {
+      console.log('📦 Retrieved papers with summaries from cache');
+      return cached;
+    }
     
     try {
-      // Get summaries for the specified skill level, ordered by highest IDs first
+      // Get summaries with skill-level specific fields only
+      const skillPrefix = skillLevel.toLowerCase();
+      const summaryFields = `id, arxiv_paper_id, ${skillPrefix}_title, ${skillPrefix}_overview, ${skillPrefix}_summary, created_at, updated_at`;
+      
       const { data: summariesData, error: summariesError } = await supabase
         .from('summary_papers')
-        .select('*')
+        .select(summaryFields)
         .eq('processing_status', 'completed')
-        .order('arxiv_paper_id', { ascending: false }) // Order by highest paper IDs first
-        .limit(1500); // Get top 1500 summarized papers
+        .order('arxiv_paper_id', { ascending: false })
+        .range((page - 1) * limit, page * limit - 1);
       
       if (summariesError) {
         console.error('❌ Error fetching summaries:', summariesError);
@@ -181,12 +247,13 @@ export const arxivAPI = {
       // Get the paper IDs that have summaries
       const paperIds = transformedSummaries.map(summary => summary.paper_id);
       
-      // Fetch the corresponding papers from v_arxiv_papers
+      // Fetch essential paper fields only
+      const paperFields = 'id, title, abstract, arxiv_id, categories_name, authors, published_date, created_at, pdf_url, abstract_url';
       const { data: papersData, error: papersError } = await supabase
         .from('v_arxiv_papers')
-        .select('*')
+        .select(paperFields)
         .in('id', paperIds)
-        .order('id', { ascending: false }); // Order by highest IDs first
+        .order('id', { ascending: false });
       
       if (papersError) {
         console.error('❌ Error fetching papers:', papersError);
@@ -214,7 +281,9 @@ export const arxivAPI = {
         };
       });
       
-      console.log(`✅ Retrieved ${papersWithSummaries.length} papers with summaries (top 1500 by ID)`);
+      // Cache the result
+      setCache(cacheKey, papersWithSummaries, 20);
+      console.log(`✅ Retrieved ${papersWithSummaries.length} papers with summaries (page ${page})`);
       return papersWithSummaries;
       
     } catch (error) {
@@ -230,10 +299,11 @@ export const arxivAPI = {
     console.log('📄 Fetching paper with summary - ID:', paperId, 'Skill Level:', skillLevel);
     
     try {
-      // Get the paper data
+      // Get essential paper data only
+      const paperFields = 'id, title, abstract, arxiv_id, categories_name, authors, published_date, created_at, pdf_url, abstract_url';
       const { data: paperData, error: paperError } = await supabase
         .from('v_arxiv_papers')
-        .select('*')
+        .select(paperFields)
         .eq('id', paperId)
         .single();
       
@@ -242,10 +312,13 @@ export const arxivAPI = {
         throw paperError;
       }
       
-      // Get the summary for the paper
+      // Get skill-level specific summary fields only
+      const skillPrefix = skillLevel.toLowerCase();
+      const summaryFields = `id, arxiv_paper_id, ${skillPrefix}_title, ${skillPrefix}_overview, ${skillPrefix}_summary`;
+      
       const { data: summaryData, error: summaryError } = await supabase
         .from('summary_papers')
-        .select('*')
+        .select(summaryFields)
         .eq('arxiv_paper_id', paperId)
         .eq('processing_status', 'completed')
         .single();
@@ -254,14 +327,14 @@ export const arxivAPI = {
         console.warn('⚠️ Error fetching summary (continuing without):', summaryError);
       }
       
-      // Transform summary data based on skill level
+      // Transform summary data - fields already filtered for skill level
       let transformedSummary = null;
       if (summaryData) {
         const skillLevelLower = skillLevel.toLowerCase();
         transformedSummary = {
-          title: skillLevelLower === 'beginner' ? summaryData.beginner_title : summaryData.intermediate_title,
-          overview: skillLevelLower === 'beginner' ? summaryData.beginner_overview : summaryData.intermediate_overview,
-          summary: skillLevelLower === 'beginner' ? summaryData.beginner_summary : summaryData.intermediate_summary,
+          title: summaryData[`${skillLevelLower}_title`],
+          overview: summaryData[`${skillLevelLower}_overview`],
+          summary: summaryData[`${skillLevelLower}_summary`],
           skill_level: skillLevel
         };
       }
@@ -284,20 +357,32 @@ export const arxivAPI = {
     }
   },
   
-  // Get papers by category using categories_name
-  async getPapersByCategory(categoryName) {
-    console.log('🏷️ Fetching papers for category name:', categoryName);
+  // Get papers by category - optimized with explicit fields and pagination
+  async getPapersByCategory(categoryName, page = 1, limit = 200) {
+    console.log(`🏷️ Fetching papers for category: ${categoryName} (page: ${page}, limit: ${limit})`);
+    
+    const cacheKey = `category_${categoryName}_${page}_${limit}`;
+    const cached = getFromCache(cacheKey);
+    if (cached) {
+      console.log('📦 Retrieved category papers from cache');
+      return cached;
+    }
+    
+    const fields = 'id, title, abstract, arxiv_id, categories_name, authors, published_date, created_at, pdf_url, abstract_url';
     const { data, error } = await supabase
       .from('v_arxiv_papers')
-      .select('*')
+      .select(fields)
       .contains('categories_name', [categoryName])
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .range((page - 1) * limit, page * limit - 1);
     
     if (error) {
       console.error('❌ Error fetching papers by category:', error);
       throw error;
     }
     
+    // Cache the result
+    setCache(cacheKey, data || [], 15);
     console.log(`✅ Found ${data?.length || 0} papers for category: ${categoryName}`);
     return data || [];
   },
@@ -366,20 +451,32 @@ export const arxivAPI = {
     }
   },
   
-  // Search papers
-  async searchPapers(searchTerm) {
-    console.log('🔍 Searching papers for:', searchTerm);
+  // Search papers - optimized with explicit fields and limits
+  async searchPapers(searchTerm, limit = 100) {
+    console.log(`🔍 Searching papers for: "${searchTerm}" (limit: ${limit})`);
+    
+    const cacheKey = `search_${searchTerm}_${limit}`;
+    const cached = getFromCache(cacheKey);
+    if (cached) {
+      console.log('📦 Retrieved search results from cache');
+      return cached;
+    }
+    
+    const fields = 'id, title, abstract, arxiv_id, categories_name, authors, published_date, created_at, pdf_url, abstract_url';
     const { data, error } = await supabase
       .from('v_arxiv_papers')
-      .select('*')
+      .select(fields)
       .or(`title.ilike.%${searchTerm}%,abstract.ilike.%${searchTerm}%`)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(limit);
     
     if (error) {
       console.error('❌ Error searching papers:', error);
       throw error;
     }
     
+    // Cache the result
+    setCache(cacheKey, data || [], 10); // Shorter cache for search results
     console.log(`✅ Search found ${data?.length || 0} papers`);
     return data || [];
   },
@@ -495,7 +592,41 @@ export const arxivAPI = {
     
     console.log('📋 Extracted categories from papers:', categories.length);
     return categories;
-  }
+  },
+
+  // Lazy load paper details (abstract, full content) when needed
+  async getPaperDetails(paperId) {
+    console.log('📄 Lazy loading paper details for ID:', paperId);
+    
+    const cacheKey = `paper_details_${paperId}`;
+    const cached = getFromCache(cacheKey);
+    if (cached) {
+      console.log('📦 Retrieved paper details from cache');
+      return cached;
+    }
+    
+    // Only load what's needed for details view
+    const { data, error } = await supabase
+      .from('v_arxiv_papers')
+      .select('id, abstract, pdf_url, abstract_url')
+      .eq('id', paperId)
+      .single();
+    
+    if (error) {
+      console.error('❌ Error fetching paper details:', error);
+      throw error;
+    }
+    
+    // Cache for longer since details don't change often
+    setCache(cacheKey, data, 60);
+    console.log('✅ Retrieved and cached paper details');
+    return data;
+  },
+
+  // Cache management
+  clearCache,
+  getFromCache,
+  setCache
 };
 
 // Authentication API
@@ -647,9 +778,10 @@ export const authAPI = {
   async getProfile(userId) {
     console.log('📋 Getting profile for userId:', userId);
     
+    // Only select essential profile fields
     const { data, error } = await supabase
       .from('profiles')
-      .select('*')
+      .select('id, full_name, professional_title, institution, research_interests, skill_level, created_at')
       .eq('id', userId)
       .single();
     
@@ -733,11 +865,11 @@ export const savedArticlesAPI = {
   async getUserSavedArticles(userId) {
     console.log('📚 Getting saved articles for user:', userId);
     try {
-      const { data, error } = await supabase
-        .from('saved_articles')
-        .select('*')
-        .eq('user_id', userId)
-        .order('saved_at', { ascending: false });
+       const { data, error } = await supabase
+         .from('saved_articles')
+         .select('id, user_id, article_id, saved_at')
+         .eq('user_id', userId)
+         .order('saved_at', { ascending: false });
       
       if (error) {
         console.error('❌ Error fetching saved articles:', error);
@@ -766,14 +898,17 @@ export const savedArticlesAPI = {
       // Join v_summary_papers with v_arxiv_papers to get complete data with summaries
       console.log('📚 Joining v_summary_papers with v_arxiv_papers...');
       
-      // Get summaries without skill level filter (skill level is determined by field names)
-      const { data: summaryResults, error: summaryError } = await supabase
-        .from('v_summary_papers')
-        .select(`
-          *,
-          v_arxiv_papers!inner(*)
-        `)
-        .in('arxiv_paper_id', savedArticles.map(s => Number(s.article_id)));
+       // Get summaries with skill-level specific fields only
+       const skillPrefix = userSkillLevel.toLowerCase();
+       const summaryFields = `
+         id, arxiv_paper_id, ${skillPrefix}_title, ${skillPrefix}_overview, ${skillPrefix}_summary,
+         v_arxiv_papers!inner(id, title, abstract, arxiv_id, categories_name, authors, published_date, created_at, pdf_url, abstract_url)
+       `;
+       
+       const { data: summaryResults, error: summaryError } = await supabase
+         .from('v_summary_papers')
+         .select(summaryFields)
+         .in('arxiv_paper_id', savedArticles.map(s => Number(s.article_id)));
       
       console.log(`📝 Found ${summaryResults?.length || 0} summary records with article data`);
       if (summaryError) {
@@ -793,11 +928,11 @@ export const savedArticlesAPI = {
         });
       }
       
-      // Fallback: get basic article data from v_arxiv_papers for articles without summaries
-      const { data: basicArticles, error: basicError } = await supabase
-        .from('v_arxiv_papers')
-        .select('*')
-        .in('id', savedArticles.map(s => Number(s.article_id)));
+       // Fallback: get essential article data from v_arxiv_papers for articles without summaries
+       const { data: basicArticles, error: basicError } = await supabase
+         .from('v_arxiv_papers')
+         .select('id, title, abstract, arxiv_id, categories_name, authors, published_date, created_at, pdf_url, abstract_url')
+         .in('id', savedArticles.map(s => Number(s.article_id)));
         
       console.log(`📄 Found ${basicArticles?.length || 0} basic article records`);
       if (basicError) {

@@ -749,15 +749,15 @@ function App() {
       console.log('📡 Loading articles from last 2 weeks with skill-level summaries...');
       console.log('📅 Fetching articles published after:', twoWeeksAgoISO);
       
-      // Try to get papers with skill-level summaries first
-      let papersData;
-      try {
-        papersData = await arxivAPI.getAllPapersWithSummaries(userSkillLevel);
-        console.log(`📝 Loaded ${papersData.length} papers with summaries`);
-      } catch (summaryError) {
-        console.log('⚠️ Failed to load summaries, falling back to basic papers');
-        papersData = await arxivAPI.getAllPapers();
-      }
+        // Try to get papers with skill-level summaries first (paginated and cached)
+        let papersData;
+        try {
+          papersData = await arxivAPI.getAllPapersWithSummaries(userSkillLevel, 1, 1000);
+          console.log(`📝 Loaded ${papersData.length} papers with summaries`);
+        } catch (summaryError) {
+          console.log('⚠️ Failed to load summaries, falling back to basic papers');
+          papersData = await arxivAPI.getAllPapers(1, 1000, true); // Use lightweight version for fallback
+        }
       
       // Filter for papers from last 2 weeks
       const recentPapers = papersData.filter(paper => {

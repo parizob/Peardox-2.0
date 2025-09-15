@@ -35,7 +35,7 @@ async function fetchArticles() {
     // Step 1: Get summaries (like your app does)
     const { data: summariesData, error: summariesError } = await supabase
       .from('summary_papers')
-      .select('*')
+      .select('id, arxiv_paper_id, beginner_title, intermediate_title, beginner_overview, intermediate_overview, beginner_summary, intermediate_summary')
       .eq('processing_status', 'completed')
       .order('arxiv_paper_id', { ascending: false })
       .limit(1500); // Same limit as your app
@@ -52,7 +52,7 @@ async function fetchArticles() {
       // Fallback to basic papers
       const { data: basicData, error: basicError } = await supabase
         .from('v_arxiv_papers')
-        .select('*')
+        .select('id, arxiv_paper_id, beginner_title, intermediate_title, beginner_overview, intermediate_overview, beginner_summary, intermediate_summary')
         .order('created_at', { ascending: false })
         .limit(1000);
       
@@ -90,7 +90,7 @@ async function fetchArticles() {
     const paperIds = transformedSummaries.map(summary => summary.paper_id);
     const { data: papersData, error: papersError } = await supabase
       .from('v_arxiv_papers')
-      .select('*')
+      .select('id, arxiv_paper_id, beginner_title, intermediate_title, beginner_overview, intermediate_overview, beginner_summary, intermediate_summary')
       .in('id', paperIds)
       .order('id', { ascending: false });
     
