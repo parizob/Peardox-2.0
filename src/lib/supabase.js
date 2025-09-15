@@ -160,11 +160,11 @@ export const arxivAPI = {
   },
 
   async getLastRefreshDate() {
-    console.log('📅 Getting last refresh date from v_summary_papers');
+    console.log('📅 Getting last refresh date from summary_papers');
     
     try {
       const { data, error } = await supabase
-        .from('v_summary_papers')
+        .from('summary_papers')
         .select('created_at')
         .order('created_at', { ascending: false })
         .limit(1);
@@ -212,7 +212,7 @@ export const arxivAPI = {
         .from('summary_papers')
         .select(summaryFields)
         .eq('processing_status', 'completed')
-        .order('arxiv_paper_id', { ascending: false })
+        .order('created_at', { ascending: false })
         .range((page - 1) * limit, page * limit - 1);
       
       if (summariesError) {
@@ -895,20 +895,18 @@ export const savedArticlesAPI = {
         return [];
       }
       
-      // Join v_summary_papers with v_arxiv_papers to get complete data with summaries
-      console.log('📚 Joining v_summary_papers with v_arxiv_papers...');
+      // Get summaries and papers separately to avoid view issues
+      console.log('📚 Getting summaries and papers for saved articles...');
       
-       // Get summaries with skill-level specific fields only
+       // Get summaries for saved articles - use direct approach instead of view
        const skillPrefix = userSkillLevel.toLowerCase();
-       const summaryFields = `
-         id, arxiv_paper_id, ${skillPrefix}_title, ${skillPrefix}_overview, ${skillPrefix}_summary,
-         v_arxiv_papers!inner(id, title, abstract, arxiv_id, categories_name, authors, published_date, created_at, pdf_url, abstract_url)
-       `;
+       const summaryFields = `id, arxiv_paper_id, ${skillPrefix}_title, ${skillPrefix}_overview, ${skillPrefix}_summary`;
        
        const { data: summaryResults, error: summaryError } = await supabase
-         .from('v_summary_papers')
+         .from('summary_papers')
          .select(summaryFields)
-         .in('arxiv_paper_id', savedArticles.map(s => Number(s.article_id)));
+         .in('arxiv_paper_id', savedArticles.map(s => Number(s.article_id)))
+         .eq('processing_status', 'completed');
       
       console.log(`📝 Found ${summaryResults?.length || 0} summary records with article data`);
       if (summaryError) {
@@ -942,10 +940,7 @@ export const savedArticlesAPI = {
       // Create maps for quick lookup
       const summaryMap = new Map();
       (summaryResults || []).forEach(summaryRecord => {
-        summaryMap.set(Number(summaryRecord.arxiv_paper_id), {
-          summary: summaryRecord,
-          article: summaryRecord.v_arxiv_papers
-        });
+        summaryMap.set(Number(summaryRecord.arxiv_paper_id), summaryRecord);
       });
       
       const basicMap = new Map();
@@ -965,8 +960,8 @@ export const savedArticlesAPI = {
         }
         
         // Use summary + article data if available, otherwise basic article data
-        const summary = summaryData?.summary;
-        const article = summaryData?.article || basicArticle;
+        const summary = summaryData;
+        const article = basicArticle;
         
         // Get the correct field names based on skill level
         const skillPrefix = userSkillLevel.toLowerCase();
