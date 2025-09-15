@@ -181,28 +181,20 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
 
             {/* Technical Details Section */}
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
-              <div className="flex items-center mb-4">
+              <div className="flex items-center mb-3">
                 <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 mr-2" />
                 <h3 className="text-base sm:text-lg font-semibold text-gray-900">Technical Details</h3>
               </div>
-              
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-medium text-gray-700 mb-2 text-sm sm:text-base">Original Research Title:</h4>
-                  <p className="text-gray-900 font-medium text-sm sm:text-base leading-relaxed">{article.originalTitle}</p>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-gray-700 mb-2 text-sm sm:text-base">Research Abstract:</h4>
-                  {isLoadingAbstract ? (
-                    <div className="text-gray-600 text-sm sm:text-base italic">Loading full abstract...</div>
-                  ) : (
-                    <div className="text-gray-800 leading-relaxed text-sm sm:text-base whitespace-pre-wrap">
-                      {fullAbstract || article.originalAbstract || article.shortDescription}
-                    </div>
-                  )}
-                </div>
-              </div>
+              <p className="text-gray-800 leading-relaxed text-sm sm:text-base">
+                <strong>Original Research Title:</strong><br /><br />
+                {article.originalTitle}<br /><br />
+                <strong>Research Abstract:</strong><br /><br />
+                {isLoadingAbstract ? (
+                  <span className="text-gray-600 italic">Loading full abstract...</span>
+                ) : (
+                  fullAbstract || article.originalAbstract || article.shortDescription
+                )}
+              </p>
             </div>
 
             {/* Article Info Section */}
