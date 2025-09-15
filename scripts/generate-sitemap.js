@@ -37,7 +37,7 @@ async function fetchArticles() {
       .from('summary_papers')
       .select('id, arxiv_paper_id, beginner_title, intermediate_title, beginner_overview, intermediate_overview, beginner_summary, intermediate_summary')
       .eq('processing_status', 'completed')
-      .order('arxiv_paper_id', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(1500); // Same limit as your app
     
     if (summariesError) {
@@ -90,7 +90,7 @@ async function fetchArticles() {
     const paperIds = transformedSummaries.map(summary => summary.paper_id);
     const { data: papersData, error: papersError } = await supabase
       .from('v_arxiv_papers')
-      .select('id, arxiv_paper_id, beginner_title, intermediate_title, beginner_overview, intermediate_overview, beginner_summary, intermediate_summary')
+      .select('id, title, abstract, arxiv_id, categories_name, authors, published_date, created_at')
       .in('id', paperIds)
       .order('id', { ascending: false });
     
