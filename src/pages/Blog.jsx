@@ -86,6 +86,156 @@ const Blog = () => {
   // Blog posts data
   const blogPosts = [
     {
+      id: 4,
+      title: "What Makes an AI Agent? Understanding Agency, State, and the Path to True Agentic Systems",
+      slug: "what-makes-an-ai-agent",
+      excerpt: "The term 'AI Agent' is everywhere in tech today, but what does it actually mean? Beyond the buzzwords lies a fascinating question about agency, state management, and what it truly means for a system to be 'agentic'. Let's explore the spectrum from simple chatbots to autonomous agents.",
+      content: `
+# What Makes an AI Agent? Understanding Agency, State, and the Path to True Agentic Systems
+
+*Cutting through the confusion to understand what makes a system truly "agentic"*
+
+Walk into any tech conference today, scroll through LinkedIn, or browse AI startup pitches, and you'll hear the term "AI Agent" thrown around with remarkable frequency. ChatGPT is an agent. A simple Python script that calls an API is an agent. Your automated email responder is apparently an agent. Even that basic if-then workflow you built last week? Also an agent, according to some marketing materials.
+
+But here's the uncomfortable truth: **most of what we call "AI Agents" today aren't actually agents at all.**
+
+This isn't just semantic nitpicking. The confusion around what constitutes an "agent" versus what makes a system "agentic" reflects a deeper misunderstanding about the fundamental nature of autonomous systems. When everything becomes an agent, nothing is—and we lose sight of what we're actually building toward.
+
+Let's cut through the noise and explore what agency really means, why state matters more than you think, and how we can build truly agentic systems that live up to the transformative potential of artificial intelligence.
+
+## The Agent Identity Crisis
+
+The word "agent" comes from the Latin "agere," meaning "to act." In its purest form, an agent is something that acts independently on behalf of another entity. This definition seems simple enough, but when we apply it to AI systems, things get complicated fast.
+
+Consider these systems, all commonly called "AI Agents":
+
+**The Chatbot**: Responds to user inputs with generated text, maintains no memory between conversations.
+
+**The Function-Calling LLM**: Can invoke external APIs and tools based on user requests, but resets after each interaction.
+
+**The Workflow Automator**: Follows predefined rules to process data and trigger actions, with basic conditional logic.
+
+**The Autonomous Researcher**: Maintains long-term goals, remembers past discoveries, adapts strategies based on outcomes, and operates independently for extended periods.
+
+Which of these is truly an "agent"? The answer depends entirely on how we define agency—and this is where the confusion begins.
+
+## Agency: The Spectrum of Independence
+
+Agency isn't binary. It's not a simple yes-or-no question of whether something is an agent. Instead, agency exists on a spectrum, with systems exhibiting varying degrees of autonomous behavior.
+
+At one end, we have **reactive systems**—they respond to inputs with outputs, following predetermined patterns or learned behaviors. Think of a customer service chatbot that can answer questions about your account balance. It's useful, it processes language intelligently, and it performs actions. But it's fundamentally reactive, operating only in response to external stimuli.
+
+Moving along the spectrum, we encounter **goal-directed systems**—these maintain objectives and can plan sequences of actions to achieve them. A system that can break down "research this topic" into subtasks like "search for relevant papers," "summarize key findings," and "identify knowledge gaps" demonstrates higher agency than a simple question-answering system.
+
+At the far end lies **autonomous agency**—systems that can form their own goals, adapt their strategies based on outcomes, and operate independently over extended periods. These systems don't just execute predefined objectives; they can recognize when objectives should change and modify their behavior accordingly.
+
+But agency alone isn't enough to make a system truly "agentic." There's another critical dimension that's often overlooked: **state**.
+
+## State: The Hidden Foundation of Intelligence
+
+State is memory with purpose. It's not just the ability to remember what happened—it's the capacity to use that memory to inform future decisions, maintain context across interactions, and build understanding over time.
+
+Most systems we call "AI Agents" today are **stateless**. Each interaction begins fresh, with no memory of previous conversations or accumulated knowledge. Like a brilliant person with severe anterograde amnesia, they can display remarkable intelligence in the moment but cannot learn, adapt, or build on their experiences.
+
+**Stateful systems**, by contrast, maintain persistent memory that influences future behavior. They can:
+
+- **Remember context** across multiple interactions
+- **Learn from experience** and improve their performance over time
+- **Maintain long-term objectives** that span multiple sessions
+- **Build relationships** and understand ongoing situations
+- **Adapt strategies** based on what has and hasn't worked previously
+
+The combination of state and agency creates something qualitatively different from either component alone. A stateless system with high agency can execute complex plans but can't learn from failure. A stateful system with low agency can remember everything but struggles to act independently on that knowledge.
+
+## The Agentic Sweet Spot: High Agency + Statefulness
+
+When we talk about "agentic systems," we're really describing AI that combines **high agency** with **robust statefulness**. These systems don't just respond to prompts or execute predetermined workflows—they operate more like autonomous colleagues who:
+
+- Understand long-term objectives and work toward them persistently
+- Remember what they've learned and apply those insights to new situations
+- Adapt their approaches based on what succeeds and what fails
+- Maintain context and relationships across extended periods
+- Make independent decisions about how to allocate their time and resources
+
+Consider the difference between these two AI systems:
+
+**System A** (High Agency, Stateless): Can break down complex tasks, use multiple tools, and execute sophisticated plans. But every conversation starts from scratch. It might solve the same problem brilliantly a hundred times without ever recognizing it's seen it before.
+
+**System B** (High Agency, Stateful): Does everything System A can do, but also remembers past interactions, learns from previous successes and failures, maintains ongoing projects across sessions, and builds increasingly sophisticated understanding of recurring problems.
+
+System B is what we mean when we talk about truly agentic AI.
+
+## Why This Distinction Matters
+
+The conflation of "AI Agent" with "any AI system that does things" isn't just a marketing problem—it's a strategic one that affects how we design, deploy, and integrate AI into our organizations and lives.
+
+**For Developers**: Understanding the agency-state matrix helps you choose the right architecture for your use case. Need a system to answer customer questions? A high-agency, stateless system might be perfect. Building a research assistant that improves over time? You need both agency and state.
+
+**For Organizations**: Recognizing the difference between reactive tools and agentic systems helps set appropriate expectations and design better human-AI collaboration. Stateless agents require human coordination and memory. Stateful, agentic systems can take on roles that more closely resemble human colleagues.
+
+**For Users**: Understanding what your AI systems can and cannot do helps you work with them more effectively. A stateless system needs context provided each time. An agentic system can build on your relationship over time.
+
+**For the Industry**: Clear definitions help us have more productive conversations about AI capabilities, limitations, and the path forward. When we're all using "agent" to mean different things, we're not actually communicating.
+
+## Building Toward True Agency
+
+As we design the next generation of AI systems, the path toward true agency becomes clearer:
+
+**Start with Purpose**: Define what autonomous behavior actually means for your specific use case. What decisions should the system make independently? What goals should it pursue without constant human guidance?
+
+**Design for Memory**: Build systems that can maintain and utilize persistent state. This isn't just about storing conversation history—it's about creating memory systems that inform decision-making and enable learning.
+
+**Enable Adaptation**: Create mechanisms for systems to modify their behavior based on outcomes. This might involve reinforcement learning, dynamic prompting, or sophisticated feedback loops.
+
+**Embrace Uncertainty**: Truly agentic systems must be able to operate in ambiguous situations, make decisions with incomplete information, and adapt when their assumptions prove wrong.
+
+**Plan for Partnership**: The most powerful agentic systems won't replace humans—they'll augment them. Design for collaboration, not automation.
+
+## The Spectrum in Practice
+
+In the real world, most useful AI systems will exist somewhere in the middle of the agency-state spectrum. A customer service agent might be highly stateful about customer history but limited in its ability to make independent decisions about company policy. A research assistant might have high agency in exploring topics but limited memory about past conversations.
+
+The key is matching your system's capabilities to its intended role. Don't build a stateless system for tasks that require memory. Don't create high-agency systems for contexts where predictable, bounded behavior is essential.
+
+## What's Next for Agentic AI?
+
+The future of AI isn't just about making systems smarter—it's about making them more genuinely autonomous. This means:
+
+**Better Memory Architectures**: Moving beyond simple conversation history to sophisticated knowledge graphs, episodic memory, and learned behavioral patterns.
+
+**Improved Goal Management**: Systems that can maintain multiple objectives, resolve conflicts between goals, and adapt priorities based on changing circumstances.
+
+**Enhanced Metacognition**: AI that can reason about its own capabilities, recognize its limitations, and seek appropriate help or resources.
+
+**Robust Feedback Loops**: Mechanisms for systems to learn not just from explicit feedback but from the outcomes of their actions in the world.
+
+**Ethical Agency**: Frameworks for ensuring that autonomous systems operate within appropriate boundaries and remain aligned with human values even as they adapt and learn.
+
+## The Real Promise of Agentic AI
+
+When we talk about AI transforming how we work, learn, and solve problems, we're really talking about the potential of truly agentic systems. Not just smart tools that respond to our requests, but intelligent partners that can maintain long-term goals, learn from experience, and operate autonomously in service of shared objectives.
+
+This isn't science fiction—the building blocks exist today. What we need is clearer thinking about what we're building and why. We need to move beyond the label of "AI Agent" and focus on the underlying capabilities that make systems genuinely useful over time.
+
+The next breakthrough in AI won't just be about larger models or faster inference. It will be about creating systems that combine the planning capabilities of high-agency AI with the learning capabilities of stateful systems, resulting in AI that truly deserves the title "agentic."
+
+Because when we build AI that can genuinely act as our partners—systems that remember, learn, adapt, and pursue goals autonomously—we're not just automating tasks. We're augmenting human intelligence itself.
+
+*The future belongs to agentic AI. But first, we need to understand what that actually means.*
+
+---
+
+**Want to build truly agentic systems?** Start by defining your agency requirements clearly. What decisions should your AI make independently? What memory does it need to be effective over time? How will it learn and adapt? The answers to these questions will guide you toward AI that doesn't just respond—but truly acts.
+
+*Because the difference between a tool and a partner is the ability to grow together.*
+      `,
+      author: "The Pearadox Team",
+      date: "2025-09-25",
+      readTime: "18 min read",
+      tags: ["AI Agents", "Agentic Systems", "AI Architecture", "Machine Learning", "Autonomous AI", "AI Development"],
+      featured: true
+    },
+    {
       id: 3,
       title: "You Wouldn't Put a Truck Engine in a Ferrari: Building with an AI-First Mindset",
       slug: "ai-first-mindset-ferrari-engine",
@@ -372,7 +522,7 @@ The future belongs to those who build around intelligence—not those who bolt i
       date: "2025-09-10",
       readTime: "15 min read",
       tags: ["AI-First Design", "Product Development", "Architecture", "Strategy", "Innovation", "Technology"],
-      featured: true
+      featured: false
     },
     {
       id: 2,
