@@ -1454,6 +1454,204 @@ export const viewedArticlesAPI = {
   }
 };
 
+// Article Comments API - Optimized for minimal egress
+export const commentsAPI = {
+  // Get comments for a specific article with minimal data transfer
+  async getArticleComments(articleId, limit = 50, offset = 0) {
+    console.log(`💬 Fetching comments for article ${articleId} (limit: ${limit}, offset: ${offset})`);
+    
+    try {
+      const { data, error } = await supabase
+        .from('v_article_comments')
+        .select('id, user_id, comment_text, created_at, is_edited, user_name, user_title')
+        .eq('article_id', articleId)
+        .order('created_at', { ascending: true })
+        .range(offset, offset + limit - 1);
+
+      if (error) {
+        console.error('❌ Error fetching comments:', error);
+        throw error;
+      }
+
+      console.log(`✅ Retrieved ${data?.length || 0} comments for article ${articleId}`);
+      return data || [];
+    } catch (error) {
+      console.error('❌ Exception in getArticleComments:', error);
+      throw error;
+    }
+  },
+
+  // Get comment count for an article (very efficient - no data transfer)
+  async getArticleCommentCount(articleId) {
+    console.log(`🔢 Getting comment count for article ${articleId}`);
+    
+    try {
+      const { data, error } = await supabase
+        .rpc('get_article_comment_count', { target_article_id: articleId });
+
+      if (error) {
+        console.error('❌ Error getting comment count:', error);
+        throw error;
+      }
+
+      const count = data || 0;
+      console.log(`✅ Article ${articleId} has ${count} comments`);
+      return count;
+    } catch (error) {
+      console.error('❌ Exception in getArticleCommentCount:', error);
+      return 0; // Return 0 on error rather than throwing
+    }
+  },
+
+  // Add a new comment (authenticated users only)
+  async addComment(articleId, userId, commentText) {
+    if (!userId) {
+      throw new Error('User must be authenticated to add comments');
+    }
+
+    if (!commentText || commentText.trim().length === 0) {
+      throw new Error('Comment text cannot be empty');
+    }
+
+    if (commentText.length > 2000) {
+      throw new Error('Comment text cannot exceed 2000 characters');
+    }
+
+    console.log(`💬 Adding comment to article ${articleId} by user ${userId}`);
+    
+    try {
+      const { data, error } = await supabase
+        .from('article_comments')
+        .insert([{
+          article_id: articleId,
+          user_id: userId,
+          comment_text: commentText.trim()
+        }])
+        .select('id, created_at')
+        .single();
+
+      if (error) {
+        console.error('❌ Error adding comment:', error);
+        throw error;
+      }
+
+      console.log(`✅ Comment added successfully with ID: ${data.id}`);
+      return data;
+    } catch (error) {
+      console.error('❌ Exception in addComment:', error);
+      throw error;
+    }
+  },
+
+  // Update a comment (user's own comments only)
+  async updateComment(commentId, userId, newCommentText) {
+    if (!userId) {
+      throw new Error('User must be authenticated to update comments');
+    }
+
+    if (!newCommentText || newCommentText.trim().length === 0) {
+      throw new Error('Comment text cannot be empty');
+    }
+
+    if (newCommentText.length > 2000) {
+      throw new Error('Comment text cannot exceed 2000 characters');
+    }
+
+    console.log(`✏️ Updating comment ${commentId} by user ${userId}`);
+    
+    try {
+      const { data, error } = await supabase
+        .from('article_comments')
+        .update({ comment_text: newCommentText.trim() })
+        .eq('id', commentId)
+        .eq('user_id', userId)
+        .eq('is_deleted', false)
+        .select('updated_at, is_edited')
+        .single();
+
+      if (error) {
+        console.error('❌ Error updating comment:', error);
+        throw error;
+      }
+
+      if (!data) {
+        throw new Error('Comment not found or you do not have permission to edit it');
+      }
+
+      console.log(`✅ Comment ${commentId} updated successfully`);
+      return data;
+    } catch (error) {
+      console.error('❌ Exception in updateComment:', error);
+      throw error;
+    }
+  },
+
+  // Delete a comment (soft delete - user's own comments only)
+  async deleteComment(commentId, userId) {
+    if (!userId) {
+      throw new Error('User must be authenticated to delete comments');
+    }
+
+    console.log(`🗑️ Soft deleting comment ${commentId} by user ${userId}`);
+    
+    try {
+      const { data, error } = await supabase
+        .from('article_comments')
+        .update({ is_deleted: true })
+        .eq('id', commentId)
+        .eq('user_id', userId)
+        .select('id')
+        .single();
+
+      if (error) {
+        console.error('❌ Error deleting comment:', error);
+        throw error;
+      }
+
+      if (!data) {
+        throw new Error('Comment not found or you do not have permission to delete it');
+      }
+
+      console.log(`✅ Comment ${commentId} deleted successfully`);
+      return data;
+    } catch (error) {
+      console.error('❌ Exception in deleteComment:', error);
+      throw error;
+    }
+  },
+
+  // Get comments with pagination metadata
+  async getArticleCommentsWithPagination(articleId, page = 1, limit = 20) {
+    const offset = (page - 1) * limit;
+    
+    try {
+      const [comments, totalCount] = await Promise.all([
+        this.getArticleComments(articleId, limit, offset),
+        this.getArticleCommentCount(articleId)
+      ]);
+
+      const totalPages = Math.ceil(totalCount / limit);
+      const hasNextPage = page < totalPages;
+      const hasPrevPage = page > 1;
+
+      return {
+        comments,
+        pagination: {
+          currentPage: page,
+          totalPages,
+          totalCount,
+          hasNextPage,
+          hasPrevPage,
+          limit
+        }
+      };
+    } catch (error) {
+      console.error('❌ Exception in getArticleCommentsWithPagination:', error);
+      throw error;
+    }
+  }
+};
+
 // Run initial test
 testConnection().then(result => {
   if (result.success) {

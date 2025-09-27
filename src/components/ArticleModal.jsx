@@ -1,11 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { X, Heart, ExternalLink, Calendar, Users, Tag, Share2, Brain, Sparkles, BookOpen, GraduationCap, User, Check } from 'lucide-react';
-import { arxivAPI } from '../lib/supabase';
+import { X, Heart, ExternalLink, Calendar, Users, Tag, Share2, Brain, Sparkles, BookOpen, GraduationCap, User, Check, MessageCircle, Send, Edit3, Trash2, MoreVertical } from 'lucide-react';
+import { arxivAPI, commentsAPI } from '../lib/supabase';
+import { useUser } from '../contexts/UserContext';
 
 const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }) => {
   const [showCopiedPopup, setShowCopiedPopup] = useState(false);
   const [fullAbstract, setFullAbstract] = useState(null);
   const [isLoadingAbstract, setIsLoadingAbstract] = useState(false);
+  
+  // Comment system state
+  const [comments, setComments] = useState([]);
+  const [commentCount, setCommentCount] = useState(0);
+  const [isLoadingComments, setIsLoadingComments] = useState(false);
+  const [newComment, setNewComment] = useState('');
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editingCommentText, setEditingCommentText] = useState('');
+  const [commentErrors, setCommentErrors] = useState({});
+  
+  // Get user context
+  const { user, userProfile } = useUser();
   
   // Lazy load full abstract when modal opens (only if not already loaded)
   useEffect(() => {
@@ -23,6 +37,150 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
         });
     }
   }, [isOpen, article, fullAbstract]);
+
+  // Load comments when modal opens
+  useEffect(() => {
+    if (isOpen && article) {
+      loadComments();
+      loadCommentCount();
+    }
+  }, [isOpen, article]);
+
+  // Comment functions
+  const loadComments = async () => {
+    if (!article) return;
+    
+    setIsLoadingComments(true);
+    try {
+      const articleComments = await commentsAPI.getArticleComments(article.id);
+      setComments(articleComments);
+      setCommentErrors({});
+    } catch (error) {
+      console.error('Failed to load comments:', error);
+      setCommentErrors({ load: 'Failed to load comments. Please try again.' });
+    } finally {
+      setIsLoadingComments(false);
+    }
+  };
+
+  const loadCommentCount = async () => {
+    if (!article) return;
+    
+    try {
+      const count = await commentsAPI.getArticleCommentCount(article.id);
+      setCommentCount(count);
+    } catch (error) {
+      console.error('Failed to load comment count:', error);
+    }
+  };
+
+  const handleSubmitComment = async (e) => {
+    e.preventDefault();
+    
+    if (!user) {
+      setCommentErrors({ submit: 'You must be logged in to post comments.' });
+      return;
+    }
+
+    if (!newComment.trim()) {
+      setCommentErrors({ submit: 'Comment cannot be empty.' });
+      return;
+    }
+
+    if (newComment.length > 2000) {
+      setCommentErrors({ submit: 'Comment cannot exceed 2000 characters.' });
+      return;
+    }
+
+    setIsSubmittingComment(true);
+    setCommentErrors({});
+
+    try {
+      await commentsAPI.addComment(article.id, user.id, newComment);
+      setNewComment('');
+      await loadComments(); // Reload comments to show the new one
+      await loadCommentCount(); // Update comment count
+    } catch (error) {
+      console.error('Failed to submit comment:', error);
+      setCommentErrors({ submit: error.message || 'Failed to post comment. Please try again.' });
+    } finally {
+      setIsSubmittingComment(false);
+    }
+  };
+
+  const handleEditComment = (comment) => {
+    setEditingCommentId(comment.id);
+    setEditingCommentText(comment.comment_text);
+    setCommentErrors({});
+  };
+
+  const handleSaveEdit = async (commentId) => {
+    if (!user) return;
+
+    if (!editingCommentText.trim()) {
+      setCommentErrors({ [commentId]: 'Comment cannot be empty.' });
+      return;
+    }
+
+    if (editingCommentText.length > 2000) {
+      setCommentErrors({ [commentId]: 'Comment cannot exceed 2000 characters.' });
+      return;
+    }
+
+    try {
+      await commentsAPI.updateComment(commentId, user.id, editingCommentText);
+      setEditingCommentId(null);
+      setEditingCommentText('');
+      setCommentErrors({});
+      await loadComments(); // Reload comments to show the updated one
+    } catch (error) {
+      console.error('Failed to update comment:', error);
+      setCommentErrors({ [commentId]: error.message || 'Failed to update comment. Please try again.' });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCommentId(null);
+    setEditingCommentText('');
+    setCommentErrors({});
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    if (!user) return;
+
+    if (!window.confirm('Are you sure you want to delete this comment?')) {
+      return;
+    }
+
+    try {
+      await commentsAPI.deleteComment(commentId, user.id);
+      await loadComments(); // Reload comments to remove the deleted one
+      await loadCommentCount(); // Update comment count
+      setCommentErrors({});
+    } catch (error) {
+      console.error('Failed to delete comment:', error);
+      setCommentErrors({ [commentId]: error.message || 'Failed to delete comment. Please try again.' });
+    }
+  };
+
+  const formatCommentDate = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) {
+      return 'Yesterday';
+    } else if (diffDays < 7) {
+      return `${diffDays} days ago`;
+    } else {
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+    }
+  };
   
   if (!isOpen || !article) return null;
 
@@ -280,6 +438,184 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                   <Share2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                   Share Article
                 </button>
+              </div>
+            </div>
+
+            {/* Comments Section */}
+            <div className="pt-6 sm:pt-8 border-t border-gray-200 mt-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 flex items-center">
+                  <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-blue-600" />
+                  Discussion
+                  {commentCount > 0 && (
+                    <span className="ml-2 text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                      {commentCount}
+                    </span>
+                  )}
+                </h3>
+              </div>
+
+              {/* Comment Form - Only for authenticated users */}
+              {user ? (
+                <form onSubmit={handleSubmitComment} className="mb-6">
+                  <div className="flex flex-col space-y-3">
+                    <textarea
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      placeholder="Share your thoughts about this research..."
+                      className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm sm:text-base"
+                      rows="3"
+                      maxLength={2000}
+                      disabled={isSubmittingComment}
+                    />
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-gray-500">
+                        {newComment.length}/2000 characters
+                      </span>
+                      <button
+                        type="submit"
+                        disabled={isSubmittingComment || !newComment.trim()}
+                        className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm"
+                      >
+                        {isSubmittingComment ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            Posting...
+                          </>
+                        ) : (
+                          <>
+                            <Send className="h-4 w-4 mr-2" />
+                            Post Comment
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  {commentErrors.submit && (
+                    <p className="text-red-600 text-sm mt-2">{commentErrors.submit}</p>
+                  )}
+                </form>
+              ) : (
+                <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                  <p className="text-gray-600 text-sm">
+                    <User className="h-4 w-4 inline mr-1" />
+                    Please sign in to join the discussion and share your thoughts about this research.
+                  </p>
+                </div>
+              )}
+
+              {/* Comments List */}
+              <div className="space-y-4">
+                {isLoadingComments ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                    <span className="ml-2 text-gray-600">Loading comments...</span>
+                  </div>
+                ) : commentErrors.load ? (
+                  <div className="text-center py-8">
+                    <p className="text-red-600 text-sm">{commentErrors.load}</p>
+                    <button
+                      onClick={loadComments}
+                      className="mt-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
+                    >
+                      Try Again
+                    </button>
+                  </div>
+                ) : comments.length === 0 ? (
+                  <div className="text-center py-8">
+                    <MessageCircle className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500 text-sm">
+                      No comments yet. Be the first to share your thoughts!
+                    </p>
+                  </div>
+                ) : (
+                  comments.map((comment) => (
+                    <div key={comment.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                      <div className="flex items-start justify-between mb-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <User className="h-3 w-3 text-blue-600" />
+                          </div>
+                          <div>
+                            <span className="font-medium text-gray-900 text-sm">
+                              {comment.user_name}
+                            </span>
+                            {comment.user_title && (
+                              <span className="text-gray-500 text-xs ml-1">
+                                • {comment.user_title}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs text-gray-500">
+                            {formatCommentDate(comment.created_at)}
+                            {comment.is_edited && (
+                              <span className="ml-1 italic">(edited)</span>
+                            )}
+                          </span>
+                          {user && user.id === comment.user_id && (
+                            <div className="flex items-center space-x-1">
+                              <button
+                                onClick={() => handleEditComment(comment)}
+                                className="text-gray-400 hover:text-blue-600 transition-colors"
+                                title="Edit comment"
+                              >
+                                <Edit3 className="h-3 w-3" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteComment(comment.id)}
+                                className="text-gray-400 hover:text-red-600 transition-colors"
+                                title="Delete comment"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {editingCommentId === comment.id ? (
+                        <div className="space-y-3">
+                          <textarea
+                            value={editingCommentText}
+                            onChange={(e) => setEditingCommentText(e.target.value)}
+                            className="w-full p-2 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                            rows="3"
+                            maxLength={2000}
+                          />
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-gray-500">
+                              {editingCommentText.length}/2000 characters
+                            </span>
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={handleCancelEdit}
+                                className="px-3 py-1 text-gray-600 hover:text-gray-800 text-sm"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                onClick={() => handleSaveEdit(comment.id)}
+                                disabled={!editingCommentText.trim()}
+                                className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 disabled:bg-gray-300"
+                              >
+                                Save
+                              </button>
+                            </div>
+                          </div>
+                          {commentErrors[comment.id] && (
+                            <p className="text-red-600 text-xs">{commentErrors[comment.id]}</p>
+                          )}
+                        </div>
+                      ) : (
+                        <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
+                          {comment.comment_text}
+                        </p>
+                      )}
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
