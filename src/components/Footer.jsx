@@ -31,6 +31,9 @@ const Footer = ({ onContactClick }) => {
               <Heart className="h-4 w-4 text-red-500 fill-current" />
               <span>for the research community</span>
             </div>
+            <div className="flex items-center space-x-1 text-sm text-gray-500">
+              <span>As a small team, we are always looking for help. If you are interested in contributing to Pearadox, please contact us or donate at <b>Pearadox.eth</b></span>
+            </div>
           </div>
 
           {/* Quick Links */}
