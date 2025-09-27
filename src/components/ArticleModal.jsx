@@ -445,10 +445,10 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
             <div className="pt-6 sm:pt-8 border-t border-gray-200 mt-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg sm:text-xl font-semibold text-gray-900 flex items-center">
-                  <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-blue-600" />
+                  <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-green-600" />
                   Discussion
                   {commentCount > 0 && (
-                    <span className="ml-2 text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                    <span className="ml-2 text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">
                       {commentCount}
                     </span>
                   )}
@@ -463,7 +463,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
                       placeholder="Share your thoughts about this research..."
-                      className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-sm sm:text-base"
+                      className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm sm:text-base"
                       rows="3"
                       maxLength={2000}
                       disabled={isSubmittingComment}
@@ -475,7 +475,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                       <button
                         type="submit"
                         disabled={isSubmittingComment || !newComment.trim()}
-                        className="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm"
+                        className="inline-flex items-center px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm"
                       >
                         {isSubmittingComment ? (
                           <>
@@ -508,7 +508,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
               <div className="space-y-4">
                 {isLoadingComments ? (
                   <div className="flex items-center justify-center py-8">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
                     <span className="ml-2 text-gray-600">Loading comments...</span>
                   </div>
                 ) : commentErrors.load ? (
@@ -516,7 +516,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                     <p className="text-red-600 text-sm">{commentErrors.load}</p>
                     <button
                       onClick={loadComments}
-                      className="mt-2 text-blue-600 hover:text-blue-700 text-sm font-medium"
+                      className="mt-2 text-green-600 hover:text-green-700 text-sm font-medium"
                     >
                       Try Again
                     </button>
@@ -533,8 +533,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                     <div key={comment.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                       <div className="flex items-start justify-between mb-2">
                         <div className="flex items-center space-x-2">
-                          <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <User className="h-3 w-3 text-blue-600" />
+                          <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <User className="h-3 w-3 text-green-600" />
                           </div>
                           <div>
                             <span className="font-medium text-gray-900 text-sm">
@@ -558,7 +558,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                             <div className="flex items-center space-x-1">
                               <button
                                 onClick={() => handleEditComment(comment)}
-                                className="text-gray-400 hover:text-blue-600 transition-colors"
+                                className="text-gray-400 hover:text-green-600 transition-colors"
                                 title="Edit comment"
                               >
                                 <Edit3 className="h-3 w-3" />
@@ -580,7 +580,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                           <textarea
                             value={editingCommentText}
                             onChange={(e) => setEditingCommentText(e.target.value)}
-                            className="w-full p-2 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                            className="w-full p-2 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
                             rows="3"
                             maxLength={2000}
                           />
@@ -598,7 +598,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                               <button
                                 onClick={() => handleSaveEdit(comment.id)}
                                 disabled={!editingCommentText.trim()}
-                                className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 disabled:bg-gray-300"
+                                className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 disabled:bg-gray-300"
                               >
                                 Save
                               </button>
