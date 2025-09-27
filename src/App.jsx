@@ -1466,15 +1466,15 @@ function App() {
                        </div>
 
                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
-                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
-                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">1.5K+</div>
-                           <div className="text-gray-600 font-medium text-sm sm:text-base">Papers Simplified</div>
-                         </div>
-                         
-                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
-                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">200+</div>
-                           <div className="text-gray-600 font-medium text-sm sm:text-base">Active Users</div>
-                         </div>
+                        <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
+                          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">10K+</div>
+                          <div className="text-gray-600 font-medium text-sm sm:text-base">Papers Simplified</div>
+                        </div>
+                        
+                        <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
+                          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">500+</div>
+                          <div className="text-gray-600 font-medium text-sm sm:text-base">Active Users</div>
+                        </div>
                          
                          <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
                            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">50+</div>
