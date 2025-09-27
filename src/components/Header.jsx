@@ -18,16 +18,60 @@ const Header = ({
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [categorySearchTerm, setCategorySearchTerm] = useState('');
   const [scrollY, setScrollY] = useState(0);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isScrollingDown, setIsScrollingDown] = useState(false);
+  const [scrollTimeout, setScrollTimeout] = useState(null);
   
   const dropdownRef = useRef(null);
   const mobileDropdownRef = useRef(null);
   const categorySearchRef = useRef(null);
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Determine scroll direction
+      const scrollingDown = currentScrollY > lastScrollY && currentScrollY > 100; // Only hide after scrolling past 100px
+      const scrollingUp = currentScrollY < lastScrollY;
+      
+      setScrollY(currentScrollY);
+      setLastScrollY(currentScrollY);
+      
+      // Update scroll direction for mobile behavior
+      if (scrollingDown && !isScrollingDown) {
+        setIsScrollingDown(true);
+        // Close mobile search and category dropdown when scrolling down
+        if (isSearchExpanded) {
+          setIsSearchExpanded(false);
+        }
+        if (isCategoryDropdownOpen) {
+          setIsCategoryDropdownOpen(false);
+        }
+      } else if (scrollingUp && isScrollingDown) {
+        setIsScrollingDown(false);
+      }
+      
+      // Clear existing timeout
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
+      
+      // Set timeout to show search bar when user stops scrolling
+      const newTimeout = setTimeout(() => {
+        setIsScrollingDown(false);
+      }, 150); // Show search bar 150ms after user stops scrolling
+      
+      setScrollTimeout(newTimeout);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
+    };
+  }, [lastScrollY, isScrollingDown, scrollTimeout]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -322,7 +366,17 @@ const Header = ({
 
         {/* Mobile Categories and Search - Same row below header */}
         {!isAboutPage && !isBlogPage && (
-          <div className="md:hidden mt-3 pt-3 border-t border-gray-100" ref={mobileDropdownRef}>
+          <div 
+            className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+              isScrollingDown ? 'max-h-0 opacity-0' : 'max-h-32 opacity-100'
+            }`}
+          >
+            <div 
+              className={`mt-3 pt-3 border-t border-gray-100 transition-transform duration-300 ease-in-out ${
+                isScrollingDown ? 'transform -translate-y-full' : 'transform translate-y-0'
+              }`} 
+              ref={mobileDropdownRef}
+            >
           <div className="flex items-center gap-2 overflow-hidden">
             {/* Categories Button - Shrinks when search is expanded */}
             <button
@@ -441,7 +495,8 @@ const Header = ({
               </div>
             </div>
           )}
-        </div>
+            </div>
+          </div>
         )}
       </div>
     </header>
