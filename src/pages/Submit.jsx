@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Upload, FileText, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, Upload, FileText, CheckCircle, AlertCircle, Loader2, UserPlus, Lock } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import AccountModal from '../components/AccountModal';
+import { useUser } from '../contexts/UserContext';
 
 const Submit = () => {
   const navigate = useNavigate();
+  const { user, userSkillLevel, handleSkillLevelChange, handleResearchInterestsChange } = useUser();
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -109,10 +113,10 @@ const Submit = () => {
         onCategoryChange={() => {}}
         categories={[]}
         onShowSavedArticles={() => {}}
-        onShowAccount={() => {}}
+        onShowAccount={() => setIsAccountOpen(true)}
         savedCount={0}
-        user={null}
-        userSkillLevel="Beginner"
+        user={user}
+        userSkillLevel={userSkillLevel || "Beginner"}
       />
 
       {/* Content Spacer for Fixed Header */}
@@ -141,8 +145,67 @@ const Submit = () => {
           </p>
         </div>
 
-        {/* Form Section */}
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 sm:p-12">
+        {/* Authentication Check */}
+        {!user ? (
+          // Not Authenticated - Show Sign In Message
+          <div className="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 sm:p-12">
+            <div className="text-center max-w-2xl mx-auto">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl mb-6">
+                <Lock className="h-10 w-10 text-indigo-600" />
+              </div>
+              
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+                Account Required
+              </h2>
+              
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                To submit your research paper to Pearadox, you'll need to create a free account. This helps us maintain quality submissions and allows you to track your submission status.
+              </p>
+
+              <div className="space-y-4 mb-8 text-left bg-blue-50 rounded-xl p-6">
+                <h3 className="font-semibold text-gray-900 mb-3">Benefits of creating an account:</h3>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Submit and track your research papers</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Save and organize your favorite articles</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Get personalized content for your skill level</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Join a community of AI researchers and enthusiasts</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  onClick={() => navigate('/')}
+                  className="px-6 py-3 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-all"
+                >
+                  Back to Home
+                </button>
+                <button
+                  onClick={() => setIsAccountOpen(true)}
+                  className="group px-8 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all flex items-center justify-center"
+                >
+                  <UserPlus className="h-5 w-5 mr-2" />
+                  <span>Create Free Account</span>
+                </button>
+              </div>
+
+              <p className="text-sm text-gray-500 mt-6">
+                Already have an account? Click "Create Free Account" to sign in.
+              </p>
+            </div>
+          </div>
+        ) : (
+          // Authenticated - Show Form
+          <div className="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 sm:p-12">
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Title Input */}
             <div>
@@ -292,7 +355,16 @@ const Submit = () => {
             </ul>
           </div>
         </div>
+        )}
       </main>
+
+      <AccountModal
+        isOpen={isAccountOpen}
+        onClose={() => setIsAccountOpen(false)}
+        userSkillLevel={userSkillLevel}
+        onSkillLevelChange={handleSkillLevelChange}
+        onResearchInterestsChange={handleResearchInterestsChange}
+      />
 
       <Footer onContactClick={() => {}} />
     </div>
