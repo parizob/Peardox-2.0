@@ -386,8 +386,8 @@ const Header = ({
         {/* Mobile Categories and Search - Same row below header */}
         {!isAboutPage && !isBlogPage && (
           <div 
-            className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-              isScrollingDown ? 'max-h-0 opacity-0' : 'max-h-32 opacity-100'
+            className={`md:hidden transition-all duration-300 ease-in-out ${
+              isScrollingDown ? 'max-h-0 opacity-0 overflow-hidden' : 'max-h-32 opacity-100 overflow-visible'
             }`}
           >
             <div 
@@ -396,7 +396,7 @@ const Header = ({
               }`} 
               ref={mobileDropdownRef}
             >
-          <div className="flex items-center gap-2 overflow-hidden">
+          <div className="flex items-center gap-2 relative">
             {/* Search Bar - Takes most space */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center bg-white border border-gray-200 rounded-lg px-3 py-2.5 shadow-sm min-w-0">
@@ -447,9 +447,14 @@ const Header = ({
               <Upload className="h-4 w-4" />
             </Link>
           </div>
+            </div>
+          </div>
+        )}
 
-          {isCategoryDropdownOpen && (
-            <div className="mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
+        {/* Mobile Dropdown - Outside overflow container */}
+        {!isAboutPage && !isBlogPage && isCategoryDropdownOpen && (
+          <div className="md:hidden">
+            <div className="mx-4 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
               <div className="p-3 border-b border-gray-100">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -500,8 +505,6 @@ const Header = ({
                   </div>
                 )}
               </div>
-            </div>
-          )}
             </div>
           </div>
         )}
