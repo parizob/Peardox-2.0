@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ChevronDown, Filter, X, Bookmark, User, Info, BookOpen } from 'lucide-react';
+import { Search, ChevronDown, Filter, X, Bookmark, User, Info, BookOpen, Upload } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Header = ({
@@ -139,7 +139,7 @@ const Header = ({
               >
                 <Filter className="h-4 w-4" />
                 <span className="max-w-24 sm:max-w-32 truncate">
-                  {selectedCategory ? selectedCategoryName : 'Categories'}
+                  {selectedCategory ? selectedCategoryName : 'Area'}
                 </span>
                 <ChevronDown className={`h-4 w-4 transition-transform ${
                   isCategoryDropdownOpen ? 'rotate-180' : ''
@@ -202,41 +202,80 @@ const Header = ({
               )}
             </div>
             
-            {/* About Us Link */}
-            <Link
-              to="/aboutus"
-              className="flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
-              onClick={() => {
-                // Close any expanded search first
-                if (isSearchExpanded) {
-                  setIsSearchExpanded(false);
-                }
-                // Let React Router handle navigation naturally
-                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-              }}
-              title="About Pearadox"
-            >
-              <Info className="h-4 w-4" />
-              <span>About Us</span>
-            </Link>
+            {/* About Us Link with Tooltip */}
+            <div className="relative group">
+              <Link
+                to="/aboutus"
+                className="flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+                onClick={() => {
+                  if (isSearchExpanded) {
+                    setIsSearchExpanded(false);
+                  }
+                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                }}
+              >
+                <Info className="h-4 w-4" />
+                <span>About Us</span>
+              </Link>
+              {/* Tooltip */}
+              <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
+                <div className="font-medium mb-0.5">Our Mission & Story</div>
+                <div className="text-gray-300">Meet the team democratizing AI research</div>
+                {/* Arrow */}
+                <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+              </div>
+            </div>
             
-            {/* Blog Link */}
-            <Link
-              to="/blog"
-              className="flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
-              onClick={() => {
-                // Close any expanded search first
-                if (isSearchExpanded) {
-                  setIsSearchExpanded(false);
-                }
-                // Let React Router handle navigation naturally
-                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-              }}
-              title="Pearadox Blog"
-            >
-              <BookOpen className="h-4 w-4" />
-              <span>Blog</span>
-            </Link>
+            {/* Blog Link with Tooltip */}
+            <div className="relative group">
+              <Link
+                to="/blog"
+                className="flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
+                onClick={() => {
+                  if (isSearchExpanded) {
+                    setIsSearchExpanded(false);
+                  }
+                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                }}
+              >
+                <BookOpen className="h-4 w-4" />
+                <span>Blog</span>
+              </Link>
+              {/* Tooltip */}
+              <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
+                <div className="font-medium mb-0.5">AI Insights & Trends</div>
+                <div className="text-gray-300">Deep dives into the future of intelligence</div>
+                {/* Arrow */}
+                <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+              </div>
+            </div>
+            
+            {/* Submit Link with Tooltip */}
+            <div className="relative group">
+              <Link
+                to="/submit"
+                className="flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium text-white hover:shadow-lg transition-all"
+                style={{ backgroundColor: '#1db954' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+                onClick={() => {
+                  if (isSearchExpanded) {
+                    setIsSearchExpanded(false);
+                  }
+                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                }}
+              >
+                <Upload className="h-4 w-4" />
+                <span>Submit</span>
+              </Link>
+              {/* Tooltip */}
+              <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
+                <div className="font-medium mb-0.5">Share Your Research</div>
+                <div className="text-gray-300">Contribute to the AI knowledge base</div>
+                {/* Arrow */}
+                <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-gray-900 rotate-45"></div>
+              </div>
+            </div>
             </div>
             
             {/* Mobile Navigation */}
@@ -246,11 +285,9 @@ const Header = ({
                 to="/aboutus"
                 className="flex items-center justify-center p-2 bg-gray-100 text-gray-700 rounded-lg hover:text-blue-600 hover:bg-gray-200 transition-colors flex-shrink-0"
                 onClick={() => {
-                  // Close any expanded search first
                   if (isSearchExpanded) {
                     setIsSearchExpanded(false);
                   }
-                  // Let React Router handle navigation naturally
                   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                 }}
                 title="About Pearadox"
@@ -263,11 +300,9 @@ const Header = ({
                 to="/blog"
                 className="flex items-center justify-center p-2 bg-gray-100 text-gray-700 rounded-lg hover:text-blue-600 hover:bg-gray-200 transition-colors flex-shrink-0"
                 onClick={() => {
-                  // Close any expanded search first
                   if (isSearchExpanded) {
                     setIsSearchExpanded(false);
                   }
-                  // Let React Router handle navigation naturally
                   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                 }}
                 title="Pearadox Blog"
@@ -362,67 +397,55 @@ const Header = ({
               ref={mobileDropdownRef}
             >
           <div className="flex items-center gap-2 overflow-hidden">
-            {/* Categories Button - Shrinks when search is expanded */}
-            <button
-              onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
-              className={`${isSearchExpanded ? 'flex-none w-28' : 'flex-1'} flex items-center justify-between px-3 py-3 rounded-lg text-sm font-medium transition-all duration-300 min-w-0 ${
-                selectedCategory
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700'
-              }`}
-            >
-              <div className="flex items-center space-x-1 min-w-0">
-                <Filter className="h-4 w-4 flex-shrink-0" />
-                <span className="truncate">
-                  {isSearchExpanded 
-                    ? (selectedCategory ? 'All' : 'All') 
-                    : (selectedCategory ? selectedCategoryName : 'Categories')
-                  }
-                </span>
-              </div>
-              {!isSearchExpanded && (
-                <ChevronDown className={`h-4 w-4 transition-transform flex-shrink-0 ${
-                  isCategoryDropdownOpen ? 'rotate-180' : ''
-                }`} />
-              )}
-            </button>
-            
-            {/* Search - Mobile - Expands when active */}
-            <div className={`transition-all duration-300 ease-in-out min-w-0 ${isSearchExpanded ? 'flex-1' : 'w-12 flex-shrink-0'}`}>
-              {isSearchExpanded ? (
-                <div className="flex items-center bg-white border border-gray-200 rounded-lg px-2 py-3 shadow-md min-w-0">
-                  <Search className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
-                  <input
-                    type="text"
-                    placeholder="Search..."
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    className="bg-transparent flex-1 text-sm focus:outline-none min-w-0"
-                    autoFocus
-                    onBlur={(e) => {
-                      // Only close if clicking outside and no search term
-                      if (!searchTerm.trim()) {
-                        setTimeout(() => setIsSearchExpanded(false), 150);
-                      }
-                    }}
-                  />
+            {/* Search Bar - Takes most space */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center bg-white border border-gray-200 rounded-lg px-3 py-2.5 shadow-sm min-w-0">
+                <Search className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  className="bg-transparent flex-1 text-sm focus:outline-none min-w-0"
+                />
+                {searchTerm && (
                   <button
                     onClick={handleSearchClose}
                     className="ml-1 p-1 hover:bg-gray-100 rounded flex-shrink-0"
                   >
                     <X className="h-4 w-4 text-gray-400" />
                   </button>
-                </div>
-              ) : (
-                <button
-                  onClick={handleSearchClick}
-                  className="flex items-center justify-center bg-gray-100 text-gray-700 rounded-lg p-3 hover:bg-gray-200 transition-all duration-300 w-full h-full"
-                  title="Search articles"
-                >
-                  <Search className="h-4 w-4" />
-                </button>
-              )}
+                )}
+              </div>
             </div>
+            
+            {/* Filter Icon Only */}
+            <button
+              onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+              className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg transition-all ${
+                selectedCategory
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+              title={selectedCategory ? selectedCategoryName : 'Filter by area'}
+            >
+              <Filter className="h-4 w-4" />
+            </button>
+            
+            {/* Submit Icon Only */}
+            <Link
+              to="/submit"
+              className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg text-white hover:shadow-lg transition-all"
+              style={{ backgroundColor: '#1db954' }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+              onClick={() => {
+                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+              }}
+              title="Submit Research"
+            >
+              <Upload className="h-4 w-4" />
+            </Link>
           </div>
 
           {isCategoryDropdownOpen && (

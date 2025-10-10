@@ -145,7 +145,7 @@ const Submit = () => {
 
         {/* Header Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mb-6 shadow-lg">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-600 to-green-600 rounded-2xl mb-6 shadow-lg">
             <FileText className="h-10 w-10 text-white" />
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
@@ -161,8 +161,8 @@ const Submit = () => {
           // Not Authenticated - Show Sign In Message
           <div className="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 sm:p-12">
             <div className="text-center max-w-2xl mx-auto">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl mb-6">
-                <Lock className="h-10 w-10 text-indigo-600" />
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-600 to-green-600 rounded-2xl mb-6">
+                <Lock className="h-10 w-10 text-white" />
               </div>
               
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
@@ -202,7 +202,7 @@ const Submit = () => {
                 </button>
                 <button
                   onClick={() => setIsAccountOpen(true)}
-                  className="group px-8 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all flex items-center justify-center"
+                  className="group px-8 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all flex items-center justify-center"
                 >
                   <UserPlus className="h-5 w-5 mr-2" />
                   <span>Create Free Account</span>
@@ -326,7 +326,7 @@ const Submit = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 px-6 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
+                className="flex-1 px-6 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
               >
                 {isSubmitting ? (
                   <>
