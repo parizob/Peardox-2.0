@@ -1263,17 +1263,119 @@ function App() {
               </div>
 
               {/* Research Of The Day Spotlight with Submit Card */}
-              {spotlightArticle && (
-                <div id="spotlight-section" className="mb-12 sm:mb-16">
-                  <div className="mx-auto max-w-6xl px-4 sm:px-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-                      
-                      {/* Spotlight Article - Takes up 8 columns on large screens */}
-                      <div className="lg:col-span-8">
-                        <div 
-                          className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 hover:border-amber-300 hover:shadow-3xl transition-all duration-500 cursor-pointer group overflow-hidden h-full min-h-[320px]"
-                          onClick={() => handleArticleClick(spotlightArticle)}
-                        >
+              <div id="spotlight-section" className="mb-8 sm:mb-12">
+                <div className="mx-auto max-w-6xl px-4 sm:px-6">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-6">
+                    
+                    {!spotlightArticle ? (
+                      <>
+                        <div className="lg:col-span-8">
+                          <div className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 overflow-hidden h-full min-h-[320px]">
+                            {/* Subtle animated background */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-amber-50/30 to-orange-50/30"></div>
+                            
+                            {/* Content with gentle fade */}
+                            <div className="relative h-full flex flex-col p-6 sm:p-8 animate-pulse">
+                              {/* Top badges skeleton - subtle */}
+                              <div className="flex items-center space-x-2 mb-6 pt-2">
+                                <div className="h-7 w-28 bg-amber-200/40 rounded-full"></div>
+                                <div className="h-7 w-32 bg-gray-200/40 rounded-full"></div>
+                              </div>
+                              
+                              {/* Today's Spotlight text - elegant and simple */}
+                              <div className="flex-1 flex flex-col items-center justify-center">
+                                <div className="text-center space-y-3">
+                                  <h3 className="text-2xl sm:text-3xl font-bold text-amber-600/80">
+                                    Today's Spotlight
+                                  </h3>
+                                  <div className="h-1 w-24 bg-gradient-to-r from-transparent via-amber-400/60 to-transparent rounded-full"></div>
+                                </div>
+                              </div>
+                              
+                              {/* Bottom skeleton - very subtle */}
+                              <div className="space-y-3">
+                                <div className="h-4 bg-gray-200/40 rounded-lg w-3/4"></div>
+                                <div className="flex items-center justify-between">
+                                  <div className="h-8 w-32 bg-amber-100/40 rounded-lg"></div>
+                                  <div className="h-10 w-28 bg-amber-200/40 rounded-xl"></div>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            {/* Trending badge - subtle */}
+                            <div className="absolute top-6 right-6 animate-pulse">
+                              <div className="bg-gradient-to-br from-amber-200/50 to-orange-200/50 rounded-xl px-4 py-2 shadow-md">
+                                <div className="text-center">
+                                  <div className="text-2xl font-bold text-amber-600/60 leading-none mb-0.5">⭐</div>
+                                  <div className="text-[10px] font-semibold text-amber-700/60 uppercase tracking-wide">Featured</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Submit card (always visible) */}
+                        <div className="lg:col-span-4">
+                          <div 
+                            className="relative bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-3xl shadow-xl border-2 border-indigo-200 hover:border-indigo-300 hover:shadow-2xl transition-all duration-500 cursor-pointer group overflow-hidden h-full min-h-[320px]"
+                            onClick={() => navigate('/submit')}
+                          >
+                            {/* Decorative elements */}
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-indigo-300/20 to-transparent rounded-full blur-2xl"></div>
+                            <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-purple-300/20 to-transparent rounded-full blur-xl"></div>
+                            
+                            {/* Glowing border effect */}
+                            <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-sm"></div>
+                            
+                            {/* Content with flexbox for better spacing */}
+                            <div className="relative h-full flex flex-col justify-between p-6 sm:p-8">
+                              <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4">
+                                {/* Icon */}
+                                <div className="p-5 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                  <Upload className="h-10 w-10 text-white" />
+                                </div>
+
+                                {/* Badge */}
+                                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-md">
+                                  ✨ SHARE YOUR WORK
+                                </span>
+
+                                {/* Title */}
+                                <h4 className="text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-indigo-700 transition-colors px-2">
+                                  Submit Your Research
+                                </h4>
+
+                                {/* Description */}
+                                <p className="text-gray-700 text-sm leading-relaxed px-2">
+                                  Have groundbreaking research? Share it with our community and help democratize AI knowledge.
+                                </p>
+                              </div>
+
+                              {/* Bottom CTA section */}
+                              <div className="space-y-3 pt-4">
+                                <div className="inline-flex items-center justify-center w-full px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transform group-hover:scale-105 transition-all">
+                                  <FileText className="h-4 w-4 mr-2" />
+                                  <span>Submit Paper</span>
+                                  <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                                </div>
+
+                                {/* Bottom text */}
+                                <p className="text-xs text-gray-600 text-center font-medium">
+                                  Free • Quick Review • Community Impact
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        {/* Spotlight Article - Takes up 8 columns on large screens */}
+                        <div className="lg:col-span-8 animate-[fadeIn_0.6s_ease-in]">
+                          <div 
+                            className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 hover:border-amber-300 hover:shadow-3xl transition-all duration-500 cursor-pointer group overflow-hidden h-full min-h-[320px]"
+                            onClick={() => handleArticleClick(spotlightArticle)}
+                          >
                           {/* Animated background decorations */}
                           <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-amber-300/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
                           <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-orange-300/20 to-transparent rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
@@ -1281,8 +1383,8 @@ function App() {
                           {/* Glowing border effect */}
                           <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-sm"></div>
                           
-                          {/* Top right corner badge */}
-                          <div className="absolute top-6 right-6">
+                          {/* Top right corner badge - hidden on mobile */}
+                          <div className="hidden sm:block absolute top-6 right-6">
                             <div className="bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-xl px-4 py-2 shadow-lg transform group-hover:scale-110 transition-transform duration-300">
                               <div className="text-center">
                                 <div className="text-2xl font-bold leading-none mb-0.5">#1</div>
@@ -1292,44 +1394,44 @@ function App() {
                           </div>
                           
                           {/* Content area */}
-                          <div className="relative h-full flex flex-col p-6 sm:p-8">
+                          <div className="relative h-full flex flex-col p-4 sm:p-6 lg:p-8">
                             {/* Top section - badges with extra spacing */}
-                            <div className="flex items-center space-x-2 mb-6 pt-2">
-                              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md">
+                            <div className="flex items-center space-x-2 mb-3 sm:mb-6 pt-1 sm:pt-2">
+                              <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md">
                                 ⭐ SPOTLIGHT
                               </span>
-                              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-white/80 text-gray-800 border border-amber-200">
+                              <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold bg-white/80 text-gray-800 border border-amber-200 truncate max-w-[120px] sm:max-w-none">
                                 {spotlightArticle.category}
                               </span>
                             </div>
                             
                             {/* Middle section - title and description with better spacing */}
-                            <div className="flex-1 mb-6 mt-2">
-                              <h4 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-5 leading-tight group-hover:text-amber-700 transition-colors line-clamp-2">
+                            <div className="flex-1 mb-4 sm:mb-6 mt-1 sm:mt-2">
+                              <h4 className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 sm:mb-5 leading-tight group-hover:text-amber-700 transition-colors sm:line-clamp-2">
                                 {spotlightArticle.title}
                               </h4>
                               
-                              <p className="text-gray-700 text-base leading-relaxed line-clamp-3">
+                              <p className="text-gray-700 text-sm sm:text-base leading-relaxed line-clamp-3 sm:line-clamp-3">
                                 {spotlightArticle.shortDescription}
                               </p>
                             </div>
                             
                             {/* Bottom section - metadata and CTA */}
-                            <div className="space-y-3">
-                              <div className="flex items-center text-sm text-gray-600">
-                                <User className="h-4 w-4 mr-2 flex-shrink-0" />
-                                <span className="truncate">{spotlightArticle.authors.split(',')[0]}{spotlightArticle.authors.split(',').length > 1 ? ' et al.' : ''}</span>
-                                <span className="mx-2">•</span>
-                                <span className="flex-shrink-0">{spotlightArticle.publishedDate}</span>
+                            <div className="space-y-2 sm:space-y-3">
+                              <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                                <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
+                                <span className="truncate text-xs sm:text-sm">{spotlightArticle.authors.split(',')[0]}{spotlightArticle.authors.split(',').length > 1 ? ' et al.' : ''}</span>
+                                <span className="mx-1 sm:mx-2 hidden xs:inline">•</span>
+                                <span className="flex-shrink-0 text-xs sm:text-sm hidden xs:inline">{spotlightArticle.publishedDate}</span>
                               </div>
                               
-                              <div className="flex items-center justify-between pt-2">
-                                <div className="text-xs text-amber-700 font-medium bg-amber-50 px-3 py-1.5 rounded-lg">
-                                  📖 Featured Research
+                              <div className="flex items-center justify-between pt-1 sm:pt-2 gap-2">
+                                <div className="text-[10px] sm:text-xs text-amber-700 font-medium bg-amber-50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg whitespace-nowrap">
+                                  📖 Featured
                                 </div>
-                                <div className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transform group-hover:scale-105 transition-all">
+                                <div className="inline-flex items-center px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-lg transform group-hover:scale-105 transition-all whitespace-nowrap">
                                   <span>Read Now</span>
-                                  <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                                  <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 sm:ml-2 group-hover:translate-x-1 transition-transform" />
                                 </div>
                               </div>
                             </div>
@@ -1390,14 +1492,15 @@ function App() {
                           </div>
                         </div>
                       </div>
-                      
-                    </div>
+                      </>
+                    )}
+                    
                   </div>
                 </div>
-              )}
+              </div>
 
               {/* Side-by-side CTA and Ready to Explore Sections */}
-              <div className="mb-12 sm:mb-16">
+              <div className="mb-8 sm:mb-12">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     
@@ -1515,7 +1618,7 @@ function App() {
               </div>
 
                {/* Democratizing Discovery Section */}
-               <div className="mb-12 sm:mb-16">
+               <div className="mb-8 sm:mb-12">
                  <div className="mx-auto max-w-6xl px-4 sm:px-6">
                    <div className="relative bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-lg border border-gray-100 p-8 sm:p-12 overflow-hidden">
                      {/* Background decoration */}
