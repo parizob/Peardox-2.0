@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Upload, FileText, CheckCircle, AlertCircle, Loader2, UserPlus, Lock } from 'lucide-react';
+import { ArrowLeft, Upload, FileText, CheckCircle, AlertCircle, Loader2, UserPlus, Lock, X, Plus, User } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AccountModal from '../components/AccountModal';
 import SavedArticles from '../components/SavedArticles';
 import { useUser } from '../contexts/UserContext';
+import { supabase } from '../lib/supabase';
 
 const Submit = () => {
   const navigate = useNavigate();
+  const categoryDropdownRef = useRef(null);
   const { 
     user, 
     userSkillLevel, 
@@ -26,10 +28,50 @@ const Submit = () => {
     description: '',
     file: null
   });
+  const [authors, setAuthors] = useState(['']); // Array of author names
+  const [selectedCategories, setSelectedCategories] = useState([]); // Array of selected category names
+  const [availableCategories, setAvailableCategories] = useState([]); // Categories from DB
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [fileName, setFileName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Fetch categories from database
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('v_arxiv_categories')
+          .select('category_name')
+          .order('category_name');
+        
+        if (error) throw error;
+        
+        // Remove duplicates and filter out null values
+        const uniqueCategories = [...new Set(data.map(c => c.category_name).filter(Boolean))];
+        setAvailableCategories(uniqueCategories);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Close category dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(event.target)) {
+        setIsCategoryDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -66,6 +108,41 @@ const Submit = () => {
     }
   };
 
+  // Author management functions
+  const handleAuthorChange = (index, value) => {
+    const newAuthors = [...authors];
+    newAuthors[index] = value;
+    setAuthors(newAuthors);
+  };
+
+  const addAuthor = () => {
+    if (authors.length < 20) {
+      setAuthors([...authors, '']);
+    }
+  };
+
+  const removeAuthor = (index) => {
+    if (authors.length > 1) {
+      const newAuthors = authors.filter((_, i) => i !== index);
+      setAuthors(newAuthors);
+    }
+  };
+
+  // Category management functions
+  const toggleCategory = (category) => {
+    if (selectedCategories.includes(category)) {
+      setSelectedCategories(selectedCategories.filter(c => c !== category));
+    } else {
+      if (selectedCategories.length < 5) {
+        setSelectedCategories([...selectedCategories, category]);
+      }
+    }
+  };
+
+  const removeCategory = (category) => {
+    setSelectedCategories(selectedCategories.filter(c => c !== category));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -76,16 +153,64 @@ const Submit = () => {
       return;
     }
 
+    // Validate authors
+    const validAuthors = authors.filter(author => author.trim() !== '');
+    if (validAuthors.length === 0) {
+      setErrorMessage('Please add at least one author');
+      setSubmitStatus('error');
+      return;
+    }
+
+    // Validate categories
+    if (selectedCategories.length === 0) {
+      setErrorMessage('Please select at least one category');
+      setSubmitStatus('error');
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus(null);
 
     try {
-      // TODO: Replace with actual API call to submit paper
-      // For now, simulate an API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Step 1: Upload the PDF file to Supabase Storage
+      const fileExt = formData.file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = `papers/${fileName}`;
 
-      // Simulate successful submission
-      console.log('Form submitted:', formData);
+      const { error: uploadError } = await supabase.storage
+        .from('research-papers')
+        .upload(filePath, formData.file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw new Error(`Failed to upload file: ${uploadError.message}`);
+      }
+
+      // Step 2: Insert the paper record into the database
+      const { data: paperData, error: insertError } = await supabase
+        .from('pearadox_papers')
+        .insert({
+          title: formData.title,
+          description: formData.description,
+          authors: validAuthors,
+          categories: selectedCategories,
+          file_path: filePath,
+          file_name: formData.file.name,
+          file_size: formData.file.size,
+          submitted_by: user.id
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('Insert error:', insertError);
+        throw new Error(`Failed to save submission: ${insertError.message}`);
+      }
+
+      console.log('Paper submitted successfully:', paperData);
       
       setSubmitStatus('success');
       
@@ -96,13 +221,15 @@ const Submit = () => {
           description: '',
           file: null
         });
+        setAuthors(['']);
+        setSelectedCategories([]);
         setFileName('');
         navigate('/');
       }, 3000);
 
     } catch (error) {
       console.error('Submission error:', error);
-      setErrorMessage('Failed to submit. Please try again.');
+      setErrorMessage(error.message || 'Failed to submit. Please try again.');
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -110,11 +237,11 @@ const Submit = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50/30 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-blue-400/10 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-purple-400/10 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-green-400/10 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-green-400/10 to-transparent rounded-full blur-3xl"></div>
       </div>
 
       <Header 
@@ -145,7 +272,7 @@ const Submit = () => {
 
         {/* Header Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-600 to-green-600 rounded-2xl mb-6 shadow-lg">
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-6 shadow-lg" style={{ backgroundColor: '#1db954' }}>
             <FileText className="h-10 w-10 text-white" />
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
@@ -161,7 +288,7 @@ const Submit = () => {
           // Not Authenticated - Show Sign In Message
           <div className="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 sm:p-12">
             <div className="text-center max-w-2xl mx-auto">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-600 to-green-600 rounded-2xl mb-6">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-6" style={{ backgroundColor: '#1db954' }}>
                 <Lock className="h-10 w-10 text-white" />
               </div>
               
@@ -173,7 +300,7 @@ const Submit = () => {
                 To submit your research paper to Pearadox, you'll need to create a free account. This helps us maintain quality submissions and allows you to track your submission status.
               </p>
 
-              <div className="space-y-4 mb-8 text-left bg-blue-50 rounded-xl p-6">
+              <div className="space-y-4 mb-8 text-left bg-green-50 rounded-xl p-6">
                 <h3 className="font-semibold text-gray-900 mb-3">Benefits of creating an account:</h3>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
@@ -202,7 +329,10 @@ const Submit = () => {
                 </button>
                 <button
                   onClick={() => setIsAccountOpen(true)}
-                  className="group px-8 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all flex items-center justify-center"
+                  className="group px-8 py-3 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all flex items-center justify-center"
+                  style={{ backgroundColor: '#1db954' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
                 >
                   <UserPlus className="h-5 w-5 mr-2" />
                   <span>Create Free Account</span>
@@ -230,7 +360,7 @@ const Submit = () => {
                 value={formData.title}
                 onChange={handleInputChange}
                 placeholder="Enter the title of your research paper"
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all outline-none text-gray-900"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none text-gray-900"
                 required
               />
             </div>
@@ -247,11 +377,132 @@ const Submit = () => {
                 onChange={handleInputChange}
                 placeholder="Provide a brief description or abstract of your research (max 500 words)"
                 rows="6"
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all outline-none text-gray-900 resize-none"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none text-gray-900 resize-none"
                 required
               />
               <p className="text-sm text-gray-500 mt-2">
                 {formData.description.split(/\s+/).filter(word => word.length > 0).length} / 500 words
+              </p>
+            </div>
+
+            {/* Authors Section */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Authors * <span className="text-sm font-normal text-gray-500">(Up to 20)</span>
+              </label>
+              <div className="space-y-3">
+                {authors.map((author, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <User className="h-5 w-5 text-gray-400 flex-shrink-0" />
+                    <input
+                      type="text"
+                      value={author}
+                      onChange={(e) => handleAuthorChange(index, e.target.value)}
+                      placeholder={`Author ${index + 1} name`}
+                      className="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none text-gray-900"
+                      required={index === 0}
+                    />
+                    {authors.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeAuthor(index)}
+                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Remove author"
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                {authors.length < 20 && (
+                  <button
+                    type="button"
+                    onClick={addAuthor}
+                    className="flex items-center gap-2 px-4 py-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors font-medium"
+                  >
+                    <Plus className="h-5 w-5" />
+                    <span>Add Another Author</span>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Categories Section */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Categories * <span className="text-sm font-normal text-gray-500">(Select 1-5)</span>
+              </label>
+              
+              {/* Selected Categories */}
+              {selectedCategories.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {selectedCategories.map((category) => (
+                    <span
+                      key={category}
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-green-100 text-green-800 rounded-lg text-sm font-medium"
+                    >
+                      {category}
+                      <button
+                        type="button"
+                        onClick={() => removeCategory(category)}
+                        className="hover:bg-green-200 rounded-full p-0.5 transition-colors"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Category Dropdown */}
+              <div className="relative" ref={categoryDropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none text-left flex items-center justify-between bg-white"
+                  disabled={selectedCategories.length >= 5}
+                >
+                  <span className={selectedCategories.length >= 5 ? 'text-gray-400' : 'text-gray-700'}>
+                    {selectedCategories.length >= 5 ? 'Maximum 5 categories selected' : 'Select categories...'}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    {selectedCategories.length}/5 selected
+                  </span>
+                </button>
+
+                {isCategoryDropdownOpen && selectedCategories.length < 5 && (
+                  <div className="absolute z-10 w-full mt-2 bg-white border-2 border-gray-200 rounded-xl shadow-xl max-h-64 overflow-y-auto">
+                    {availableCategories.map((category) => (
+                      <button
+                        key={category}
+                        type="button"
+                        onClick={() => {
+                          toggleCategory(category);
+                          if (selectedCategories.length >= 4) {
+                            setIsCategoryDropdownOpen(false);
+                          }
+                        }}
+                        disabled={selectedCategories.includes(category)}
+                        className={`w-full px-4 py-3 text-left hover:bg-green-50 transition-colors border-b border-gray-100 last:border-b-0 ${
+                          selectedCategories.includes(category)
+                            ? 'bg-green-50 text-green-700 cursor-not-allowed'
+                            : 'text-gray-900'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium">{category}</span>
+                          {selectedCategories.includes(category) && (
+                            <CheckCircle className="h-4 w-4 text-green-600" />
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              <p className="text-xs text-gray-500 mt-2">
+                Select the research categories that best describe your paper
               </p>
             </div>
 
@@ -272,16 +523,16 @@ const Submit = () => {
                 />
                 <label
                   htmlFor="file"
-                  className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-indigo-500 hover:bg-indigo-50/50 transition-all group"
+                  className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-green-500 hover:bg-green-50/50 transition-all group"
                 >
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="h-12 w-12 text-gray-400 group-hover:text-indigo-500 mb-3 transition-colors" />
+                    <Upload className="h-12 w-12 text-gray-400 group-hover:text-green-600 mb-3 transition-colors" />
                     <p className="mb-2 text-sm text-gray-700">
                       <span className="font-semibold">Click to upload</span> or drag and drop
                     </p>
                     <p className="text-xs text-gray-500">PDF (MAX. 25MB)</p>
                     {fileName && (
-                      <p className="mt-3 text-sm text-indigo-600 font-medium flex items-center">
+                      <p className="mt-3 text-sm text-green-600 font-medium flex items-center">
                         <CheckCircle className="h-4 w-4 mr-1" />
                         {fileName}
                       </p>
@@ -326,7 +577,10 @@ const Submit = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 px-6 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
+                className="flex-1 px-6 py-4 rounded-xl text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center"
+                style={{ backgroundColor: isSubmitting ? undefined : '#1db954' }}
+                onMouseEnter={(e) => !isSubmitting && (e.currentTarget.style.backgroundColor = '#16a14a')}
+                onMouseLeave={(e) => !isSubmitting && (e.currentTarget.style.backgroundColor = '#1db954')}
               >
                 {isSubmitting ? (
                   <>
@@ -344,9 +598,9 @@ const Submit = () => {
           </form>
 
           {/* Info Box */}
-          <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-xl">
-            <h4 className="font-semibold text-blue-900 mb-2">Submission Guidelines</h4>
-            <ul className="space-y-2 text-sm text-blue-800">
+          <div className="mt-8 p-6 bg-green-50 border border-green-200 rounded-xl">
+            <h4 className="font-semibold text-green-900 mb-2">Submission Guidelines</h4>
+            <ul className="space-y-2 text-sm text-green-800">
               <li className="flex items-start">
                 <span className="mr-2">•</span>
                 <span>Papers should be in PDF format and not exceed 25MB</span>
