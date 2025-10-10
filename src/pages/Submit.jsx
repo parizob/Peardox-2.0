@@ -8,9 +8,12 @@ import SavedArticles from '../components/SavedArticles';
 import { useUser } from '../contexts/UserContext';
 import { supabase } from '../lib/supabase';
 
+const MINIMUM_LOADING_TIME = 5000; // 5 seconds in milliseconds
+
 const Submit = () => {
   const navigate = useNavigate();
   const categoryDropdownRef = useRef(null);
+  const loadingContainerRef = useRef(null);
   const { 
     user, 
     userSkillLevel, 
@@ -171,7 +174,19 @@ const Submit = () => {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
+    // Scroll to the loading animation
+    setTimeout(() => {
+      if (loadingContainerRef.current) {
+        loadingContainerRef.current.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      }
+    }, 100);
+
     try {
+      const startTime = Date.now();
+
       // Step 1: Upload the PDF file to Supabase Storage
       const fileExt = formData.file.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
@@ -211,20 +226,19 @@ const Submit = () => {
       }
 
       console.log('Paper submitted successfully:', paperData);
+
+      // Ensure minimum loading time for the exciting animation
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, MINIMUM_LOADING_TIME - elapsedTime);
+      
+      await new Promise(resolve => setTimeout(resolve, remainingTime));
       
       setSubmitStatus('success');
       
-      // Reset form after 3 seconds and redirect
+      // Redirect after 3 seconds and scroll to top
       setTimeout(() => {
-        setFormData({
-          title: '',
-          description: '',
-          file: null
-        });
-        setAuthors(['']);
-        setSelectedCategories([]);
-        setFileName('');
         navigate('/');
+        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
       }, 3000);
 
     } catch (error) {
@@ -267,7 +281,7 @@ const Submit = () => {
           className="flex items-center text-gray-600 hover:text-gray-900 mb-8 transition-colors group"
         >
           <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
-          <span className="font-medium">Back to Home</span>
+          <span className="font-medium">Back to Research Hub</span>
         </button>
 
         {/* Header Section */}
@@ -345,8 +359,126 @@ const Submit = () => {
             </div>
           </div>
         ) : (
-          // Authenticated - Show Form
+          // Authenticated - Show Form or Loading State
           <div className="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 sm:p-12">
+          {submitStatus === 'success' ? (
+            // Success State - Celebration
+            <div ref={loadingContainerRef} className="flex flex-col items-center justify-center py-20">
+              {/* Success Animation */}
+              <div className="relative w-48 h-48 mb-8">
+                {/* Checkmark Circle */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-green-600 rounded-full animate-ping opacity-75"></div>
+                    <div className="relative bg-gradient-to-r from-green-500 to-green-700 rounded-full p-8 shadow-2xl">
+                      <CheckCircle className="h-20 w-20 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Success Messages */}
+              <div className="text-center space-y-4 max-w-md">
+                <h3 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent">
+                  Successfully Uploaded! 🎉
+                </h3>
+                
+                <div className="space-y-3 pt-4">
+                  <p className="text-lg text-gray-700 font-medium">
+                    Your research has been submitted for review
+                  </p>
+                  <p className="text-base text-gray-600">
+                    We'll notify you once it's been processed and published
+                  </p>
+                </div>
+
+                {/* Returning message with animated dots */}
+                <div className="pt-8 flex items-center justify-center space-x-2">
+                  <Loader2 className="h-5 w-5 text-green-600 animate-spin" />
+                  <p className="text-sm text-gray-600 font-medium">
+                    Returning to Research Hub
+                  </p>
+                  <div className="flex space-x-1">
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                  </div>
+                </div>
+
+                <p className="text-xs text-gray-500 pt-4 italic">
+                  Thank you for contributing to the AI research community! 🚀
+                </p>
+              </div>
+            </div>
+          ) : isSubmitting ? (
+            // Loading State - Exciting Animation
+            <div ref={loadingContainerRef} className="flex flex-col items-center justify-center py-20">
+              {/* Animated Circle with Progress */}
+              <div className="relative w-48 h-48 mb-8">
+                {/* Outer spinning ring */}
+                <svg className="w-48 h-48 transform -rotate-90">
+                  <circle
+                    cx="96"
+                    cy="96"
+                    r="88"
+                    stroke="currentColor"
+                    strokeWidth="8"
+                    fill="none"
+                    className="text-green-100"
+                  />
+                  <circle
+                    cx="96"
+                    cy="96"
+                    r="88"
+                    stroke="currentColor"
+                    strokeWidth="8"
+                    fill="none"
+                    strokeLinecap="round"
+                    className="text-green-500 animate-[spin_3s_ease-in-out_infinite]"
+                    strokeDasharray="554"
+                    strokeDashoffset="138"
+                  />
+                </svg>
+                
+                {/* Center icon */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-green-600 rounded-full animate-ping opacity-75"></div>
+                    <div className="relative bg-gradient-to-r from-green-500 to-green-700 rounded-full p-6 shadow-2xl">
+                      <Upload className="h-12 w-12 text-white animate-bounce" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Exciting Messages */}
+              <div className="text-center space-y-4 max-w-md">
+                <h3 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent animate-pulse">
+                  Submitting Your Research
+                </h3>
+                
+                <div className="space-y-2">
+                  <p className="text-lg text-gray-700 font-medium animate-[fadeIn_0.5s_ease-in]">
+                    🚀 Uploading your groundbreaking work...
+                  </p>
+                  <p className="text-sm text-gray-600 animate-[fadeIn_0.8s_ease-in]">
+                    Your contribution will help advance AI knowledge
+                  </p>
+                </div>
+
+                {/* Progress indicators */}
+                <div className="flex justify-center space-x-2 pt-4">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                </div>
+
+                <p className="text-xs text-gray-500 pt-4 italic">
+                  "Every great discovery begins with a single submission"
+                </p>
+              </div>
+            </div>
+          ) : (
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Title Input */}
             <div>
@@ -596,8 +728,10 @@ const Submit = () => {
               </button>
             </div>
           </form>
+          )}
 
-          {/* Info Box */}
+          {/* Info Box - Always visible when not submitting */}
+          {!isSubmitting && (
           <div className="mt-8 p-6 bg-green-50 border border-green-200 rounded-xl">
             <h4 className="font-semibold text-green-900 mb-2">Submission Guidelines</h4>
             <ul className="space-y-2 text-sm text-green-800">
@@ -619,7 +753,8 @@ const Submit = () => {
               </li>
             </ul>
           </div>
-        </div>
+          )}
+          </div>
         )}
       </main>
 
