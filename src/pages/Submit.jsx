@@ -4,12 +4,23 @@ import { ArrowLeft, Upload, FileText, CheckCircle, AlertCircle, Loader2, UserPlu
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import AccountModal from '../components/AccountModal';
+import SavedArticles from '../components/SavedArticles';
 import { useUser } from '../contexts/UserContext';
 
 const Submit = () => {
   const navigate = useNavigate();
-  const { user, userSkillLevel, handleSkillLevelChange, handleResearchInterestsChange } = useUser();
+  const { 
+    user, 
+    userSkillLevel, 
+    handleSkillLevelChange, 
+    handleResearchInterestsChange,
+    savedArticlesFromDB,
+    isLoadingSavedArticles,
+    favorites,
+    handleToggleFavorite
+  } = useUser();
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -112,9 +123,9 @@ const Submit = () => {
         selectedCategory=""
         onCategoryChange={() => {}}
         categories={[]}
-        onShowSavedArticles={() => {}}
+        onShowSavedArticles={() => setIsSavedArticlesOpen(true)}
         onShowAccount={() => setIsAccountOpen(true)}
-        savedCount={0}
+        savedCount={savedArticlesFromDB.length}
         user={user}
         userSkillLevel={userSkillLevel || "Beginner"}
       />
@@ -364,6 +375,19 @@ const Submit = () => {
         userSkillLevel={userSkillLevel}
         onSkillLevelChange={handleSkillLevelChange}
         onResearchInterestsChange={handleResearchInterestsChange}
+      />
+
+      <SavedArticles
+        isOpen={isSavedArticlesOpen}
+        onClose={() => setIsSavedArticlesOpen(false)}
+        savedArticles={savedArticlesFromDB}
+        onArticleClick={(article) => {
+          // Navigate to home with article modal
+          navigate(`/article/${article.arxivId}-${article.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-')}`);
+        }}
+        onToggleFavorite={handleToggleFavorite}
+        isLoading={isLoadingSavedArticles}
+        user={user}
       />
 
       <Footer onContactClick={() => {}} />
