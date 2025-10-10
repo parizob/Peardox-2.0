@@ -5,6 +5,7 @@ import App from './App';
 import AboutUs from './pages/AboutUs';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import Submit from './pages/Submit';
 
 const AppRouter = () => {
   return (
@@ -16,6 +17,7 @@ const AppRouter = () => {
           <Route path="/aboutus" element={<AboutUs />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="/submit" element={<Submit />} />
         </Routes>
       </UserProvider>
     </Router>

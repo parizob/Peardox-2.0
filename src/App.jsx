@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle, Sparkles } from 'lucide-react';
+import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle, Sparkles, Upload } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
@@ -235,6 +236,7 @@ function generateSlug(title, arxivId) {
 };
 
 function App() {
+  const navigate = useNavigate();
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -1260,67 +1262,135 @@ function App() {
                 </p>
               </div>
 
-              {/* Research Of The Day Spotlight */}
+              {/* Research Of The Day Spotlight with Submit Card */}
               {spotlightArticle && (
                 <div id="spotlight-section" className="mb-12 sm:mb-16">
                   <div className="mx-auto max-w-6xl px-4 sm:px-6">
-                    <div 
-                      className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 hover:border-amber-300 p-6 sm:p-8 hover:shadow-3xl transition-all duration-500 cursor-pointer group overflow-hidden"
-                      onClick={() => handleArticleClick(spotlightArticle)}
-                    >
-                      {/* Animated background decorations */}
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-amber-300/20 to-transparent rounded-full blur-2xl animate-pulse"></div>
-                      <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-orange-300/20 to-transparent rounded-full blur-xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
                       
-                      {/* Glowing border effect */}
-                      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-sm"></div>
-                      
-                      {/* Content area */}
-                      <div className="relative flex flex-col lg:flex-row lg:items-center lg:space-x-8">
-                        <div className="flex-1">
-                          <div className="flex items-center space-x-3 mb-4">
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r from-amber-400 to-orange-400 text-white shadow-lg animate-pulse">
-                              ⭐ Spotlight
-                            </span>
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                              {spotlightArticle.category}
-                            </span>
-                          </div>
+                      {/* Spotlight Article - Takes up 8 columns on large screens */}
+                      <div className="lg:col-span-8">
+                        <div 
+                          className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 hover:border-amber-300 hover:shadow-3xl transition-all duration-500 cursor-pointer group overflow-hidden h-full min-h-[320px]"
+                          onClick={() => handleArticleClick(spotlightArticle)}
+                        >
+                          {/* Animated background decorations */}
+                          <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-amber-300/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
+                          <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-orange-300/20 to-transparent rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
                           
-                          <h4 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 group-hover:text-amber-700 transition-colors">
-                            {spotlightArticle.title}
-                          </h4>
+                          {/* Glowing border effect */}
+                          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-sm"></div>
                           
-                          <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-4">
-                            {spotlightArticle.shortDescription}
-                          </p>
-                          
-                          <div className="text-sm text-gray-500">
-                            {spotlightArticle.authors} • {spotlightArticle.publishedDate}
-                          </div>
-                        </div>
-                        
-                        <div className="lg:w-32 lg:flex-shrink-0 mt-6 lg:mt-0">
-                          <div className="w-full h-32 lg:h-32 bg-gradient-to-br from-amber-200 to-orange-200 rounded-xl flex items-center justify-center shadow-inner">
-                            <div className="text-center">
-                              <div className="text-2xl lg:text-3xl font-bold text-amber-700 mb-1">
-                                #1
-                              </div>
-                              <div className="text-xs text-amber-600 font-medium">
-                                TRENDING
+                          {/* Top right corner badge */}
+                          <div className="absolute top-6 right-6">
+                            <div className="bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-xl px-4 py-2 shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+                              <div className="text-center">
+                                <div className="text-2xl font-bold leading-none mb-0.5">#1</div>
+                                <div className="text-[10px] font-semibold uppercase tracking-wide">Trending</div>
                               </div>
                             </div>
                           </div>
                           
-                          {/* Read Full Paper button moved below trending */}
-                          <div className="mt-3 flex justify-center">
-                            <div className="inline-flex items-center px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-700 rounded-lg font-medium text-xs transition-colors">
-                              <span className="mr-1">Jump Right In</span>
-                              <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+                          {/* Content area */}
+                          <div className="relative h-full flex flex-col p-6 sm:p-8">
+                            {/* Top section - badges with extra spacing */}
+                            <div className="flex items-center space-x-2 mb-6 pt-2">
+                              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md">
+                                ⭐ SPOTLIGHT
+                              </span>
+                              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-white/80 text-gray-800 border border-amber-200">
+                                {spotlightArticle.category}
+                              </span>
+                            </div>
+                            
+                            {/* Middle section - title and description with better spacing */}
+                            <div className="flex-1 mb-6 mt-2">
+                              <h4 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-5 leading-tight group-hover:text-amber-700 transition-colors line-clamp-2">
+                                {spotlightArticle.title}
+                              </h4>
+                              
+                              <p className="text-gray-700 text-base leading-relaxed line-clamp-3">
+                                {spotlightArticle.shortDescription}
+                              </p>
+                            </div>
+                            
+                            {/* Bottom section - metadata and CTA */}
+                            <div className="space-y-3">
+                              <div className="flex items-center text-sm text-gray-600">
+                                <User className="h-4 w-4 mr-2 flex-shrink-0" />
+                                <span className="truncate">{spotlightArticle.authors.split(',')[0]}{spotlightArticle.authors.split(',').length > 1 ? ' et al.' : ''}</span>
+                                <span className="mx-2">•</span>
+                                <span className="flex-shrink-0">{spotlightArticle.publishedDate}</span>
+                              </div>
+                              
+                              <div className="flex items-center justify-between pt-2">
+                                <div className="text-xs text-amber-700 font-medium bg-amber-50 px-3 py-1.5 rounded-lg">
+                                  📖 Featured Research
+                                </div>
+                                <div className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transform group-hover:scale-105 transition-all">
+                                  <span>Read Now</span>
+                                  <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
+
+                      {/* Submit Paper Card - Takes up 4 columns on large screens */}
+                      <div className="lg:col-span-4">
+                        <div 
+                          className="relative bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-3xl shadow-xl border-2 border-indigo-200 hover:border-indigo-300 hover:shadow-2xl transition-all duration-500 cursor-pointer group overflow-hidden h-full min-h-[320px]"
+                          onClick={() => navigate('/submit')}
+                        >
+                          {/* Decorative elements */}
+                          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-indigo-300/20 to-transparent rounded-full blur-2xl"></div>
+                          <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-purple-300/20 to-transparent rounded-full blur-xl"></div>
+                          
+                          {/* Glowing border effect */}
+                          <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-sm"></div>
+                          
+                          {/* Content with flexbox for better spacing */}
+                          <div className="relative h-full flex flex-col justify-between p-6 sm:p-8">
+                            <div className="flex-1 flex flex-col items-center justify-center text-center space-y-4">
+                              {/* Icon */}
+                              <div className="p-5 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                <Upload className="h-10 w-10 text-white" />
+                              </div>
+
+                              {/* Badge */}
+                              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-md">
+                                ✨ SHARE YOUR WORK
+                              </span>
+
+                              {/* Title */}
+                              <h4 className="text-xl sm:text-2xl font-bold text-gray-900 group-hover:text-indigo-700 transition-colors px-2">
+                                Submit Your Research
+                              </h4>
+
+                              {/* Description */}
+                              <p className="text-gray-700 text-sm leading-relaxed px-2">
+                                Have groundbreaking research? Share it with our community and help democratize AI knowledge.
+                              </p>
+                            </div>
+
+                            {/* Bottom CTA section */}
+                            <div className="space-y-3 pt-4">
+                              <div className="inline-flex items-center justify-center w-full px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold text-sm shadow-md hover:shadow-lg transform group-hover:scale-105 transition-all">
+                                <FileText className="h-4 w-4 mr-2" />
+                                <span>Submit Paper</span>
+                                <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                              </div>
+
+                              {/* Bottom text */}
+                              <p className="text-xs text-gray-600 text-center font-medium">
+                                Free • Quick Review • Community Impact
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                     </div>
                   </div>
                 </div>
