@@ -903,7 +903,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <Header 
         searchTerm=""
         onSearchChange={() => {}}
@@ -931,12 +931,12 @@ The knowledge exists. The tools are available. The only question is: are you rea
               <div className="max-w-5xl mx-auto">
                 {/* Main Header */}
                 <div className="text-center mb-8">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-green-600 rounded-2xl mb-6 shadow-lg">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 shadow-lg" style={{ backgroundColor: '#1db954' }}>
                     <BookOpen className="h-8 w-8 text-white" />
                   </div>
                   
                   <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
-                    <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Pearadox</span>
+                    <span className="text-gray-900">Pearadox</span>
                     <span className="text-gray-900"> Blog</span>
                   </h1>
                   
@@ -947,21 +947,21 @@ The knowledge exists. The tools are available. The only question is: are you rea
 
                 {/* Category Pills */}
                 <div className="flex flex-wrap items-center justify-center gap-3">
-                  <div className="group flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100 hover:shadow-md hover:border-blue-200 transition-all duration-300 cursor-pointer">
-                    <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full mr-3 group-hover:scale-110 transition-transform"></div>
-                    <Brain className="h-4 w-4 text-blue-600 mr-2" />
+                  <div className="group flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300 cursor-pointer">
+                    <div className="w-2 h-2 rounded-full mr-3 group-hover:scale-110 transition-transform" style={{ backgroundColor: '#1db954' }}></div>
+                    <Brain className="h-4 w-4 mr-2" style={{ color: '#1db954' }} />
                     <span className="text-sm font-medium text-gray-700">Research Insights</span>
                   </div>
                   
-                  <div className="group flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100 hover:shadow-md hover:border-green-200 transition-all duration-300 cursor-pointer">
-                    <div className="w-2 h-2 bg-gradient-to-r from-green-500 to-green-600 rounded-full mr-3 group-hover:scale-110 transition-transform"></div>
-                    <Globe className="h-4 w-4 text-green-600 mr-2" />
+                  <div className="group flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300 cursor-pointer">
+                    <div className="w-2 h-2 rounded-full mr-3 group-hover:scale-110 transition-transform" style={{ backgroundColor: '#1db954' }}></div>
+                    <Globe className="h-4 w-4 mr-2" style={{ color: '#1db954' }} />
                     <span className="text-sm font-medium text-gray-700">Global Impact</span>
                   </div>
                   
-                  <div className="group flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100 hover:shadow-md hover:border-purple-200 transition-all duration-300 cursor-pointer">
-                    <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full mr-3 group-hover:scale-110 transition-transform"></div>
-                    <Users className="h-4 w-4 text-purple-600 mr-2" />
+                  <div className="group flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300 cursor-pointer">
+                    <div className="w-2 h-2 rounded-full mr-3 group-hover:scale-110 transition-transform" style={{ backgroundColor: '#1db954' }}></div>
+                    <Users className="h-4 w-4 mr-2" style={{ color: '#1db954' }} />
                     <span className="text-sm font-medium text-gray-700">Community Stories</span>
                   </div>
                 </div>
@@ -982,7 +982,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
                 <article key={post.id} className="mb-8 sm:mb-16 bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                   {/* Featured Badge */}
                   {post.featured && (
-                    <div className="bg-gradient-to-r from-blue-600 to-green-600 px-6 py-2">
+                    <div className="px-6 py-2" style={{ backgroundColor: '#1db954' }}>
                       <span className="text-white text-sm font-medium flex items-center">
                         <Zap className="h-4 w-4 mr-2" />
                         Featured Post
@@ -1028,7 +1028,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
                       {post.tags.map((tag, index) => (
                         <span 
                           key={index}
-                          className="px-2 sm:px-3 py-1 bg-blue-50 text-blue-700 text-xs sm:text-sm rounded-full font-medium"
+                          className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 text-xs sm:text-sm rounded-full font-medium"
                         >
                           {tag}
                         </span>
@@ -1040,7 +1040,10 @@ The knowledge exists. The tools are available. The only question is: are you rea
                   <div className="px-4 sm:px-8 pb-4 sm:pb-8">
                     <Link 
                       to={`/blog/${post.slug}`}
-                      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                      className="inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                      style={{ backgroundColor: '#1db954' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
                       onClick={async () => {
                         // Track blog post preview click
                         try {
@@ -1078,7 +1081,10 @@ The knowledge exists. The tools are available. The only question is: are you rea
       <div className="flex items-center justify-center mb-8">
                 <Link 
                   to="/"
-                  className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors group"
+                  className="inline-flex items-center transition-colors group"
+                  style={{ color: '#1db954' }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#16a14a'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = '#1db954'}
                   onClick={() => {
                     // Scroll to top when navigating to home page
                     setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);

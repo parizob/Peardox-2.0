@@ -157,14 +157,17 @@ const BlogPost = () => {
 
   // Return 404 if post not found
   if (!blogPost) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 flex items-center justify-center">
+        return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Post Not Found</h1>
           <p className="text-gray-600 mb-8">The blog post you're looking for doesn't exist.</p>
           <Link 
             to="/blog"
-            className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center px-6 py-3 text-white rounded-xl transition-colors"
+            style={{ backgroundColor: '#1db954' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
           >
             <ArrowLeft className="h-5 w-5 mr-2" />
             Back to Blog
@@ -175,7 +178,7 @@ const BlogPost = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <Header 
         searchTerm=""
         onSearchChange={() => {}}
@@ -196,7 +199,10 @@ const BlogPost = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-8">
           <Link 
             to="/blog"
-            className="inline-flex items-center text-blue-600 hover:text-blue-700 transition-colors mb-8"
+            className="inline-flex items-center transition-colors mb-8"
+            style={{ color: '#1db954' }}
+            onMouseEnter={(e) => e.currentTarget.style.color = '#16a14a'}
+            onMouseLeave={(e) => e.currentTarget.style.color = '#1db954'}
             onClick={() => {
               setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
             }}
@@ -216,7 +222,7 @@ const BlogPost = () => {
             {/* Article Header */}
             <header className="mb-12">
               {blogPost.featured && (
-                <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-green-600 text-white text-sm font-medium rounded-full mb-6">
+                <div className="inline-flex items-center px-4 py-2 text-white text-sm font-medium rounded-full mb-6" style={{ backgroundColor: '#1db954' }}>
                   <Zap className="h-4 w-4 mr-2" />
                   Featured Post
                 </div>
@@ -249,7 +255,7 @@ const BlogPost = () => {
                 {blogPost.tags.map((tag, index) => (
                   <span 
                     key={index}
-                    className="px-3 py-1 bg-blue-50 text-blue-700 text-sm rounded-full font-medium"
+                    className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full font-medium"
                   >
                     {tag}
                   </span>
@@ -525,7 +531,10 @@ const BlogPost = () => {
                 <div className="text-center pt-8">
                   <Link 
                     to="/"
-                    className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                    className="inline-flex items-center px-8 py-4 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                    style={{ backgroundColor: '#1db954' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
                     onClick={() => {
                       setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                     }}
@@ -822,7 +831,10 @@ const BlogPost = () => {
                   </p>
                   <Link 
                     to="/"
-                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:shadow-lg transition-all transform hover:scale-105 font-medium"
+                    className="inline-flex items-center px-6 py-3 text-white rounded-lg hover:shadow-lg transition-all transform hover:scale-105 font-medium"
+                    style={{ backgroundColor: '#1db954' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
                     onClick={() => {
                       setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                     }}
@@ -1026,7 +1038,10 @@ const BlogPost = () => {
                 </p>
                 <Link 
                   to="/"
-                  className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                  className="inline-flex items-center px-8 py-4 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                  style={{ backgroundColor: '#1db954' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
                   onClick={() => {
                     setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                   }}
@@ -1446,7 +1461,10 @@ const BlogPost = () => {
                   </p>
                   <Link 
                     to="/"
-                    className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                    className="inline-flex items-center px-6 py-3 text-white rounded-lg transition-colors font-medium"
+                    style={{ backgroundColor: '#1db954' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
                     onClick={() => {
                       setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                     }}

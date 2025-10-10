@@ -148,7 +148,7 @@ const AboutUs = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
       <Header 
         searchTerm=""
         onSearchChange={() => {}}
@@ -172,7 +172,10 @@ const AboutUs = () => {
               <div className="flex items-center justify-center mb-8">
                 <Link 
                   to="/"
-                  className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors group"
+                  className="inline-flex items-center transition-colors group"
+                  style={{ color: '#1db954' }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = '#16a14a'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = '#1db954'}
                 >
                   <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
                   Back to Research Hub
@@ -180,7 +183,7 @@ const AboutUs = () => {
               </div>
               
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                About <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Pearadox</span>
+                About <span className="text-gray-900">Pearadox</span>
               </h1>
               
               <p className="text-xl sm:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
@@ -198,7 +201,7 @@ const AboutUs = () => {
             >
               {stats.map((stat, index) => (
                 <div key={index} className="text-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-green-500 rounded-xl mb-4">
+                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4" style={{ backgroundColor: '#1db954' }}>
                     <stat.icon className="h-6 w-6 text-white" />
                   </div>
                   <div className="text-3xl font-bold text-gray-900 mb-2">{stat.number}</div>
@@ -210,7 +213,7 @@ const AboutUs = () => {
         </section>
 
         {/* Our Story Section */}
-        <section className="py-20 bg-gradient-to-r from-blue-50 to-green-50">
+        <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div 
@@ -247,7 +250,7 @@ const AboutUs = () => {
                 }`}
               >
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-green-400 rounded-3xl transform rotate-3"></div>
+                  <div className="absolute inset-0 rounded-3xl transform rotate-3" style={{ backgroundColor: '#1db954' }}></div>
                   <div className="relative bg-white rounded-3xl p-8 shadow-2xl">
                     <div className="flex items-center mb-6">
                       <div className="w-4 h-4 bg-red-400 rounded-full mr-2"></div>
@@ -256,12 +259,12 @@ const AboutUs = () => {
                     </div>
                     <div className="space-y-4">
                       <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                      <div className="h-4 bg-blue-200 rounded w-full"></div>
+                      <div className="h-4 bg-green-200 rounded w-full"></div>
                       <div className="h-4 bg-green-200 rounded w-2/3"></div>
-                      <div className="h-8 bg-gradient-to-r from-blue-100 to-green-100 rounded"></div>
+                      <div className="h-8 bg-green-100 rounded"></div>
                       <div className="flex space-x-2">
-                        <div className="h-6 w-6 bg-blue-400 rounded"></div>
-                        <div className="h-6 w-6 bg-green-400 rounded"></div>
+                        <div className="h-6 w-6 rounded" style={{ backgroundColor: '#1db954' }}></div>
+                        <div className="h-6 w-6 rounded" style={{ backgroundColor: '#16a14a' }}></div>
                         <div className="h-6 w-6 bg-purple-400 rounded"></div>
                       </div>
                     </div>
@@ -295,7 +298,7 @@ const AboutUs = () => {
                   }`}
                   style={{ transitionDelay: `${index * 150}ms` }}
                 >
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-green-500 rounded-2xl mb-6">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6" style={{ backgroundColor: '#1db954' }}>
                     <value.icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-4">{value.title}</h3>
@@ -334,7 +337,7 @@ const AboutUs = () => {
                   </div>
                   <div className="p-8">
                     <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
-                    <p className="text-blue-600 font-medium mb-4">{member.role}</p>
+                    <p className="font-medium mb-4" style={{ color: '#1db954' }}>{member.role}</p>
                     <p className="text-gray-600 leading-relaxed">{member.description}</p>
                   </div>
                 </div>
@@ -344,7 +347,7 @@ const AboutUs = () => {
         </section>
 
         {/* Impact Section */}
-        <section className="py-20 bg-gradient-to-r from-blue-600 to-green-600">
+        <section className="py-20" style={{ backgroundColor: '#1db954' }}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
             <div 
               data-animate
@@ -360,15 +363,15 @@ const AboutUs = () => {
               <div className="grid md:grid-cols-3 gap-8 mb-12">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
                   <div className="text-4xl font-bold text-white mb-2">10x</div>
-                  <div className="text-blue-100">Faster Research Discovery</div>
+                  <div className="text-green-100">Faster Research Discovery</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
                   <div className="text-4xl font-bold text-white mb-2">90%</div>
-                  <div className="text-blue-100">Reduction in Reading Time</div>
+                  <div className="text-green-100">Reduction in Reading Time</div>
                 </div>
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
                   <div className="text-4xl font-bold text-white mb-2">∞</div>
-                  <div className="text-blue-100">Learning Potential Unlocked</div>
+                  <div className="text-green-100">Learning Potential Unlocked</div>
                 </div>
               </div>
 
@@ -377,9 +380,18 @@ const AboutUs = () => {
                 we're not just sharing knowledge — we're accelerating human progress."
               </blockquote>
               
-              <Link 
+                <Link 
                 to="/"
-                className="inline-flex items-center px-8 py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="inline-flex items-center px-8 py-4 bg-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+                style={{ color: '#1db954' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#f0fdf4';
+                  e.currentTarget.style.color = '#16a14a';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'white';
+                  e.currentTarget.style.color = '#1db954';
+                }}
                 onClick={() => {
                   // Scroll to top when navigating to home page
                   setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
@@ -412,14 +424,25 @@ const AboutUs = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a 
                   href="mailto:pearadoxapp@gmail.com"
-                  className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                  className="inline-flex items-center px-8 py-4 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                  style={{ backgroundColor: '#1db954' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
                 >
                   Get in Touch
                   <ArrowRight className="h-5 w-5 ml-2" />
                 </a>
                 <Link 
                   to="/"
-                  className="inline-flex items-center px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-blue-500 hover:text-blue-600 transition-all duration-300"
+                  className="inline-flex items-center px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl transition-all duration-300"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = '#1db954';
+                    e.currentTarget.style.color = '#1db954';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = '';
+                    e.currentTarget.style.color = '';
+                  }}
                   onClick={() => {
                     // Scroll to top when navigating to home page
                     setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
