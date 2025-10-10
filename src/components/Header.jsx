@@ -20,7 +20,6 @@ const Header = ({
   const [scrollY, setScrollY] = useState(0);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
-  const [scrollTimeout, setScrollTimeout] = useState(null);
   
   const dropdownRef = useRef(null);
   const mobileDropdownRef = useRef(null);
@@ -50,28 +49,13 @@ const Header = ({
       } else if (scrollingUp && isScrollingDown) {
         setIsScrollingDown(false);
       }
-      
-      // Clear existing timeout
-      if (scrollTimeout) {
-        clearTimeout(scrollTimeout);
-      }
-      
-      // Set timeout to show search bar when user stops scrolling
-      const newTimeout = setTimeout(() => {
-        setIsScrollingDown(false);
-      }, 150); // Show search bar 150ms after user stops scrolling
-      
-      setScrollTimeout(newTimeout);
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeout) {
-        clearTimeout(scrollTimeout);
-      }
     };
-  }, [lastScrollY, isScrollingDown, scrollTimeout]);
+  }, [lastScrollY, isScrollingDown, isSearchExpanded, isCategoryDropdownOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
