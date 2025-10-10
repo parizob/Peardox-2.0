@@ -23,6 +23,7 @@ const Header = ({
   
   const dropdownRef = useRef(null);
   const mobileDropdownRef = useRef(null);
+  const mobileDropdownContentRef = useRef(null);
   const categorySearchRef = useRef(null);
 
   useEffect(() => {
@@ -61,8 +62,9 @@ const Header = ({
     const handleClickOutside = (event) => {
       const isOutsideDesktop = dropdownRef.current && !dropdownRef.current.contains(event.target);
       const isOutsideMobile = mobileDropdownRef.current && !mobileDropdownRef.current.contains(event.target);
+      const isOutsideMobileContent = mobileDropdownContentRef.current && !mobileDropdownContentRef.current.contains(event.target);
       
-      if (isOutsideDesktop && isOutsideMobile) {
+      if (isOutsideDesktop && isOutsideMobile && isOutsideMobileContent) {
         setIsCategoryDropdownOpen(false);
         setCategorySearchTerm('');
       }
@@ -453,7 +455,7 @@ const Header = ({
 
         {/* Mobile Dropdown - Outside overflow container */}
         {!isAboutPage && !isBlogPage && isCategoryDropdownOpen && (
-          <div className="md:hidden">
+          <div className="md:hidden" ref={mobileDropdownContentRef}>
             <div className="mx-4 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
               <div className="p-3 border-b border-gray-100">
                 <div className="relative">
