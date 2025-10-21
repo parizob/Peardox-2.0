@@ -108,45 +108,63 @@ const FieldQuiz = ({ onFieldSelect, selectedField, user, onSaveToProfile, isOpen
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
+      <div className="bg-gradient-to-br from-white via-gray-50 to-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-gray-200/50 relative">
+        {/* Decorative Elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl -z-10" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.1) 0%, rgba(22, 161, 74, 0.05) 100%)' }}></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full blur-3xl -z-10" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.08) 0%, rgba(22, 161, 74, 0.03) 100%)' }}></div>
+        
         {/* Modal Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-          <h2 className="text-2xl font-bold text-gray-900">Find Your Perfect Research Match</h2>
+        <div className="relative p-8 border-b border-gray-200/50 bg-gradient-to-r from-gray-50/50 to-white/50 backdrop-blur-sm">
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="absolute top-6 right-6 p-2 hover:bg-gray-200/50 rounded-full transition-all hover:rotate-90 duration-300"
           >
-            <X className="h-5 w-5 text-gray-500" />
+            <X className="h-5 w-5 text-gray-600" />
           </button>
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center px-4 py-1.5 rounded-full mb-4" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+              <span className="text-sm font-semibold" style={{ color: '#1db954' }}>
+                ✨ Personalized Research Discovery
+              </span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 leading-tight">
+              Find Your Perfect Research Match
+            </h2>
+            <p className="text-gray-600 text-lg">
+              Get AI-curated research recommendations tailored specifically to your field and interests
+            </p>
+          </div>
         </div>
 
         {/* Modal Content */}
-        <div className="p-6">
+        <div className="p-8">
           {/* Unauthenticated User Message */}
           {!user && (
-            <div className="mb-6 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl">
-              <div className="flex items-start space-x-3">
-                <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-white text-xs font-bold">🔒</span>
+            <div className="mb-8 p-6 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border-2 border-amber-200 rounded-2xl shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-300/20 rounded-full blur-2xl"></div>
+              <div className="relative flex items-start space-x-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg">
+                    <span className="text-white text-xl">🔒</span>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-amber-900 mb-1">
-                    Account Required for Personalization
+                <div className="flex-1">
+                  <h4 className="font-bold text-amber-900 mb-2 text-lg">
+                    Unlock Personalized Research
                   </h4>
-                  <p className="text-amber-800 text-sm leading-relaxed">
-                    You can preview different field categories below, but you'll need to create a free account to access this feature and save your personalized research preferences.
+                  <p className="text-amber-800 text-sm leading-relaxed mb-4">
+                    Preview different field categories below, or create a free account to save your preferences and get personalized AI research recommendations.
                   </p>
                   <button
                     onClick={() => {
                       onClose();
                       if (onOpenAccount) onOpenAccount();
                     }}
-                    className="mt-3 inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-blue-50 to-blue-100 text-blue-600 rounded-lg hover:from-blue-100 hover:to-blue-200 font-medium text-sm transition-all border border-blue-200 hover:border-blue-300 relative overflow-hidden group"
+                    className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold text-sm transition-all hover:shadow-lg hover:scale-105 transform relative overflow-hidden group"
                   >
-                    {/* Mini shimmer effect */}
-                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-                    <span className="relative z-10">Create Free Account</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <span className="relative z-10">Create Free Account →</span>
                   </button>
                 </div>
               </div>
@@ -154,20 +172,20 @@ const FieldQuiz = ({ onFieldSelect, selectedField, user, onSaveToProfile, isOpen
           )}
 
           {/* Quiz Header */}
-          <div className="text-center mb-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
-              What's your field?
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              Select Your Field
             </h3>
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 max-w-xl mx-auto">
               {user ? 
-                "Get personalized AI research recommendations tailored to your expertise" :
-                "Preview how categories would change for different fields"
+                "Choose your professional field to discover AI research that matters to you" :
+                "Explore how AI research categories align with different professional fields"
               }
             </p>
           </div>
 
           {/* Field Selection */}
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
             {fields.map((field) => {
               const Icon = field.icon;
               const isSelected = selectedField === field.id;
@@ -176,17 +194,64 @@ const FieldQuiz = ({ onFieldSelect, selectedField, user, onSaveToProfile, isOpen
                 <button
                   key={field.id}
                   onClick={() => handleFieldSelect(field.id)}
-                  className={`p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-md ${
-                    isSelected ? field.selectedColor : field.color
+                  className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
+                    isSelected 
+                      ? 'border-gray-300 bg-white shadow-xl scale-105' 
+                      : 'border-gray-200 bg-white/50 hover:border-gray-300'
                   }`}
                 >
-                  <div className="flex flex-col items-center space-y-2">
-                    <div className="p-2 rounded-lg bg-white shadow-sm">
-                      <Icon className="h-6 w-6" />
+                  {/* Animated Background Gradient */}
+                  <div className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+                    isSelected ? 'opacity-10' : ''
+                  }`}>
+                    <div className={`w-full h-full rounded-2xl ${
+                      field.id === 'medicine' ? 'bg-gradient-to-br from-red-200/30 to-pink-200/30' :
+                      field.id === 'finance' ? 'bg-gradient-to-br from-green-200/30 to-emerald-200/30' :
+                      field.id === 'education' ? 'bg-gradient-to-br from-blue-200/30 to-cyan-200/30' :
+                      field.id === 'tech' ? 'bg-gradient-to-br from-purple-200/30 to-indigo-200/30' :
+                      'bg-gradient-to-br from-amber-200/30 to-yellow-200/30'
+                    }`}></div>
+                  </div>
+                  
+                  <div className="relative flex flex-col items-center space-y-3">
+                    {/* Icon Container */}
+                    <div className={`p-3 rounded-xl transition-all duration-300 shadow-md ${
+                      isSelected 
+                        ? 'bg-gradient-to-br scale-110 shadow-lg' + (
+                          field.id === 'medicine' ? ' from-red-500 to-pink-500' :
+                          field.id === 'finance' ? ' from-green-500 to-emerald-500' :
+                          field.id === 'education' ? ' from-blue-500 to-cyan-500' :
+                          field.id === 'tech' ? ' from-purple-500 to-indigo-500' :
+                          ' from-amber-500 to-yellow-500'
+                        )
+                        : 'bg-gray-100 group-hover:bg-gradient-to-br' + (
+                          field.id === 'medicine' ? ' group-hover:from-red-500 group-hover:to-pink-500' :
+                          field.id === 'finance' ? ' group-hover:from-green-500 group-hover:to-emerald-500' :
+                          field.id === 'education' ? ' group-hover:from-blue-500 group-hover:to-cyan-500' :
+                          field.id === 'tech' ? ' group-hover:from-purple-500 group-hover:to-indigo-500' :
+                          ' group-hover:from-amber-500 group-hover:to-yellow-500'
+                        )
+                    }`}>
+                      <Icon className={`h-7 w-7 transition-colors ${
+                        isSelected ? 'text-white' : 'text-gray-600 group-hover:text-white'
+                      }`} />
                     </div>
-                    <span className="font-semibold text-sm sm:text-base">
+                    
+                    {/* Field Name */}
+                    <span className={`font-bold text-sm transition-colors ${
+                      isSelected ? 'text-gray-900' : 'text-gray-700 group-hover:text-gray-900'
+                    }`}>
                       {field.name}
                     </span>
+                    
+                    {/* Selected Indicator */}
+                    {isSelected && (
+                      <div className="absolute -top-2 -right-2">
+                        <div className="w-6 h-6 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                          <CheckCircle className="h-4 w-4 text-white" />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </button>
               );
@@ -195,78 +260,118 @@ const FieldQuiz = ({ onFieldSelect, selectedField, user, onSaveToProfile, isOpen
 
           {/* Recommendations Section */}
           {showRecommendations && selectedFieldData && (
-            <div className="mt-6 p-4 sm:p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
-              <div className="flex items-center mb-4">
-                <div className={`p-2 rounded-lg mr-3 ${selectedFieldData.color.split(' ')[0]} ${selectedFieldData.color.split(' ')[2]}`}>
-                  <selectedFieldData.icon className="h-5 w-5" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">
-                    Recommended for {selectedFieldData.name}
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    AI research categories most relevant to your field
-                  </p>
-                </div>
-              </div>
-
-              {/* Category Pills */}
-              <div className="flex flex-wrap gap-2 mb-4">
-                {selectedCategories.map((category, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium border border-blue-200"
-                  >
-                    {category}
-                  </span>
-                ))}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                {user ? (
-                  <button
-                    onClick={handleSaveCategories}
-                    disabled={isSaving}
-                    className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium text-sm"
-                  >
-                    {isSaving ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
-                        Saving...
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle className="h-4 w-4 mr-2" />
-                        Save to My Profile
-                      </>
-                    )}
-                  </button>
-                ) : (
-                  <div className="flex items-center text-sm text-amber-700 bg-amber-50 px-4 py-2 rounded-lg border border-amber-200">
-                    <span className="mr-2">👁️</span>
-                    Preview only - Create account to save changes
+            <div className="mt-8 p-8 bg-gradient-to-br from-white to-gray-50 rounded-3xl border-2 border-gray-200 shadow-xl relative overflow-hidden animate-fadeIn">
+              {/* Decorative gradient orbs */}
+              <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.15) 0%, rgba(22, 161, 74, 0.05) 100%)' }}></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full blur-3xl" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.12) 0%, rgba(22, 161, 74, 0.03) 100%)' }}></div>
+              
+              <div className="relative">
+                {/* Header */}
+                <div className="flex items-start space-x-4 mb-6">
+                  <div className={`flex-shrink-0 p-4 rounded-2xl shadow-lg bg-gradient-to-br ${
+                    selectedFieldData.id === 'medicine' ? 'from-red-500 to-pink-500' :
+                    selectedFieldData.id === 'finance' ? 'from-green-500 to-emerald-500' :
+                    selectedFieldData.id === 'education' ? 'from-blue-500 to-cyan-500' :
+                    selectedFieldData.id === 'tech' ? 'from-purple-500 to-indigo-500' :
+                    'from-amber-500 to-yellow-500'
+                  }`}>
+                    <selectedFieldData.icon className="h-8 w-8 text-white" />
                   </div>
-                )}
-                
-                <button
-                  onClick={() => {
-                    setShowRecommendations(false);
-                    onFieldSelect(null);
-                    setSelectedCategories([]);
-                  }}
-                  className="flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm"
-                >
-                  Choose Different Field
-                </button>
+                  <div className="flex-1">
+                    <h4 className="text-2xl font-bold text-gray-900 mb-2">
+                      Curated for {selectedFieldData.name} Professionals
+                    </h4>
+                    <p className="text-gray-600">
+                      AI research categories hand-picked to accelerate your work and expand your expertise
+                    </p>
+                  </div>
+                </div>
+
+                {/* Category Pills */}
+                <div className="mb-6">
+                  <div className="flex items-center space-x-2 mb-4">
+                    <div className="h-1 w-12 rounded-full" style={{ background: 'linear-gradient(to right, #1db954, #16a14a)' }}></div>
+                    <span className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
+                      Your Categories ({selectedCategories.length})
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    {selectedCategories.map((category, index) => (
+                      <div
+                        key={index}
+                        className="group px-5 py-3 bg-white rounded-xl text-sm font-semibold border-2 border-gray-200 transition-all hover:shadow-lg hover:scale-105 transform relative overflow-hidden"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                        onMouseEnter={(e) => e.currentTarget.style.borderColor = '#1db954'}
+                        onMouseLeave={(e) => e.currentTarget.style.borderColor = ''}
+                      >
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity" style={{ background: 'linear-gradient(to right, rgba(29, 185, 84, 0.05), rgba(22, 161, 74, 0.05))' }}></div>
+                        <span className="relative z-10 text-gray-700 group-hover:text-gray-900 flex items-center">
+                          <span className="mr-2">✨</span>
+                          {category}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+                  {user ? (
+                    <button
+                      onClick={handleSaveCategories}
+                      disabled={isSaving}
+                      className="flex-1 flex items-center justify-center px-6 py-4 text-white rounded-xl hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed transition-all font-bold text-base hover:scale-105 transform relative overflow-hidden group"
+                      style={{ backgroundColor: '#1db954' }}
+                      onMouseEnter={(e) => !isSaving && (e.currentTarget.style.backgroundColor = '#16a14a')}
+                      onMouseLeave={(e) => !isSaving && (e.currentTarget.style.backgroundColor = '#1db954')}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                      {isSaving ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-3"></div>
+                          <span className="relative z-10">Saving Your Preferences...</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle className="h-5 w-5 mr-3 relative z-10" />
+                          <span className="relative z-10">Save to My Profile</span>
+                        </>
+                      )}
+                    </button>
+                  ) : (
+                    <div className="flex-1 flex items-center justify-center px-6 py-4 bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 rounded-xl border-2 border-amber-300 font-semibold">
+                      <span className="mr-2 text-xl">👁️</span>
+                      Preview Mode - Create account to save
+                    </div>
+                  )}
+                  
+                  <button
+                    onClick={() => {
+                      setShowRecommendations(false);
+                      onFieldSelect(null);
+                      setSelectedCategories([]);
+                    }}
+                    className="flex items-center justify-center px-6 py-4 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 transition-all font-semibold hover:border-gray-400"
+                  >
+                    ← Try Another Field
+                  </button>
+                </div>
               </div>
             </div>
           )}
 
           {/* Call to Action for Non-Selected State */}
           {!showRecommendations && (
-            <div className="text-center text-sm text-gray-500 mt-4">
-              <p>Select your field above to see personalized research categories</p>
+            <div className="text-center mt-8 p-8 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl border-2 border-dashed border-gray-300">
+              <div className="mb-4">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 shadow-lg" style={{ backgroundColor: '#1db954' }}>
+                  <ChevronRight className="h-8 w-8 text-white" />
+                </div>
+              </div>
+              <h4 className="text-lg font-bold text-gray-900 mb-2">Ready to Discover?</h4>
+              <p className="text-gray-600 max-w-md mx-auto">
+                Select your professional field above to unlock personalized AI research recommendations
+              </p>
             </div>
           )}
         </div>
