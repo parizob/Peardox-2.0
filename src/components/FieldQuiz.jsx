@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Stethoscope, DollarSign, GraduationCap, Cpu, CheckCircle, ChevronRight, X } from 'lucide-react';
+import { Stethoscope, DollarSign, GraduationCap, Cpu, Scale, CheckCircle, ChevronRight, X } from 'lucide-react';
 
 const FieldQuiz = ({ onFieldSelect, selectedField, user, onSaveToProfile, isOpen, onClose, onOpenAccount }) => {
   const [showRecommendations, setShowRecommendations] = useState(false);
@@ -35,6 +35,13 @@ const FieldQuiz = ({ onFieldSelect, selectedField, user, onSaveToProfile, isOpen
       icon: Cpu,
       color: 'bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-700',
       selectedColor: 'bg-purple-100 border-purple-300 text-purple-800'
+    },
+    {
+      id: 'legal',
+      name: 'Legal',
+      icon: Scale,
+      color: 'bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-700',
+      selectedColor: 'bg-amber-100 border-amber-300 text-amber-800'
     }
   ];
 
@@ -67,6 +74,13 @@ const FieldQuiz = ({ onFieldSelect, selectedField, user, onSaveToProfile, isOpen
       'Computer Vision and Pattern Recognition',
       'Computation and Language',
       'Robotics'
+    ],
+    legal: [
+      'Computation and Language',
+      'Machine Learning',
+      'Computers and Society',
+      'Artificial Intelligence',
+      'Information Retrieval'
     ]
   };
 
@@ -153,7 +167,7 @@ const FieldQuiz = ({ onFieldSelect, selectedField, user, onSaveToProfile, isOpen
           </div>
 
           {/* Field Selection */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
             {fields.map((field) => {
               const Icon = field.icon;
               const isSelected = selectedField === field.id;
