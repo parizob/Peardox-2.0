@@ -1384,112 +1384,179 @@ function App() {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     
                     {/* Left Side - Enhanced CTA Section */}
-                    <div className="bg-gradient-to-br from-white to-blue-50 rounded-3xl shadow-lg border border-blue-100 p-8 sm:p-10 h-full flex flex-col justify-between">
-                      <div>
+                    <div className="bg-gradient-to-br from-white via-gray-50 to-white rounded-3xl shadow-2xl border border-gray-200 p-8 sm:p-10 h-full flex flex-col justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
+                      {/* Decorative Elements */}
+                      <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.1) 0%, rgba(22, 161, 74, 0.03) 100%)' }}></div>
+                      <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full blur-2xl" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.08) 0%, rgba(22, 161, 74, 0.02) 100%)' }}></div>
+                      
+                      <div className="relative z-10">
                         <div className="text-center mb-8">
-                          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl mb-6 shadow-md">
-                            <UserPlus className="h-8 w-8 text-white" />
+                          {/* Enhanced Icon */}
+                          <div className="relative inline-block mb-6">
+                            <div className="absolute inset-0 rounded-2xl blur-lg opacity-50" style={{ backgroundColor: '#1db954' }}></div>
+                            <div className="relative inline-flex items-center justify-center w-20 h-20 rounded-2xl shadow-xl transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500" style={{ backgroundColor: '#1db954' }}>
+                              <UserPlus className="h-10 w-10 text-white" />
+                            </div>
                           </div>
-                          <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">
-                            Personalize Your Research
-                          </h3>
-                          <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
-                            Get instant access to AI research that matches your expertise level. Start your journey today.
+                          
+                          {/* Title with gradient accent */}
+                          <div className="mb-4">
+                            <div className="inline-flex items-center px-3 py-1 rounded-full mb-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                              <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#1db954' }}>
+                                ✨ Tailored For You
+                              </span>
+                            </div>
+                            <h3 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                              Personalize Your<br />Research Journey
+                            </h3>
+                          </div>
+                          
+                          <p className="text-gray-600 text-base sm:text-lg leading-relaxed max-w-md mx-auto">
+                            AI-curated research that adapts to your expertise and interests. Transform how you discover knowledge.
                           </p>
                         </div>
                         
-                        <div className="space-y-4 mb-8">
-                          <div className="flex items-center text-sm text-gray-600">
-                            <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                            <span>Personalized content for your skill level</span>
+                        {/* Feature Grid */}
+                        <div className="grid grid-cols-1 gap-4 mb-8">
+                          <div className="flex items-start p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 group/item">
+                            <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-all duration-300" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                              <CheckCircle className="h-5 w-5" style={{ color: '#1db954' }} />
+                            </div>
+                            <div>
+                              <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Smart Personalization</div>
+                              <div className="text-xs sm:text-sm text-gray-600">Content tailored to your skill level and field</div>
+                            </div>
                           </div>
-                          <div className="flex items-center text-sm text-gray-600">
-                            <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                            <span>Save and organize your favorite papers</span>
+                          
+                          <div className="flex items-start p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 group/item">
+                            <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-all duration-300" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                              <CheckCircle className="h-5 w-5" style={{ color: '#1db954' }} />
+                            </div>
+                            <div>
+                              <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Organized Collections</div>
+                              <div className="text-xs sm:text-sm text-gray-600">Save and curate your favorite research</div>
+                            </div>
                           </div>
-                          <div className="flex items-center text-sm text-gray-600">
-                            <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                            <span>Track your progress and stay motivated</span>
+                          
+                          <div className="flex items-start p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 group/item">
+                            <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-all duration-300" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                              <CheckCircle className="h-5 w-5" style={{ color: '#1db954' }} />
+                            </div>
+                            <div>
+                              <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Progress Tracking</div>
+                              <div className="text-xs sm:text-sm text-gray-600">Monitor your learning journey and stay motivated</div>
+                            </div>
                           </div>
                         </div>
                       </div>
                       
-                      <div className="text-center">
+                      {/* CTA Button */}
+                      <div className="text-center relative z-10">
                         {user ? (
-                          <div className="flex items-center justify-center text-green-600 font-medium">
-                            <CheckCircle className="w-5 h-5 mr-2" />
-                            Welcome back, {(() => {
-                              const displayName = userProfile?.full_name || user.email?.split('@')[0] || 'there';
-                              console.log('👤 CTA Display name:', displayName, 'from profile:', userProfile?.full_name, 'from email:', user.email?.split('@')[0]);
-                              return displayName;
-                            })()}!
+                          <div className="flex flex-col items-center justify-center p-6 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-gray-200">
+                            <div className="w-12 h-12 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                              <CheckCircle className="w-6 h-6" style={{ color: '#1db954' }} />
+                            </div>
+                            <div className="font-bold text-gray-900 mb-1">Welcome back!</div>
+                            <div className="text-gray-600 text-sm">
+                              {(() => {
+                                const displayName = userProfile?.full_name || user.email?.split('@')[0] || 'there';
+                                console.log('👤 CTA Display name:', displayName, 'from profile:', userProfile?.full_name, 'from email:', user.email?.split('@')[0]);
+                                return displayName;
+                              })()}
+                            </div>
                           </div>
                         ) : (
                           <button
                             onClick={handleShowAccount}
-                            className="w-full inline-flex items-center justify-center px-6 py-4 text-lg font-semibold text-blue-600 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 hover:from-blue-100 hover:to-blue-200 border border-blue-200 hover:border-blue-300 relative overflow-hidden group"
+                            className="w-full inline-flex items-center justify-center px-8 py-5 text-lg font-bold text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 relative overflow-hidden group/btn"
+                            style={{ backgroundColor: '#1db954' }}
+                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
                           >
                             {/* Shimmer effect */}
-                            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                            <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
                             <span className="relative z-10">Create Free Account</span>
-                            <ArrowRight className="ml-3 w-5 h-5 relative z-10" />
+                            <ArrowRight className="ml-3 w-6 h-6 relative z-10 group-hover/btn:translate-x-1 transition-transform" />
                           </button>
                         )}
-                          </div>
+                      </div>
                     </div>
 
                     {/* Right Side - Ready to Explore Section */}
-                    <div className="bg-gradient-to-br from-white to-green-50 rounded-3xl shadow-lg border border-green-100 p-8 sm:p-10 h-full flex flex-col justify-between">
-                      <div>
+                    <div className="bg-gradient-to-br from-white via-green-50/30 to-white rounded-3xl shadow-2xl border border-gray-200 p-8 sm:p-10 h-full flex flex-col justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
+                      {/* Decorative Elements */}
+                      <div className="absolute top-0 left-0 w-64 h-64 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.12) 0%, rgba(22, 161, 74, 0.04) 100%)' }}></div>
+                      <div className="absolute -bottom-10 -right-10 w-40 h-40 rounded-full blur-2xl" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.1) 0%, rgba(22, 161, 74, 0.03) 100%)' }}></div>
+                      
+                      <div className="relative z-10">
                         <div className="text-center mb-8">
-                          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 shadow-md" style={{ backgroundColor: '#1db954' }}>
-                            <Zap className="h-8 w-8 text-white" />
+                          {/* Enhanced Icon */}
+                          <div className="relative inline-block mb-6">
+                            <div className="absolute inset-0 rounded-2xl blur-lg opacity-50" style={{ backgroundColor: '#1db954' }}></div>
+                            <div className="relative inline-flex items-center justify-center w-20 h-20 rounded-2xl shadow-xl transform group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500" style={{ backgroundColor: '#1db954' }}>
+                              <Zap className="h-10 w-10 text-white" />
+                            </div>
                           </div>
-                          <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">
-                            Ready to Explore?
-                          </h3>
-                          <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
-                            Jump straight into cutting-edge AI research. No signup required to start exploring.
+                          
+                          {/* Title with gradient accent */}
+                          <div className="mb-4">
+                            <div className="inline-flex items-center px-3 py-1 rounded-full mb-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                              <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#1db954' }}>
+                                🚀 No Barriers
+                              </span>
+                            </div>
+                            <h3 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                              Start Exploring<br />Instantly
+                            </h3>
+                          </div>
+                          
+                          <p className="text-gray-600 text-base sm:text-lg leading-relaxed max-w-md mx-auto">
+                            Dive into cutting-edge AI research immediately. No account needed to discover groundbreaking ideas.
                           </p>
                         </div>
                         
-                        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-8">
-                          <div className="text-center p-2 sm:p-3 bg-white/80 rounded-xl border border-green-100">
-                            <div className="text-sm sm:text-lg font-bold text-green-600">1M+</div>
-                            <div className="text-xs text-gray-600">Authors</div>
+                        {/* Stats Grid */}
+                        <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-8">
+                          <div className="text-center p-4 sm:p-5 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                            <div className="text-2xl sm:text-3xl font-bold mb-1" style={{ color: '#1db954' }}>1M+</div>
+                            <div className="text-xs sm:text-sm text-gray-600 font-medium">Authors</div>
                           </div>
-                          <div className="text-center p-2 sm:p-3 bg-white/80 rounded-xl border border-green-100">
-                            <div className="text-sm sm:text-lg font-bold text-green-600">Daily</div>
-                            <div className="text-xs text-gray-600">Updates</div>
+                          <div className="text-center p-4 sm:p-5 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                            <div className="text-2xl sm:text-3xl font-bold mb-1" style={{ color: '#1db954' }}>Daily</div>
+                            <div className="text-xs sm:text-sm text-gray-600 font-medium">Updates</div>
                           </div>
-                          <div className="text-center p-2 sm:p-3 bg-white/80 rounded-xl border border-green-100">
-                            <div className="text-sm sm:text-lg font-bold text-green-600">AI</div>
-                            <div className="text-xs text-gray-600">Centric</div>
+                          <div className="text-center p-4 sm:p-5 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 transform hover:scale-105">
+                            <div className="text-2xl sm:text-3xl font-bold mb-1" style={{ color: '#1db954' }}>AI</div>
+                            <div className="text-xs sm:text-sm text-gray-600 font-medium">Focused</div>
                           </div>
                         </div>
                       </div>
                       
-                      <div className="text-center">
-                          <button
+                      {/* CTA Button */}
+                      <div className="text-center relative z-10">
+                        <button
                           onClick={scrollToArticles}
-                          className="w-full group inline-flex items-center justify-center px-6 py-4 text-lg font-semibold text-white rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                          className="w-full group/btn inline-flex items-center justify-center px-8 py-5 text-lg font-bold text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 relative overflow-hidden"
                           style={{ 
                             backgroundColor: '#1db954'
                           }}
                           onMouseEnter={(e) => e.target.style.backgroundColor = '#16a14a'}
                           onMouseLeave={(e) => e.target.style.backgroundColor = '#1db954'}
                         >
-                          <span>See Latest Breakthroughs</span>
+                          {/* Shimmer effect */}
+                          <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                          <span className="relative z-10">See Latest Breakthroughs</span>
                           <svg 
-                            className="ml-3 w-5 h-5 transform group-hover:translate-y-1 transition-transform duration-300" 
+                            className="ml-3 w-6 h-6 transform group-hover/btn:translate-y-1 transition-transform duration-300 relative z-10" 
                             fill="none" 
                             stroke="currentColor" 
                             viewBox="0 0 24 24"
                           >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                           </svg>
-                          </button>
-                    </div>
+                        </button>
+                      </div>
                     </div>
                     
                   </div>
