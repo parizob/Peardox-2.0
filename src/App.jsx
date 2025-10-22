@@ -795,30 +795,38 @@ function App() {
     try {
       console.log('📊 Loading analytics data for user:', user.id);
       
-      // Helper function to process weekly data (same as AccountModal)
+      // Helper function to process weekly data (EXACT same logic as AccountModal)
       const processWeeklyData = (recentViews) => {
+        const weekDays = [];
         const today = new Date();
-        const weekData = [];
         
-        for (let i = 6; i >= 0; i--) {
-          const date = new Date(today);
-          date.setDate(date.getDate() - i);
+        // Get the start of current week (Sunday)
+        const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - currentDay);
+        
+        // Create array for current week (Sunday to Saturday)
+        for (let i = 0; i < 7; i++) {
+          const date = new Date(startOfWeek);
+          date.setDate(startOfWeek.getDate() + i);
           const dateStr = date.toISOString().split('T')[0];
-          const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
           
-          const viewsForDay = recentViews.filter(view => {
+          // Count views for this day (exclude blog entries)
+          const viewsCount = recentViews?.filter(view => {
             const viewDate = new Date(view.viewed_at).toISOString().split('T')[0];
-            return viewDate === dateStr;
-          }).length;
+            return viewDate === dateStr && view.article_id !== 'blog';
+          }).length || 0;
           
-          weekData.push({
-            day: dayName,
-            views: viewsForDay,
-            isToday: i === 0
+          weekDays.push({
+            date: dateStr,
+            day: date.toLocaleDateString('en-US', { weekday: 'long' }), // Full day name
+            dayShort: date.toLocaleDateString('en-US', { weekday: 'short' }), // Short day name
+            views: viewsCount,
+            isToday: dateStr === today.toISOString().split('T')[0]
           });
         }
         
-        return weekData;
+        return weekDays;
       };
       
       // Get user viewing stats
