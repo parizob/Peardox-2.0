@@ -1667,57 +1667,84 @@ function App() {
 
                     {/* Democratizing Discovery Section - Takes full 12 columns */}
                     <div className="lg:col-span-12">
-                      <div className="relative bg-gradient-to-br from-white via-green-50/20 to-white rounded-3xl shadow-2xl border border-gray-200 p-6 sm:p-8 overflow-hidden group hover:shadow-3xl transition-all duration-500 min-h-[320px] flex flex-col justify-between">
-                     {/* Background decoration */}
-                     <div className="absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.15) 0%, rgba(22, 161, 74, 0.05) 100%)' }}></div>
-                     
-                     <div className="relative z-10">
-                       {/* Header */}
-                       <div className="mb-6">
-                         <div className="inline-flex items-center px-3 py-1 rounded-full mb-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                           <Users className="h-4 w-4 mr-2" style={{ color: '#1db954' }} />
-                           <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#1db954' }}>Our Mission</span>
-                             </div>
-                         <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 leading-tight">
-                           Making AI Research <span style={{ color: '#1db954' }}>Accessible to Everyone</span>
-                         </h3>
-                         <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                           Turning complex papers into clear insights—no PhD required.
-                           </p>
-                         </div>
+                      <div className="relative bg-gradient-to-br from-white via-green-50/20 to-white rounded-3xl shadow-2xl border border-gray-200 p-6 sm:p-8 overflow-hidden group hover:shadow-3xl transition-all duration-500 min-h-[320px]">
+                        {/* Background decoration */}
+                        <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.2) 0%, rgba(22, 161, 74, 0.05) 100%)' }}></div>
+                        <div className="absolute -bottom-10 -left-10 w-56 h-56 rounded-full blur-3xl opacity-20" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.15) 0%, transparent 100%)' }}></div>
+                        
+                        <div className="relative z-10 flex flex-col gap-6">
+                          {/* Top Row: Stats Grid (left) + Mission Statement (right) */}
+                          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+                            {/* Left: Visual Stats Grid */}
+                            <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+                              <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-green-300">
+                                <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full animate-pulse" style={{ backgroundColor: 'rgba(29, 185, 84, 0.2)' }}></div>
+                                <div className="text-center">
+                                  <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">10K+</div>
+                                  <div className="text-gray-700 font-bold text-xs sm:text-sm">Papers</div>
+                                </div>
+                              </div>
+                              
+                              <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-green-300">
+                                <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full animate-pulse delay-75" style={{ backgroundColor: 'rgba(29, 185, 84, 0.2)' }}></div>
+                                <div className="text-center">
+                                  <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">500+</div>
+                                  <div className="text-gray-700 font-bold text-xs sm:text-sm">Users</div>
+                                </div>
+                              </div>
+                              
+                              <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-green-300">
+                                <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full animate-pulse delay-150" style={{ backgroundColor: 'rgba(29, 185, 84, 0.2)' }}></div>
+                                <div className="text-center">
+                                  <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">50+</div>
+                                  <div className="text-gray-700 font-bold text-xs sm:text-sm">Universities</div>
+                                </div>
+                              </div>
+                              
+                              <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-green-300">
+                                <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full animate-pulse delay-200" style={{ backgroundColor: 'rgba(29, 185, 84, 0.2)' }}></div>
+                                <div className="text-center">
+                                  <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">50+</div>
+                                  <div className="text-gray-700 font-bold text-xs sm:text-sm">Countries</div>
+                                </div>
+                              </div>
+                            </div>
 
-                       {/* Stats Row */}
-                       <div className="grid grid-cols-4 gap-3 sm:gap-4 mb-6">
-                         <div className="text-center">
-                           <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: '#1db954' }}>10K+</div>
-                           <div className="text-gray-600 font-medium text-xs">Papers</div>
-                             </div>
-                         <div className="text-center">
-                           <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: '#1db954' }}>500+</div>
-                           <div className="text-gray-600 font-medium text-xs">Users</div>
-                             </div>
-                         <div className="text-center">
-                           <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: '#1db954' }}>50+</div>
-                           <div className="text-gray-600 font-medium text-xs">Universities</div>
-                           </div>
-                         <div className="text-center">
-                           <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: '#1db954' }}>50+</div>
-                           <div className="text-gray-600 font-medium text-xs">Countries</div>
-                           </div>
-                         </div>
-                     </div>
-
-                     {/* Bottom section - Trust badges */}
-                     <div className="relative z-10 pt-4 border-t border-gray-200">
-                       <p className="text-gray-500 text-xs text-center mb-3">Trusted by professionals at</p>
-                       <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3">
-                         <span className="bg-white/90 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all text-gray-700 font-semibold text-xs hover:scale-105">Google</span>
-                         <span className="bg-white/90 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all text-gray-700 font-semibold text-xs hover:scale-105">Microsoft</span>
-                         <span className="bg-white/90 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all text-gray-700 font-semibold text-xs hover:scale-105">Verizon</span>
-                         <span className="bg-white/90 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all text-gray-700 font-semibold text-xs hover:scale-105">MIT</span>
-                         <span className="bg-white/90 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all text-gray-700 font-semibold text-xs hover:scale-105">Cresta</span>
-                       </div>
-                     </div>
+                            {/* Right: Mission Statement with Icon */}
+                            <div className="flex-shrink-0 text-center lg:text-right lg:max-w-md">
+                              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 shadow-xl animate-bounce" style={{ backgroundColor: '#1db954' }}>
+                                <Users className="h-8 w-8 text-white" />
+                              </div>
+                              <h3 className="text-2xl sm:text-3xl font-black text-gray-900 mb-3 leading-tight">
+                                Research for <span className="bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">Everyone</span>
+                              </h3>
+                              <div className="flex flex-wrap justify-center lg:justify-end gap-2">
+                                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-white/90 backdrop-blur-sm border border-green-200 text-gray-700 shadow-sm hover:shadow-md hover:scale-105 transition-all">
+                                  🌍 Global
+                                </span>
+                                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-white/90 backdrop-blur-sm border border-green-200 text-gray-700 shadow-sm hover:shadow-md hover:scale-105 transition-all">
+                                  ⚡ Fast
+                                </span>
+                                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-white/90 backdrop-blur-sm border border-green-200 text-gray-700 shadow-sm hover:shadow-md hover:scale-105 transition-all">
+                                  🎯 Clear
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Bottom Row: Trust Badges - Centered */}
+                          <div className="text-center pt-4 border-t border-gray-200">
+                            <p className="text-gray-500 text-xs mb-3 font-semibold">Trusted by professionals at</p>
+                            <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3">
+                              <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">Google</span>
+                              <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">Microsoft</span>
+                              <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">Verizon</span>
+                              <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">MIT</span>
+                              <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">UCF</span>
+                              <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">Cresta</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

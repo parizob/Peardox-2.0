@@ -33,8 +33,21 @@ export default {
         shimmer: 'shimmer 2s ease-in-out infinite',
         fadeIn: 'fadeIn 0.6s ease-in',
         slideIn: 'slideIn 0.3s ease-out',
+      },
+      animationDelay: {
+        75: '75ms',
+        150: '150ms',
+        200: '200ms',
       }
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.delay-75': { 'animation-delay': '75ms' },
+        '.delay-150': { 'animation-delay': '150ms' },
+        '.delay-200': { 'animation-delay': '200ms' },
+      })
+    }
+  ],
 } 
