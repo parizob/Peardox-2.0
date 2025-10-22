@@ -1447,11 +1447,11 @@ function App() {
                       {/* Content area */}
                         <div className="relative h-full flex flex-col p-4 sm:p-6 lg:p-8">
                           {/* Top section - badges with extra spacing */}
-                          <div className="flex items-center space-x-2 mb-3 sm:mb-6 pt-1 sm:pt-2">
-                            <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md">
+                          <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-6 pt-1 sm:pt-2">
+                            <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md flex-shrink-0">
                               ⭐ SPOTLIGHT
                             </span>
-                            <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold bg-white/80 text-gray-800 border border-amber-200 truncate max-w-[120px] sm:max-w-none">
+                            <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold bg-white/80 text-gray-800 border border-amber-200 break-words leading-tight">
                               {spotlightArticle.category}
                             </span>
                           </div>
