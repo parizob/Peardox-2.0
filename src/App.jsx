@@ -320,6 +320,10 @@ function App() {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Analytics state for dashboard metrics
+  const [analyticsData, setAnalyticsData] = useState(null);
+  const [weeklyData, setWeeklyData] = useState([]);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -697,6 +701,11 @@ function App() {
     loadLastRefreshDate();
   }, [userSkillLevel]); // Reload when skill level changes
 
+  // Load analytics data when user logs in/out
+  useEffect(() => {
+    loadAnalyticsData();
+  }, [user]);
+
   // Select spotlight article when articles are loaded or date changes
   useEffect(() => {
     if (articles.length > 0) {
@@ -772,6 +781,61 @@ function App() {
       const selectedArticle = articles[dailyIndex];
       setSpotlightArticle(selectedArticle);
       console.log('📌 Selected daily spotlight article:', selectedArticle?.title, `(index: ${dailyIndex} for date: ${dateString})`);
+    }
+  };
+
+  // Load analytics data for dashboard metrics
+  const loadAnalyticsData = async () => {
+    if (!user?.id) {
+      setAnalyticsData(null);
+      setWeeklyData([]);
+      return;
+    }
+    
+    try {
+      console.log('📊 Loading analytics data for user:', user.id);
+      
+      // Helper function to process weekly data (same as AccountModal)
+      const processWeeklyData = (recentViews) => {
+        const today = new Date();
+        const weekData = [];
+        
+        for (let i = 6; i >= 0; i--) {
+          const date = new Date(today);
+          date.setDate(date.getDate() - i);
+          const dateStr = date.toISOString().split('T')[0];
+          const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+          
+          const viewsForDay = recentViews.filter(view => {
+            const viewDate = new Date(view.viewed_at).toISOString().split('T')[0];
+            return viewDate === dateStr;
+          }).length;
+          
+          weekData.push({
+            day: dayName,
+            views: viewsForDay,
+            isToday: i === 0
+          });
+        }
+        
+        return weekData;
+      };
+      
+      // Get user viewing stats
+      const statsResult = await viewedArticlesAPI.getUserViewingStats(user.id);
+      if (statsResult.success) {
+        setAnalyticsData(statsResult.data);
+        
+        // Process weekly data for "This Week" metric
+        const weeklyViews = processWeeklyData(statsResult.data.recentViews);
+        setWeeklyData(weeklyViews);
+        
+        console.log('✅ Analytics data loaded:', statsResult.data);
+      }
+    } catch (error) {
+      console.error('❌ Error loading analytics data:', error);
+      setAnalyticsData(null);
+      setWeeklyData([]);
     }
   };
 
@@ -1499,28 +1563,57 @@ function App() {
                           </p>
                         </div>
                         
-                        {/* Feature highlights - compact version */}
+                        {/* Feature highlights - dynamic based on user status */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-                          <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
-                            <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                              <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
-                            </div>
-                            <div className="text-xs font-semibold text-gray-900">Personalized</div>
-                          </div>
-                          
-                          <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
-                            <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                              <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
-                            </div>
-                            <div className="text-xs font-semibold text-gray-900">Save & Organize</div>
-                          </div>
-                          
-                          <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
-                            <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                              <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
-                            </div>
-                            <div className="text-xs font-semibold text-gray-900">Track Progress</div>
-                          </div>
+                          {user ? (
+                            <>
+                              {/* Logged in: Show user metrics from analytics */}
+                              <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
+                                <div className="text-2xl font-bold" style={{ color: '#1db954' }}>
+                                  {analyticsData?.totalViews || 0}
+                                </div>
+                                <div className="text-[10px] font-semibold text-gray-600 mt-1">Articles Read</div>
+                              </div>
+                              
+                              <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
+                                <div className="text-2xl font-bold" style={{ color: '#1db954' }}>
+                                  {analyticsData?.categoriesViewed?.length || 0}
+                                </div>
+                                <div className="text-[10px] font-semibold text-gray-600 mt-1">Categories</div>
+                              </div>
+                              
+                              <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
+                                <div className="text-2xl font-bold" style={{ color: '#1db954' }}>
+                                  {weeklyData.reduce((sum, day) => sum + day.views, 0)}
+                                </div>
+                                <div className="text-[10px] font-semibold text-gray-600 mt-1">This Week</div>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              {/* Not logged in: Show benefits */}
+                              <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
+                                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                                  <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
+                                </div>
+                                <div className="text-xs font-semibold text-gray-900">Personalized</div>
+                              </div>
+                              
+                              <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
+                                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                                  <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
+                                </div>
+                                <div className="text-xs font-semibold text-gray-900">Save & Organize</div>
+                              </div>
+                              
+                              <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
+                                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                                  <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
+                                </div>
+                                <div className="text-xs font-semibold text-gray-900">Track Progress</div>
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
                       
