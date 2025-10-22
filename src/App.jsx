@@ -1494,7 +1494,7 @@ function App() {
                           
                     {/* Start Exploring Section - Takes 4 columns on large screens */}
                     <div className="lg:col-span-4">
-                      <div className="bg-gradient-to-br from-white via-green-50/30 to-white rounded-3xl shadow-2xl border border-gray-200 p-4 sm:p-6 lg:p-8 h-full min-h-[320px] flex flex-col justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
+                      <div className="bg-gradient-to-br from-white via-green-50/30 to-white rounded-3xl shadow-2xl border border-gray-200 p-4 sm:p-6 lg:p-8 lg:h-full lg:min-h-[320px] flex flex-col lg:justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
                         {/* Decorative Elements */}
                         <div className="absolute top-0 left-0 w-48 h-48 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.12) 0%, rgba(22, 161, 74, 0.04) 100%)' }}></div>
                         
@@ -1506,7 +1506,7 @@ function App() {
                           
                           {/* Description - matching spotlight description */}
                           <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6 line-clamp-3">
-                            Dive into cutting-edge AI research immediately. Browse 1M+ papers with daily updates from 1M+ authors.
+                            Dive into cutting-edge AI research immediately. Browse thousands of papers from top researchers.
                           </p>
                           
                           {/* Free Access badge */}
