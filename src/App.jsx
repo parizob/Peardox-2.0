@@ -1751,17 +1751,36 @@ function App() {
                 </div>
               </div>
 
-              {/* Decorative Line Break */}
-              <div className="my-16 sm:my-20">
-                <div className="mx-auto max-w-3xl px-4 sm:px-6">
-                  <div className="relative">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-gray-200"></div>
+              {/* Elegant Section Divider */}
+              <div className="my-16 sm:my-20 relative">
+                <div className="mx-auto max-w-4xl px-4 sm:px-6">
+                  <div className="relative py-8">
+                    {/* Subtle gradient background */}
+                    <div className="absolute inset-0 overflow-hidden opacity-30">
+                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-16 rounded-full blur-3xl" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.15), transparent)' }}></div>
                     </div>
-                    <div className="relative flex justify-center">
-                      <span className="bg-white px-6 text-gray-400 text-sm font-medium">
-                        •••
-                      </span>
+                    
+                    {/* Main divider line */}
+                    <div className="relative flex items-center">
+                      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-gray-300"></div>
+                      
+                      {/* Center icon - minimal */}
+                      <div className="mx-4 flex items-center space-x-3">
+                        <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'rgba(29, 185, 84, 0.4)' }}></div>
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center border border-gray-200 bg-white shadow-sm">
+                          <svg className="w-4 h-4" style={{ color: '#1db954' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                          </svg>
+                        </div>
+                        <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'rgba(29, 185, 84, 0.4)' }}></div>
+                      </div>
+                      
+                      <div className="flex-1 h-px bg-gradient-to-r from-gray-300 via-gray-200 to-transparent"></div>
+                    </div>
+                    
+                    {/* Optional text - very subtle */}
+                    <div className="text-center mt-4">
+                      <p className="text-xs text-gray-400 font-medium tracking-wide">Research Hub</p>
                     </div>
                   </div>
                 </div>
