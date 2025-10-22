@@ -1541,7 +1541,6 @@ function App() {
                               {/* Shimmer effect */}
                               <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
                               <span className="relative z-10">Explore Now</span>
-                              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 sm:ml-2 group-hover:translate-x-1 transition-transform relative z-10" />
                             </button>
                       </div>
                     </div>
