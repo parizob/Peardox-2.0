@@ -265,9 +265,9 @@ const FieldQuiz = ({ onFieldSelect, selectedField, user, onSaveToProfile, isOpen
               <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.15) 0%, rgba(22, 161, 74, 0.05) 100%)' }}></div>
               <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full blur-3xl" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.12) 0%, rgba(22, 161, 74, 0.03) 100%)' }}></div>
               
-              <div className="relative overflow-x-hidden">
+              <div className="relative">
                 {/* Header */}
-                <div className="flex items-start space-x-3 sm:space-x-4 mb-4 sm:mb-6">
+                <div className="flex items-start space-x-3 sm:space-x-4 mb-4 sm:mb-6 overflow-x-hidden">
                   <div className={`flex-shrink-0 p-3 sm:p-4 rounded-2xl shadow-lg bg-gradient-to-br ${
                     selectedFieldData.id === 'medicine' ? 'from-red-500 to-pink-500' :
                     selectedFieldData.id === 'finance' ? 'from-green-500 to-emerald-500' :
@@ -288,14 +288,14 @@ const FieldQuiz = ({ onFieldSelect, selectedField, user, onSaveToProfile, isOpen
                 </div>
 
                 {/* Category Pills */}
-                <div className="mb-6">
+                <div className="mb-6 overflow-visible">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="h-1 w-8 sm:w-12 rounded-full flex-shrink-0" style={{ background: 'linear-gradient(to right, #1db954, #16a14a)' }}></div>
                     <span className="text-xs sm:text-sm font-semibold text-gray-600 uppercase tracking-wide">
                       Your Categories ({selectedCategories.length})
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-2 sm:gap-3">
+                  <div className="flex flex-wrap gap-2 sm:gap-3 p-1">
                     {selectedCategories.map((category, index) => (
                       <div
                         key={index}
