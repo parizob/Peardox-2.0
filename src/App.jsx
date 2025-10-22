@@ -1425,14 +1425,14 @@ function App() {
                     <div className="animate-[fadeIn_0.6s_ease-in]">
                       <div 
                         className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 hover:border-amber-300 hover:shadow-3xl transition-all duration-500 cursor-pointer group overflow-hidden h-full min-h-[320px]"
-                        onClick={() => handleArticleClick(spotlightArticle)}
-                      >
-                        {/* Animated background decorations */}
+                      onClick={() => handleArticleClick(spotlightArticle)}
+                    >
+                      {/* Animated background decorations */}
                         <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-amber-300/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
                         <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-orange-300/20 to-transparent rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-                        
-                        {/* Glowing border effect */}
-                        <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-sm"></div>
+                      
+                      {/* Glowing border effect */}
+                      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-sm"></div>
                         
                         {/* Top right corner badge - hidden on mobile */}
                         <div className="hidden sm:block absolute top-6 right-6">
@@ -1443,8 +1443,8 @@ function App() {
                             </div>
                           </div>
                         </div>
-                        
-                        {/* Content area */}
+                      
+                      {/* Content area */}
                         <div className="relative h-full flex flex-col p-4 sm:p-6 lg:p-8">
                           {/* Top section - badges with extra spacing */}
                           <div className="flex items-center space-x-2 mb-3 sm:mb-6 pt-1 sm:pt-2">
@@ -1459,12 +1459,12 @@ function App() {
                           {/* Middle section - title and description with better spacing */}
                           <div className="flex-1 mb-4 sm:mb-6 mt-1 sm:mt-2">
                             <h4 className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 sm:mb-5 leading-tight group-hover:text-amber-700 transition-colors sm:line-clamp-2">
-                              {spotlightArticle.title}
-                            </h4>
-                            
+                            {spotlightArticle.title}
+                          </h4>
+                          
                             <p className="text-gray-700 text-sm sm:text-base leading-relaxed line-clamp-3 sm:line-clamp-3">
-                              {spotlightArticle.shortDescription}
-                            </p>
+                            {spotlightArticle.shortDescription}
+                          </p>
                           </div>
                           
                           {/* Bottom section - metadata and CTA */}
@@ -1474,8 +1474,8 @@ function App() {
                               <span className="truncate text-xs sm:text-sm">{spotlightArticle.authors.split(',')[0]}{spotlightArticle.authors.split(',').length > 1 ? ' et al.' : ''}</span>
                               <span className="mx-1 sm:mx-2 hidden xs:inline">•</span>
                               <span className="flex-shrink-0 text-xs sm:text-sm hidden xs:inline">{spotlightArticle.publishedDate}</span>
-                            </div>
-                            
+                        </div>
+                        
                             <div className="flex items-center justify-between pt-1 sm:pt-2 gap-2">
                               <div className="text-[10px] sm:text-xs text-amber-700 font-medium bg-amber-50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg whitespace-nowrap">
                                 📖 Featured
@@ -1490,8 +1490,8 @@ function App() {
                       </div>
                     </div>
                   )}
-                    </div>
-
+                          </div>
+                          
                     {/* Start Exploring Section - Takes 4 columns on large screens */}
                     <div className="lg:col-span-4">
                       <div className="bg-gradient-to-br from-white via-green-50/30 to-white rounded-3xl shadow-2xl border border-gray-200 p-4 sm:p-6 lg:p-8 h-full min-h-[320px] flex flex-col justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
@@ -1517,8 +1517,8 @@ function App() {
                             <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold bg-white/80 text-gray-800 border truncate max-w-[120px] sm:max-w-none" style={{ borderColor: 'rgba(29, 185, 84, 0.3)' }}>
                               No Account Required
                             </span>
+                            </div>
                           </div>
-                        </div>
                         
                         {/* Button row - matching spotlight bottom section */}
                         <div className="relative z-10 space-y-2 sm:space-y-3">
@@ -1528,7 +1528,7 @@ function App() {
                             <span className="font-semibold" style={{ color: '#1db954' }}>10k+ Papers</span>
                             <span className="mx-1 sm:mx-2">•</span>
                             <span className="flex-shrink-0 font-semibold" style={{ color: '#1db954' }}>1 Place</span>
-                          </div>
+                        </div>
                           
                           <div className="pt-1 sm:pt-2">
                             <button
@@ -1543,10 +1543,10 @@ function App() {
                               <span className="relative z-10">Explore Now</span>
                               <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 sm:ml-2 group-hover:translate-x-1 transition-transform relative z-10" />
                             </button>
-                          </div>
-                        </div>
                       </div>
                     </div>
+                  </div>
+                </div>
 
                     {/* Personalize Your Research Section - Takes 6 columns on large screens, positioned below Spotlight */}
                     <div className="lg:col-span-6">
@@ -1579,16 +1579,16 @@ function App() {
                               <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
                                 <div className="text-2xl font-bold" style={{ color: '#1db954' }}>
                                   {analyticsData?.totalViews || 0}
-                                </div>
+                          </div>
                                 <div className="text-[10px] font-semibold text-gray-600 mt-1">Articles Read</div>
-                              </div>
+                          </div>
                               
                               <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
                                 <div className="text-2xl font-bold" style={{ color: '#1db954' }}>
                                   {analyticsData?.categoriesViewed?.length || 0}
-                                </div>
+                          </div>
                                 <div className="text-[10px] font-semibold text-gray-600 mt-1">Categories</div>
-                              </div>
+                        </div>
                               
                               <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
                                 <div className="text-2xl font-bold" style={{ color: '#1db954' }}>
@@ -1605,8 +1605,8 @@ function App() {
                                   <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
                                 </div>
                                 <div className="text-xs font-semibold text-gray-900">Personalized</div>
-                              </div>
-                              
+                      </div>
+                      
                               <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
                                   <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
@@ -1636,9 +1636,9 @@ function App() {
                               <div className="font-bold text-gray-900">Welcome back!</div>
                               <div className="text-gray-600 text-sm">
                                 {(() => {
-                                  const displayName = userProfile?.full_name || user.email?.split('@')[0] || 'there';
-                                  console.log('👤 CTA Display name:', displayName, 'from profile:', userProfile?.full_name, 'from email:', user.email?.split('@')[0]);
-                                  return displayName;
+                              const displayName = userProfile?.full_name || user.email?.split('@')[0] || 'there';
+                              console.log('👤 CTA Display name:', displayName, 'from profile:', userProfile?.full_name, 'from email:', user.email?.split('@')[0]);
+                              return displayName;
                                 })()}
                               </div>
                             </div>
@@ -1657,9 +1657,14 @@ function App() {
                             <ArrowRight className="ml-3 w-5 h-5 relative z-10 group-hover/btn:translate-x-1 transition-transform" />
                           </button>
                         )}
-                      </div>
+                          </div>
                     </div>
-                    </div>
+                        </div>
+                        
+                    {/* What Our Readers Say Section - Takes 6 columns on large screens, next to Personalize */}
+                    <div className="lg:col-span-6">
+                      <TestimonialCarousel />
+                          </div>
                   </div>
                 </div>
               </div>
@@ -1772,9 +1777,6 @@ function App() {
                    </div>
                  </div>
                </div>
-
-              {/* What Our Readers Say - Testimonial Carousel */}
-              <TestimonialCarousel />
 
               {/* Decorative Line Break */}
               <div className="my-16 sm:my-20">
