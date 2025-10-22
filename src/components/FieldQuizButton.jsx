@@ -30,52 +30,52 @@ const FieldQuizButton = ({ onClick }) => {
             }}
           ></div>
           
-          <div className="relative p-6 sm:p-8">
-            <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-              {/* Left Content */}
-              <div className="flex items-center space-x-5 flex-1">
-                {/* Icon */}
+          <div className="relative p-4 sm:p-6 lg:p-8">
+            <div className="flex flex-col lg:flex-row items-center lg:justify-between text-center lg:text-left gap-4 sm:gap-6">
+              {/* Left Content - centered on mobile, left-aligned on desktop */}
+              <div className="flex flex-col lg:flex-row items-center lg:space-x-5 flex-1 gap-4 lg:gap-0">
+                {/* Icon - centered on mobile */}
                 <div className="flex-shrink-0 relative">
                   <div className="absolute inset-0 rounded-2xl blur-md opacity-50" style={{ backgroundColor: '#1db954' }}></div>
                   <div 
-                    className="relative w-16 h-16 rounded-2xl flex items-center justify-center backdrop-blur-sm shadow-xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500"
+                    className="relative w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-2xl flex items-center justify-center backdrop-blur-sm shadow-xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500"
                     style={{ backgroundColor: '#1db954' }}
                   >
-                    <Target className="h-8 w-8 text-white" />
+                    <Target className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-white" />
                   </div>
                 </div>
                 
-                {/* Text Content */}
-                <div className="text-center lg:text-left flex-1">
+                {/* Text Content - centered on mobile, left on desktop */}
+                <div className="flex-1 w-full">
                   <div className="flex items-center justify-center lg:justify-start mb-2">
-                    <div className="inline-flex items-center px-3 py-1 rounded-full mb-1" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                    <div className="inline-flex items-center px-2.5 sm:px-3 py-1 rounded-full mb-1" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
                       <Sparkles className="h-3 w-3 mr-1.5" style={{ color: '#1db954' }} />
-                      <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#1db954' }}>
+                      <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider" style={{ color: '#1db954' }}>
                         AI-Powered Match
                       </span>
                     </div>
                   </div>
-                  <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 leading-tight">
+                  <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 leading-tight px-2 lg:px-0">
                     Get Personalized Research
                   </h3>
-                  <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                  <p className="text-gray-600 text-xs sm:text-sm lg:text-base leading-relaxed px-2 lg:px-0">
                     Discover AI papers tailored to your field in just 30 seconds
                   </p>
                 </div>
               </div>
 
-              {/* Right CTA */}
-              <div className="flex-shrink-0">
+              {/* CTA Button - full width on mobile, auto on desktop */}
+              <div className="w-full lg:w-auto flex-shrink-0">
                 <div
-                  className="group/btn inline-flex items-center space-x-3 px-8 py-4 rounded-2xl font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 relative overflow-hidden text-white"
+                  className="group/btn w-full lg:w-auto inline-flex items-center justify-center space-x-2 sm:space-x-3 px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-bold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 relative overflow-hidden text-white"
                   style={{ backgroundColor: isHovered ? '#16a14a' : '#1db954' }}
                 >
                   {/* Shimmer effect */}
                   <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
                   
-                  <Sparkles className="h-5 w-5 relative z-10 animate-pulse" />
-                  <span className="text-lg relative z-10">Take the Quiz</span>
-                  <ArrowRight className="h-5 w-5 group-hover/btn:translate-x-2 transition-transform duration-300 relative z-10" />
+                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 relative z-10 animate-pulse" />
+                  <span className="text-base sm:text-lg relative z-10">Take the Quiz</span>
+                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover/btn:translate-x-2 transition-transform duration-300 relative z-10" />
                 </div>
               </div>
             </div>
