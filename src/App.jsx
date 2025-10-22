@@ -1688,7 +1688,7 @@ function App() {
                               <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-green-300">
                                 <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full animate-pulse delay-75" style={{ backgroundColor: 'rgba(29, 185, 84, 0.2)' }}></div>
                                 <div className="text-center">
-                                  <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">500+</div>
+                                  <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">50+</div>
                                   <div className="text-gray-700 font-bold text-xs sm:text-sm">Users</div>
                                 </div>
                               </div>
@@ -1792,11 +1792,6 @@ function App() {
               </div>
 
               <div id="categories-section" className="text-center mb-8 sm:mb-12">
-                <div className="inline-flex items-center px-4 py-1.5 rounded-full mb-4" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                  <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#1db954' }}>
-                    ✨ Curated Categories
-                  </span>
-                </div>
                 <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 px-4">
                   Pick a Category 
                 </h3>
