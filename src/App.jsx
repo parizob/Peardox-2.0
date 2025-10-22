@@ -1475,75 +1475,51 @@ function App() {
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
 
-              {/* Personalize Your Research Section */}
-              <div className="mb-8 sm:mb-12">
-                <div className="mx-auto max-w-4xl px-4 sm:px-6">
-                    <div className="bg-gradient-to-br from-white via-gray-50 to-white rounded-3xl shadow-2xl border border-gray-200 p-8 sm:p-10 h-full flex flex-col justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
+                    {/* Personalize Your Research Section - Takes 6 columns on large screens, positioned below Spotlight */}
+                    <div className="lg:col-span-6">
+                    <div className="bg-gradient-to-br from-white via-gray-50 to-white rounded-3xl shadow-2xl border border-gray-200 p-6 sm:p-8 h-full flex flex-col justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
                       {/* Decorative Elements */}
                       <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.1) 0%, rgba(22, 161, 74, 0.03) 100%)' }}></div>
                       <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full blur-2xl" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.08) 0%, rgba(22, 161, 74, 0.02) 100%)' }}></div>
                       
                       <div className="relative z-10">
-                        <div className="text-center mb-8">
-                          {/* Enhanced Icon */}
-                          <div className="relative inline-block mb-6">
-                            <div className="absolute inset-0 rounded-2xl blur-lg opacity-50" style={{ backgroundColor: '#1db954' }}></div>
-                            <div className="relative inline-flex items-center justify-center w-20 h-20 rounded-2xl shadow-xl transform group-hover:scale-110 group-hover:rotate-3 transition-all duration-500" style={{ backgroundColor: '#1db954' }}>
-                              <UserPlus className="h-10 w-10 text-white" />
-                            </div>
+                        {/* Title and badge */}
+                        <div className="mb-6">
+                          <div className="inline-flex items-center px-3 py-1 rounded-full mb-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                            <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#1db954' }}>
+                              ✨ Tailored For You
+                            </span>
                           </div>
-                          
-                          {/* Title with gradient accent */}
-                          <div className="mb-4">
-                            <div className="inline-flex items-center px-3 py-1 rounded-full mb-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                              <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#1db954' }}>
-                                ✨ Tailored For You
-                              </span>
-                            </div>
-                            <h3 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4 leading-tight">
-                              Personalize Your<br />Research Journey
-                            </h3>
-                          </div>
-                          
-                          <p className="text-gray-600 text-base sm:text-lg leading-relaxed max-w-md mx-auto">
-                            AI-curated research that adapts to your expertise and interests. Transform how you discover knowledge.
+                          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 leading-tight">
+                            Personalize Your Research Journey
+                          </h3>
+                          <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                            AI-curated research that adapts to your expertise and interests.
                           </p>
                         </div>
                         
-                        {/* Feature Grid */}
-                        <div className="grid grid-cols-1 gap-4 mb-8">
-                          <div className="flex items-start p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 group/item">
-                            <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-all duration-300" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                              <CheckCircle className="h-5 w-5" style={{ color: '#1db954' }} />
+                        {/* Feature highlights - compact version */}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                          <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
+                            <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                              <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
                             </div>
-                            <div>
-                              <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Smart Personalization</div>
-                              <div className="text-xs sm:text-sm text-gray-600">Content tailored to your skill level and field</div>
-                            </div>
+                            <div className="text-xs font-semibold text-gray-900">Personalized</div>
                           </div>
                           
-                          <div className="flex items-start p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 group/item">
-                            <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-all duration-300" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                              <CheckCircle className="h-5 w-5" style={{ color: '#1db954' }} />
+                          <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
+                            <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                              <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
                             </div>
-                            <div>
-                              <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Organized Collections</div>
-                              <div className="text-xs sm:text-sm text-gray-600">Save and curate your favorite research</div>
-                            </div>
+                            <div className="text-xs font-semibold text-gray-900">Save & Organize</div>
                           </div>
                           
-                          <div className="flex items-start p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 hover:border-gray-300 hover:shadow-lg transition-all duration-300 group/item">
-                            <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center mr-4 transition-all duration-300" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                              <CheckCircle className="h-5 w-5" style={{ color: '#1db954' }} />
+                          <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
+                            <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                              <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
                             </div>
-                            <div>
-                              <div className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Progress Tracking</div>
-                              <div className="text-xs sm:text-sm text-gray-600">Monitor your learning journey and stay motivated</div>
-                            </div>
+                            <div className="text-xs font-semibold text-gray-900">Track Progress</div>
                           </div>
                         </div>
                       </div>
@@ -1551,23 +1527,25 @@ function App() {
                       {/* CTA Button */}
                       <div className="text-center relative z-10">
                         {user ? (
-                          <div className="flex flex-col items-center justify-center p-6 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-gray-200">
-                            <div className="w-12 h-12 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                              <CheckCircle className="w-6 h-6" style={{ color: '#1db954' }} />
+                          <div className="flex items-center justify-center p-4 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-gray-200">
+                            <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                              <CheckCircle className="w-5 h-5" style={{ color: '#1db954' }} />
                             </div>
-                            <div className="font-bold text-gray-900 mb-1">Welcome back!</div>
-                            <div className="text-gray-600 text-sm">
-                              {(() => {
-                                const displayName = userProfile?.full_name || user.email?.split('@')[0] || 'there';
-                                console.log('👤 CTA Display name:', displayName, 'from profile:', userProfile?.full_name, 'from email:', user.email?.split('@')[0]);
-                                return displayName;
-                              })()}
+                            <div className="text-left">
+                              <div className="font-bold text-gray-900">Welcome back!</div>
+                              <div className="text-gray-600 text-sm">
+                                {(() => {
+                                  const displayName = userProfile?.full_name || user.email?.split('@')[0] || 'there';
+                                  console.log('👤 CTA Display name:', displayName, 'from profile:', userProfile?.full_name, 'from email:', user.email?.split('@')[0]);
+                                  return displayName;
+                                })()}
+                              </div>
                             </div>
                           </div>
                         ) : (
                           <button
                             onClick={handleShowAccount}
-                            className="w-full inline-flex items-center justify-center px-8 py-5 text-lg font-bold text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 relative overflow-hidden group/btn"
+                            className="w-full inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 relative overflow-hidden group/btn"
                             style={{ backgroundColor: '#1db954' }}
                             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
                             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
@@ -1575,11 +1553,13 @@ function App() {
                             {/* Shimmer effect */}
                             <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
                             <span className="relative z-10">Create Free Account</span>
-                            <ArrowRight className="ml-3 w-6 h-6 relative z-10 group-hover/btn:translate-x-1 transition-transform" />
+                            <ArrowRight className="ml-3 w-5 h-5 relative z-10 group-hover/btn:translate-x-1 transition-transform" />
                           </button>
                         )}
                       </div>
                     </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
