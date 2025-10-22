@@ -1452,20 +1452,24 @@ function App() {
                         <div className="relative z-10 space-y-2 sm:space-y-3">
                           <div className="flex items-center text-xs sm:text-sm text-gray-600">
                             <span className="font-semibold" style={{ color: '#1db954' }}>1M+ Authors</span>
-                            <span className="mx-1 sm:mx-2 hidden xs:inline">•</span>
-                            <span className="flex-shrink-0 hidden xs:inline font-semibold" style={{ color: '#1db954' }}>Daily Updates</span>
+                            <span className="mx-1 sm:mx-2">•</span>
+                            <span className="font-semibold" style={{ color: '#1db954' }}>10k+ Papers</span>
+                            <span className="mx-1 sm:mx-2">•</span>
+                            <span className="flex-shrink-0 font-semibold" style={{ color: '#1db954' }}>1 Place</span>
                           </div>
                           
                           <div className="pt-1 sm:pt-2">
                             <button
                               onClick={scrollToArticles}
-                              className="w-full inline-flex items-center justify-center px-3 sm:px-5 py-2 sm:py-2.5 text-white rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-lg transform group-hover:scale-105 transition-all"
+                              className="w-full inline-flex items-center justify-center px-3 sm:px-5 py-2 sm:py-2.5 text-white rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-lg transform group-hover:scale-105 transition-all relative overflow-hidden group/btn"
                               style={{ backgroundColor: '#1db954' }}
                               onMouseEnter={(e) => e.target.style.backgroundColor = '#16a14a'}
                               onMouseLeave={(e) => e.target.style.backgroundColor = '#1db954'}
                             >
-                              <span>Explore Now</span>
-                              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 sm:ml-2 group-hover:translate-x-1 transition-transform" />
+                              {/* Shimmer effect */}
+                              <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+                              <span className="relative z-10">Explore Now</span>
+                              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 sm:ml-2 group-hover:translate-x-1 transition-transform relative z-10" />
                             </button>
                           </div>
                         </div>
