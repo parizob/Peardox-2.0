@@ -1465,8 +1465,8 @@ function App() {
                             <p className="text-gray-700 text-sm sm:text-base leading-relaxed line-clamp-3 sm:line-clamp-3">
                             {spotlightArticle.shortDescription}
                           </p>
-                          </div>
-                          
+                        </div>
+                        
                           {/* Bottom section - metadata and CTA */}
                           <div className="space-y-2 sm:space-y-3">
                             <div className="flex items-center text-xs sm:text-sm text-gray-600">
@@ -1474,22 +1474,22 @@ function App() {
                               <span className="truncate text-xs sm:text-sm">{spotlightArticle.authors.split(',')[0]}{spotlightArticle.authors.split(',').length > 1 ? ' et al.' : ''}</span>
                               <span className="mx-1 sm:mx-2 hidden xs:inline">•</span>
                               <span className="flex-shrink-0 text-xs sm:text-sm hidden xs:inline">{spotlightArticle.publishedDate}</span>
-                        </div>
-                        
+                          </div>
+                          
                             <div className="flex items-center justify-between pt-1 sm:pt-2 gap-2">
                               <div className="text-[10px] sm:text-xs text-amber-700 font-medium bg-amber-50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg whitespace-nowrap">
                                 📖 Featured
-                              </div>
+                            </div>
                               <div className="inline-flex items-center px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-lg transform group-hover:scale-105 transition-all whitespace-nowrap">
                                 <span>Read Now</span>
                                 <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 sm:ml-2 group-hover:translate-x-1 transition-transform" />
-                              </div>
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  )}
+                  </div>
+                </div>
+              )}
                           </div>
                           
                     {/* Start Exploring Section - Takes 4 columns on large screens */}
@@ -1517,9 +1517,9 @@ function App() {
                             <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold bg-white/80 text-gray-800 border truncate max-w-[120px] sm:max-w-none" style={{ borderColor: 'rgba(29, 185, 84, 0.3)' }}>
                               No Account Required
                             </span>
-                            </div>
-                          </div>
-                        
+                        </div>
+                      </div>
+                      
                         {/* Button row - matching spotlight bottom section */}
                         <div className="relative z-10 space-y-2 sm:space-y-3">
                           <div className="flex items-center text-xs sm:text-sm text-gray-600">
@@ -1528,24 +1528,24 @@ function App() {
                             <span className="font-semibold" style={{ color: '#1db954' }}>10k+ Papers</span>
                             <span className="mx-1 sm:mx-2">•</span>
                             <span className="flex-shrink-0 font-semibold" style={{ color: '#1db954' }}>1 Place</span>
-                        </div>
+                          </div>
                           
                           <div className="pt-1 sm:pt-2">
-                            <button
+                          <button
                               onClick={scrollToArticles}
                               className="w-full inline-flex items-center justify-center px-3 sm:px-5 py-2 sm:py-2.5 text-white rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-lg transform group-hover:scale-105 transition-all relative overflow-hidden group/btn"
                               style={{ backgroundColor: '#1db954' }}
                               onMouseEnter={(e) => e.target.style.backgroundColor = '#16a14a'}
                               onMouseLeave={(e) => e.target.style.backgroundColor = '#1db954'}
-                            >
-                              {/* Shimmer effect */}
+                          >
+                            {/* Shimmer effect */}
                               <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
                               <span className="relative z-10">Explore Now</span>
-                            </button>
+                          </button>
                       </div>
                     </div>
-                  </div>
-                </div>
+                          </div>
+                    </div>
 
                     {/* Personalize Your Research Section - Takes 6 columns on large screens, positioned below Spotlight */}
                     <div className="lg:col-span-6">
@@ -1580,21 +1580,21 @@ function App() {
                                   {analyticsData?.totalViews || 0}
                           </div>
                                 <div className="text-[10px] font-semibold text-gray-600 mt-1">Articles Read</div>
-                          </div>
-                              
+                      </div>
+                      
                               <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
                                 <div className="text-2xl font-bold" style={{ color: '#1db954' }}>
                                   {analyticsData?.categoriesViewed?.length || 0}
-                          </div>
+                    </div>
                                 <div className="text-[10px] font-semibold text-gray-600 mt-1">Categories</div>
-                        </div>
-                              
+                    </div>
+                    
                               <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
                                 <div className="text-2xl font-bold" style={{ color: '#1db954' }}>
                                   {weeklyData.reduce((sum, day) => sum + day.views, 0)}
-                                </div>
+                  </div>
                                 <div className="text-[10px] font-semibold text-gray-600 mt-1">This Week</div>
-                              </div>
+                </div>
                             </>
                           ) : (
                             <>
@@ -1604,33 +1604,33 @@ function App() {
                                   <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
                                 </div>
                                 <div className="text-xs font-semibold text-gray-900">Personalized</div>
-                      </div>
-                      
+              </div>
+
                               <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
                                   <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
-                                </div>
+                         </div>
                                 <div className="text-xs font-semibold text-gray-900">Save & Organize</div>
-                              </div>
-                              
+                       </div>
+
                               <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
                                   <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
-                                </div>
+                        </div>
                                 <div className="text-xs font-semibold text-gray-900">Track Progress</div>
-                              </div>
+                        </div>
                             </>
                           )}
                         </div>
-                      </div>
-                      
+                         </div>
+                         
                       {/* CTA Button */}
                       <div className="text-center relative z-10">
                         {user ? (
                           <div className="flex items-center justify-center p-4 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-gray-200">
                             <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
                               <CheckCircle className="w-5 h-5" style={{ color: '#1db954' }} />
-                            </div>
+                         </div>
                             <div className="text-left">
                               <div className="font-bold text-gray-900">Welcome back!</div>
                               <div className="text-gray-600 text-sm">
@@ -1639,9 +1639,9 @@ function App() {
                               console.log('👤 CTA Display name:', displayName, 'from profile:', userProfile?.full_name, 'from email:', user.email?.split('@')[0]);
                               return displayName;
                                 })()}
-                              </div>
-                            </div>
-                          </div>
+                       </div>
+                             </div>
+                             </div>
                         ) : (
                           <button
                             onClick={handleShowAccount}
@@ -1656,126 +1656,73 @@ function App() {
                             <ArrowRight className="ml-3 w-5 h-5 relative z-10 group-hover/btn:translate-x-1 transition-transform" />
                           </button>
                         )}
-                          </div>
+                      </div>
                     </div>
-                        </div>
-                        
+                    </div>
+
                     {/* What Our Readers Say Section - Takes 6 columns on large screens, next to Personalize */}
                     <div className="lg:col-span-6">
                       <TestimonialCarousel />
-                          </div>
+                    </div>
+
+                    {/* Democratizing Discovery Section - Takes full 12 columns */}
+                    <div className="lg:col-span-12">
+                      <div className="relative bg-gradient-to-br from-white via-green-50/20 to-white rounded-3xl shadow-2xl border border-gray-200 p-6 sm:p-8 overflow-hidden group hover:shadow-3xl transition-all duration-500 min-h-[320px] flex flex-col justify-between">
+                     {/* Background decoration */}
+                     <div className="absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.15) 0%, rgba(22, 161, 74, 0.05) 100%)' }}></div>
+                     
+                     <div className="relative z-10">
+                       {/* Header */}
+                       <div className="mb-6">
+                         <div className="inline-flex items-center px-3 py-1 rounded-full mb-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                           <Users className="h-4 w-4 mr-2" style={{ color: '#1db954' }} />
+                           <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#1db954' }}>Our Mission</span>
+                             </div>
+                         <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 leading-tight">
+                           Making AI Research <span style={{ color: '#1db954' }}>Accessible to Everyone</span>
+                         </h3>
+                         <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                           Turning complex papers into clear insights—no PhD required.
+                           </p>
+                         </div>
+
+                       {/* Stats Row */}
+                       <div className="grid grid-cols-4 gap-3 sm:gap-4 mb-6">
+                         <div className="text-center">
+                           <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: '#1db954' }}>10K+</div>
+                           <div className="text-gray-600 font-medium text-xs">Papers</div>
+                             </div>
+                         <div className="text-center">
+                           <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: '#1db954' }}>500+</div>
+                           <div className="text-gray-600 font-medium text-xs">Users</div>
+                             </div>
+                         <div className="text-center">
+                           <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: '#1db954' }}>50+</div>
+                           <div className="text-gray-600 font-medium text-xs">Universities</div>
+                           </div>
+                         <div className="text-center">
+                           <div className="text-xl sm:text-2xl font-bold mb-1" style={{ color: '#1db954' }}>50+</div>
+                           <div className="text-gray-600 font-medium text-xs">Countries</div>
+                           </div>
+                         </div>
+                     </div>
+
+                     {/* Bottom section - Trust badges */}
+                     <div className="relative z-10 pt-4 border-t border-gray-200">
+                       <p className="text-gray-500 text-xs text-center mb-3">Trusted by professionals at</p>
+                       <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3">
+                         <span className="bg-white/90 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all text-gray-700 font-semibold text-xs hover:scale-105">Google</span>
+                         <span className="bg-white/90 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all text-gray-700 font-semibold text-xs hover:scale-105">Microsoft</span>
+                         <span className="bg-white/90 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all text-gray-700 font-semibold text-xs hover:scale-105">Verizon</span>
+                         <span className="bg-white/90 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all text-gray-700 font-semibold text-xs hover:scale-105">MIT</span>
+                         <span className="bg-white/90 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all text-gray-700 font-semibold text-xs hover:scale-105">Cresta</span>
+                       </div>
+                     </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-
-               {/* Democratizing Discovery Section */}
-               <div className="mb-8 sm:mb-12">
-                 <div className="mx-auto max-w-6xl px-4 sm:px-6">
-                   <div className="relative bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-lg border border-gray-100 p-8 sm:p-12 overflow-hidden">
-                     {/* Background decoration */}
-                     <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-gray-200/20 to-transparent rounded-full blur-2xl"></div>
-                     <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-gray-300/20 to-transparent rounded-full blur-2xl"></div>
-                     
-                     <div className="relative">
-                       <div className="text-center mb-10 sm:mb-12">
-                         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-gray-600 to-gray-700 rounded-2xl mb-6 shadow-md">
-                           <Users className="h-8 w-8 text-white" />
-                         </div>
-                         <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4 leading-tight">
-                           Democratizing Discovery
-                         </h3>
-                         <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                           The future belongs to those who understand it. We're making sure that's everyone.
-                         </p>
-                       </div>
-
-                       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
-                        <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
-                          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">10K+</div>
-                          <div className="text-gray-600 font-medium text-sm sm:text-base">Papers Simplified</div>
-                        </div>
-                        
-                        <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
-                          <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">500+</div>
-                          <div className="text-gray-600 font-medium text-sm sm:text-base">Active Users</div>
-                        </div>
-                         
-                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
-                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">50+</div>
-                           <div className="text-gray-600 font-medium text-sm sm:text-base">Universities</div>
-                         </div>
-                         
-                         <div className="text-center p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 shadow-sm">
-                           <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-1 sm:mb-2">50+</div>
-                           <div className="text-gray-600 font-medium text-sm sm:text-base">Countries</div>
-                         </div>
-                       </div>
-
-                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-                         <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300 group">
-                           <div className="flex items-center space-x-4 mb-4">
-                             <div className="p-3 rounded-xl bg-green-100 text-green-600 group-hover:scale-110 transition-transform duration-300">
-                               <Building2 className="h-6 w-6" />
-                             </div>
-                             <div>
-                               <div className="text-xl font-bold text-gray-900">Fortune 500</div>
-                               <div className="text-gray-600 text-sm">Trusted By The Best</div>
-                             </div>
-                           </div>
-                           <p className="text-gray-600 leading-relaxed">
-                             Used by employees at 50+ Fortune 500 companies to cut through AI noise and get straight to what matters.
-                           </p>
-                         </div>
-
-                         <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300 group">
-                           <div className="flex items-center space-x-4 mb-4">
-                             <div className="p-3 rounded-xl bg-blue-100 text-blue-600 group-hover:scale-110 transition-transform duration-300">
-                               <Microscope className="h-6 w-6" />
-                             </div>
-                             <div>
-                               <div className="text-xl font-bold text-gray-900">Top Insights</div>
-                               <div className="text-gray-600 text-sm">From Research to Reality</div>
-                             </div>
-                           </div>
-                           <p className="text-gray-600 leading-relaxed">
-                             Distill breakthroughs from MIT, Stanford, and leading AI labs into plain English—so you can apply them immediately.
-                           </p>
-                         </div>
-
-                         <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100 hover:shadow-xl transition-all duration-300 group">
-                           <div className="flex items-center space-x-4 mb-4">
-                             <div className="p-3 rounded-xl bg-purple-100 text-purple-600 group-hover:scale-110 transition-transform duration-300">
-                               <TrendingUp className="h-6 w-6" />
-                             </div>
-                             <div>
-                               <div className="text-xl font-bold text-gray-900">Rapid Growth</div>
-                               <div className="text-gray-600 text-sm">Grow Smarter Every Day</div>
-                             </div>
-                           </div>
-                           <p className="text-gray-600 leading-relaxed">
-                             Our community is exploding because busy people don't have time to read 40-page papers. We do it for you.
-                           </p>
-                         </div>
-                       </div>
-
-                       {/* Trust badge section */}
-                       <div className="mt-10 pt-8 border-t border-gray-200">
-                         <div className="text-center">
-                           <p className="text-gray-500 text-sm mb-4">Trusted by professionals at</p>
-                           <div className="flex flex-wrap justify-center items-center gap-6 text-gray-500 text-sm font-medium">
-                             <span className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">Google</span>
-                             <span className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">Microsoft</span>
-                             <span className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">Verizon</span>
-                             <span className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">Leidos</span>
-                             <span className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">MIT</span>
-                             <span className="bg-white px-4 py-2 rounded-lg border border-gray-200 shadow-sm">Cresta</span>
-                           </div>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
 
               {/* Decorative Line Break */}
               <div className="my-16 sm:my-20">
