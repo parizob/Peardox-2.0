@@ -1474,17 +1474,17 @@ function App() {
                               <span className="truncate text-xs sm:text-sm">{spotlightArticle.authors.split(',')[0]}{spotlightArticle.authors.split(',').length > 1 ? ' et al.' : ''}</span>
                               <span className="mx-1 sm:mx-2 hidden xs:inline">•</span>
                               <span className="flex-shrink-0 text-xs sm:text-sm hidden xs:inline">{spotlightArticle.publishedDate}</span>
-                          </div>
-                          
+                        </div>
+                        
                             <div className="flex items-center justify-between pt-1 sm:pt-2 gap-2">
                               <div className="text-[10px] sm:text-xs text-amber-700 font-medium bg-amber-50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg whitespace-nowrap">
                                 📖 Featured
-                            </div>
+                              </div>
                               <div className="inline-flex items-center px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-lg transform group-hover:scale-105 transition-all whitespace-nowrap">
                                 <span>Read Now</span>
                                 <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 sm:ml-2 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </div>
+                              </div>
+                            </div>
                       </div>
                     </div>
                   </div>
@@ -1500,35 +1500,35 @@ function App() {
                         
                         <div className="relative z-10">
                           {/* Title - matching spotlight title size */}
-                          <h3 className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 sm:mb-5 leading-tight">
+                          <h3 className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 sm:mb-5 leading-tight text-center lg:text-left">
                             Start Exploring Instantly
                           </h3>
                           
                           {/* Description - matching spotlight description */}
-                          <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6 line-clamp-3">
+                          <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6 line-clamp-3 text-center lg:text-left">
                             Dive into cutting-edge AI research immediately. Browse thousands of papers from top researchers.
                           </p>
                           
                           {/* Free Access badge */}
-                          <div className="flex items-center space-x-2 mb-3">
+                          <div className="flex items-center justify-center lg:justify-start space-x-2 mb-3">
                             <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-medium whitespace-nowrap" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)', color: '#16a14a' }}>
                               🌟 Free Access
                             </span>
                             <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold bg-white/80 text-gray-800 border truncate max-w-[120px] sm:max-w-none" style={{ borderColor: 'rgba(29, 185, 84, 0.3)' }}>
                               No Account Required
                             </span>
-                        </div>
-                      </div>
+                            </div>
+                          </div>
                       
                         {/* Button row - matching spotlight bottom section */}
                         <div className="relative z-10 space-y-2 sm:space-y-3">
-                          <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                          <div className="flex items-center justify-center lg:justify-start text-xs sm:text-sm text-gray-600">
                             <span className="font-semibold" style={{ color: '#1db954' }}>1M+ Authors</span>
                             <span className="mx-1 sm:mx-2">•</span>
                             <span className="font-semibold" style={{ color: '#1db954' }}>10k+ Papers</span>
                             <span className="mx-1 sm:mx-2">•</span>
                             <span className="flex-shrink-0 font-semibold" style={{ color: '#1db954' }}>1 Place</span>
-                          </div>
+                        </div>
                           
                           <div className="pt-1 sm:pt-2">
                           <button
@@ -1544,8 +1544,8 @@ function App() {
                           </button>
                       </div>
                     </div>
-                          </div>
-                    </div>
+                  </div>
+                </div>
 
                     {/* Personalize Your Research Section - Takes 6 columns on large screens, positioned below Spotlight */}
                     <div className="lg:col-span-6">
@@ -1580,14 +1580,14 @@ function App() {
                                   {analyticsData?.totalViews || 0}
                           </div>
                                 <div className="text-[10px] font-semibold text-gray-600 mt-1">Articles Read</div>
-                      </div>
+                          </div>
                       
                               <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
                                 <div className="text-2xl font-bold" style={{ color: '#1db954' }}>
                                   {analyticsData?.categoriesViewed?.length || 0}
-                    </div>
+                          </div>
                                 <div className="text-[10px] font-semibold text-gray-600 mt-1">Categories</div>
-                    </div>
+                        </div>
                     
                               <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
                                 <div className="text-2xl font-bold" style={{ color: '#1db954' }}>
@@ -1604,8 +1604,8 @@ function App() {
                                   <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
                                 </div>
                                 <div className="text-xs font-semibold text-gray-900">Personalized</div>
-              </div>
-
+                      </div>
+                      
                               <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
                                 <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
                                   <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
@@ -1641,7 +1641,7 @@ function App() {
                                 })()}
                        </div>
                              </div>
-                             </div>
+                          </div>
                         ) : (
                           <button
                             onClick={handleShowAccount}
@@ -1657,14 +1657,14 @@ function App() {
                           </button>
                         )}
                       </div>
-                    </div>
+                          </div>
                     </div>
 
                     {/* What Our Readers Say Section - Takes 6 columns on large screens, next to Personalize */}
                     <div className="lg:col-span-6">
                       <TestimonialCarousel />
-                    </div>
-
+                        </div>
+                        
                     {/* Democratizing Discovery Section - Takes full 12 columns */}
                     <div className="lg:col-span-12">
                       <div className="relative bg-gradient-to-br from-white via-green-50/20 to-white rounded-3xl shadow-2xl border border-gray-200 p-6 sm:p-8 overflow-hidden group hover:shadow-3xl transition-all duration-500 min-h-[320px]">
@@ -1682,42 +1682,42 @@ function App() {
                                 <div className="text-center">
                                   <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">10K+</div>
                                   <div className="text-gray-700 font-bold text-xs sm:text-sm">Papers</div>
-                                </div>
-                              </div>
+                          </div>
+                          </div>
                               
                               <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-green-300">
                                 <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full animate-pulse delay-75" style={{ backgroundColor: 'rgba(29, 185, 84, 0.2)' }}></div>
                                 <div className="text-center">
                                   <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">50+</div>
                                   <div className="text-gray-700 font-bold text-xs sm:text-sm">Users</div>
-                                </div>
-                              </div>
-                              
+                        </div>
+                      </div>
+                      
                               <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-green-300">
                                 <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full animate-pulse delay-150" style={{ backgroundColor: 'rgba(29, 185, 84, 0.2)' }}></div>
-                                <div className="text-center">
+                      <div className="text-center">
                                   <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">50+</div>
                                   <div className="text-gray-700 font-bold text-xs sm:text-sm">Universities</div>
-                                </div>
-                              </div>
-                              
+                    </div>
+                    </div>
+                    
                               <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-green-300">
                                 <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full animate-pulse delay-200" style={{ backgroundColor: 'rgba(29, 185, 84, 0.2)' }}></div>
                                 <div className="text-center">
                                   <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">50+</div>
                                   <div className="text-gray-700 font-bold text-xs sm:text-sm">Countries</div>
-                                </div>
-                              </div>
-                            </div>
+                  </div>
+                </div>
+              </div>
 
                             {/* Right: Mission Statement with Icon */}
                             <div className="flex-shrink-0 text-center lg:text-right lg:max-w-md">
                               <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 shadow-xl animate-bounce" style={{ backgroundColor: '#1db954' }}>
-                                <Users className="h-8 w-8 text-white" />
-                              </div>
+                           <Users className="h-8 w-8 text-white" />
+                         </div>
                               <h3 className="text-2xl sm:text-3xl font-black text-gray-900 mb-3 leading-tight">
                                 Research for <span className="bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">Everyone</span>
-                              </h3>
+                         </h3>
                               <div className="flex flex-wrap justify-center lg:justify-end gap-2">
                                 <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-white/90 backdrop-blur-sm border border-green-200 text-gray-700 shadow-sm hover:shadow-md hover:scale-105 transition-all">
                                   🌍 Global
@@ -1728,10 +1728,10 @@ function App() {
                                 <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-white/90 backdrop-blur-sm border border-green-200 text-gray-700 shadow-sm hover:shadow-md hover:scale-105 transition-all">
                                   🎯 Clear
                                 </span>
-                              </div>
-                            </div>
-                          </div>
-                          
+                       </div>
+                        </div>
+                        </div>
+                         
                           {/* Bottom Row: Trust Badges - Centered */}
                           <div className="text-center pt-4 border-t border-gray-200">
                             <p className="text-gray-500 text-xs mb-3 font-semibold">Trusted by professionals at</p>
@@ -1742,14 +1742,14 @@ function App() {
                               <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">MIT</span>
                               <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">UCF</span>
                               <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">Cresta</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                         </div>
+                         </div>
+                       </div>
+                             </div>
+                             </div>
+                           </div>
                 </div>
-              </div>
+                         </div>
 
               {/* Elegant Section Divider */}
               <div className="my-16 sm:my-20 relative">
@@ -1758,8 +1758,8 @@ function App() {
                     {/* Subtle gradient background */}
                     <div className="absolute inset-0 overflow-hidden opacity-30">
                       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-16 rounded-full blur-3xl" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.15), transparent)' }}></div>
-                    </div>
-                    
+                         </div>
+
                     {/* Main divider line */}
                     <div className="relative flex items-center">
                       <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-gray-300"></div>
@@ -1771,13 +1771,13 @@ function App() {
                           <svg className="w-4 h-4" style={{ color: '#1db954' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                           </svg>
-                        </div>
+                             </div>
                         <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'rgba(29, 185, 84, 0.4)' }}></div>
-                      </div>
-                      
+                       </div>
+
                       <div className="flex-1 h-px bg-gradient-to-r from-gray-300 via-gray-200 to-transparent"></div>
-                    </div>
-                    
+               </div>
+
                     {/* Optional text - very subtle */}
                     <div className="text-center mt-4">
                       <p className="text-xs text-gray-400 font-medium tracking-wide">Research Hub</p>
