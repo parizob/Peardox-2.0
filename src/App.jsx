@@ -1377,9 +1377,9 @@ function App() {
                 <div className="mx-auto max-w-7xl px-4 sm:px-6">
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     {/* Spotlight Article - Takes 8 columns on large screens */}
-                    <div className="lg:col-span-8">
+                    <div className="lg:col-span-8 flex">
                   {!spotlightArticle ? (
-                    <div className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 overflow-hidden h-full min-h-[320px]">
+                    <div className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 overflow-hidden w-full lg:h-full lg:min-h-[320px] min-h-[400px]">
                       {/* Subtle animated background */}
                       <div className="absolute inset-0 bg-gradient-to-br from-amber-50/30 to-orange-50/30"></div>
                       
@@ -1422,9 +1422,9 @@ function App() {
                       </div>
                     </div>
                   ) : (
-                    <div className="animate-[fadeIn_0.6s_ease-in]">
+                    <div className="animate-[fadeIn_0.6s_ease-in] w-full">
                       <div 
-                        className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 hover:border-amber-300 hover:shadow-3xl transition-all duration-500 cursor-pointer group overflow-hidden h-full min-h-[320px]"
+                        className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 hover:border-amber-300 hover:shadow-3xl transition-all duration-500 cursor-pointer group overflow-hidden lg:h-full lg:min-h-[320px] min-h-[400px]"
                       onClick={() => handleArticleClick(spotlightArticle)}
                     >
                       {/* Animated background decorations */}
@@ -1493,8 +1493,8 @@ function App() {
                           </div>
                           
                     {/* Start Exploring Section - Takes 4 columns on large screens */}
-                    <div className="lg:col-span-4">
-                      <div className="bg-gradient-to-br from-white via-green-50/30 to-white rounded-3xl shadow-2xl border border-gray-200 p-4 sm:p-6 lg:p-8 lg:h-full lg:min-h-[320px] flex flex-col lg:justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
+                    <div className="lg:col-span-4 flex">
+                      <div className="bg-gradient-to-br from-white via-green-50/30 to-white rounded-3xl shadow-2xl border border-gray-200 p-4 sm:p-6 lg:p-8 w-full lg:h-full lg:min-h-[320px] min-h-[400px] flex flex-col lg:justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
                         {/* Decorative Elements */}
                         <div className="absolute top-0 left-0 w-48 h-48 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.12) 0%, rgba(22, 161, 74, 0.04) 100%)' }}></div>
                         
