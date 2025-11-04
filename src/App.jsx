@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle, Sparkles } from 'lucide-react';
+import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle, Sparkles, Shuffle } from 'lucide-react';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
@@ -1304,6 +1304,30 @@ function App() {
     }
   };
 
+  // Handle random category selection
+  const handleRandomCategory = () => {
+    // Get all available categories from the displayed interests
+    const availableCategories = displayResearchInterests.filter(cat => cat !== selectedCategory);
+    
+    if (availableCategories.length > 0) {
+      const randomIndex = Math.floor(Math.random() * availableCategories.length);
+      const randomCategory = availableCategories[randomIndex];
+      setSelectedCategory(randomCategory);
+      
+      // Scroll to results
+      if (resultsRef.current) {
+        const headerHeight = 80;
+        const elementPosition = resultsRef.current.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+
   // For authenticated users: use session interests if available, otherwise user interests or defaults
   // For unauthenticated users: ALWAYS use default categories (never session interests)
   const displayResearchInterests = user 
@@ -1855,6 +1879,39 @@ function App() {
                     </button>
                   );
                 })}
+                
+                {/* Random Category Button - 6th square on mobile */}
+                <button
+                  onClick={handleRandomCategory}
+                  className="group relative p-5 sm:p-8 rounded-2xl sm:rounded-3xl border-2 transition-all duration-500 hover:scale-105 hover:shadow-2xl bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50 border-purple-200 hover:border-purple-400 shadow-lg hover:shadow-xl sm:hidden"
+                >
+                  {/* Hover gradient overlay */}
+                  <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" 
+                    style={{ 
+                      background: 'radial-gradient(circle at top, rgba(168, 85, 247, 0.15), transparent)' 
+                    }}
+                  ></div>
+
+                  <div className="relative flex flex-col items-center justify-center space-y-3 h-24">
+                    {/* Icon container with enhanced styling */}
+                    <div className="relative p-3 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 shadow-md group-hover:shadow-xl transition-all duration-500 flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-180">
+                      <div className="absolute inset-0 rounded-xl blur-md opacity-0 group-hover:opacity-50 transition-opacity duration-500" 
+                        style={{ backgroundColor: 'rgba(168, 85, 247, 0.3)' }}
+                      ></div>
+                      <Shuffle className="relative h-6 w-6 text-purple-600 transition-transform duration-500" />
+                    </div>
+
+                    {/* Button text */}
+                    <span className="text-xs font-bold text-gray-900 leading-tight text-center min-h-[2.5rem] flex items-center justify-center px-2">
+                      Random Pick
+                    </span>
+                  </div>
+                  
+                  {/* Sparkle decoration */}
+                  <div className="absolute -top-1 -right-1 animate-pulse">
+                    <Sparkles className="h-4 w-4 text-purple-500" />
+                  </div>
+                </button>
               </div>
             </div>
           </div>
