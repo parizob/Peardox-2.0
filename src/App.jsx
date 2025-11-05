@@ -1778,13 +1778,12 @@ function App() {
                           <div className="text-center">
                             {/* Wallet Header - Premium Feel */}
                             <div className="mb-4">
-                              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-full shadow-lg mb-2">
+                              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-full shadow-lg">
                                 <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center">
                                   <Sparkles className="h-3.5 w-3.5 text-white" />
                                 </div>
                                 <span className="text-white font-black text-sm tracking-wide">PEARADOX WALLET</span>
                               </div>
-                              <p className="text-amber-700 text-xs font-semibold uppercase tracking-wider">Digital Asset Balance</p>
                             </div>
                             
                             {/* Token Balance Display - Wallet Style */}
@@ -1820,15 +1819,15 @@ function App() {
                             </div>
                             
                             {/* Balance Amount - Crypto Style */}
-                            <div className="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300 rounded-2xl p-3 mb-4 shadow-lg">
-                              <div className="flex items-center justify-center gap-2 mb-1">
-                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                <p className="text-xs font-bold text-amber-700 uppercase tracking-wider">Balance</p>
+                            <div className="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300 rounded-xl p-2.5 mb-3 shadow-lg">
+                              <div className="flex items-center justify-center gap-1.5 mb-0.5">
+                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                                <p className="text-[10px] font-bold text-amber-700 uppercase tracking-wider">Balance</p>
                               </div>
-                              <p className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+                              <p className="text-xl sm:text-2xl font-black bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent leading-tight">
                                 {pearTokenCount} PEAR
                               </p>
-                              <p className="text-xs text-gray-600 font-medium mt-0.5">
+                              <p className="text-[10px] text-gray-600 font-medium">
                                 Token{pearTokenCount !== 1 ? 's' : ''} Owned
                               </p>
                             </div>
