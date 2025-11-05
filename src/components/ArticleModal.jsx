@@ -22,6 +22,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showQuizResult, setShowQuizResult] = useState(false);
+  const [hasAnsweredCorrectly, setHasAnsweredCorrectly] = useState(false);
   
   // Get user context
   const { user, userProfile } = useUser();
@@ -223,6 +224,27 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
   
   const quizData = getQuizData();
 
+  // Check if user has already answered this quiz correctly
+  useEffect(() => {
+    if (isQuizOpen && article && (user || userProp)) {
+      const checkAnswerStatus = async () => {
+        try {
+          const userId = (user || userProp).id;
+          const hasAnswered = await quizAPI.hasUserAnsweredCorrectly(userId, article.id);
+          setHasAnsweredCorrectly(hasAnswered);
+          
+          if (hasAnswered) {
+            console.log('✅ User has already answered this quiz correctly');
+          }
+        } catch (error) {
+          console.error('❌ Error checking answer status:', error);
+        }
+      };
+      
+      checkAnswerStatus();
+    }
+  }, [isQuizOpen, article, user, userProp]);
+
   // Quiz handlers
   const handleOpenQuiz = () => {
     // Always open the quiz modal (will show auth prompt if not logged in)
@@ -235,6 +257,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
     setIsQuizOpen(false);
     setSelectedAnswer(null);
     setShowQuizResult(false);
+    // Don't reset hasAnsweredCorrectly - it should persist
   };
 
   const handleSelectAnswer = (optionId) => {
@@ -250,6 +273,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
       // Record correct answer to database if user is authenticated
       const isCorrect = selectedAnswer === quizData.correctAnswer;
       if (isCorrect && (user || userProp)) {
+        setHasAnsweredCorrectly(true);
+        
         try {
           const userId = (user || userProp).id;
           const result = await quizAPI.recordCorrectAnswer(
@@ -261,7 +286,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
           if (result.alreadyRecorded) {
             console.log('✅ Quiz answer was already recorded for this user');
           } else {
-            console.log('✅ Correct quiz answer recorded successfully');
+            console.log('✅ Correct quiz answer recorded successfully - User earned 1 PEAR token');
           }
         } catch (error) {
           console.error('❌ Failed to record correct answer:', error);
@@ -797,8 +822,27 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                   </p>
                 </div>
               </div>
+            ) : hasAnsweredCorrectly ? (
+              // Show "Already Completed" state
+              <div className="p-8 space-y-6 text-center">
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 border-2 border-green-200">
+                  <div className="flex justify-center mb-4">
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
+                      <CheckCircle className="h-8 w-8 text-white" />
+                    </div>
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-900 mb-3">Quiz Completed! ✓</h4>
+                  <p className="text-gray-600 mb-4">
+                    You've already answered this quiz correctly and earned your reward.
+                  </p>
+                  <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-amber-400 to-yellow-500 text-white font-bold rounded-lg shadow-lg">
+                    <Sparkles className="h-5 w-5 mr-2" />
+                    1 PEAR Token Earned
+                  </div>
+                </div>
+              </div>
             ) : (
-              // Show quiz if logged in
+              // Show quiz if logged in and hasn't completed it
               <div className="p-6 space-y-6">
               {/* Question */}
               <div className="bg-green-50 border border-green-200 rounded-lg p-5">
@@ -818,8 +862,9 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                 {quizData.options.map((option) => {
                   const isSelected = selectedAnswer === option.id;
                   const isCorrect = option.id === quizData.correctAnswer;
-                  const showCorrect = showQuizResult && isCorrect;
-                  const showIncorrect = showQuizResult && isSelected && !isCorrect;
+                  // Only show if user got it correct - don't reveal correct answer when wrong
+                  const showAsCorrect = showQuizResult && isSelected && isCorrect;
+                  const showAsIncorrect = showQuizResult && isSelected && !isCorrect;
                   
                   return (
                     <button
@@ -827,9 +872,9 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                       onClick={() => handleSelectAnswer(option.id)}
                       disabled={showQuizResult}
                       className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ${
-                        showCorrect
+                        showAsCorrect
                           ? 'bg-green-50 border-green-500 ring-2 ring-green-200'
-                          : showIncorrect
+                          : showAsIncorrect
                           ? 'bg-red-50 border-red-500 ring-2 ring-red-200'
                           : isSelected
                           ? 'bg-green-50 border-green-500 ring-2 ring-green-200'
@@ -839,26 +884,26 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                       <div className="flex items-start space-x-3">
                         <div 
                           className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
-                            showIncorrect
+                            showAsIncorrect
                               ? 'bg-red-500 text-white'
                               : 'bg-gray-200 text-gray-700'
                           }`}
-                          style={showCorrect || isSelected ? { backgroundColor: '#1db954', color: 'white' } : {}}
+                          style={showAsCorrect || (isSelected && !showQuizResult) ? { backgroundColor: '#1db954', color: 'white' } : {}}
                         >
-                          {showQuizResult && isCorrect ? (
+                          {showAsCorrect ? (
                             <CheckCircle className="h-5 w-5" />
-                          ) : showQuizResult && showIncorrect ? (
+                          ) : showAsIncorrect ? (
                             <XCircle className="h-5 w-5" />
                           ) : (
                             option.id.toUpperCase()
                           )}
                         </div>
                         <p className={`flex-1 ${
-                          showCorrect
+                          showAsCorrect
                             ? 'text-green-900 font-medium'
-                            : showIncorrect
+                            : showAsIncorrect
                             ? 'text-red-900'
-                            : isSelected
+                            : isSelected && !showQuizResult
                             ? 'text-green-900 font-medium'
                             : 'text-gray-700'
                         }`}>
@@ -874,7 +919,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
               {showQuizResult && (
                 <div className={`rounded-lg p-5 ${
                   selectedAnswer === quizData.correctAnswer
-                    ? 'bg-green-50 border border-green-200'
+                    ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200'
                     : 'bg-red-50 border border-red-200'
                 }`}>
                   <div className="flex items-start space-x-3">
@@ -893,24 +938,30 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                       )}
                     </div>
                     <div className="flex-1">
-                      <h4 className={`text-lg font-bold mb-1 ${
+                      <h4 className={`text-lg font-bold mb-2 ${
                         selectedAnswer === quizData.correctAnswer
                           ? 'text-green-900'
                           : 'text-red-900'
                       }`}>
                         {selectedAnswer === quizData.correctAnswer
-                          ? '🎉 Correct!'
-                          : '❌ Not Quite'}
+                          ? '🎉 Correct! You Earned a Reward!'
+                          : '❌ Incorrect'}
                       </h4>
-                      <p className={
-                        selectedAnswer === quizData.correctAnswer
-                          ? 'text-green-800'
-                          : 'text-red-800'
-                      }>
-                        {selectedAnswer === quizData.correctAnswer
-                          ? 'Great job! You understood the key contribution of this research.'
-                          : 'That\'s not quite right. Review the paper\'s main findings and try again!'}
-                      </p>
+                      {selectedAnswer === quizData.correctAnswer ? (
+                        <div className="space-y-3">
+                          <p className="text-green-800">
+                            Great job! You understood the key contribution of this research.
+                          </p>
+                          <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-amber-400 to-yellow-500 text-white font-bold rounded-lg shadow-md">
+                            <Sparkles className="h-5 w-5 mr-2" />
+                            +1 PEAR Token
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-red-800">
+                          That's not quite right. Review the paper and try again!
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -938,7 +989,20 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                       Cancel
                     </button>
                   </>
+                ) : selectedAnswer === quizData.correctAnswer ? (
+                  // Correct answer - only show close button
+                  <button
+                    onClick={handleCloseQuiz}
+                    className="w-full inline-flex items-center justify-center px-6 py-3 text-white font-semibold rounded-lg transition-all shadow-md hover:shadow-lg"
+                    style={{ backgroundColor: '#1db954' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+                  >
+                    <CheckCircle className="h-5 w-5 mr-2" />
+                    Done
+                  </button>
                 ) : (
+                  // Incorrect answer - show retry and close
                   <>
                     <button
                       onClick={handleRetryQuiz}
