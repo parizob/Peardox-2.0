@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Heart, ExternalLink, Calendar, Users, Tag, Share2, Brain, Sparkles, BookOpen, GraduationCap, User, Check, MessageCircle, Send, Edit3, Trash2, MoreVertical } from 'lucide-react';
+import { X, Heart, ExternalLink, Calendar, Users, Tag, Share2, Brain, Sparkles, BookOpen, GraduationCap, User, Check, MessageCircle, Send, Edit3, Trash2, MoreVertical, CheckCircle, XCircle, HelpCircle } from 'lucide-react';
 import { arxivAPI, commentsAPI } from '../lib/supabase';
 import { useUser } from '../contexts/UserContext';
 
@@ -17,6 +17,11 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editingCommentText, setEditingCommentText] = useState('');
   const [commentErrors, setCommentErrors] = useState({});
+  
+  // Quiz state
+  const [isQuizOpen, setIsQuizOpen] = useState(false);
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [showQuizResult, setShowQuizResult] = useState(false);
   
   // Get user context
   const { user, userProfile } = useUser();
@@ -181,6 +186,48 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
       });
     }
   };
+
+  // Placeholder quiz data (will be replaced with dynamic content later)
+  const quizData = {
+    question: "What is the main contribution of this research paper?",
+    options: [
+      { id: 'a', text: "A novel machine learning architecture that improves accuracy by 15%" },
+      { id: 'b', text: "A comprehensive survey of existing methods in the field" },
+      { id: 'c', text: "A new dataset for benchmarking AI models" },
+      { id: 'd', text: "An optimization technique for faster model training" }
+    ],
+    correctAnswer: 'a'
+  };
+
+  // Quiz handlers
+  const handleOpenQuiz = () => {
+    setIsQuizOpen(true);
+    setSelectedAnswer(null);
+    setShowQuizResult(false);
+  };
+
+  const handleCloseQuiz = () => {
+    setIsQuizOpen(false);
+    setSelectedAnswer(null);
+    setShowQuizResult(false);
+  };
+
+  const handleSelectAnswer = (optionId) => {
+    if (!showQuizResult) {
+      setSelectedAnswer(optionId);
+    }
+  };
+
+  const handleSubmitQuiz = () => {
+    if (selectedAnswer) {
+      setShowQuizResult(true);
+    }
+  };
+
+  const handleRetryQuiz = () => {
+    setSelectedAnswer(null);
+    setShowQuizResult(false);
+  };
   
   if (!isOpen || !article) return null;
 
@@ -265,51 +312,75 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
     <>
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
         <div className="bg-white rounded-lg max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto w-full mx-2 sm:mx-4">
-          <div className="sticky top-0 bg-white border-b border-gray-200 p-4 sm:p-6 flex justify-between items-start">
-            <div className="flex-1 pr-3 sm:pr-4 min-w-0">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 leading-tight">{article.title}</h2>
-              <div className="flex flex-wrap items-center gap-2">
-                {article.skillLevel && (
-                  <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${getSkillLevelColor(article.skillLevel)}`}>
-                    <Brain className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                    {article.skillLevel}
-                  </span>
-                )}
-                {article.hasSummary && (
-                  <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-purple-100 text-purple-800 border border-purple-200">
-                    <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                    AI Summary
-                  </span>
-                )}
-                {isFavorite && (
-                  <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-red-100 text-red-800 border border-red-200">
-                    <Heart className="w-3 h-3 sm:w-4 sm:h-4 mr-1 fill-current" />
-                    Favorite
-                  </span>
-                )}
+          <div className="sticky top-0 bg-white border-b border-gray-200 p-4 sm:p-6">
+            <div className="flex justify-between items-start mb-3">
+              <div className="flex-1 pr-3 sm:pr-4 min-w-0">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 leading-tight">{article.title}</h2>
+              </div>
+              <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+                <button
+                  onClick={() => onToggleFavorite(article.id)}
+                  className={`p-2 rounded-full transition-all duration-200 ${
+                    isFavorite 
+                      ? 'bg-red-50 text-red-600 hover:bg-red-100' 
+                      : 'bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-500'
+                  }`}
+                  title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                >
+                  <Heart 
+                    className={`h-5 w-5 sm:h-6 sm:w-6 transition-all duration-200 ${
+                      isFavorite ? 'fill-current' : ''
+                    }`} 
+                  />
+                </button>
+                <button
+                  onClick={onClose}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <X className="h-5 w-5 sm:h-6 sm:w-6 text-gray-500" />
+                </button>
               </div>
             </div>
-            <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
-              <button
-                onClick={() => onToggleFavorite(article.id)}
-                className={`p-2 rounded-full transition-all duration-200 ${
-                  isFavorite 
-                    ? 'bg-red-50 text-red-600 hover:bg-red-100' 
-                    : 'bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-500'
-                }`}
-                title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            
+            <div className="flex flex-wrap items-center gap-2">
+              {article.skillLevel && (
+                <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${getSkillLevelColor(article.skillLevel)}`}>
+                  <Brain className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                  {article.skillLevel}
+                </span>
+              )}
+              {isFavorite && (
+                <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-red-100 text-red-800 border border-red-200">
+                  <Heart className="w-3 h-3 sm:w-4 sm:h-4 mr-1 fill-current" />
+                  Favorite
+                </span>
+              )}
+              
+              {/* Action Buttons - Smaller Size for Header */}
+              <a
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-3 py-1.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-xs"
               >
-                <Heart 
-                  className={`h-5 w-5 sm:h-6 sm:w-6 transition-all duration-200 ${
-                    isFavorite ? 'fill-current' : ''
-                  }`} 
-                />
+                <ExternalLink className="h-3 w-3 mr-1.5" />
+                Read Paper
+              </a>
+              
+              <button
+                onClick={handleOpenQuiz}
+                className="inline-flex items-center justify-center px-3 py-1.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all text-xs shadow-sm hover:shadow-md"
+              >
+                <Brain className="h-3 w-3 mr-1.5" />
+                Quiz
               </button>
+              
               <button
-                onClick={onClose}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                onClick={handleShare}
+                className="inline-flex items-center justify-center px-3 py-1.5 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors text-xs border border-gray-300"
               >
-                <X className="h-5 w-5 sm:h-6 sm:w-6 text-gray-500" />
+                <Share2 className="h-3 w-3 mr-1.5" />
+                Share
               </button>
             </div>
           </div>
@@ -415,29 +486,6 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                     </span>
                   )}
                 </div>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="pt-4 sm:pt-6 border-t border-gray-200">
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <a
-                  href={article.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
-                >
-                  <ExternalLink className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-                  Read Full Research Paper
-                </a>
-                
-                <button
-                  onClick={handleShare}
-                  className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-gray-900 font-medium rounded-lg hover:bg-gray-200 transition-colors text-sm sm:text-base border border-gray-300"
-                >
-                  <Share2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-                  Share Article
-                </button>
               </div>
             </div>
 
@@ -632,6 +680,187 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Link Copied!</h3>
               <p className="text-sm text-gray-600">The article link has been copied to your clipboard and is ready to share.</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Quiz Popup */}
+      {isQuizOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            {/* Header */}
+            <div className="sticky top-0 bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 rounded-t-2xl">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Brain className="h-6 w-6" />
+                    <h3 className="text-xl sm:text-2xl font-bold">Test Your Knowledge</h3>
+                  </div>
+                  <p className="text-green-100 text-sm">Answer the question below about this research paper</p>
+                </div>
+                <button
+                  onClick={handleCloseQuiz}
+                  className="p-2 hover:bg-white/20 rounded-full transition-colors flex-shrink-0"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Quiz Content */}
+            <div className="p-6 space-y-6">
+              {/* Question */}
+              <div className="bg-green-50 border border-green-200 rounded-lg p-5">
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold">
+                    ?
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-semibold text-gray-900 mb-1">Question</h4>
+                    <p className="text-gray-700">{quizData.question}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Options */}
+              <div className="space-y-3">
+                {quizData.options.map((option) => {
+                  const isSelected = selectedAnswer === option.id;
+                  const isCorrect = option.id === quizData.correctAnswer;
+                  const showCorrect = showQuizResult && isCorrect;
+                  const showIncorrect = showQuizResult && isSelected && !isCorrect;
+                  
+                  return (
+                    <button
+                      key={option.id}
+                      onClick={() => handleSelectAnswer(option.id)}
+                      disabled={showQuizResult}
+                      className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ${
+                        showCorrect
+                          ? 'bg-green-50 border-green-500 ring-2 ring-green-200'
+                          : showIncorrect
+                          ? 'bg-red-50 border-red-500 ring-2 ring-red-200'
+                          : isSelected
+                          ? 'bg-green-50 border-green-500 ring-2 ring-green-200'
+                          : 'bg-white border-gray-300 hover:border-green-400 hover:bg-green-50'
+                      } ${showQuizResult ? 'cursor-default' : 'cursor-pointer'}`}
+                    >
+                      <div className="flex items-start space-x-3">
+                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
+                          showCorrect
+                            ? 'bg-green-500 text-white'
+                            : showIncorrect
+                            ? 'bg-red-500 text-white'
+                            : isSelected
+                            ? 'bg-green-600 text-white'
+                            : 'bg-gray-200 text-gray-700'
+                        }`}>
+                          {showQuizResult && isCorrect ? (
+                            <CheckCircle className="h-5 w-5" />
+                          ) : showQuizResult && showIncorrect ? (
+                            <XCircle className="h-5 w-5" />
+                          ) : (
+                            option.id.toUpperCase()
+                          )}
+                        </div>
+                        <p className={`flex-1 ${
+                          showCorrect
+                            ? 'text-green-900 font-medium'
+                            : showIncorrect
+                            ? 'text-red-900'
+                            : isSelected
+                            ? 'text-green-900 font-medium'
+                            : 'text-gray-700'
+                        }`}>
+                          {option.text}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Result Message */}
+              {showQuizResult && (
+                <div className={`rounded-lg p-5 ${
+                  selectedAnswer === quizData.correctAnswer
+                    ? 'bg-green-50 border border-green-200'
+                    : 'bg-red-50 border border-red-200'
+                }`}>
+                  <div className="flex items-start space-x-3">
+                    <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+                      selectedAnswer === quizData.correctAnswer
+                        ? 'bg-green-500'
+                        : 'bg-red-500'
+                    }`}>
+                      {selectedAnswer === quizData.correctAnswer ? (
+                        <CheckCircle className="h-6 w-6 text-white" />
+                      ) : (
+                        <XCircle className="h-6 w-6 text-white" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className={`text-lg font-bold mb-1 ${
+                        selectedAnswer === quizData.correctAnswer
+                          ? 'text-green-900'
+                          : 'text-red-900'
+                      }`}>
+                        {selectedAnswer === quizData.correctAnswer
+                          ? '🎉 Correct!'
+                          : '❌ Not Quite'}
+                      </h4>
+                      <p className={
+                        selectedAnswer === quizData.correctAnswer
+                          ? 'text-green-800'
+                          : 'text-red-800'
+                      }>
+                        {selectedAnswer === quizData.correctAnswer
+                          ? 'Great job! You understood the key contribution of this research.'
+                          : 'That\'s not quite right. Review the paper\'s main findings and try again!'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
+                {!showQuizResult ? (
+                  <>
+                    <button
+                      onClick={handleSubmitQuiz}
+                      disabled={!selectedAnswer}
+                      className="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-700 hover:to-emerald-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg"
+                    >
+                      <CheckCircle className="h-5 w-5 mr-2" />
+                      Submit Answer
+                    </button>
+                    <button
+                      onClick={handleCloseQuiz}
+                      className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors border border-gray-300"
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      onClick={handleRetryQuiz}
+                      className="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
+                    >
+                      <HelpCircle className="h-5 w-5 mr-2" />
+                      Try Again
+                    </button>
+                    <button
+                      onClick={handleCloseQuiz}
+                      className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors border border-gray-300"
+                    >
+                      Close
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
