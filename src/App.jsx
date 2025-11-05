@@ -2056,6 +2056,8 @@ function App() {
         onClose={handleCloseModal}
         isFavorite={selectedArticle ? favorites.has(selectedArticle.id) : false}
         onToggleFavorite={handleToggleFavorite}
+        user={user}
+        onOpenAccountModal={() => setIsAccountOpen(true)}
       />
 
       <SavedArticles

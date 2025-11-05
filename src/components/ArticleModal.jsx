@@ -3,7 +3,7 @@ import { X, Heart, ExternalLink, Calendar, Users, Tag, Share2, Brain, Sparkles, 
 import { arxivAPI, commentsAPI } from '../lib/supabase';
 import { useUser } from '../contexts/UserContext';
 
-const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }) => {
+const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, user: userProp, onOpenAccountModal }) => {
   const [showCopiedPopup, setShowCopiedPopup] = useState(false);
   const [fullAbstract, setFullAbstract] = useState(null);
   const [isLoadingAbstract, setIsLoadingAbstract] = useState(false);
@@ -225,6 +225,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
 
   // Quiz handlers
   const handleOpenQuiz = () => {
+    // Always open the quiz modal (will show auth prompt if not logged in)
     setIsQuizOpen(true);
     setSelectedAnswer(null);
     setShowQuizResult(false);
@@ -724,7 +725,12 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                     <Brain className="h-6 w-6" />
                     <h3 className="text-xl sm:text-2xl font-bold">Test Your Knowledge</h3>
                   </div>
-                  <p className="text-white/80 text-sm">Answer the question below about this research paper</p>
+                  <p className="text-white/80 text-sm">
+                    {(user || userProp) 
+                      ? "Answer the question below about this research paper"
+                      : "Create a free account to test your knowledge"
+                    }
+                  </p>
                 </div>
                 <button
                   onClick={handleCloseQuiz}
@@ -735,8 +741,43 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
               </div>
             </div>
 
-            {/* Quiz Content */}
-            <div className="p-6 space-y-6">
+            {/* Auth Required or Quiz Content */}
+            {!(user || userProp) ? (
+              // Show auth prompt if not logged in
+              <div className="p-8 space-y-6 text-center">
+                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 border-2 border-green-200">
+                  <div className="flex justify-center mb-4">
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
+                      <Brain className="h-8 w-8 text-white" />
+                    </div>
+                  </div>
+                  <h4 className="text-2xl font-bold text-gray-900 mb-3">Unlock Quizzes</h4>
+                  <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                    Test your understanding of research papers with interactive quizzes. Create a free account to access this feature and track your progress!
+                  </p>
+                  <button
+                    onClick={() => {
+                      handleCloseQuiz();
+                      if (onOpenAccountModal) {
+                        onOpenAccountModal();
+                      }
+                    }}
+                    className="inline-flex items-center justify-center px-8 py-3 text-white font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                    style={{ backgroundColor: '#1db954' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+                  >
+                    <User className="h-5 w-5 mr-2" />
+                    Create Free Account
+                  </button>
+                  <p className="text-sm text-gray-500 mt-4">
+                    Already have an account? Click above to sign in.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              // Show quiz if logged in
+              <div className="p-6 space-y-6">
               {/* Question */}
               <div className="bg-green-50 border border-green-200 rounded-lg p-5">
                 <div className="flex items-start space-x-3">
@@ -897,6 +938,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                 )}
               </div>
             </div>
+            )}
           </div>
         </div>
       )}
