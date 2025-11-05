@@ -1445,12 +1445,12 @@ function App() {
                     {/* Spotlight Article - Takes 8 columns on large screens */}
                     <div className="lg:col-span-8 flex">
                   {!spotlightArticle ? (
-                    <div className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 overflow-hidden w-full lg:h-full lg:min-h-[320px] min-h-[400px]">
+                    <div className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 overflow-hidden w-full lg:h-full lg:min-h-[320px]">
                       {/* Subtle animated background */}
                       <div className="absolute inset-0 bg-gradient-to-br from-amber-50/30 to-orange-50/30"></div>
                       
                       {/* Content with gentle fade */}
-                      <div className="relative h-full flex flex-col p-6 sm:p-8 animate-pulse">
+                      <div className="relative h-full flex flex-col p-4 sm:p-6 lg:p-8 animate-pulse justify-between">
                         {/* Top badges skeleton - subtle */}
                         <div className="flex items-center space-x-2 mb-6 pt-2">
                           <div className="h-7 w-28 bg-amber-200/40 rounded-full"></div>
@@ -1490,7 +1490,7 @@ function App() {
                   ) : (
                     <div className="animate-[fadeIn_0.6s_ease-in] w-full">
                       <div 
-                        className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 hover:border-amber-300 hover:shadow-3xl transition-all duration-500 cursor-pointer group overflow-hidden lg:h-full lg:min-h-[320px] min-h-[400px]"
+                        className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 hover:border-amber-300 hover:shadow-3xl transition-all duration-500 cursor-pointer group overflow-hidden lg:h-full lg:min-h-[320px]"
                       onClick={() => handleArticleClick(spotlightArticle)}
                     >
                       {/* Animated background decorations */}
@@ -1511,7 +1511,7 @@ function App() {
                         </div>
                       
                       {/* Content area */}
-                        <div className="relative h-full flex flex-col p-4 sm:p-6 lg:p-8">
+                        <div className="relative h-full flex flex-col p-4 sm:p-6 lg:p-8 justify-between">
                           {/* Top section - badges with extra spacing */}
                           <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-6 pt-1 sm:pt-2">
                             <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md flex-shrink-0">
@@ -1523,18 +1523,18 @@ function App() {
                           </div>
                           
                           {/* Middle section - title and description with better spacing */}
-                          <div className="flex-1 mb-4 sm:mb-6 mt-1 sm:mt-2">
+                          <div className="flex-1 mb-3 sm:mb-6 mt-1 sm:mt-2">
                             <h4 className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 sm:mb-5 leading-tight group-hover:text-amber-700 transition-colors sm:line-clamp-2">
                             {spotlightArticle.title}
                           </h4>
                           
-                            <p className="text-gray-700 text-sm sm:text-base leading-relaxed line-clamp-3 sm:line-clamp-3">
+                            <p className="text-gray-700 text-sm sm:text-base leading-relaxed sm:line-clamp-3">
                             {spotlightArticle.shortDescription}
                           </p>
                         </div>
                         
                           {/* Bottom section - metadata and CTA */}
-                          <div className="space-y-2 sm:space-y-3">
+                          <div className="space-y-2 sm:space-y-3 flex-shrink-0">
                             <div className="flex items-center text-xs sm:text-sm text-gray-600">
                               <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
                               <span className="truncate text-xs sm:text-sm">{spotlightArticle.authors.split(',')[0]}{spotlightArticle.authors.split(',').length > 1 ? ' et al.' : ''}</span>
