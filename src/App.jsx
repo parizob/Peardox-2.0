@@ -1774,53 +1774,85 @@ function App() {
                             </p>
                           </div>
                         ) : (
-                          /* Authenticated User View - Token Balance */
+                          /* Authenticated User View - Personal Wallet */
                           <div className="text-center">
-                            {/* Token Balance Display */}
-                            <p className="text-gray-600 text-base font-semibold mb-3">Your Balance</p>
-                            <div className="flex justify-center mb-4">
-                              <div className="relative w-28 h-28 sm:w-32 sm:h-32">
-                                {/* Outer rotating ring */}
-                                <div className="absolute inset-0 rounded-full border-4 border-amber-200 border-t-amber-500 animate-spin" style={{ animationDuration: '3s' }}></div>
-                                {/* Inner rotating ring opposite direction */}
-                                <div className="absolute inset-2 rounded-full border-4 border-yellow-200 border-b-yellow-500" style={{ animation: 'spin 4s linear infinite reverse' }}></div>
-                                {/* Token center */}
-                                <div className="absolute inset-4 rounded-full bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 shadow-2xl flex flex-col items-center justify-center">
-                                  <Sparkles className="h-6 w-6 text-white mb-0.5 animate-pulse" />
+                            {/* Wallet Header - Premium Feel */}
+                            <div className="mb-4">
+                              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-full shadow-lg mb-2">
+                                <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center">
+                                  <Sparkles className="h-3.5 w-3.5 text-white" />
+                                </div>
+                                <span className="text-white font-black text-sm tracking-wide">PEARADOX WALLET</span>
+                              </div>
+                              <p className="text-amber-700 text-xs font-semibold uppercase tracking-wider">Digital Asset Balance</p>
+                            </div>
+                            
+                            {/* Token Balance Display - Wallet Style */}
+                            <div className="flex justify-center mb-3">
+                              <div className="relative w-32 h-32 sm:w-36 sm:h-36">
+                                {/* Glowing effect backdrop */}
+                                <div className="absolute -inset-6 rounded-full blur-2xl opacity-50 animate-pulse" style={{ background: 'radial-gradient(circle, rgba(251, 191, 36, 0.6), transparent)' }}></div>
+                                
+                                {/* Outer rotating ring - seamlessly integrated */}
+                                <div className="absolute inset-0 rounded-full border-[6px] border-transparent bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-400 animate-spin" style={{ animationDuration: '3s', WebkitMaskImage: 'linear-gradient(white, white)', maskImage: 'linear-gradient(white, white)' }}>
+                                  <div className="absolute inset-[6px] rounded-full bg-amber-50"></div>
+                                </div>
+                                
+                                {/* Inner rotating ring - opposite direction */}
+                                <div className="absolute inset-3 rounded-full border-[5px] border-transparent bg-gradient-to-bl from-yellow-400 via-amber-500 to-yellow-500" style={{ animation: 'spin 4s linear infinite reverse', WebkitMaskImage: 'linear-gradient(white, white)', maskImage: 'linear-gradient(white, white)' }}>
+                                  <div className="absolute inset-[5px] rounded-full bg-amber-50"></div>
+                                </div>
+                                
+                                {/* Token center - fully integrated */}
+                                <div className="absolute inset-6 rounded-full bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 shadow-2xl flex flex-col items-center justify-center overflow-hidden">
+                                  {/* Animated shine overlay */}
+                                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent animate-pulse"></div>
+                                  <Sparkles className="h-6 w-6 sm:h-7 sm:w-7 text-white mb-0.5 animate-pulse relative z-10" />
                                   {isLoadingTokens ? (
-                                    <div className="text-xl font-black text-white">...</div>
+                                    <div className="text-xl sm:text-2xl font-black text-white relative z-10 drop-shadow-lg">...</div>
                                   ) : (
-                                    <div className="text-3xl sm:text-4xl font-black text-white">
+                                    <div className="text-3xl sm:text-4xl font-black text-white relative z-10 drop-shadow-lg">
                                       {pearTokenCount}
                                     </div>
                                   )}
                                 </div>
                               </div>
                             </div>
-                            <p className="text-xl sm:text-2xl font-bold text-amber-600 mb-4">
-                              {pearTokenCount} PEAR Token{pearTokenCount !== 1 ? 's' : ''}
-                            </p>
+                            
+                            {/* Balance Amount - Crypto Style */}
+                            <div className="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300 rounded-2xl p-3 mb-4 shadow-lg">
+                              <div className="flex items-center justify-center gap-2 mb-1">
+                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                <p className="text-xs font-bold text-amber-700 uppercase tracking-wider">Balance</p>
+                              </div>
+                              <p className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+                                {pearTokenCount} PEAR
+                              </p>
+                              <p className="text-xs text-gray-600 font-medium mt-0.5">
+                                Token{pearTokenCount !== 1 ? 's' : ''} Owned
+                              </p>
+                            </div>
                             
                             {/* Compact Motivational Message */}
                             {pearTokenCount === 0 ? (
-                              <p className="text-gray-700 text-base font-medium">
-                                🚀 Take quizzes to earn your first tokens!
+                              <p className="text-gray-700 text-sm font-medium">
+                                🚀 Complete quizzes to add to your wallet!
                               </p>
                             ) : pearTokenCount < 5 ? (
-                              <p className="text-gray-700 text-base font-medium">
-                                🌟 Great start! Next milestone: <span className="font-bold text-amber-600">5 tokens</span>
+                              <p className="text-gray-700 text-sm font-medium">
+                                🌟 Building your portfolio! Next: <span className="font-bold text-amber-600">5 PEAR</span>
                               </p>
                             ) : pearTokenCount < 10 ? (
-                              <p className="text-gray-700 text-base font-medium">
-                                🔥 You're on fire! Next: <span className="font-bold text-amber-600">10 tokens</span>
+                              <p className="text-gray-700 text-sm font-medium">
+                                🔥 Growing your holdings! Next: <span className="font-bold text-amber-600">10 PEAR</span>
                               </p>
                             ) : (
                               <div>
-                                <p className="text-amber-700 font-bold text-lg mb-1">🏆 Token Master!</p>
-                                <p className="text-gray-700 text-base font-medium">Keep building your collection</p>
+                                <p className="text-amber-700 font-bold text-base mb-1">💎 Premium Holder!</p>
+                                <p className="text-gray-700 text-sm font-medium">Your collection is impressive</p>
                               </div>
                             )}
-                            <p className="text-sm text-gray-500 mt-3 italic">
+                            <p className="text-xs text-gray-500 mt-3 italic font-medium">
                               🛍️ Pearadox store coming soon!
                             </p>
                           </div>
