@@ -473,6 +473,7 @@ function App() {
           title: foundArticle.summaryTitle || foundArticle.title || 'Untitled',
           shortDescription: foundArticle.summaryOverview || (foundArticle.abstract?.substring(0, 200) + '...') || 'No description available',
           originalTitle: foundArticle.title,
+          quiz: foundArticle.quiz || null,
           originalAbstract: foundArticle.abstract,
           summaryContent: foundArticle.summaryContent,
           hasSummary: !!(foundArticle.summaryTitle || foundArticle.summaryOverview || foundArticle.summaryContent),
@@ -921,8 +922,22 @@ function App() {
         authors: Array.isArray(paper.authors) ? paper.authors.join(', ') : (paper.authors || 'Unknown Authors'),
         publishedDate: formatDate(paper.published_date || paper.created_at),
         tags: generateTags(paper.categories_name, paper.title, paper.abstract),
+        // Add quiz data if available
+        quiz: paper.quiz || null,
         _original: paper
       }));
+      
+      // Log quiz data for debugging
+      const articlesWithQuizzes = transformedArticles.filter(a => a.quiz !== null);
+      console.log(`🧠 Found ${articlesWithQuizzes.length} articles with quiz data out of ${transformedArticles.length} total`);
+      if (articlesWithQuizzes.length > 0) {
+        console.log('🧠 Sample article with quiz:', {
+          id: articlesWithQuizzes[0].id,
+          title: articlesWithQuizzes[0].title?.substring(0, 50),
+          hasQuiz: !!articlesWithQuizzes[0].quiz,
+          quizQuestion: articlesWithQuizzes[0].quiz?.question?.substring(0, 50)
+        });
+      }
       
       setArticles(transformedArticles);
       

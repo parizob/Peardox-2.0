@@ -187,17 +187,41 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
     }
   };
 
-  // Placeholder quiz data (will be replaced with dynamic content later)
-  const quizData = {
-    question: "What is the main contribution of this research paper?",
-    options: [
-      { id: 'a', text: "A novel machine learning architecture that improves accuracy by 15%" },
-      { id: 'b', text: "A comprehensive survey of existing methods in the field" },
-      { id: 'c', text: "A new dataset for benchmarking AI models" },
-      { id: 'd', text: "An optimization technique for faster model training" }
-    ],
-    correctAnswer: 'a'
+  // Get quiz data from article or use placeholder
+  const getQuizData = () => {
+    console.log('🧠 Getting quiz data for article:', article?.id);
+    console.log('🧠 Article quiz object:', article?.quiz);
+    
+    // If article has quiz data from database
+    if (article?.quiz && article.quiz.question && article.quiz.answer_a && article.quiz.answer_b && article.quiz.answer_c && article.quiz.answer_d && article.quiz.correct_answer) {
+      console.log('✅ Using quiz from database');
+      return {
+        question: article.quiz.question,
+        options: [
+          { id: 'a', text: article.quiz.answer_a },
+          { id: 'b', text: article.quiz.answer_b },
+          { id: 'c', text: article.quiz.answer_c },
+          { id: 'd', text: article.quiz.answer_d }
+        ],
+        correctAnswer: article.quiz.correct_answer.toLowerCase() // Convert "A" to "a"
+      };
+    }
+    
+    console.log('⚠️ No quiz found in article, using placeholder');
+    // Fallback to placeholder quiz if no quiz data
+    return {
+      question: "What is the main contribution of this research paper?",
+      options: [
+        { id: 'a', text: "A novel machine learning architecture that improves accuracy by 15%" },
+        { id: 'b', text: "A comprehensive survey of existing methods in the field" },
+        { id: 'c', text: "A new dataset for benchmarking AI models" },
+        { id: 'd', text: "An optimization technique for faster model training" }
+      ],
+      correctAnswer: 'a'
+    };
   };
+  
+  const quizData = getQuizData();
 
   // Quiz handlers
   const handleOpenQuiz = () => {

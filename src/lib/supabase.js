@@ -262,28 +262,64 @@ export const arxivAPI = {
       
       console.log(`📊 Found ${papersData?.length || 0} papers from v_arxiv_papers`);
       
+      // Fetch quiz data for these papers
+      console.log('🧠 Fetching quiz data for papers...');
+      console.log('🧠 Paper IDs to fetch quizzes for:', paperIds.slice(0, 10), '... (showing first 10)');
+      const { data: quizzesData, error: quizzesError } = await supabase
+        .from('v_papers_with_quizzes')
+        .select('arxiv_paper_id, question, answer_a, answer_b, answer_c, answer_d, correct_answer')
+        .in('arxiv_paper_id', paperIds);
+      
+      if (quizzesError) {
+        console.error('❌ Error fetching quizzes:', quizzesError);
+        console.warn('⚠️ Error fetching quizzes (continuing without):', quizzesError);
+      }
+      
+      console.log(`🧠 Found ${quizzesData?.length || 0} quizzes`);
+      if (quizzesData && quizzesData.length > 0) {
+        console.log('🧠 Quiz paper IDs:', quizzesData.map(q => q.arxiv_paper_id).slice(0, 10));
+        console.log('🧠 Sample quiz:', quizzesData[0]);
+      }
+      
       // Create a map of summaries by paper ID for quick lookup
       const summariesMap = new Map();
       transformedSummaries.forEach(summary => {
         summariesMap.set(summary.paper_id, summary);
       });
       
-      // Merge papers with their corresponding summaries
+      // Create a map of quizzes by paper ID for quick lookup
+      const quizzesMap = new Map();
+      (quizzesData || []).forEach(quiz => {
+        quizzesMap.set(quiz.arxiv_paper_id, quiz);
+      });
+      
+      // Merge papers with their corresponding summaries and quizzes
       const papersWithSummaries = (papersData || []).map(paper => {
         const summary = summariesMap.get(paper.id);
+        const quiz = quizzesMap.get(paper.id);
+        
         return {
           ...paper,
           // Add summary fields if available
           summaryTitle: summary?.title || null,
           summaryOverview: summary?.overview || null,
           summaryContent: summary?.summary || null,
-          skillLevel: summary?.skill_level || null
+          skillLevel: summary?.skill_level || null,
+          // Add quiz fields if available
+          quiz: quiz ? {
+            question: quiz.question,
+            answer_a: quiz.answer_a,
+            answer_b: quiz.answer_b,
+            answer_c: quiz.answer_c,
+            answer_d: quiz.answer_d,
+            correct_answer: quiz.correct_answer
+          } : null
         };
       });
       
       // Cache the result
       setCache(cacheKey, papersWithSummaries, 20);
-      console.log(`✅ Retrieved ${papersWithSummaries.length} papers with summaries (page ${page})`);
+      console.log(`✅ Retrieved ${papersWithSummaries.length} papers with summaries and quizzes (page ${page})`);
       return papersWithSummaries;
       
     } catch (error) {
@@ -327,6 +363,18 @@ export const arxivAPI = {
         console.warn('⚠️ Error fetching summary (continuing without):', summaryError);
       }
       
+      // Get quiz data for this paper
+      console.log('🧠 Fetching quiz data for paper:', paperId);
+      const { data: quizData, error: quizError } = await supabase
+        .from('v_papers_with_quizzes')
+        .select('arxiv_paper_id, question, answer_a, answer_b, answer_c, answer_d, correct_answer')
+        .eq('arxiv_paper_id', paperId)
+        .single();
+      
+      if (quizError && quizError.code !== 'PGRST116') {
+        console.warn('⚠️ Error fetching quiz (continuing without):', quizError);
+      }
+      
       // Transform summary data - fields already filtered for skill level
       let transformedSummary = null;
       if (summaryData) {
@@ -339,16 +387,25 @@ export const arxivAPI = {
         };
       }
       
-      // Merge paper with summary
+      // Merge paper with summary and quiz
       const paperWithSummary = {
         ...paperData,
         summaryTitle: transformedSummary?.title || null,
         summaryOverview: transformedSummary?.overview || null,
         summaryContent: transformedSummary?.summary || null,
-        skillLevel: transformedSummary?.skill_level || null
+        skillLevel: transformedSummary?.skill_level || null,
+        // Add quiz fields if available
+        quiz: quizData ? {
+          question: quizData.question,
+          answer_a: quizData.answer_a,
+          answer_b: quizData.answer_b,
+          answer_c: quizData.answer_c,
+          answer_d: quizData.answer_d,
+          correct_answer: quizData.correct_answer
+        } : null
       };
       
-      console.log('✅ Retrieved paper with summary');
+      console.log('✅ Retrieved paper with summary and quiz');
       return paperWithSummary;
       
     } catch (error) {
