@@ -369,7 +369,10 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
               
               <button
                 onClick={handleOpenQuiz}
-                className="inline-flex items-center justify-center px-3 py-1.5 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-medium rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all text-xs shadow-sm hover:shadow-md"
+                className="inline-flex items-center justify-center px-3 py-1.5 text-white font-medium rounded-lg transition-all text-xs shadow-sm hover:shadow-md"
+                style={{ backgroundColor: '#1db954' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
               >
                 <Brain className="h-3 w-3 mr-1.5" />
                 Quiz
@@ -690,14 +693,14 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             {/* Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-green-600 to-emerald-600 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 text-white p-6 rounded-t-2xl" style={{ background: 'linear-gradient(to right, #1db954, #16a14a)' }}>
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center space-x-2 mb-2">
                     <Brain className="h-6 w-6" />
                     <h3 className="text-xl sm:text-2xl font-bold">Test Your Knowledge</h3>
                   </div>
-                  <p className="text-green-100 text-sm">Answer the question below about this research paper</p>
+                  <p className="text-white/80 text-sm">Answer the question below about this research paper</p>
                 </div>
                 <button
                   onClick={handleCloseQuiz}
@@ -713,7 +716,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
               {/* Question */}
               <div className="bg-green-50 border border-green-200 rounded-lg p-5">
                 <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold">
+                  <div className="flex-shrink-0 w-8 h-8 text-white rounded-full flex items-center justify-center font-bold" style={{ backgroundColor: '#1db954' }}>
                     ?
                   </div>
                   <div className="flex-1">
@@ -747,15 +750,14 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                       } ${showQuizResult ? 'cursor-default' : 'cursor-pointer'}`}
                     >
                       <div className="flex items-start space-x-3">
-                        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
-                          showCorrect
-                            ? 'bg-green-500 text-white'
-                            : showIncorrect
-                            ? 'bg-red-500 text-white'
-                            : isSelected
-                            ? 'bg-green-600 text-white'
-                            : 'bg-gray-200 text-gray-700'
-                        }`}>
+                        <div 
+                          className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
+                            showIncorrect
+                              ? 'bg-red-500 text-white'
+                              : 'bg-gray-200 text-gray-700'
+                          }`}
+                          style={showCorrect || isSelected ? { backgroundColor: '#1db954', color: 'white' } : {}}
+                        >
                           {showQuizResult && isCorrect ? (
                             <CheckCircle className="h-5 w-5" />
                           ) : showQuizResult && showIncorrect ? (
@@ -789,11 +791,14 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                     : 'bg-red-50 border border-red-200'
                 }`}>
                   <div className="flex items-start space-x-3">
-                    <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
-                      selectedAnswer === quizData.correctAnswer
-                        ? 'bg-green-500'
-                        : 'bg-red-500'
-                    }`}>
+                    <div 
+                      className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
+                        selectedAnswer === quizData.correctAnswer
+                          ? ''
+                          : 'bg-red-500'
+                      }`}
+                      style={selectedAnswer === quizData.correctAnswer ? { backgroundColor: '#1db954' } : {}}
+                    >
                       {selectedAnswer === quizData.correctAnswer ? (
                         <CheckCircle className="h-6 w-6 text-white" />
                       ) : (
@@ -831,7 +836,10 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                     <button
                       onClick={handleSubmitQuiz}
                       disabled={!selectedAnswer}
-                      className="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-700 hover:to-emerald-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg"
+                      className="flex-1 inline-flex items-center justify-center px-6 py-3 text-white font-semibold rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg"
+                      style={!selectedAnswer ? {} : { backgroundColor: '#1db954' }}
+                      onMouseEnter={(e) => !selectedAnswer ? null : e.currentTarget.style.backgroundColor = '#16a14a'}
+                      onMouseLeave={(e) => !selectedAnswer ? null : e.currentTarget.style.backgroundColor = '#1db954'}
                     >
                       <CheckCircle className="h-5 w-5 mr-2" />
                       Submit Answer
@@ -847,7 +855,10 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite }
                   <>
                     <button
                       onClick={handleRetryQuiz}
-                      className="flex-1 inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
+                      className="flex-1 inline-flex items-center justify-center px-6 py-3 text-white font-semibold rounded-lg transition-all shadow-md hover:shadow-lg"
+                      style={{ backgroundColor: '#1db954' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
                     >
                       <HelpCircle className="h-5 w-5 mr-2" />
                       Try Again
