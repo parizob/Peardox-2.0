@@ -1709,6 +1709,159 @@ export const commentsAPI = {
   }
 };
 
+// Quiz API - Track correct answers
+export const quizAPI = {
+  /**
+   * Record a correct quiz answer for a user
+   * @param {string} userId - UUID of the authenticated user
+   * @param {number} arxivPaperId - Internal paper ID from v_arxiv_papers.id
+   * @param {string} arxivId - ArXiv ID string (e.g., "2301.12345")
+   * @returns {Promise<Object>} The created record or error
+   */
+  async recordCorrectAnswer(userId, arxivPaperId, arxivId) {
+    try {
+      console.log('🎯 Recording correct quiz answer:', { userId, arxivPaperId, arxivId });
+      
+      if (!userId) {
+        console.error('❌ Cannot record quiz answer: user not authenticated');
+        throw new Error('User must be authenticated to record quiz answers');
+      }
+      
+      if (!arxivPaperId || !arxivId) {
+        console.error('❌ Cannot record quiz answer: missing paper information');
+        throw new Error('Paper ID and ArXiv ID are required');
+      }
+      
+      const { data, error } = await supabase
+        .from('quiz_correct_answers')
+        .insert({
+          user_id: userId,
+          arxiv_paper_id: arxivPaperId,
+          arxiv_id: arxivId,
+          answered_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+      
+      if (error) {
+        // Check if it's a unique constraint violation (user already answered correctly)
+        if (error.code === '23505') {
+          console.log('ℹ️ User already has a correct answer recorded for this quiz');
+          return { 
+            success: true, 
+            alreadyRecorded: true,
+            message: 'Answer already recorded'
+          };
+        }
+        
+        console.error('❌ Error recording correct answer:', error);
+        throw error;
+      }
+      
+      console.log('✅ Correct answer recorded successfully');
+      return { 
+        success: true, 
+        data,
+        alreadyRecorded: false 
+      };
+      
+    } catch (error) {
+      console.error('❌ Exception in recordCorrectAnswer:', error);
+      throw error;
+    }
+  },
+  
+  /**
+   * Get all correct answers for a user
+   * @param {string} userId - UUID of the authenticated user
+   * @returns {Promise<Array>} Array of correct answers
+   */
+  async getUserCorrectAnswers(userId) {
+    try {
+      console.log('📊 Fetching correct answers for user:', userId);
+      
+      if (!userId) {
+        return [];
+      }
+      
+      const { data, error } = await supabase
+        .from('quiz_correct_answers')
+        .select('*')
+        .eq('user_id', userId)
+        .order('answered_at', { ascending: false });
+      
+      if (error) {
+        console.error('❌ Error fetching user correct answers:', error);
+        throw error;
+      }
+      
+      console.log(`✅ Found ${data?.length || 0} correct answers for user`);
+      return data || [];
+      
+    } catch (error) {
+      console.error('❌ Exception in getUserCorrectAnswers:', error);
+      throw error;
+    }
+  },
+  
+  /**
+   * Check if a user has answered a specific quiz correctly
+   * @param {string} userId - UUID of the authenticated user
+   * @param {number} arxivPaperId - Internal paper ID
+   * @returns {Promise<boolean>} True if user has answered correctly
+   */
+  async hasUserAnsweredCorrectly(userId, arxivPaperId) {
+    try {
+      if (!userId || !arxivPaperId) {
+        return false;
+      }
+      
+      const { data, error } = await supabase
+        .from('quiz_correct_answers')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('arxiv_paper_id', arxivPaperId)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        console.error('❌ Error checking if user answered correctly:', error);
+        return false;
+      }
+      
+      return !!data;
+      
+    } catch (error) {
+      console.error('❌ Exception in hasUserAnsweredCorrectly:', error);
+      return false;
+    }
+  },
+  
+  /**
+   * Get count of correct answers for a specific quiz (across all users)
+   * @param {number} arxivPaperId - Internal paper ID
+   * @returns {Promise<number>} Count of users who answered correctly
+   */
+  async getQuizCorrectCount(arxivPaperId) {
+    try {
+      const { count, error } = await supabase
+        .from('quiz_correct_answers')
+        .select('*', { count: 'exact', head: true })
+        .eq('arxiv_paper_id', arxivPaperId);
+      
+      if (error) {
+        console.error('❌ Error getting quiz correct count:', error);
+        return 0;
+      }
+      
+      return count || 0;
+      
+    } catch (error) {
+      console.error('❌ Exception in getQuizCorrectCount:', error);
+      return 0;
+    }
+  }
+};
+
 // Run initial test
 testConnection().then(result => {
   if (result.success) {

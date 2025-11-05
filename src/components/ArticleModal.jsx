@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Heart, ExternalLink, Calendar, Users, Tag, Share2, Brain, Sparkles, BookOpen, GraduationCap, User, Check, MessageCircle, Send, Edit3, Trash2, MoreVertical, CheckCircle, XCircle, HelpCircle } from 'lucide-react';
-import { arxivAPI, commentsAPI } from '../lib/supabase';
+import { arxivAPI, commentsAPI, quizAPI } from '../lib/supabase';
 import { useUser } from '../contexts/UserContext';
 
 const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, user: userProp, onOpenAccountModal }) => {
@@ -243,9 +243,31 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
     }
   };
 
-  const handleSubmitQuiz = () => {
+  const handleSubmitQuiz = async () => {
     if (selectedAnswer) {
       setShowQuizResult(true);
+      
+      // Record correct answer to database if user is authenticated
+      const isCorrect = selectedAnswer === quizData.correctAnswer;
+      if (isCorrect && (user || userProp)) {
+        try {
+          const userId = (user || userProp).id;
+          const result = await quizAPI.recordCorrectAnswer(
+            userId,
+            article.id,
+            article.arxivId
+          );
+          
+          if (result.alreadyRecorded) {
+            console.log('✅ Quiz answer was already recorded for this user');
+          } else {
+            console.log('✅ Correct quiz answer recorded successfully');
+          }
+        } catch (error) {
+          console.error('❌ Failed to record correct answer:', error);
+          // Don't show error to user, just log it
+        }
+      }
     }
   };
 
