@@ -104,8 +104,8 @@ const TestimonialCarousel = () => {
                 </blockquote>
                 
                 {/* Author & Rating */}
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <div className="flex-1 min-w-0">
                     <div className="font-semibold text-gray-900 text-sm">
                       {testimonials[currentIndex].name}
                     </div>
@@ -114,8 +114,8 @@ const TestimonialCarousel = () => {
                     </div>
                   </div>
                   
-                  {/* Rating */}
-                  <div className="flex items-center">
+                  {/* Rating - Below on mobile, right side on desktop */}
+                  <div className="flex items-center flex-shrink-0">
                     {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
                       <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
                     ))}
