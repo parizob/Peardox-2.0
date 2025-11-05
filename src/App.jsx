@@ -11,7 +11,7 @@ import TestimonialCarousel from './components/TestimonialCarousel';
 import FieldQuiz from './components/FieldQuiz';
 import FieldQuizButton from './components/FieldQuizButton';
 import { useUser } from './contexts/UserContext';
-import { arxivAPI, authAPI, savedArticlesAPI, viewedArticlesAPI, supabase } from './lib/supabase';
+import { arxivAPI, authAPI, savedArticlesAPI, viewedArticlesAPI, quizAPI, supabase } from './lib/supabase';
 
 // Comprehensive category to icon mapping
 const getCategoryIcon = (categoryName) => {
@@ -305,6 +305,10 @@ function App() {
     handleResearchInterestsChange,
     handleToggleFavorite
   } = useUser();
+  
+  // PEAR token state
+  const [pearTokenCount, setPearTokenCount] = useState(0);
+  const [isLoadingTokens, setIsLoadingTokens] = useState(false);
   
   // Default research interests fallback
   const defaultResearchInterests = [
@@ -695,6 +699,29 @@ function App() {
       subscription?.unsubscribe();
     };
   }, []);
+
+  // Load PEAR token count for authenticated users
+  useEffect(() => {
+    const loadPearTokens = async () => {
+      if (user) {
+        setIsLoadingTokens(true);
+        try {
+          const correctAnswers = await quizAPI.getUserCorrectAnswers(user.id);
+          setPearTokenCount(correctAnswers.length);
+          console.log(`🪙 User has ${correctAnswers.length} PEAR tokens`);
+        } catch (error) {
+          console.error('❌ Error loading PEAR tokens:', error);
+          setPearTokenCount(0);
+        } finally {
+          setIsLoadingTokens(false);
+        }
+      } else {
+        setPearTokenCount(0);
+      }
+    };
+
+    loadPearTokens();
+  }, [user]);
 
   // Load data from Supabase with skill-level specific summaries
   useEffect(() => {
@@ -1699,12 +1726,109 @@ function App() {
                           </div>
                     </div>
 
-                    {/* What Our Readers Say Section - Takes 6 columns on large screens, next to Personalize */}
-                    <div className="lg:col-span-6">
-                      <TestimonialCarousel />
-                        </div>
+                    {/* PEAR Tokens Section - Takes 6 columns on large screens, next to Personalize */}
+                    <div className="lg:col-span-6 relative bg-gradient-to-br from-amber-50 via-yellow-50/30 to-amber-50 rounded-3xl shadow-2xl border-2 border-amber-200 p-6 sm:p-8 overflow-hidden group hover:shadow-3xl transition-all duration-500 min-h-[320px]">
+                      {/* Background decoration */}
+                      <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(251, 191, 36, 0.3) 0%, rgba(245, 158, 11, 0.1) 100%)' }}></div>
+                      <div className="absolute -bottom-10 -left-10 w-56 h-56 rounded-full blur-3xl opacity-30" style={{ background: 'radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 100%)' }}></div>
+                      
+                      <div className="relative z-10 h-full flex flex-col justify-center">
+                        {/* Content changes based on authentication */}
+                        {!user ? (
+                          /* Unauthenticated User View - Engaging CTA */
+                          <div className="text-center lg:text-left">
+                            {/* Token Visual */}
+                            <div className="flex justify-center lg:justify-start mb-6">
+                              <div className="relative w-20 h-20">
+                                {/* Animated rings */}
+                                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 animate-pulse opacity-20"></div>
+                                <div className="absolute inset-2 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 animate-pulse opacity-40" style={{ animationDelay: '0.5s' }}></div>
+                                {/* Main token */}
+                                <div className="absolute inset-3 rounded-full bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 shadow-2xl flex items-center justify-center">
+                                  <Sparkles className="h-8 w-8 text-white animate-pulse" />
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <h3 className="text-2xl sm:text-3xl font-black text-gray-900 mb-3 leading-tight">
+                              Earn <span className="bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">PEAR Tokens</span>
+                            </h3>
+                            <p className="text-gray-700 text-sm sm:text-base mb-4 leading-relaxed">
+                              Test your knowledge with quizzes on every research paper. Answer correctly and earn <span className="font-bold text-amber-600">PEAR tokens</span> — redeemable for exclusive rewards. 
+                            </p>
+                            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-3">
+                              <button
+                                onClick={() => setIsAccountOpen(true)}
+                                className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+                              >
+                                <Sparkles className="h-4 w-4 mr-2" />
+                                Start Earning
+                              </button>
+                              <div className="inline-flex items-center justify-center px-4 py-3 bg-white/80 backdrop-blur-sm rounded-xl border-2 border-amber-300 shadow-md">
+                                <Brain className="h-4 w-4 mr-2 text-amber-600" />
+                                <span className="font-semibold text-gray-700 text-sm">1 Quiz = 1 Token</span>
+                              </div>
+                            </div>
+                            <p className="text-sm text-gray-500 italic">
+                              🛍️ Pearadox store coming soon!
+                            </p>
+                          </div>
+                        ) : (
+                          /* Authenticated User View - Token Balance */
+                          <div className="text-center">
+                            {/* Token Balance Display */}
+                            <p className="text-gray-600 text-base font-semibold mb-3">Your Balance</p>
+                            <div className="flex justify-center mb-4">
+                              <div className="relative w-28 h-28 sm:w-32 sm:h-32">
+                                {/* Outer rotating ring */}
+                                <div className="absolute inset-0 rounded-full border-4 border-amber-200 border-t-amber-500 animate-spin" style={{ animationDuration: '3s' }}></div>
+                                {/* Inner rotating ring opposite direction */}
+                                <div className="absolute inset-2 rounded-full border-4 border-yellow-200 border-b-yellow-500" style={{ animation: 'spin 4s linear infinite reverse' }}></div>
+                                {/* Token center */}
+                                <div className="absolute inset-4 rounded-full bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 shadow-2xl flex flex-col items-center justify-center">
+                                  <Sparkles className="h-6 w-6 text-white mb-0.5 animate-pulse" />
+                                  {isLoadingTokens ? (
+                                    <div className="text-xl font-black text-white">...</div>
+                                  ) : (
+                                    <div className="text-3xl sm:text-4xl font-black text-white">
+                                      {pearTokenCount}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <p className="text-xl sm:text-2xl font-bold text-amber-600 mb-4">
+                              {pearTokenCount} PEAR Token{pearTokenCount !== 1 ? 's' : ''}
+                            </p>
+                            
+                            {/* Compact Motivational Message */}
+                            {pearTokenCount === 0 ? (
+                              <p className="text-gray-700 text-base font-medium">
+                                🚀 Take quizzes to earn your first tokens!
+                              </p>
+                            ) : pearTokenCount < 5 ? (
+                              <p className="text-gray-700 text-base font-medium">
+                                🌟 Great start! Next milestone: <span className="font-bold text-amber-600">5 tokens</span>
+                              </p>
+                            ) : pearTokenCount < 10 ? (
+                              <p className="text-gray-700 text-base font-medium">
+                                🔥 You're on fire! Next: <span className="font-bold text-amber-600">10 tokens</span>
+                              </p>
+                            ) : (
+                              <div>
+                                <p className="text-amber-700 font-bold text-lg mb-1">🏆 Token Master!</p>
+                                <p className="text-gray-700 text-base font-medium">Keep building your collection</p>
+                              </div>
+                            )}
+                            <p className="text-sm text-gray-500 mt-3 italic">
+                              🛍️ Pearadox store coming soon!
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                         
-                    {/* Democratizing Discovery Section - Takes full 12 columns */}
+                    {/* What Our Readers Say Section - Takes full 12 columns */}
                     <div className="lg:col-span-12">
                       <div className="relative bg-gradient-to-br from-white via-green-50/20 to-white rounded-3xl shadow-2xl border border-gray-200 p-6 sm:p-8 overflow-hidden group hover:shadow-3xl transition-all duration-500 min-h-[320px]">
                         {/* Background decoration */}
@@ -1712,64 +1836,8 @@ function App() {
                         <div className="absolute -bottom-10 -left-10 w-56 h-56 rounded-full blur-3xl opacity-20" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.15) 0%, transparent 100%)' }}></div>
                         
                         <div className="relative z-10 flex flex-col gap-6">
-                          {/* Top Row: Stats Grid (left) + Mission Statement (right) */}
-                          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-                            {/* Left: Visual Stats Grid */}
-                            <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
-                              <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-green-300">
-                                <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full animate-pulse" style={{ backgroundColor: 'rgba(29, 185, 84, 0.2)' }}></div>
-                                <div className="text-center">
-                                  <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">10K+</div>
-                                  <div className="text-gray-700 font-bold text-xs sm:text-sm">Papers</div>
-                          </div>
-                          </div>
-                              
-                              <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-green-300">
-                                <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full animate-pulse delay-75" style={{ backgroundColor: 'rgba(29, 185, 84, 0.2)' }}></div>
-                                <div className="text-center">
-                                  <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">50+</div>
-                                  <div className="text-gray-700 font-bold text-xs sm:text-sm">Users</div>
-                        </div>
-                      </div>
-                      
-                              <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-green-300">
-                                <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full animate-pulse delay-150" style={{ backgroundColor: 'rgba(29, 185, 84, 0.2)' }}></div>
-                      <div className="text-center">
-                                  <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">50+</div>
-                                  <div className="text-gray-700 font-bold text-xs sm:text-sm">Universities</div>
-                    </div>
-                    </div>
-                    
-                              <div className="group relative bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-green-300">
-                                <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full animate-pulse delay-200" style={{ backgroundColor: 'rgba(29, 185, 84, 0.2)' }}></div>
-                                <div className="text-center">
-                                  <div className="text-3xl sm:text-4xl font-black mb-2 bg-gradient-to-br from-green-600 to-green-400 bg-clip-text text-transparent">50+</div>
-                                  <div className="text-gray-700 font-bold text-xs sm:text-sm">Countries</div>
-                  </div>
-                </div>
-              </div>
-
-                            {/* Right: Mission Statement with Icon */}
-                            <div className="flex-shrink-0 text-center lg:text-right lg:max-w-md">
-                              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 shadow-xl animate-bounce" style={{ backgroundColor: '#1db954' }}>
-                           <Users className="h-8 w-8 text-white" />
-                         </div>
-                              <h3 className="text-2xl sm:text-3xl font-black text-gray-900 mb-3 leading-tight">
-                                Research for <span className="bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent">Everyone</span>
-                         </h3>
-                              <div className="flex flex-wrap justify-center lg:justify-end gap-2">
-                                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-white/90 backdrop-blur-sm border border-green-200 text-gray-700 shadow-sm hover:shadow-md hover:scale-105 transition-all">
-                                  🌍 Global
-                                </span>
-                                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-white/90 backdrop-blur-sm border border-green-200 text-gray-700 shadow-sm hover:shadow-md hover:scale-105 transition-all">
-                                  ⚡ Fast
-                                </span>
-                                <span className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-white/90 backdrop-blur-sm border border-green-200 text-gray-700 shadow-sm hover:shadow-md hover:scale-105 transition-all">
-                                  🎯 Clear
-                                </span>
-                       </div>
-                        </div>
-                        </div>
+                          {/* Top Row: Testimonials */}
+                          <TestimonialCarousel />
                          
                           {/* Bottom Row: Trust Badges - Centered */}
                           <div className="text-center pt-4 border-t border-gray-200">
@@ -1784,11 +1852,11 @@ function App() {
                          </div>
                          </div>
                        </div>
-                             </div>
-                             </div>
-                           </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                         </div>
+              </div>
 
               {/* Elegant Section Divider */}
               <div className="my-16 sm:my-20 relative">

@@ -69,11 +69,6 @@ const TestimonialCarousel = () => {
       <div className="relative z-10">
         {/* Header inside carousel */}
         <div className="mb-6">
-          <div className="inline-flex items-center px-3 py-1 rounded-full mb-3" style={{ backgroundColor: 'rgba(59, 130, 246, 0.1)' }}>
-            <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#2563eb' }}>
-              ✨ Testimonials
-            </span>
-          </div>
           <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 leading-tight">
             What Our Readers Say
           </h3>
