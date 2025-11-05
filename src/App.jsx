@@ -1560,23 +1560,23 @@ function App() {
                           
                     {/* Start Exploring Section - Takes 4 columns on large screens */}
                     <div className="lg:col-span-4 flex">
-                      <div className="bg-gradient-to-br from-white via-green-50/30 to-white rounded-3xl shadow-2xl border border-gray-200 p-4 sm:p-6 lg:p-8 w-full lg:h-full lg:min-h-[320px] min-h-[400px] flex flex-col lg:justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
+                      <div className="bg-gradient-to-br from-white via-green-50/30 to-white rounded-3xl shadow-2xl border border-gray-200 p-4 sm:p-6 lg:p-8 w-full lg:h-full lg:min-h-[320px] flex flex-col justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
                         {/* Decorative Elements */}
                         <div className="absolute top-0 left-0 w-48 h-48 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.12) 0%, rgba(22, 161, 74, 0.04) 100%)' }}></div>
                         
                         <div className="relative z-10">
                           {/* Title - matching spotlight title size */}
-                          <h3 className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 sm:mb-5 leading-tight text-center lg:text-left">
+                          <h3 className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 sm:mb-3 lg:mb-5 leading-tight text-center lg:text-left">
                             Start Exploring Instantly
                           </h3>
                           
                           {/* Description - matching spotlight description */}
-                          <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-4 sm:mb-6 line-clamp-3 text-center lg:text-left">
+                          <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-3 sm:mb-4 lg:mb-6 line-clamp-3 text-center lg:text-left">
                             Dive into cutting-edge AI research immediately. Browse thousands of papers from top researchers.
                           </p>
                           
                           {/* Free Access badge */}
-                          <div className="flex items-center justify-center lg:justify-start space-x-2 mb-3">
+                          <div className="flex items-center justify-center lg:justify-start space-x-2 mb-3 lg:mb-0">
                             <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-medium whitespace-nowrap" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)', color: '#16a14a' }}>
                               🌟 Free Access
                             </span>
@@ -1587,7 +1587,7 @@ function App() {
                           </div>
                       
                         {/* Button row - matching spotlight bottom section */}
-                        <div className="relative z-10 space-y-2 sm:space-y-3">
+                        <div className="relative z-10 space-y-2 sm:space-y-3 mt-4 lg:mt-0">
                           <div className="flex items-center justify-center lg:justify-start text-xs sm:text-sm text-gray-600">
                             <span className="font-semibold" style={{ color: '#1db954' }}>1M+ Authors</span>
                             <span className="mx-1 sm:mx-2">•</span>
