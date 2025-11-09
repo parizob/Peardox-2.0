@@ -180,6 +180,42 @@ function generateSitemapXML(articles, baseUrl = 'https://pearadox.app') {
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+  
+  <url>
+    <loc>${baseUrl}/submit</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- Blog posts -->
+  <url>
+    <loc>${baseUrl}/blog/what-makes-an-ai-agent</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>${baseUrl}/blog/ai-first-mindset-ferrari-engine</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>${baseUrl}/blog/building-an-app-with-AI</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>${baseUrl}/blog/democratizing-ai-research</loc>
+    <lastmod>${currentDate}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
   <!-- Article pages -->`;
 
@@ -256,21 +292,56 @@ async function generateWorkingSitemap() {
     fs.writeFileSync(sitemapPath, sitemapXML, 'utf8');
     console.log(`✅ Sitemap generated: ${sitemapPath}`);
     
-    // Update robots.txt
+    // Update robots.txt with LLM crawler support
     const robotsTxt = `User-agent: *
+Allow: /
+
+# Specific AI/LLM crawlers (explicitly allow for better discoverability)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Googlebot
 Allow: /
 
 # Sitemaps
 Sitemap: https://pearadox.app/sitemap.xml
+Sitemap: https://pearadox.app/ai-training-data.json
+
+# Allow article pages (most important for indexing)
+Allow: /article/
+
+# Allow public resources
+Allow: /aboutus
+Allow: /blog
 
 # Block admin areas
 Disallow: /admin/
-Disallow: /api/
 
-# Allow article pages
-Allow: /article/
-
-# Crawl delay for politeness
+# Crawl delay for politeness (1 second between requests)
 Crawl-delay: 1
 
 # Host
@@ -334,6 +405,36 @@ Host: https://pearadox.app`;
     <loc>https://pearadox.app/blog</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pearadox.app/submit</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://pearadox.app/blog/what-makes-an-ai-agent</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pearadox.app/blog/ai-first-mindset-ferrari-engine</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pearadox.app/blog/building-an-app-with-AI</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pearadox.app/blog/democratizing-ai-research</loc>
+    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 </urlset>`;
