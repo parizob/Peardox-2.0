@@ -23,8 +23,8 @@ const Footer = ({ onContactClick }) => {
               <h3 className="text-xl font-bold">Pearadox</h3>
             </div>
             <p className="text-gray-600 text-sm leading-relaxed">
-              Democratizing access to AI research. We break down complex scientific papers into 
-              digestible insights for researchers, students, and curious minds everywhere.
+              Democratizing access to AI research. We break down complex insights into 
+              digestible summaries for curious minds everywhere.
             </p>
             <div className="flex items-center space-x-1 text-sm text-gray-500">
               <span>Made with</span>
