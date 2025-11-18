@@ -1751,10 +1751,10 @@ function App() {
                             </div>
                             
                             <h3 className="text-2xl sm:text-3xl font-black text-gray-900 mb-3 leading-tight">
-                              Earn <span className="bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">PEAR Tokens</span>
+                              Earn <span className="bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">PEAR </span> Tokens
                             </h3>
                             <p className="text-gray-700 text-sm sm:text-base mb-4 leading-relaxed">
-                              Test your knowledge with quizzes on every research paper. Answer correctly and earn <span className="font-bold text-amber-600">PEAR tokens</span> — redeemable for exclusive rewards. 
+                              Test your knowledge with quizzes on every research paper. Answer correctly and earn <span className="font-bold text-amber-600">PEAR </span> tokens — redeemable for exclusive rewards. 
                             </p>
                             <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-3">
                               <button
@@ -1770,7 +1770,7 @@ function App() {
                               </div>
                             </div>
                             <p className="text-sm text-gray-500 italic">
-                              🛍️ Pearadox store coming soon!
+                              Pearadox store coming soon!
                             </p>
                           </div>
                         ) : (
@@ -1852,7 +1852,7 @@ function App() {
                               </div>
                             )}
                             <p className="text-xs text-gray-500 mt-3 italic font-medium">
-                              🛍️ Pearadox store coming soon!
+                              Pearadox store coming soon!
                             </p>
                           </div>
                         )}
