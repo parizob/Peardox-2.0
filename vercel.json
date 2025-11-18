@@ -10,23 +10,6 @@
       "schedule": "0 3 * * *"
     }
   ],
-  "redirects": [
-    {
-      "source": "https://pearadox.app/:path*",
-      "destination": "https://www.pearadox.app/:path*",
-      "permanent": true
-    },
-    {
-      "source": "http://pearadox.app/:path*",
-      "destination": "https://www.pearadox.app/:path*",
-      "permanent": true
-    },
-    {
-      "source": "http://www.pearadox.app/:path*",
-      "destination": "https://www.pearadox.app/:path*",
-      "permanent": true
-    }
-  ],
   "rewrites": [
     {
       "source": "/sitemap.xml",
