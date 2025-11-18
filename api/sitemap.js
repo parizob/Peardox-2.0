@@ -1,6 +1,4 @@
 import { createClient } from '@supabase/supabase-js';
-import fs from 'fs';
-import path from 'path';
 
 // Initialize Supabase client
 const supabaseUrl = process.env.VITE_SUPABASE_URL || 'https://ullqyuvcyvaaiihmntnw.supabase.co';
@@ -9,8 +7,10 @@ const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsI
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 /**
- * API route to generate and update sitemap.xml
- * Can be called manually or via Vercel cron job
+ * Dynamic sitemap.xml API endpoint
+ * Returns fresh sitemap XML directly from Supabase
+ * Called by: /sitemap.xml rewrite, Vercel cron (daily 3 AM UTC), manual API calls
+ * Cache: 1 hour (s-maxage=3600) to reduce database load
  */
 export default async function handler(req, res) {
   try {
@@ -171,32 +171,13 @@ ${allUrls.map(({ url, lastmod, changefreq, priority }) => `  <url>
   </url>`).join('\n')}
 </urlset>`;
 
-    // Write sitemap to public directory
-    const publicDir = path.join(process.cwd(), 'public');
-    const sitemapPath = path.join(publicDir, 'sitemap.xml');
-    
-    // Ensure public directory exists
-    if (!fs.existsSync(publicDir)) {
-      fs.mkdirSync(publicDir, { recursive: true });
-    }
-    
-    fs.writeFileSync(sitemapPath, sitemap, 'utf8');
-
     console.log(`✅ Sitemap generated successfully with ${allUrls.length} URLs`);
-    console.log(`📁 Sitemap saved to: ${sitemapPath}`);
 
-    // Return success response
-    res.status(200).json({
-      success: true,
-      message: `Sitemap updated successfully ✅`,
-      stats: {
-        totalUrls: allUrls.length,
-        articleUrls: articleUrls.length,
-        blogUrls: blogPosts.length,
-        staticUrls: staticPages.length,
-        generatedAt: new Date().toISOString()
-      }
-    });
+    // Return sitemap XML directly in response
+    // This allows the sitemap to be served dynamically without filesystem access
+    res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+    res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
+    res.status(200).send(sitemap);
 
   } catch (error) {
     console.error('❌ Sitemap generation failed:', error);
