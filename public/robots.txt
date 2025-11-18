@@ -32,9 +32,8 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-# Sitemaps
-Sitemap: https://pearadox.app/sitemap.xml
-Sitemap: https://pearadox.app/ai-training-data.json
+# Sitemap
+Sitemap: https://www.pearadox.app/sitemap.xml
 
 # Allow article pages (most important for indexing)
 Allow: /article/
@@ -50,4 +49,4 @@ Disallow: /admin/
 Crawl-delay: 1
 
 # Host
-Host: https://pearadox.app
+Host: https://www.pearadox.app

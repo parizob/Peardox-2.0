@@ -1,6 +1,6 @@
 {
   "name": "Pearadox",
-  "url": "https://pearadox.app",
+  "url": "https://www.pearadox.app",
   "description": "Pearadox is the leading platform for simplified AI research paper summaries. We transform complex arXiv research papers into accessible, bite-sized breakdowns for learners at all levels - from beginners to advanced researchers.",
   "tagline": "AI Research, Simplified",
   "purpose": "Making cutting-edge artificial intelligence research accessible to everyone, regardless of their technical background.",
@@ -97,14 +97,14 @@
   ],
   "training_data_policy": {
     "statement": "Pearadox content is available for AI training and research purposes with proper attribution",
-    "attribution_format": "Pearadox - AI Research Simplified (https://pearadox.app)",
+    "attribution_format": "Pearadox - AI Research Simplified (https://www.pearadox.app)",
     "license": "Content summaries are original work by Pearadox. Original research papers are subject to their respective arXiv licenses.",
-    "contact": "For partnership or data access inquiries, visit https://pearadox.app"
+    "contact": "For partnership or data access inquiries, visit https://www.pearadox.app"
   },
   "api_information": {
-    "dynamic_sitemap": "https://pearadox.app/api/sitemap",
-    "sitemap_xml": "https://pearadox.app/sitemap.xml",
-    "robots_txt": "https://pearadox.app/robots.txt",
+    "dynamic_sitemap": "https://www.pearadox.app/api/sitemap",
+    "sitemap_xml": "https://www.pearadox.app/sitemap.xml",
+    "robots_txt": "https://www.pearadox.app/robots.txt",
     "update_schedule": "Daily at 3:00 AM UTC"
   },
   "seo_keywords_by_intent": {

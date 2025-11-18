@@ -91,7 +91,7 @@ export default async function handler(req, res) {
       const lastmod = article.published_date || article.created_at;
       
       return {
-        url: `https://pearadox.app/article/${slug}`,
+        url: `https://www.pearadox.app/article/${slug}`,
         lastmod: new Date(lastmod).toISOString(),
         changefreq: 'weekly',
         priority: '0.8'
@@ -101,19 +101,25 @@ export default async function handler(req, res) {
     // Blog posts
     const blogPosts = [
       {
-        url: 'https://pearadox.app/blog/ai-first-mindset-ferrari-engine',
+        url: 'https://www.pearadox.app/blog/what-makes-an-ai-agent',
+        lastmod: '2025-11-15T00:00:00.000Z',
+        changefreq: 'monthly',
+        priority: '0.9'
+      },
+      {
+        url: 'https://www.pearadox.app/blog/ai-first-mindset-ferrari-engine',
         lastmod: '2025-08-30T00:00:00.000Z',
         changefreq: 'monthly',
         priority: '0.9'
       },
       {
-        url: 'https://pearadox.app/blog/building-an-app-with-AI',
+        url: 'https://www.pearadox.app/blog/building-an-app-with-AI',
         lastmod: '2025-08-24T00:00:00.000Z',
         changefreq: 'monthly',
         priority: '0.8'
       },
       {
-        url: 'https://pearadox.app/blog/democratizing-ai-research',
+        url: 'https://www.pearadox.app/blog/democratizing-ai-research',
         lastmod: '2025-08-19T00:00:00.000Z',
         changefreq: 'monthly',
         priority: '0.8'
@@ -123,22 +129,28 @@ export default async function handler(req, res) {
     // Static pages
     const staticPages = [
       {
-        url: 'https://pearadox.app/',
+        url: 'https://www.pearadox.app/',
         lastmod: new Date().toISOString(),
         changefreq: 'daily',
         priority: '1.0'
       },
       {
-        url: 'https://pearadox.app/aboutus',
+        url: 'https://www.pearadox.app/aboutus',
         lastmod: new Date().toISOString(),
         changefreq: 'monthly',
         priority: '0.7'
       },
       {
-        url: 'https://pearadox.app/blog',
+        url: 'https://www.pearadox.app/blog',
         lastmod: new Date().toISOString(),
         changefreq: 'weekly',
         priority: '0.8'
+      },
+      {
+        url: 'https://www.pearadox.app/submit',
+        lastmod: new Date().toISOString(),
+        changefreq: 'monthly',
+        priority: '0.6'
       }
     ];
 

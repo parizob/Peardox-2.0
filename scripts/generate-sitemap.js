@@ -150,7 +150,7 @@ async function fetchArticles() {
 }
 
 // Generate sitemap XML with your actual articles
-function generateSitemapXML(articles, baseUrl = 'https://pearadox.app') {
+function generateSitemapXML(articles, baseUrl = 'https://www.pearadox.app') {
   const currentDate = new Date().toISOString().split('T')[0];
   
   let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -327,9 +327,8 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-# Sitemaps
-Sitemap: https://pearadox.app/sitemap.xml
-Sitemap: https://pearadox.app/ai-training-data.json
+# Sitemap
+Sitemap: https://www.pearadox.app/sitemap.xml
 
 # Allow article pages (most important for indexing)
 Allow: /article/
@@ -345,7 +344,7 @@ Disallow: /admin/
 Crawl-delay: 1
 
 # Host
-Host: https://pearadox.app`;
+Host: https://www.pearadox.app`;
 
     const robotsPath = path.join(publicDir, 'robots.txt');
     fs.writeFileSync(robotsPath, robotsTxt, 'utf8');
@@ -390,49 +389,49 @@ Host: https://pearadox.app`;
     const fallbackSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://pearadox.app</loc>
+    <loc>https://www.pearadox.app</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://pearadox.app/aboutus</loc>
+    <loc>https://www.pearadox.app/aboutus</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://pearadox.app/blog</loc>
+    <loc>https://www.pearadox.app/blog</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://pearadox.app/submit</loc>
+    <loc>https://www.pearadox.app/submit</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://pearadox.app/blog/what-makes-an-ai-agent</loc>
+    <loc>https://www.pearadox.app/blog/what-makes-an-ai-agent</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://pearadox.app/blog/ai-first-mindset-ferrari-engine</loc>
+    <loc>https://www.pearadox.app/blog/ai-first-mindset-ferrari-engine</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://pearadox.app/blog/building-an-app-with-AI</loc>
+    <loc>https://www.pearadox.app/blog/building-an-app-with-AI</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://pearadox.app/blog/democratizing-ai-research</loc>
+    <loc>https://www.pearadox.app/blog/democratizing-ai-research</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
