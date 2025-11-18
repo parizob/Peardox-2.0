@@ -1,6 +1,6 @@
 # Science Articles Explorer
 
-A modern React application for exploring and discovering science articles from ArXiv. The app presents articles with beautiful cards showing titles, descriptions, and categories, and allows users to click on articles to view detailed information.
+A modern React application, called Pearadox, for exploring and discovering science articles from ArXiv. The app presents articles with beautiful cards showing titles, descriptions, and categories, and allows users to click on articles to view detailed information.
 
 ## Features
 
