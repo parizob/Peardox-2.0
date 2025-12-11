@@ -906,7 +906,9 @@ export const authAPI = {
 
   async resetPassword(email) {
     console.log('🔄 Resetting password for:', email);
-    const { error } = await supabase.auth.resetPasswordForEmail(email);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: 'https://www.pearadox.app/update-password'
+    });
     
     if (error) {
       console.error('❌ Password reset error:', error);
@@ -914,6 +916,21 @@ export const authAPI = {
     }
     
     console.log('✅ Password reset email sent');
+  },
+
+  async updatePassword(newPassword) {
+    console.log('🔐 Updating password...');
+    const { data, error } = await supabase.auth.updateUser({
+      password: newPassword
+    });
+    
+    if (error) {
+      console.error('❌ Password update error:', error);
+      throw error;
+    }
+    
+    console.log('✅ Password updated successfully');
+    return data;
   }
 };
 

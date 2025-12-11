@@ -1565,54 +1565,71 @@ function App() {
                         <div className="absolute top-0 left-0 w-48 h-48 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.12) 0%, rgba(22, 161, 74, 0.04) 100%)' }}></div>
                         
                         <div className="relative z-10">
-                          {/* Title - matching spotlight title size */}
-                          <h3 className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 sm:mb-3 lg:mb-5 leading-tight text-center lg:text-left">
-                            Start Exploring Instantly
-                          </h3>
+                          {/* Title and badge - matching Personalize structure */}
+                          <div className="mb-6">
+                            <div className="inline-flex items-center px-3 py-1 rounded-full mb-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
+                              <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#1db954' }}>
+                                🌟 Free Access
+                              </span>
+                            </div>
+                            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 leading-tight">
+                              Start Exploring Instantly
+                            </h3>
+                            <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                              Dive into cutting-edge AI research immediately. Browse thousands of papers from top researchers.
+                            </p>
+                          </div>
                           
-                          {/* Description - matching spotlight description */}
-                          <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-3 sm:mb-4 lg:mb-6 line-clamp-3 text-center lg:text-left">
-                            Dive into cutting-edge AI research immediately. Browse thousands of papers from top researchers.
-                          </p>
-                          
-                          {/* Free Access badge */}
-                          <div className="flex items-center justify-center lg:justify-start space-x-2 mb-3 lg:mb-0">
-                            <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-medium whitespace-nowrap" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)', color: '#16a14a' }}>
-                              🌟 Free Access
-                            </span>
-                            <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold bg-white/80 text-gray-800 border truncate max-w-[120px] sm:max-w-none" style={{ borderColor: 'rgba(29, 185, 84, 0.3)' }}>
-                              No Account Required
-                            </span>
+                          {/* Feature highlights - metrics styled like Personalize cards */}
+                          <div className="grid grid-cols-3 gap-3 mb-6">
+                            <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
+                              <div className="text-lg sm:text-2xl font-bold" style={{ color: '#1db954' }}>
+                                1M+
+                              </div>
+                              <div className="text-[10px] font-semibold text-gray-600 mt-1 text-center">Authors</div>
+                            </div>
+                            
+                            <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
+                              <div className="text-lg sm:text-2xl font-bold" style={{ color: '#1db954' }}>
+                                10k+
+                              </div>
+                              <div className="text-[10px] font-semibold text-gray-600 mt-1 text-center">Papers</div>
+                            </div>
+                            
+                            <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
+                              <div className="text-lg sm:text-2xl font-bold" style={{ color: '#1db954' }}>
+                                1
+                              </div>
+                              <div className="text-[10px] font-semibold text-gray-600 mt-1 text-center">Place</div>
                             </div>
                           </div>
-                      
-                        {/* Button row - matching spotlight bottom section */}
-                        <div className="relative z-10 space-y-2 sm:space-y-3 mt-4 lg:mt-0">
-                          <div className="flex items-center justify-center lg:justify-start text-xs sm:text-sm text-gray-600">
-                            <span className="font-semibold" style={{ color: '#1db954' }}>1M+ Authors</span>
-                            <span className="mx-1 sm:mx-2">•</span>
-                            <span className="font-semibold" style={{ color: '#1db954' }}>10k+ Papers</span>
-                            <span className="mx-1 sm:mx-2">•</span>
-                            <span className="flex-shrink-0 font-semibold" style={{ color: '#1db954' }}>1 Place</span>
                         </div>
-                          
-                          <div className="pt-1 sm:pt-2">
+                      
+                        {/* CTA Button - matching Personalize placement */}
+                        <div className="text-center relative z-10">
                           <button
                               onClick={scrollToArticles}
-                              className="w-full inline-flex items-center justify-center px-3 sm:px-5 py-2 sm:py-2.5 text-white rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-lg transform group-hover:scale-105 transition-all relative overflow-hidden group/btn"
+                              className="w-full inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 relative overflow-hidden group/btn"
                               style={{ backgroundColor: '#1db954' }}
-                              onMouseEnter={(e) => e.target.style.backgroundColor = '#16a14a'}
-                              onMouseLeave={(e) => e.target.style.backgroundColor = '#1db954'}
+                              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
                           >
                             {/* Shimmer effect */}
                               <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
                               <span className="relative z-10">Explore Now</span>
+                              <ArrowRight className="ml-3 w-5 h-5 relative z-10 group-hover/btn:translate-x-1 transition-transform" />
                           </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
                 </div>
+              </div>
+            </div>
 
+            {/* Second row - Personalize and PEAR Tokens */}
+            <div className="mb-8 sm:mb-12">
+              <div className="mx-auto max-w-7xl px-4 sm:px-6">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     {/* Personalize Your Research Section - Takes 6 columns on large screens, positioned below Spotlight */}
                     <div className="lg:col-span-6">
                     <div className="bg-gradient-to-br from-white via-gray-50 to-white rounded-3xl shadow-2xl border border-gray-200 p-6 sm:p-8 h-full flex flex-col justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
@@ -1751,10 +1768,10 @@ function App() {
                             </div>
                             
                             <h3 className="text-2xl sm:text-3xl font-black text-gray-900 mb-3 leading-tight">
-                              Earn <span className="bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">PEAR Tokens</span>
+                              Earn <span className="bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">PEAR </span> Tokens
                             </h3>
                             <p className="text-gray-700 text-sm sm:text-base mb-4 leading-relaxed">
-                              Test your knowledge with quizzes on every research paper. Answer correctly and earn <span className="font-bold text-amber-600">PEAR tokens</span> — redeemable for exclusive rewards. 
+                              Test your knowledge with quizzes on every research paper. Answer correctly and earn <span className="font-bold text-amber-600">PEAR </span> tokens — redeemable for exclusive rewards. 
                             </p>
                             <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-3">
                               <button
@@ -1770,7 +1787,7 @@ function App() {
                               </div>
                             </div>
                             <p className="text-sm text-gray-500 italic">
-                              🛍️ Pearadox store coming soon!
+                              Pearadox store coming soon!
                             </p>
                           </div>
                         ) : (
@@ -1852,7 +1869,7 @@ function App() {
                               </div>
                             )}
                             <p className="text-xs text-gray-500 mt-3 italic font-medium">
-                              🛍️ Pearadox store coming soon!
+                              Pearadox store coming soon!
                             </p>
                           </div>
                         )}

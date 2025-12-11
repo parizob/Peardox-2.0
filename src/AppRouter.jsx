@@ -6,6 +6,7 @@ import AboutUs from './pages/AboutUs';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import Submit from './pages/Submit';
+import UpdatePassword from './pages/UpdatePassword';
 
 const AppRouter = () => {
   return (
@@ -18,6 +19,7 @@ const AppRouter = () => {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/submit" element={<Submit />} />
+          <Route path="/update-password" element={<UpdatePassword />} />
         </Routes>
       </UserProvider>
     </Router>

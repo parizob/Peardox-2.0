@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, User, ArrowLeft, BookOpen, Brain, Globe, Users, Zap, Heart, Target, Lightbulb, ArrowRight } from 'lucide-react';
+import { Calendar, Clock, User, ArrowLeft, BookOpen, Zap, Lightbulb, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -945,26 +945,6 @@ The knowledge exists. The tools are available. The only question is: are you rea
                   </p>
                 </div>
 
-                {/* Category Pills */}
-                <div className="flex flex-wrap items-center justify-center gap-3">
-                  <div className="group flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300 cursor-pointer">
-                    <div className="w-2 h-2 rounded-full mr-3 group-hover:scale-110 transition-transform" style={{ backgroundColor: '#1db954' }}></div>
-                    <Brain className="h-4 w-4 mr-2" style={{ color: '#1db954' }} />
-                    <span className="text-sm font-medium text-gray-700">Research Insights</span>
-                  </div>
-                  
-                  <div className="group flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300 cursor-pointer">
-                    <div className="w-2 h-2 rounded-full mr-3 group-hover:scale-110 transition-transform" style={{ backgroundColor: '#1db954' }}></div>
-                    <Globe className="h-4 w-4 mr-2" style={{ color: '#1db954' }} />
-                    <span className="text-sm font-medium text-gray-700">Global Impact</span>
-                  </div>
-                  
-                  <div className="group flex items-center px-4 py-2 bg-white rounded-full shadow-sm border border-gray-100 hover:shadow-md hover:border-gray-200 transition-all duration-300 cursor-pointer">
-                    <div className="w-2 h-2 rounded-full mr-3 group-hover:scale-110 transition-transform" style={{ backgroundColor: '#1db954' }}></div>
-                    <Users className="h-4 w-4 mr-2" style={{ color: '#1db954' }} />
-                    <span className="text-sm font-medium text-gray-700">Community Stories</span>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
