@@ -921,7 +921,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
 
       <main className="relative z-10">
         {/* Hero Section */}
-        <section className="py-12 sm:py-20">
+        <section className="pt-8 pb-4 sm:pt-12 sm:pb-6">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
             <div 
               className={`transform transition-all duration-1000 ${
@@ -930,17 +930,17 @@ The knowledge exists. The tools are available. The only question is: are you rea
             >
               <div className="max-w-5xl mx-auto">
                 {/* Main Header */}
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 shadow-lg" style={{ backgroundColor: '#1db954' }}>
-                    <BookOpen className="h-8 w-8 text-white" />
+                <div className="text-center">
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 shadow-lg" style={{ backgroundColor: '#1db954' }}>
+                    <BookOpen className="h-7 w-7 text-white" />
                   </div>
                   
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3">
                     <span className="text-gray-900">Pearadox</span>
                     <span className="text-gray-900"> Blog</span>
                   </h1>
                   
-                  <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                  <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                     Insights, perspectives, and stories about democratizing AI research and making complex science accessible to everyone.
                   </p>
                 </div>
@@ -951,7 +951,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
         </section>
 
         {/* Blog Posts Section */}
-        <section className="py-8 sm:py-16">
+        <section className="py-6 sm:py-8">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div 
               className={`transform transition-all duration-1000 ${
