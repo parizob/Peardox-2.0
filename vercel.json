@@ -34,6 +34,10 @@
     {
       "source": "/submit",
       "destination": "/index.html"
+    },
+    {
+      "source": "/update-password",
+      "destination": "/index.html"
     }
   ],
   "buildCommand": "npm run build",
