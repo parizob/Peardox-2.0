@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Heart, ExternalLink, Calendar, Users, Tag, Share2, Brain, Sparkles, BookOpen, GraduationCap, User, Check, MessageCircle, Send, Edit3, Trash2, MoreVertical, CheckCircle, XCircle, HelpCircle } from 'lucide-react';
+import { X, Heart, ExternalLink, Calendar, Users, Tag, Share2, Brain, Sparkles, BookOpen, GraduationCap, User, Check, MessageCircle, Send, Edit3, Trash2, MoreVertical, CheckCircle, XCircle, HelpCircle, ChevronDown, FileText, ArrowUpRight } from 'lucide-react';
 import { arxivAPI, commentsAPI, quizAPI } from '../lib/supabase';
 import { useUser } from '../contexts/UserContext';
 
@@ -7,6 +7,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
   const [showCopiedPopup, setShowCopiedPopup] = useState(false);
   const [fullAbstract, setFullAbstract] = useState(null);
   const [isLoadingAbstract, setIsLoadingAbstract] = useState(false);
+  const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
   
   // Comment system state
   const [comments, setComments] = useState([]);
@@ -104,8 +105,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
     try {
       await commentsAPI.addComment(article.id, user.id, newComment);
       setNewComment('');
-      await loadComments(); // Reload comments to show the new one
-      await loadCommentCount(); // Update comment count
+      await loadComments();
+      await loadCommentCount();
     } catch (error) {
       console.error('Failed to submit comment:', error);
       setCommentErrors({ submit: error.message || 'Failed to post comment. Please try again.' });
@@ -138,7 +139,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
       setEditingCommentId(null);
       setEditingCommentText('');
       setCommentErrors({});
-      await loadComments(); // Reload comments to show the updated one
+      await loadComments();
     } catch (error) {
       console.error('Failed to update comment:', error);
       setCommentErrors({ [commentId]: error.message || 'Failed to update comment. Please try again.' });
@@ -160,8 +161,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
 
     try {
       await commentsAPI.deleteComment(commentId, user.id);
-      await loadComments(); // Reload comments to remove the deleted one
-      await loadCommentCount(); // Update comment count
+      await loadComments();
+      await loadCommentCount();
       setCommentErrors({});
     } catch (error) {
       console.error('Failed to delete comment:', error);
@@ -190,12 +191,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
 
   // Get quiz data from article or use placeholder
   const getQuizData = () => {
-    console.log('🧠 Getting quiz data for article:', article?.id);
-    console.log('🧠 Article quiz object:', article?.quiz);
-    
-    // If article has quiz data from database
     if (article?.quiz && article.quiz.question && article.quiz.answer_a && article.quiz.answer_b && article.quiz.answer_c && article.quiz.answer_d && article.quiz.correct_answer) {
-      console.log('✅ Using quiz from database');
       return {
         question: article.quiz.question,
         options: [
@@ -204,12 +200,10 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
           { id: 'c', text: article.quiz.answer_c },
           { id: 'd', text: article.quiz.answer_d }
         ],
-        correctAnswer: article.quiz.correct_answer.toLowerCase() // Convert "A" to "a"
+        correctAnswer: article.quiz.correct_answer.toLowerCase()
       };
     }
     
-    console.log('⚠️ No quiz found in article, using placeholder');
-    // Fallback to placeholder quiz if no quiz data
     return {
       question: "What is the main contribution of this research paper?",
       options: [
@@ -232,12 +226,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
           const userId = (user || userProp).id;
           const hasAnswered = await quizAPI.hasUserAnsweredCorrectly(userId, article.id);
           setHasAnsweredCorrectly(hasAnswered);
-          
-          if (hasAnswered) {
-            console.log('✅ User has already answered this quiz correctly');
-          }
         } catch (error) {
-          console.error('❌ Error checking answer status:', error);
+          console.error('Error checking answer status:', error);
         }
       };
       
@@ -247,7 +237,6 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
 
   // Quiz handlers
   const handleOpenQuiz = () => {
-    // Always open the quiz modal (will show auth prompt if not logged in)
     setIsQuizOpen(true);
     setSelectedAnswer(null);
     setShowQuizResult(false);
@@ -257,7 +246,6 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
     setIsQuizOpen(false);
     setSelectedAnswer(null);
     setShowQuizResult(false);
-    // Don't reset hasAnsweredCorrectly - it should persist
   };
 
   const handleSelectAnswer = (optionId) => {
@@ -270,27 +258,15 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
     if (selectedAnswer) {
       setShowQuizResult(true);
       
-      // Record correct answer to database if user is authenticated
       const isCorrect = selectedAnswer === quizData.correctAnswer;
       if (isCorrect && (user || userProp)) {
         setHasAnsweredCorrectly(true);
         
         try {
           const userId = (user || userProp).id;
-          const result = await quizAPI.recordCorrectAnswer(
-            userId,
-            article.id,
-            article.arxivId
-          );
-          
-          if (result.alreadyRecorded) {
-            console.log('✅ Quiz answer was already recorded for this user');
-          } else {
-            console.log('✅ Correct quiz answer recorded successfully - User earned 1 PEAR token');
-          }
+          await quizAPI.recordCorrectAnswer(userId, article.id, article.arxivId);
         } catch (error) {
-          console.error('❌ Failed to record correct answer:', error);
-          // Don't show error to user, just log it
+          console.error('Failed to record correct answer:', error);
         }
       }
     }
@@ -307,12 +283,11 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
   const generateSlug = (title, arxivId) => {
     const cleanTitle = title
       .toLowerCase()
-      .replace(/[^\w\s-]/g, '') // Remove special characters
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .replace(/-+/g, '-') // Replace multiple hyphens with single
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
       .trim();
     
-    // Limit length for better URLs
     const truncatedTitle = cleanTitle.length > 60 ? cleanTitle.substring(0, 60).replace(/-[^-]*$/, '') : cleanTitle;
     
     return `${arxivId}-${truncatedTitle}`;
@@ -328,702 +303,574 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
     };
 
     try {
-      // Try native sharing first (mobile devices)
       if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
         await navigator.share(shareData);
       } else {
-        // Fallback to clipboard with custom popup
         await navigator.clipboard.writeText(shareUrl);
-        
-        // Show custom popup
         setShowCopiedPopup(true);
         setTimeout(() => {
           setShowCopiedPopup(false);
         }, 2000);
       }
     } catch (error) {
-      console.error('Error sharing:', error);
-      // Fallback: copy to clipboard
       try {
         await navigator.clipboard.writeText(shareUrl);
-        // Show custom popup for fallback too
         setShowCopiedPopup(true);
         setTimeout(() => {
           setShowCopiedPopup(false);
         }, 2000);
       } catch (clipboardError) {
-        console.error('Clipboard error:', clipboardError);
-        // Final fallback: show URL in prompt
         prompt('Copy this link to share:', shareUrl);
       }
     }
   };
 
-  const getCategoryColor = (category) => {
-    const colors = {
-      'Artificial Intelligence': 'bg-blue-100 text-blue-800',
-      'Quantum Computing': 'bg-purple-100 text-purple-800',
-      'Edge Computing': 'bg-green-100 text-green-800',
-      'Computer Vision': 'bg-orange-100 text-orange-800',
-      'Natural Language Processing': 'bg-indigo-100 text-indigo-800',
-    };
-    return colors[category] || 'bg-gray-100 text-gray-800';
-  };
-
-  const getSkillLevelColor = (skillLevel) => {
-    const colors = {
-      'Beginner': 'bg-green-100 text-green-800 border-green-200',
-      'Intermediate': 'bg-yellow-100 text-yellow-800 border-yellow-200',
-      'Advanced': 'bg-orange-100 text-orange-800 border-orange-200',
-      'Expert': 'bg-red-100 text-red-800 border-red-200'
-    };
-    return colors[skillLevel] || 'bg-gray-100 text-gray-800 border-gray-200';
+  // Filter categories
+  const getFilteredCategories = () => {
+    if (article.categories && article.categories.length > 0) {
+      return article.categories.filter(category => !category.includes('.') && !category.includes(','));
+    }
+    return [article.category];
   };
 
   return (
     <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50">
-        <div className="bg-white rounded-lg max-w-4xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto w-full mx-2 sm:mx-4">
-          <div className="sticky top-0 bg-white border-b border-gray-200 p-4 sm:p-6">
-            <div className="flex justify-between items-start mb-3">
-              <div className="flex-1 pr-3 sm:pr-4 min-w-0">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 leading-tight">{article.title}</h2>
+      {/* Main Modal */}
+      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
+        <div 
+          className="bg-white rounded-2xl max-w-3xl w-full max-h-[95vh] overflow-hidden shadow-2xl flex flex-col"
+          style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
+        >
+          {/* Minimal Header */}
+          <div className="flex-shrink-0 px-6 sm:px-8 pt-6 pb-4 border-b border-gray-100">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                {/* Skill Level Badge */}
+                {article.skillLevel && (
+                  <div className="inline-flex items-center mb-3">
+                    <span 
+                      className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold text-white"
+                      style={{ backgroundColor: '#1db954' }}
+                    >
+                      <Brain className="w-3 h-3 mr-1.5" />
+                      {article.skillLevel} Level
+                    </span>
+                  </div>
+                )}
+                
+                {/* Title */}
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight tracking-tight">
+                  {article.title}
+                </h1>
               </div>
-              <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+              
+              {/* Close & Favorite */}
+              <div className="flex items-center gap-2 flex-shrink-0">
                 <button
                   onClick={() => onToggleFavorite(article.id)}
-                  className={`p-2 rounded-full transition-all duration-200 ${
+                  className={`p-2.5 rounded-full transition-all duration-200 ${
                     isFavorite 
-                      ? 'bg-red-50 text-red-600 hover:bg-red-100' 
-                      : 'bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-500'
+                      ? 'bg-red-50 text-red-500' 
+                      : 'bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600'
                   }`}
-                  title={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                  title={isFavorite ? 'Remove from saved' : 'Save article'}
                 >
-                  <Heart 
-                    className={`h-5 w-5 sm:h-6 sm:w-6 transition-all duration-200 ${
-                      isFavorite ? 'fill-current' : ''
-                    }`} 
-                  />
+                  <Heart className={`h-5 w-5 ${isFavorite ? 'fill-current' : ''}`} />
                 </button>
                 <button
                   onClick={onClose}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="p-2.5 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
                 >
-                  <X className="h-5 w-5 sm:h-6 sm:w-6 text-gray-500" />
+                  <X className="h-5 w-5 text-gray-500" />
                 </button>
               </div>
             </div>
-            
-            <div className="flex flex-wrap items-center gap-2">
-              {article.skillLevel && (
-                <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${getSkillLevelColor(article.skillLevel)}`}>
-                  <Brain className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                  {article.skillLevel}
+
+            {/* Meta Info Row */}
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-sm text-gray-500">
+              <span className="inline-flex items-center">
+                <Calendar className="w-4 h-4 mr-1.5" />
+                {article.publishedDate}
+              </span>
+              <span className="inline-flex items-center">
+                <FileText className="w-4 h-4 mr-1.5" />
+                {article.arxivId}
+              </span>
+              {commentCount > 0 && (
+                <span className="inline-flex items-center">
+                  <MessageCircle className="w-4 h-4 mr-1.5" />
+                  {commentCount} {commentCount === 1 ? 'comment' : 'comments'}
                 </span>
               )}
-              {isFavorite && (
-                <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-red-100 text-red-800 border border-red-200">
-                  <Heart className="w-3 h-3 sm:w-4 sm:h-4 mr-1 fill-current" />
-                  Favorite
-                </span>
-              )}
-              
-              {/* Action Buttons - Smaller Size for Header */}
-              <a
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-3 py-1.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-xs"
-              >
-                <ExternalLink className="h-3 w-3 mr-1.5" />
-                Read Paper
-              </a>
-              
-              <button
-                onClick={handleOpenQuiz}
-                className="inline-flex items-center justify-center px-3 py-1.5 text-white font-medium rounded-lg transition-all text-xs shadow-sm hover:shadow-md"
-                style={{ backgroundColor: '#1db954' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
-              >
-                <Brain className="h-3 w-3 mr-1.5" />
-                Quiz
-              </button>
-              
-              <button
-                onClick={handleShare}
-                className="inline-flex items-center justify-center px-3 py-1.5 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors text-xs border border-gray-300"
-              >
-                <Share2 className="h-3 w-3 mr-1.5" />
-                Share
-              </button>
             </div>
           </div>
 
-          <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
-            {/* Overview Section */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 sm:p-6">
-              <div className="flex items-center mb-3">
-                <BookOpen className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mr-2" />
-                <h3 className="text-base sm:text-lg font-semibold text-blue-900">Overview</h3>
-              </div>
-              <p className="text-blue-800 leading-relaxed text-sm sm:text-base">{article.shortDescription}</p>
-            </div>
+          {/* Scrollable Content */}
+          <div className="flex-1 overflow-y-auto">
+            <div className="px-6 sm:px-8 py-6 space-y-8">
+              
+              {/* Key Insight - The Star of the Show */}
+              <section>
+                <p className="text-lg sm:text-xl text-gray-700 leading-relaxed font-light">
+                  {article.shortDescription}
+                </p>
+              </section>
 
-            {/* AI-Generated Summary Section (if available) */}
-            {article.summaryContent && (
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 sm:p-6">
-                <div className="flex items-center mb-3">
-                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600 mr-2" />
-                  <h3 className="text-base sm:text-lg font-semibold text-purple-900">AI-Generated Summary</h3>
-                </div>
-                <div className="text-purple-800 leading-relaxed text-sm sm:text-base whitespace-pre-wrap">
-                  {article.summaryContent}
-                </div>
-              </div>
-            )}
+              {/* Action Bar */}
+              <section className="flex flex-wrap gap-3">
+                <a
+                  href={article.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center px-5 py-2.5 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-800 transition-all text-sm group"
+                >
+                  Read Full Paper
+                  <ArrowUpRight className="h-4 w-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </a>
+                
+                <button
+                  onClick={handleOpenQuiz}
+                  className="inline-flex items-center px-5 py-2.5 text-white font-medium rounded-xl transition-all text-sm shadow-sm hover:shadow-md"
+                  style={{ backgroundColor: '#1db954' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+                >
+                  <Brain className="h-4 w-4 mr-2" />
+                  Test Knowledge
+                </button>
+                
+                <button
+                  onClick={handleShare}
+                  className="inline-flex items-center px-5 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-colors text-sm"
+                >
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Share
+                </button>
+              </section>
 
-            {/* Technical Details Section */}
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 sm:p-6">
-              <div className="flex items-center mb-3">
-                <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 text-gray-600 mr-2" />
-                <h3 className="text-base sm:text-lg font-semibold text-gray-900">Technical Details</h3>
-              </div>
-              <p className="text-gray-800 leading-relaxed text-sm sm:text-base">
-                <strong>Original Research Title:</strong><br /><br />
-                {article.originalTitle}<br /><br />
-                <strong>Research Abstract:</strong><br /><br />
-                {isLoadingAbstract ? (
-                  <span className="text-gray-600 italic">Loading full abstract...</span>
-                ) : (
-                  fullAbstract || article.originalAbstract || article.shortDescription
-                )}
-              </p>
-            </div>
-
-            {/* Article Info Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="flex items-start text-gray-600">
-                  <User className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0 mt-0.5" />
-                  <div className="min-w-0">
-                    <span className="font-medium text-sm sm:text-base">Authors:</span>
-                    <p className="text-gray-800 text-sm sm:text-base break-words">{article.authors}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center text-gray-600">
-                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0" />
-                  <div>
-                    <span className="font-medium text-sm sm:text-base">Published:</span>
-                    <p className="text-gray-800 text-sm sm:text-base">{article.publishedDate}</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center text-gray-600">
-                  <ExternalLink className="h-4 w-4 sm:h-5 sm:w-5 mr-2 flex-shrink-0" />
-                  <div>
-                    <span className="font-medium text-sm sm:text-base">ArXiv ID:</span>
-                    <p className="text-gray-800 text-sm sm:text-base break-all">{article.arxivId}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-medium text-gray-700 mb-3 text-sm sm:text-base">Research Tags:</h4>
-                <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                  {article.categories && article.categories.length > 0 ? (
-                    (() => {
-                      // Filter out categories that contain periods or commas
-                      const filteredCategories = article.categories.filter(category => !category.includes('.') && !category.includes(','));
-                      
-                      return filteredCategories.length > 0 ? (
-                        <>
-                          {filteredCategories.map((category, index) => (
-                            <span 
-                              key={index}
-                              className="inline-flex items-center px-2 py-0.5 sm:py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium"
-                            >
-                              {category}
-                            </span>
-                          ))}
-                        </>
-                      ) : (
-                        // Fallback to article.category if no valid categories remain
-                        <span className="inline-flex items-center px-2 py-0.5 sm:py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
-                          {article.category}
-                        </span>
-                      );
-                    })()
-                  ) : (
-                    <span className="inline-flex items-center px-2 py-0.5 sm:py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
-                      {article.category}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Comments Section */}
-            <div className="pt-6 sm:pt-8 border-t border-gray-200 mt-6">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 flex items-center">
-                  <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 mr-2 text-green-600" />
-                  Discussion
-                  {commentCount > 0 && (
-                    <span className="ml-2 text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                      {commentCount}
-                    </span>
-                  )}
-                </h3>
-              </div>
-
-              {/* Comment Form - Only for authenticated users */}
-              {user ? (
-                <form onSubmit={handleSubmitComment} className="mb-6">
-                  <div className="flex flex-col space-y-3">
-                    <textarea
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      placeholder="Share your thoughts about this research..."
-                      className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm sm:text-base"
-                      rows="3"
-                      maxLength={2000}
-                      disabled={isSubmittingComment}
-                    />
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-gray-500">
-                        {newComment.length}/2000 characters
-                      </span>
-                      <button
-                        type="submit"
-                        disabled={isSubmittingComment || !newComment.trim()}
-                        className="inline-flex items-center px-4 py-2 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-sm"
-                      >
-                        {isSubmittingComment ? (
-                          <>
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                            Posting...
-                          </>
-                        ) : (
-                          <>
-                            <Send className="h-4 w-4 mr-2" />
-                            Post Comment
-                          </>
-                        )}
-                      </button>
+              {/* AI Summary - Clean Card */}
+              {article.summaryContent && (
+                <section className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-100">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
+                      <Sparkles className="h-4 w-4 text-white" />
                     </div>
+                    <h2 className="font-semibold text-gray-900">AI Summary</h2>
                   </div>
-                  {commentErrors.submit && (
-                    <p className="text-red-600 text-sm mt-2">{commentErrors.submit}</p>
-                  )}
-                </form>
-              ) : (
-                <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                  <p className="text-gray-600 text-sm">
-                    <User className="h-4 w-4 inline mr-1" />
-                    Please sign in to join the discussion and share your thoughts about this research.
-                  </p>
-                </div>
+                  <div className="text-gray-700 leading-relaxed whitespace-pre-wrap text-[15px]">
+                    {article.summaryContent}
+                  </div>
+                </section>
               )}
 
-              {/* Comments List */}
-              <div className="space-y-4">
-                {isLoadingComments ? (
-                  <div className="flex items-center justify-center py-8">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
-                    <span className="ml-2 text-gray-600">Loading comments...</span>
+              {/* Technical Details - Collapsible */}
+              <section className="border border-gray-200 rounded-2xl overflow-hidden">
+                <button
+                  onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
+                  className="w-full flex items-center justify-between px-6 py-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
+                >
+                  <div className="flex items-center gap-3">
+                    <GraduationCap className="h-5 w-5 text-gray-600" />
+                    <span className="font-semibold text-gray-900">Technical Details</span>
                   </div>
-                ) : commentErrors.load ? (
-                  <div className="text-center py-8">
-                    <p className="text-red-600 text-sm">{commentErrors.load}</p>
-                    <button
-                      onClick={loadComments}
-                      className="mt-2 text-green-600 hover:text-green-700 text-sm font-medium"
-                    >
-                      Try Again
-                    </button>
-                  </div>
-                ) : comments.length === 0 ? (
-                  <div className="text-center py-8">
-                    <MessageCircle className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <p className="text-gray-500 text-sm">
-                      No comments yet. Be the first to share your thoughts!
-                    </p>
-                  </div>
-                ) : (
-                  comments.map((comment) => (
-                    <div key={comment.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                      <div className="flex items-start justify-between mb-2">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <User className="h-3 w-3 text-green-600" />
-                          </div>
-                          <div>
-                            <span className="font-medium text-gray-900 text-sm">
-                              {comment.user_name}
-                            </span>
-                            {comment.user_title && (
-                              <span className="text-gray-500 text-xs ml-1">
-                                • {comment.user_title}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-xs text-gray-500">
-                            {formatCommentDate(comment.created_at)}
-                            {comment.is_edited && (
-                              <span className="ml-1 italic">(edited)</span>
-                            )}
-                          </span>
-                          {user && user.id === comment.user_id && (
-                            <div className="flex items-center space-x-1">
-                              <button
-                                onClick={() => handleEditComment(comment)}
-                                className="text-gray-400 hover:text-green-600 transition-colors"
-                                title="Edit comment"
-                              >
-                                <Edit3 className="h-3 w-3" />
-                              </button>
-                              <button
-                                onClick={() => handleDeleteComment(comment.id)}
-                                className="text-gray-400 hover:text-red-600 transition-colors"
-                                title="Delete comment"
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      
-                      {editingCommentId === comment.id ? (
-                        <div className="space-y-3">
-                          <textarea
-                            value={editingCommentText}
-                            onChange={(e) => setEditingCommentText(e.target.value)}
-                            className="w-full p-2 border border-gray-300 rounded-md resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
-                            rows="3"
-                            maxLength={2000}
-                          />
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-gray-500">
-                              {editingCommentText.length}/2000 characters
-                            </span>
-                            <div className="flex space-x-2">
-                              <button
-                                onClick={handleCancelEdit}
-                                className="px-3 py-1 text-gray-600 hover:text-gray-800 text-sm"
-                              >
-                                Cancel
-                              </button>
-                              <button
-                                onClick={() => handleSaveEdit(comment.id)}
-                                disabled={!editingCommentText.trim()}
-                                className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 disabled:bg-gray-300"
-                              >
-                                Save
-                              </button>
-                            </div>
-                          </div>
-                          {commentErrors[comment.id] && (
-                            <p className="text-red-600 text-xs">{commentErrors[comment.id]}</p>
-                          )}
-                        </div>
+                  <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${showTechnicalDetails ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {showTechnicalDetails && (
+                  <div className="px-6 py-5 space-y-5 bg-white">
+                    {/* Original Title */}
+                    <div>
+                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Original Title</h4>
+                      <p className="text-gray-800">{article.originalTitle}</p>
+                    </div>
+                    
+                    {/* Abstract */}
+                    <div>
+                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Research Abstract</h4>
+                      {isLoadingAbstract ? (
+                        <p className="text-gray-500 italic">Loading abstract...</p>
                       ) : (
-                        <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
-                          {comment.comment_text}
+                        <p className="text-gray-700 leading-relaxed text-sm">
+                          {fullAbstract || article.originalAbstract || article.shortDescription}
                         </p>
                       )}
                     </div>
-                  ))
+
+                    {/* Authors */}
+                    <div>
+                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Authors</h4>
+                      <p className="text-gray-700 text-sm">{article.authors}</p>
+                    </div>
+
+                    {/* Categories */}
+                    <div>
+                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Research Areas</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {getFilteredCategories().map((category, index) => (
+                          <span 
+                            key={index}
+                            className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-medium"
+                          >
+                            {category}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 )}
-              </div>
+              </section>
+
+              {/* Discussion Section */}
+              <section className="pt-2">
+                <div className="flex items-center gap-2 mb-6">
+                  <MessageCircle className="h-5 w-5" style={{ color: '#1db954' }} />
+                  <h2 className="font-semibold text-gray-900">Discussion</h2>
+                  {commentCount > 0 && (
+                    <span className="text-sm text-gray-500">({commentCount})</span>
+                  )}
+                </div>
+
+                {/* Comment Form */}
+                {user ? (
+                  <form onSubmit={handleSubmitComment} className="mb-6">
+                    <div className="relative">
+                      <textarea
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        placeholder="Share your thoughts on this research..."
+                        className="w-full p-4 pr-24 bg-gray-50 border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent focus:bg-white transition-all text-sm"
+                        rows="3"
+                        maxLength={2000}
+                        disabled={isSubmittingComment}
+                      />
+                      <button
+                        type="submit"
+                        disabled={isSubmittingComment || !newComment.trim()}
+                        className="absolute bottom-3 right-3 p-2.5 rounded-lg text-white disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                        style={{ backgroundColor: newComment.trim() && !isSubmittingComment ? '#1db954' : undefined }}
+                      >
+                        {isSubmittingComment ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                        ) : (
+                          <Send className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
+                    <div className="flex justify-between mt-2 text-xs text-gray-400">
+                      <span>{newComment.length}/2000</span>
+                    </div>
+                    {commentErrors.submit && (
+                      <p className="text-red-500 text-sm mt-2">{commentErrors.submit}</p>
+                    )}
+                  </form>
+                ) : (
+                  <div className="mb-6 p-4 bg-gray-50 rounded-xl text-center">
+                    <p className="text-gray-600 text-sm">
+                      Sign in to join the discussion
+                    </p>
+                  </div>
+                )}
+
+                {/* Comments List */}
+                <div className="space-y-4">
+                  {isLoadingComments ? (
+                    <div className="flex items-center justify-center py-8">
+                      <div className="animate-spin rounded-full h-6 w-6 border-2 border-gray-300 border-t-green-500"></div>
+                    </div>
+                  ) : commentErrors.load ? (
+                    <div className="text-center py-8">
+                      <p className="text-red-500 text-sm">{commentErrors.load}</p>
+                      <button onClick={loadComments} className="mt-2 text-sm font-medium" style={{ color: '#1db954' }}>
+                        Try Again
+                      </button>
+                    </div>
+                  ) : comments.length === 0 ? (
+                    <div className="text-center py-12">
+                      <MessageCircle className="h-10 w-10 text-gray-200 mx-auto mb-3" />
+                      <p className="text-gray-400 text-sm">No comments yet. Start the conversation!</p>
+                    </div>
+                  ) : (
+                    comments.map((comment) => (
+                      <div key={comment.id} className="group">
+                        <div className="flex items-start gap-3">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-white text-sm font-semibold" style={{ backgroundColor: '#1db954' }}>
+                            {comment.user_name?.charAt(0)?.toUpperCase() || 'U'}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-medium text-gray-900 text-sm">{comment.user_name}</span>
+                              <span className="text-xs text-gray-400">
+                                {formatCommentDate(comment.created_at)}
+                                {comment.is_edited && <span className="ml-1">(edited)</span>}
+                              </span>
+                              {user && user.id === comment.user_id && (
+                                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                  <button
+                                    onClick={() => handleEditComment(comment)}
+                                    className="p-1 text-gray-400 hover:text-gray-600"
+                                  >
+                                    <Edit3 className="h-3 w-3" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteComment(comment.id)}
+                                    className="p-1 text-gray-400 hover:text-red-500"
+                                  >
+                                    <Trash2 className="h-3 w-3" />
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                            
+                            {editingCommentId === comment.id ? (
+                              <div className="space-y-2">
+                                <textarea
+                                  value={editingCommentText}
+                                  onChange={(e) => setEditingCommentText(e.target.value)}
+                                  className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                                  rows="3"
+                                  maxLength={2000}
+                                />
+                                <div className="flex justify-end gap-2">
+                                  <button onClick={handleCancelEdit} className="px-3 py-1.5 text-gray-600 text-sm font-medium">
+                                    Cancel
+                                  </button>
+                                  <button
+                                    onClick={() => handleSaveEdit(comment.id)}
+                                    disabled={!editingCommentText.trim()}
+                                    className="px-3 py-1.5 text-white text-sm font-medium rounded-lg disabled:bg-gray-300"
+                                    style={{ backgroundColor: editingCommentText.trim() ? '#1db954' : undefined }}
+                                  >
+                                    Save
+                                  </button>
+                                </div>
+                                {commentErrors[comment.id] && (
+                                  <p className="text-red-500 text-xs">{commentErrors[comment.id]}</p>
+                                )}
+                              </div>
+                            ) : (
+                              <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
+                                {comment.comment_text}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </section>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Custom "Link Copied" Popup */}
+      {/* Link Copied Toast */}
       {showCopiedPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 z-[60]">
-          <div className="bg-white rounded-xl p-6 shadow-2xl max-w-sm w-full mx-4 transform animate-pulse">
-            <div className="text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Check className="h-6 w-6 text-green-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Link Copied!</h3>
-              <p className="text-sm text-gray-600">The article link has been copied to your clipboard and is ready to share.</p>
-            </div>
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[60] animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="flex items-center gap-2 px-4 py-3 bg-gray-900 text-white rounded-xl shadow-lg">
+            <Check className="h-4 w-4 text-green-400" />
+            <span className="text-sm font-medium">Link copied to clipboard</span>
           </div>
         </div>
       )}
 
-      {/* Quiz Popup */}
+      {/* Quiz Modal */}
       {isQuizOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            {/* Header */}
-            <div className="sticky top-0 text-white p-6 rounded-t-2xl" style={{ background: 'linear-gradient(to right, #1db954, #16a14a)' }}>
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Brain className="h-6 w-6" />
-                    <h3 className="text-xl sm:text-2xl font-bold">Test Your Knowledge</h3>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto">
+            {/* Quiz Header */}
+            <div className="px-6 py-5 border-b border-gray-100">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
+                    <Brain className="h-5 w-5 text-white" />
                   </div>
-                  <p className="text-white/80 text-sm">
-                    {(user || userProp) 
-                      ? "Answer the question below about this research paper"
-                      : "Create a free account to test your knowledge"
-                    }
-                  </p>
+                  <div>
+                    <h3 className="font-bold text-gray-900">Knowledge Check</h3>
+                    <p className="text-xs text-gray-500">Earn PEAR tokens for correct answers</p>
+                  </div>
                 </div>
                 <button
                   onClick={handleCloseQuiz}
-                  className="p-2 hover:bg-white/20 rounded-full transition-colors flex-shrink-0"
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-5 w-5 text-gray-400" />
                 </button>
               </div>
             </div>
 
-            {/* Auth Required or Quiz Content */}
+            {/* Quiz Content */}
             {!(user || userProp) ? (
-              // Show auth prompt if not logged in
-              <div className="p-8 space-y-6 text-center">
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 border-2 border-green-200">
-                  <div className="flex justify-center mb-4">
-                    <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
-                      <Brain className="h-8 w-8 text-white" />
-                    </div>
-                  </div>
-                  <h4 className="text-2xl font-bold text-gray-900 mb-3">Unlock Quizzes</h4>
-                  <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                    Test your understanding of research papers with interactive quizzes. Create a free account to access this feature and track your progress!
-                  </p>
-                  <button
-                    onClick={() => {
-                      handleCloseQuiz();
-                      if (onOpenAccountModal) {
-                        onOpenAccountModal();
-                      }
-                    }}
-                    className="inline-flex items-center justify-center px-8 py-3 text-white font-semibold rounded-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
-                    style={{ backgroundColor: '#1db954' }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
-                  >
-                    <User className="h-5 w-5 mr-2" />
-                    Create Free Account
-                  </button>
-                  <p className="text-sm text-gray-500 mt-4">
-                    Already have an account? Click above to sign in.
-                  </p>
+              // Auth prompt
+              <div className="p-8 text-center">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1db954' }}>
+                  <Brain className="h-8 w-8 text-white" />
                 </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-2">Unlock Quizzes</h4>
+                <p className="text-gray-600 mb-6 max-w-sm mx-auto">
+                  Create a free account to test your knowledge and earn PEAR tokens.
+                </p>
+                <button
+                  onClick={() => {
+                    handleCloseQuiz();
+                    if (onOpenAccountModal) onOpenAccountModal();
+                  }}
+                  className="inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl transition-all"
+                  style={{ backgroundColor: '#1db954' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+                >
+                  <User className="h-5 w-5 mr-2" />
+                  Create Free Account
+                </button>
               </div>
             ) : hasAnsweredCorrectly ? (
-              // Show "Already Completed" state
-              <div className="p-8 space-y-6 text-center">
-                <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 border-2 border-green-200">
-                  <div className="flex justify-center mb-4">
-                    <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
-                      <CheckCircle className="h-8 w-8 text-white" />
-                    </div>
-                  </div>
-                  <h4 className="text-2xl font-bold text-gray-900 mb-3">Quiz Completed! ✓</h4>
-                  <p className="text-gray-600 mb-4">
-                    You've already answered this quiz correctly and earned your reward.
-                  </p>
-                  <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-amber-400 to-yellow-500 text-white font-bold rounded-lg shadow-lg">
-                    <Sparkles className="h-5 w-5 mr-2" />
-                    1 PEAR Token Earned
-                  </div>
+              // Already completed
+              <div className="p-8 text-center">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1db954' }}>
+                  <CheckCircle className="h-8 w-8 text-white" />
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-2">Already Completed!</h4>
+                <p className="text-gray-600 mb-4">You've already earned your token for this quiz.</p>
+                <div className="inline-flex items-center px-4 py-2 bg-amber-100 text-amber-800 font-bold rounded-lg">
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  1 PEAR Token Earned
                 </div>
               </div>
             ) : (
-              // Show quiz if logged in and hasn't completed it
+              // Quiz questions
               <div className="p-6 space-y-6">
-              {/* Question */}
-              <div className="bg-green-50 border border-green-200 rounded-lg p-5">
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 w-8 h-8 text-white rounded-full flex items-center justify-center font-bold" style={{ backgroundColor: '#1db954' }}>
-                    ?
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="text-lg font-semibold text-gray-900 mb-1">Question</h4>
-                    <p className="text-gray-700">{quizData.question}</p>
-                  </div>
+                {/* Question */}
+                <div>
+                  <p className="text-gray-900 font-medium text-lg leading-relaxed">{quizData.question}</p>
                 </div>
-              </div>
 
-              {/* Options */}
-              <div className="space-y-3">
-                {quizData.options.map((option) => {
-                  const isSelected = selectedAnswer === option.id;
-                  const isCorrect = option.id === quizData.correctAnswer;
-                  // Only show if user got it correct - don't reveal correct answer when wrong
-                  const showAsCorrect = showQuizResult && isSelected && isCorrect;
-                  const showAsIncorrect = showQuizResult && isSelected && !isCorrect;
-                  
-                  return (
-                    <button
-                      key={option.id}
-                      onClick={() => handleSelectAnswer(option.id)}
-                      disabled={showQuizResult}
-                      className={`w-full text-left p-4 rounded-lg border-2 transition-all duration-200 ${
-                        showAsCorrect
-                          ? 'bg-green-50 border-green-500 ring-2 ring-green-200'
-                          : showAsIncorrect
-                          ? 'bg-red-50 border-red-500 ring-2 ring-red-200'
-                          : isSelected
-                          ? 'bg-green-50 border-green-500 ring-2 ring-green-200'
-                          : 'bg-white border-gray-300 hover:border-green-400 hover:bg-green-50'
-                      } ${showQuizResult ? 'cursor-default' : 'cursor-pointer'}`}
-                    >
-                      <div className="flex items-start space-x-3">
-                        <div 
-                          className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
-                            showAsIncorrect
-                              ? 'bg-red-500 text-white'
-                              : 'bg-gray-200 text-gray-700'
-                          }`}
-                          style={showAsCorrect || (isSelected && !showQuizResult) ? { backgroundColor: '#1db954', color: 'white' } : {}}
-                        >
-                          {showAsCorrect ? (
-                            <CheckCircle className="h-5 w-5" />
-                          ) : showAsIncorrect ? (
-                            <XCircle className="h-5 w-5" />
-                          ) : (
-                            option.id.toUpperCase()
-                          )}
-                        </div>
-                        <p className={`flex-1 ${
+                {/* Options */}
+                <div className="space-y-3">
+                  {quizData.options.map((option) => {
+                    const isSelected = selectedAnswer === option.id;
+                    const isCorrect = option.id === quizData.correctAnswer;
+                    const showAsCorrect = showQuizResult && isSelected && isCorrect;
+                    const showAsIncorrect = showQuizResult && isSelected && !isCorrect;
+                    
+                    return (
+                      <button
+                        key={option.id}
+                        onClick={() => handleSelectAnswer(option.id)}
+                        disabled={showQuizResult}
+                        className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${
                           showAsCorrect
-                            ? 'text-green-900 font-medium'
+                            ? 'bg-green-50 border-green-500'
                             : showAsIncorrect
-                            ? 'text-red-900'
-                            : isSelected && !showQuizResult
-                            ? 'text-green-900 font-medium'
-                            : 'text-gray-700'
-                        }`}>
-                          {option.text}
-                        </p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Result Message */}
-              {showQuizResult && (
-                <div className={`rounded-lg p-5 ${
-                  selectedAnswer === quizData.correctAnswer
-                    ? 'bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200'
-                    : 'bg-red-50 border border-red-200'
-                }`}>
-                  <div className="flex items-start space-x-3">
-                    <div 
-                      className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
-                        selectedAnswer === quizData.correctAnswer
-                          ? ''
-                          : 'bg-red-500'
-                      }`}
-                      style={selectedAnswer === quizData.correctAnswer ? { backgroundColor: '#1db954' } : {}}
-                    >
-                      {selectedAnswer === quizData.correctAnswer ? (
-                        <CheckCircle className="h-6 w-6 text-white" />
-                      ) : (
-                        <XCircle className="h-6 w-6 text-white" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <h4 className={`text-lg font-bold mb-2 ${
-                        selectedAnswer === quizData.correctAnswer
-                          ? 'text-green-900'
-                          : 'text-red-900'
-                      }`}>
-                        {selectedAnswer === quizData.correctAnswer
-                          ? '🎉 Correct! You Earned a Reward!'
-                          : '❌ Incorrect'}
-                      </h4>
-                      {selectedAnswer === quizData.correctAnswer ? (
-                        <div className="space-y-3">
-                          <p className="text-green-800">
-                            Great job! You understood the key contribution of this research.
-                          </p>
-                          <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-amber-400 to-yellow-500 text-white font-bold rounded-lg shadow-md">
-                            <Sparkles className="h-5 w-5 mr-2" />
-                            +1 PEAR Token
+                            ? 'bg-red-50 border-red-500'
+                            : isSelected
+                            ? 'bg-green-50 border-green-500'
+                            : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        } ${showQuizResult ? 'cursor-default' : 'cursor-pointer'}`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div 
+                            className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-sm font-semibold ${
+                              showAsCorrect
+                                ? 'bg-green-500 text-white'
+                                : showAsIncorrect
+                                ? 'bg-red-500 text-white'
+                                : isSelected
+                                ? 'text-white'
+                                : 'bg-gray-100 text-gray-600'
+                            }`}
+                            style={isSelected && !showQuizResult ? { backgroundColor: '#1db954' } : {}}
+                          >
+                            {showAsCorrect ? <Check className="h-4 w-4" /> : showAsIncorrect ? <X className="h-4 w-4" /> : option.id.toUpperCase()}
                           </div>
+                          <p className={`flex-1 text-sm ${showAsCorrect ? 'text-green-900' : showAsIncorrect ? 'text-red-900' : 'text-gray-700'}`}>
+                            {option.text}
+                          </p>
                         </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Result */}
+                {showQuizResult && (
+                  <div className={`rounded-xl p-5 ${
+                    selectedAnswer === quizData.correctAnswer
+                      ? 'bg-green-50 border border-green-200'
+                      : 'bg-red-50 border border-red-200'
+                  }`}>
+                    <div className="flex items-center gap-3">
+                      {selectedAnswer === quizData.correctAnswer ? (
+                        <>
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
+                            <CheckCircle className="h-5 w-5 text-white" />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-green-900">Correct! 🎉</h4>
+                            <p className="text-green-700 text-sm">You earned 1 PEAR token</p>
+                          </div>
+                        </>
                       ) : (
-                        <p className="text-red-800">
-                          That's not quite right. Review the paper and try again!
-                        </p>
+                        <>
+                          <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center">
+                            <XCircle className="h-5 w-5 text-white" />
+                          </div>
+                          <div>
+                            <h4 className="font-bold text-red-900">Not quite right</h4>
+                            <p className="text-red-700 text-sm">Review the paper and try again</p>
+                          </div>
+                        </>
                       )}
                     </div>
                   </div>
-                </div>
-              )}
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                {!showQuizResult ? (
-                  <>
-                    <button
-                      onClick={handleSubmitQuiz}
-                      disabled={!selectedAnswer}
-                      className="flex-1 inline-flex items-center justify-center px-6 py-3 text-white font-semibold rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg"
-                      style={!selectedAnswer ? {} : { backgroundColor: '#1db954' }}
-                      onMouseEnter={(e) => !selectedAnswer ? null : e.currentTarget.style.backgroundColor = '#16a14a'}
-                      onMouseLeave={(e) => !selectedAnswer ? null : e.currentTarget.style.backgroundColor = '#1db954'}
-                    >
-                      <CheckCircle className="h-5 w-5 mr-2" />
-                      Submit Answer
-                    </button>
-                    <button
-                      onClick={handleCloseQuiz}
-                      className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors border border-gray-300"
-                    >
-                      Cancel
-                    </button>
-                  </>
-                ) : selectedAnswer === quizData.correctAnswer ? (
-                  // Correct answer - only show close button
-                  <button
-                    onClick={handleCloseQuiz}
-                    className="w-full inline-flex items-center justify-center px-6 py-3 text-white font-semibold rounded-lg transition-all shadow-md hover:shadow-lg"
-                    style={{ backgroundColor: '#1db954' }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
-                  >
-                    <CheckCircle className="h-5 w-5 mr-2" />
-                    Done
-                  </button>
-                ) : (
-                  // Incorrect answer - show retry and close
-                  <>
-                    <button
-                      onClick={handleRetryQuiz}
-                      className="flex-1 inline-flex items-center justify-center px-6 py-3 text-white font-semibold rounded-lg transition-all shadow-md hover:shadow-lg"
-                      style={{ backgroundColor: '#1db954' }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
-                    >
-                      <HelpCircle className="h-5 w-5 mr-2" />
-                      Try Again
-                    </button>
-                    <button
-                      onClick={handleCloseQuiz}
-                      className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors border border-gray-300"
-                    >
-                      Close
-                    </button>
-                  </>
                 )}
+
+                {/* Actions */}
+                <div className="flex gap-3 pt-2">
+                  {!showQuizResult ? (
+                    <>
+                      <button
+                        onClick={handleSubmitQuiz}
+                        disabled={!selectedAnswer}
+                        className="flex-1 py-3 text-white font-semibold rounded-xl disabled:bg-gray-200 disabled:text-gray-400 transition-all"
+                        style={{ backgroundColor: selectedAnswer ? '#1db954' : undefined }}
+                      >
+                        Submit Answer
+                      </button>
+                      <button
+                        onClick={handleCloseQuiz}
+                        className="px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : selectedAnswer === quizData.correctAnswer ? (
+                    <button
+                      onClick={handleCloseQuiz}
+                      className="w-full py-3 text-white font-semibold rounded-xl transition-all"
+                      style={{ backgroundColor: '#1db954' }}
+                    >
+                      Done
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        onClick={handleRetryQuiz}
+                        className="flex-1 py-3 text-white font-semibold rounded-xl transition-all"
+                        style={{ backgroundColor: '#1db954' }}
+                      >
+                        Try Again
+                      </button>
+                      <button
+                        onClick={handleCloseQuiz}
+                        className="px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-colors"
+                      >
+                        Close
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
             )}
           </div>
         </div>
@@ -1032,4 +879,4 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
   );
 };
 
-export default ArticleModal; 
+export default ArticleModal;
