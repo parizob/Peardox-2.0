@@ -386,6 +386,22 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
         throw new Error('Authentication service not available');
       }
 
+      if (authMode === 'forgot') {
+        // Handle password reset
+        if (!authForm.email) {
+          throw new Error('Please enter your email address');
+        }
+        
+        if (typeof authAPI.resetPassword !== 'function') {
+          throw new Error('Password reset not available');
+        }
+
+        await authAPI.resetPassword(authForm.email);
+        setAuthError('Password reset link sent! Please check your email inbox.');
+        setAuthLoading(false);
+        return;
+      }
+
       if (authMode === 'signup') {
         if (authForm.password !== authForm.confirmPassword) {
           throw new Error('Passwords do not match');
@@ -1316,7 +1332,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
         <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-6 text-white">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">
-              {authMode === 'signin' ? 'Welcome Back' : 'Join Pearadox'}
+              {authMode === 'signin' ? 'Welcome Back' : authMode === 'forgot' ? 'Reset Password' : 'Join Pearadox'}
             </h2>
             <button
               onClick={onClose}
@@ -1328,6 +1344,8 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
           <p className="text-green-100 mt-2">
             {authMode === 'signin' 
               ? 'Sign in to access your research hub'
+              : authMode === 'forgot'
+              ? 'Enter your email to receive a reset link'
               : 'Create your account to start discovering research'
             }
           </p>
@@ -1384,46 +1402,64 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  value={authForm.password}
-                  onChange={(e) => setAuthForm(prev => ({ ...prev, password: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 pr-10"
-                  placeholder="••••••••"
-                  minLength={6}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
+            {authMode !== 'forgot' && (
+              <>
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-sm font-medium text-gray-700">Password</label>
+                    {authMode === 'signin' && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAuthMode('forgot');
+                          setAuthError('');
+                        }}
+                        className="text-sm text-green-600 hover:text-green-700 font-medium"
+                      >
+                        Forgot password?
+                      </button>
+                    )}
+                  </div>
+                  <div className="relative">
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      value={authForm.password}
+                      onChange={(e) => setAuthForm(prev => ({ ...prev, password: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 pr-10"
+                      placeholder="••••••••"
+                      minLength={6}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
 
-            {authMode === 'signup' && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  value={authForm.confirmPassword}
-                  onChange={(e) => setAuthForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="••••••••"
-                  minLength={6}
-                />
-              </div>
+                {authMode === 'signup' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      value={authForm.confirmPassword}
+                      onChange={(e) => setAuthForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="••••••••"
+                      minLength={6}
+                    />
+                  </div>
+                )}
+              </>
             )}
 
             {authError && authError.trim() && (
               <div className={`p-3 rounded-lg text-sm ${
-                authError.includes('successfully')
+                authError.includes('successfully') || authError.includes('sent')
                   ? 'bg-green-50 text-green-800 border border-green-200'
                   : 'bg-red-50 text-red-800 border border-red-200'
               }`}>
@@ -1440,11 +1476,26 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
               ) : (
                 <>
-                  {authMode === 'signin' ? <LogIn className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
-                  <span>{authMode === 'signin' ? 'Sign In' : 'Create Account'}</span>
+                  {authMode === 'signin' ? <LogIn className="h-4 w-4" /> : authMode === 'forgot' ? <Mail className="h-4 w-4" /> : <UserPlus className="h-4 w-4" />}
+                  <span>{authMode === 'signin' ? 'Sign In' : authMode === 'forgot' ? 'Send Reset Link' : 'Create Account'}</span>
                 </>
               )}
             </button>
+
+            {authMode === 'forgot' && (
+              <div className="text-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthMode('signin');
+                    setAuthError('');
+                  }}
+                  className="text-sm text-green-600 hover:text-green-700 font-medium"
+                >
+                  ← Back to Sign In
+                </button>
+              </div>
+            )}
 
             <div className="text-center pt-4 border-t border-gray-200">
               <button
