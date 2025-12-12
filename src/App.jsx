@@ -1627,23 +1627,25 @@ function App() {
               </div>
             </div>
 
-            {/* Second row - Personalize and PEAR Tokens */}
+            {/* Second row - Research Hub, PEAR Wallet, and Testimonials */}
             <div className="mb-8 sm:mb-12">
               <div className="mx-auto max-w-7xl px-4 sm:px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Left Column - Research Hub + PEAR Wallet stacked */}
+                  <div className="flex flex-col gap-6">
                     {/* Personalize Section */}
-                    <div className="relative bg-gradient-to-br from-white via-green-50/30 to-emerald-50/50 rounded-3xl shadow-xl border border-green-100 p-6 sm:p-8 overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                    <div className="relative bg-gradient-to-br from-white via-green-50/30 to-emerald-50/50 rounded-3xl shadow-xl border border-green-100 p-6 overflow-hidden group hover:shadow-2xl transition-all duration-500">
                       {/* Decorative elements */}
                       <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-green-200/20 to-emerald-200/10 rounded-full blur-3xl"></div>
                       <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-green-100/30 to-transparent rounded-full blur-2xl"></div>
                       
                       <div className="relative">
-                        <div className="flex items-center gap-4 mb-5">
-                          <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style={{ backgroundColor: '#1db954' }}>
-                            <User className="h-7 w-7 text-white" />
+                        <div className="flex items-center gap-4 mb-4">
+                          <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style={{ backgroundColor: '#1db954' }}>
+                            <User className="h-6 w-6 text-white" />
                           </div>
                           <div>
-                            <h3 className="text-xl font-bold text-gray-900">
+                            <h3 className="text-lg font-bold text-gray-900">
                               {user ? 'Your Research Hub' : 'Personalize Your Feed'}
                             </h3>
                             <p className="text-gray-500 text-sm">
@@ -1656,28 +1658,28 @@ function App() {
                         </div>
                         
                         {user ? (
-                          <div className="grid grid-cols-3 gap-3">
-                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 text-center border border-green-100 shadow-sm">
-                              <div className="text-2xl font-bold" style={{ color: '#1db954' }}>{analyticsData?.totalViews || 0}</div>
-                              <div className="text-xs font-medium text-gray-500 mt-0.5">Articles Read</div>
+                          <div className="grid grid-cols-3 gap-2">
+                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2.5 text-center border border-green-100 shadow-sm">
+                              <div className="text-xl font-bold" style={{ color: '#1db954' }}>{analyticsData?.totalViews || 0}</div>
+                              <div className="text-[10px] font-medium text-gray-500 mt-0.5">Read</div>
                             </div>
-                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 text-center border border-green-100 shadow-sm">
-                              <div className="text-2xl font-bold" style={{ color: '#1db954' }}>{analyticsData?.categoriesViewed?.length || 0}</div>
-                              <div className="text-xs font-medium text-gray-500 mt-0.5">Topics Explored</div>
+                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2.5 text-center border border-green-100 shadow-sm">
+                              <div className="text-xl font-bold" style={{ color: '#1db954' }}>{analyticsData?.categoriesViewed?.length || 0}</div>
+                              <div className="text-[10px] font-medium text-gray-500 mt-0.5">Topics</div>
                             </div>
-                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 text-center border border-green-100 shadow-sm">
-                              <div className="text-2xl font-bold" style={{ color: '#1db954' }}>{weeklyData.reduce((sum, day) => sum + day.views, 0)}</div>
-                              <div className="text-xs font-medium text-gray-500 mt-0.5">This Week</div>
+                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2.5 text-center border border-green-100 shadow-sm">
+                              <div className="text-xl font-bold" style={{ color: '#1db954' }}>{weeklyData.reduce((sum, day) => sum + day.views, 0)}</div>
+                              <div className="text-[10px] font-medium text-gray-500 mt-0.5">This Week</div>
                             </div>
                           </div>
                         ) : (
-                          <div className="space-y-4">
+                          <div className="space-y-3">
                             <p className="text-gray-600 text-sm">
-                              Create a free account to save articles, track progress, and get personalized recommendations.
+                              Create a free account to save articles and track progress.
                             </p>
                             <button
                               onClick={handleShowAccount}
-                              className="inline-flex items-center px-5 py-2.5 text-sm font-semibold text-white rounded-xl transition-all hover:shadow-lg hover:scale-105 transform"
+                              className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white rounded-lg transition-all hover:shadow-lg"
                               style={{ backgroundColor: '#1db954' }}
                               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
                               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
@@ -1691,18 +1693,18 @@ function App() {
                     </div>
 
                     {/* PEAR Tokens Section */}
-                    <div className="relative bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50/30 rounded-3xl shadow-xl border border-amber-200 p-6 sm:p-8 overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                    <div className="relative bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50/30 rounded-3xl shadow-xl border border-amber-200 p-6 overflow-hidden group hover:shadow-2xl transition-all duration-500">
                       {/* Decorative elements */}
                       <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-amber-200/30 to-yellow-200/20 rounded-full blur-3xl"></div>
                       <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-orange-100/30 to-transparent rounded-full blur-2xl"></div>
                       
                       <div className="relative">
-                        <div className="flex items-center gap-4 mb-5">
-                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-lg">
-                            <Sparkles className="h-7 w-7 text-white" />
+                        <div className="flex items-center gap-4 mb-4">
+                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-lg">
+                            <Sparkles className="h-6 w-6 text-white" />
                           </div>
                           <div>
-                            <h3 className="text-xl font-bold text-gray-900">
+                            <h3 className="text-lg font-bold text-gray-900">
                               {user ? 'Your PEAR Wallet' : 'Earn PEAR Tokens'}
                             </h3>
                             <p className="text-gray-500 text-sm">
@@ -1712,36 +1714,36 @@ function App() {
                         </div>
                         
                         {user ? (
-                          <div className="flex items-center gap-4">
-                            <div className="flex-1 bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-amber-200 shadow-sm">
+                          <div className="flex items-center gap-3">
+                            <div className="flex-1 bg-white/80 backdrop-blur-sm rounded-xl p-3 border border-amber-200 shadow-sm">
                               <div className="flex items-center justify-between">
                                 <div>
-                                  <div className="text-3xl font-bold bg-gradient-to-r from-amber-500 to-yellow-600 bg-clip-text text-transparent">
+                                  <div className="text-2xl font-bold bg-gradient-to-r from-amber-500 to-yellow-600 bg-clip-text text-transparent">
                                     {isLoadingTokens ? '...' : pearTokenCount}
                                   </div>
-                                  <div className="text-xs font-medium text-gray-500 mt-0.5">PEAR Tokens</div>
+                                  <div className="text-[10px] font-medium text-gray-500 mt-0.5">PEAR Tokens</div>
                                 </div>
-                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md">
-                                  <span className="text-xl">🍐</span>
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md">
+                                  <span className="text-lg">🍐</span>
                                 </div>
                               </div>
                             </div>
                             <Link
                               to="/store"
-                              className="flex-shrink-0 inline-flex items-center px-4 py-3 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-lg hover:scale-105 transform"
+                              className="flex-shrink-0 inline-flex items-center px-4 py-2.5 text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-lg hover:scale-105 transform"
                             >
                               Store
                               <ArrowRight className="ml-1.5 w-4 h-4" />
                             </Link>
                           </div>
                         ) : (
-                          <div className="space-y-4">
+                          <div className="space-y-3">
                             <p className="text-gray-600 text-sm">
-                              Answer quiz questions correctly to earn tokens and unlock exclusive content.
+                              Answer quiz questions to earn tokens and unlock rewards.
                             </p>
                             <button
                               onClick={() => setIsAccountOpen(true)}
-                              className="inline-flex items-center px-5 py-2.5 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-lg hover:scale-105 transform"
+                              className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-lg"
                             >
                               Start Earning
                               <ArrowRight className="ml-2 w-4 h-4" />
@@ -1750,33 +1752,34 @@ function App() {
                         )}
                       </div>
                     </div>
+                  </div>
+
+                  {/* Right Column - Testimonials */}
+                  <div className="h-full">
+                    <TestimonialCarousel />
+                  </div>
                 </div>
               </div>
             </div>
-                        
-            {/* Testimonials Section - Compact */}
+
+            {/* Trusted By Section */}
             <div className="mb-8 sm:mb-12">
               <div className="mx-auto max-w-7xl px-4 sm:px-6">
-                <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 hover:shadow-lg transition-shadow duration-300">
-                  <TestimonialCarousel />
-                  
-                  {/* Trust Badges */}
-                  <div className="text-center pt-6 mt-6 border-t border-gray-100">
-                    <p className="text-gray-500 text-xs mb-3 font-medium">Trusted by professionals at</p>
-                    <div className="flex flex-wrap justify-center items-center gap-2">
-                      {['Google', 'Microsoft', 'Verizon', 'MIT', 'UCF', 'Cresta'].map((company) => (
-                        <span key={company} className="px-3 py-1 bg-gray-50 rounded-full border border-gray-200 text-gray-600 text-xs font-medium">
-                          {company}
-                        </span>
-                      ))}
-                    </div>
+                <div className="text-center py-6 px-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                  <p className="text-gray-500 text-sm mb-4 font-medium">Trusted by professionals at</p>
+                  <div className="flex flex-wrap justify-center items-center gap-3">
+                    {['Google', 'Microsoft', 'Verizon', 'MIT', 'UCF', 'Cresta'].map((company) => (
+                      <span key={company} className="px-4 py-1.5 bg-gray-50 rounded-full border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-100 transition-colors">
+                        {company}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
 
               {/* Simple Section Divider */}
-              <div className="my-10 sm:my-12">
+              <div className="my-8 sm:my-10">
                 <div className="mx-auto max-w-xl px-4">
                   <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
                 </div>
