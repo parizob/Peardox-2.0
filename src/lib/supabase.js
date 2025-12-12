@@ -1537,7 +1537,7 @@ export const commentsAPI = {
     try {
       const { data, error } = await supabase
         .from('v_article_comments')
-        .select('id, user_id, comment_text, created_at, is_edited, user_name, user_title')
+        .select('id, user_id, comment_text, created_at, is_edited, user_name, user_title, user_institution')
         .eq('article_id', articleId)
         .order('created_at', { ascending: true })
         .range(offset, offset + limit - 1);

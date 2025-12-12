@@ -597,27 +597,34 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                             {comment.user_name?.charAt(0)?.toUpperCase() || 'U'}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-medium text-gray-900 text-sm">{comment.user_name}</span>
-                              <span className="text-xs text-gray-400">
-                                {formatCommentDate(comment.created_at)}
-                                {comment.is_edited && <span className="ml-1">(edited)</span>}
-                              </span>
-                              {user && user.id === comment.user_id && (
-                                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                  <button
-                                    onClick={() => handleEditComment(comment)}
-                                    className="p-1 text-gray-400 hover:text-gray-600"
-                                  >
-                                    <Edit3 className="h-3 w-3" />
-                                  </button>
-                                  <button
-                                    onClick={() => handleDeleteComment(comment.id)}
-                                    className="p-1 text-gray-400 hover:text-red-500"
-                                  >
-                                    <Trash2 className="h-3 w-3" />
-                                  </button>
-                                </div>
+                            <div className="mb-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-medium text-gray-900 text-sm">{comment.user_name}</span>
+                                <span className="text-xs text-gray-400">
+                                  {formatCommentDate(comment.created_at)}
+                                  {comment.is_edited && <span className="ml-1">(edited)</span>}
+                                </span>
+                                {user && user.id === comment.user_id && (
+                                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button
+                                      onClick={() => handleEditComment(comment)}
+                                      className="p-1 text-gray-400 hover:text-gray-600"
+                                    >
+                                      <Edit3 className="h-3 w-3" />
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteComment(comment.id)}
+                                      className="p-1 text-gray-400 hover:text-red-500"
+                                    >
+                                      <Trash2 className="h-3 w-3" />
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                              {(comment.user_title || comment.user_institution) && (
+                                <p className="text-xs text-gray-400 italic mt-0.5">
+                                  {comment.user_title}{comment.user_title && comment.user_institution ? ' — ' : ''}{comment.user_institution}
+                                </p>
                               )}
                             </div>
                             
