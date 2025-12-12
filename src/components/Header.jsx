@@ -317,69 +317,87 @@ const Header = ({
             </div>
             </div>
             
-            {/* Mobile Navigation - Menu Button */}
-            <div className="md:hidden relative" ref={mobileMenuDropdownRef}>
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className={`flex items-center justify-center p-2 rounded-lg transition-colors flex-shrink-0 ${
-                  isMenuOpen
-                    ? 'bg-gray-200 text-gray-900'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-                title="Menu"
-              >
-                <Menu className="h-4 w-4" />
-              </button>
+            {/* Mobile Navigation - Filter and Menu Buttons */}
+            <div className="md:hidden flex items-center space-x-2">
+              {/* Mobile Filter Button */}
+              <div className="relative" ref={mobileDropdownRef}>
+                <button
+                  onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                  className={`flex items-center justify-center p-2 rounded-lg transition-colors flex-shrink-0 ${
+                    selectedCategory
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                  title={selectedCategory ? selectedCategoryName : 'Filter'}
+                >
+                  <Filter className="h-4 w-4" />
+                </button>
+              </div>
+              
+              {/* Mobile Menu Button */}
+              <div className="relative" ref={mobileMenuDropdownRef}>
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className={`flex items-center justify-center p-2 rounded-lg transition-colors flex-shrink-0 ${
+                    isMenuOpen
+                      ? 'bg-gray-200 text-gray-900'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                  title="Menu"
+                >
+                  <Menu className="h-4 w-4" />
+                </button>
 
-              {isMenuOpen && (
-                <div className="absolute top-full left-0 mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
-                  <div className="py-2">
-                    <Link
-                      to="/aboutus"
-                      className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsMenuOpen(false);
-                        if (isSearchExpanded) setIsSearchExpanded(false);
-                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-                      }}
-                    >
-                      <Info className="h-4 w-4 mr-3 text-gray-500" />
-                      <span className="text-sm font-medium">About Us</span>
-                    </Link>
-                    
-                    <Link
-                      to="/blog"
-                      className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsMenuOpen(false);
-                        if (isSearchExpanded) setIsSearchExpanded(false);
-                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-                      }}
-                    >
-                      <BookOpen className="h-4 w-4 mr-3 text-gray-500" />
-                      <span className="text-sm font-medium">Blog</span>
-                    </Link>
-                    
-                    <div className="border-t border-gray-100 my-1"></div>
-                    
-                    <Link
-                      to="/store"
-                      className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setIsMenuOpen(false);
-                        if (isSearchExpanded) setIsSearchExpanded(false);
-                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-                      }}
-                    >
-                      <ShoppingBag className="h-4 w-4 mr-3 text-gray-500" />
-                      <span className="text-sm font-medium">Store</span>
-                    </Link>
+                {isMenuOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+                    <div className="py-2">
+                      <Link
+                        to="/aboutus"
+                        className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsMenuOpen(false);
+                          if (isSearchExpanded) setIsSearchExpanded(false);
+                          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                        }}
+                      >
+                        <Info className="h-4 w-4 mr-3 text-gray-500" />
+                        <span className="text-sm font-medium">About Us</span>
+                      </Link>
+                      
+                      <Link
+                        to="/blog"
+                        className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsMenuOpen(false);
+                          if (isSearchExpanded) setIsSearchExpanded(false);
+                          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                        }}
+                      >
+                        <BookOpen className="h-4 w-4 mr-3 text-gray-500" />
+                        <span className="text-sm font-medium">Blog</span>
+                      </Link>
+                      
+                      <div className="border-t border-gray-100 my-1"></div>
+                      
+                      <Link
+                        to="/store"
+                        className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsMenuOpen(false);
+                          if (isSearchExpanded) setIsSearchExpanded(false);
+                          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                        }}
+                      >
+                        <ShoppingBag className="h-4 w-4 mr-3 text-gray-500" />
+                        <span className="text-sm font-medium">Store</span>
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
 
@@ -464,17 +482,16 @@ const Header = ({
             <div 
               className={`mt-3 pt-3 border-t border-gray-100 transition-transform duration-300 ease-in-out ${
                 isScrollingDown ? 'transform -translate-y-full' : 'transform translate-y-0'
-              }`} 
-              ref={mobileDropdownRef}
+              }`}
             >
           <div className="flex items-center gap-2 relative">
-            {/* Search Bar - Takes most space */}
+            {/* Search Bar - Full width */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center bg-white border border-gray-200 rounded-lg px-3 py-2.5 shadow-sm min-w-0">
                 <Search className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
                 <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Search papers..."
                   value={searchTerm}
                   onChange={handleSearchChange}
                   className="bg-transparent flex-1 text-sm focus:outline-none min-w-0"
@@ -489,19 +506,6 @@ const Header = ({
                 )}
               </div>
             </div>
-            
-            {/* Filter Icon Only */}
-            <button
-              onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
-              className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg transition-all ${
-                selectedCategory
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-              title={selectedCategory ? selectedCategoryName : 'Filter by area'}
-            >
-              <Filter className="h-4 w-4" />
-            </button>
             
             {/* Submit Icon Only */}
             <Link
