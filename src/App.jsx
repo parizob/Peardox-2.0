@@ -1492,18 +1492,19 @@ function App() {
                           </div>
                         
                           {/* Bottom section - metadata and CTA */}
-                          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                            <div className="flex items-center text-sm text-gray-500">
-                              <User className="h-4 w-4 mr-2 flex-shrink-0" />
+                          <div className="flex items-center justify-between pt-4 border-t border-gray-100 gap-3">
+                            <div className="flex items-center text-xs sm:text-sm text-gray-500 min-w-0 flex-1">
+                              <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 flex-shrink-0" />
                               <span className="truncate">{spotlightArticle.authors.split(',')[0]}{spotlightArticle.authors.split(',').length > 1 ? ' et al.' : ''}</span>
                               <span className="mx-2 hidden sm:inline">•</span>
                               <span className="hidden sm:inline">{spotlightArticle.publishedDate}</span>
                             </div>
-                              <button className="inline-flex items-center px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium text-sm transition-colors">
-                                Read Article
-                                <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
-                              </button>
-                            </div>
+                            <button className="flex-shrink-0 inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium text-xs sm:text-sm transition-colors">
+                              <span className="hidden sm:inline">Read Article</span>
+                              <span className="sm:hidden">Read</span>
+                              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1.5 sm:ml-2" />
+                            </button>
+                          </div>
                           </div>
                         </div>
                       </div>
@@ -1517,7 +1518,7 @@ function App() {
                           {/* Header */}
                           <div className="flex items-center gap-3 mb-4">
                             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
-                              <span className="text-white text-lg">🚀</span>
+                              <Eye className="h-5 w-5 text-white" />
                             </div>
                             <div>
                               <h3 className="text-lg font-bold text-gray-900">Start Exploring</h3>
