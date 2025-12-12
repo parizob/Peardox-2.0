@@ -11,7 +11,7 @@ const TestimonialCarousel = () => {
       name: "Matthew Cohen",
       role: "VP of Credit",
       company: "Atlantic Pacific Credit Partners",
-      content: "Pearadox has become my go-to source for staying ahead in AI research. The simplified explanations save me time and help me quickly identify what to read next.",
+      content: "Pearadox has become my go-to source for staying ahead in AI research. The simplified explanations save me time.",
       rating: 5,
       avatar: "MC"
     },
@@ -20,7 +20,7 @@ const TestimonialCarousel = () => {
         name: "Brandon Parizo",
         role: "Technical Product Manager",
         company: "Verizon",
-        content: "Staying on top of AI developments is crucial for product strategy. Pearadox makes it easy by breaking down papers into words I can actually understand.",
+        content: "Staying on top of AI developments is crucial for product strategy. Pearadox makes it easy.",
         rating: 5,
         avatar: "BP"
       },
@@ -29,7 +29,7 @@ const TestimonialCarousel = () => {
       name: "Zoe Zimmerman",
       role: "Stenographer",
       company: "U.S. Legal Support",
-      content: "As a stenographer, I like to stay on top of new tech. I'm not a tech person, but Pearadox makes something as hard as AI a lot easier to understand.",
+      content: "I'm not a tech person, but Pearadox makes something as hard as AI a lot easier to understand.",
       rating: 5,
       avatar: "ZZ"
     },
@@ -38,13 +38,11 @@ const TestimonialCarousel = () => {
         name: "Jon Mohr",
         role: "Field Service Engineer",
         company: "Boston Scientific",
-        content:  "Pearadox is an incredible resource for cutting through the noise in AI. It’s not only helping me at work but also inspiring me to explore ideas for my own business.",
+        content:  "Pearadox is an incredible resource for cutting through the noise in AI research.",
         rating: 5,
         avatar: "JM"
       },
   ];
-
-  // Auto-play functionality removed - manual navigation only
 
   const goToPrevious = () => {
     setCurrentIndex(currentIndex === 0 ? testimonials.length - 1 : currentIndex - 1);
@@ -58,63 +56,61 @@ const TestimonialCarousel = () => {
     setCurrentIndex(index);
   };
 
-  // Auto-play resume functionality removed - manual navigation only
-
   return (
-    <div className="bg-gradient-to-br from-white via-blue-50/30 to-white rounded-3xl shadow-2xl border border-gray-200 p-6 sm:p-8 h-full flex flex-col justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
+    <div className="bg-gradient-to-br from-white via-blue-50/30 to-white rounded-3xl shadow-xl border border-gray-200 p-5 sm:p-6 h-full flex flex-col justify-between relative overflow-hidden group hover:shadow-2xl transition-all duration-500">
       {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.03) 100%)' }}></div>
-      <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full blur-2xl" style={{ background: 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(37, 99, 235, 0.02) 100%)' }}></div>
+      <div className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.03) 100%)' }}></div>
+      <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full blur-2xl" style={{ background: 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(37, 99, 235, 0.02) 100%)' }}></div>
       
-      <div className="relative z-10">
-        {/* Header inside carousel */}
-        <div className="mb-6">
-          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 leading-tight">
+      <div className="relative z-10 flex-1 flex flex-col">
+        {/* Header */}
+        <div className="mb-4">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 leading-tight">
             What Our Readers Say
           </h3>
-          <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-            Trusted by researchers and professionals worldwide
+          <p className="text-gray-500 text-xs sm:text-sm">
+            Trusted by professionals worldwide
           </p>
         </div>
 
         {/* Main Content with Side Navigation */}
-        <div className="flex items-center mb-4">
-          {/* Left Arrow - Outside content area */}
+        <div className="flex items-center flex-1">
+          {/* Left Arrow */}
           <button
             onClick={goToPrevious}
-            className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-sm border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200 hover:shadow-md transition-all duration-300 mr-4 flex-shrink-0"
+            className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-sm border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200 transition-all mr-3 flex-shrink-0"
             aria-label="Previous testimonial"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-4 w-4" />
           </button>
 
           {/* Testimonial Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start space-x-4">
+            <div className="flex items-start space-x-3">
               {/* Avatar */}
-              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+              <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center text-white font-semibold text-xs flex-shrink-0">
                 {testimonials[currentIndex].avatar}
               </div>
               
               {/* Content */}
               <div className="flex-1 min-w-0">
                 {/* Quote */}
-                <blockquote className="text-gray-700 text-sm sm:text-base leading-relaxed mb-3">
+                <blockquote className="text-gray-700 text-sm leading-relaxed mb-2">
                   "{testimonials[currentIndex].content}"
                 </blockquote>
                 
                 {/* Author & Rating */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div className="flex items-center justify-between gap-2">
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-gray-900 text-sm">
+                    <div className="font-semibold text-gray-900 text-xs">
                       {testimonials[currentIndex].name}
                     </div>
-                    <div className="text-gray-600 text-xs">
+                    <div className="text-gray-500 text-[10px]">
                       {testimonials[currentIndex].role} • {testimonials[currentIndex].company}
                     </div>
                   </div>
                   
-                  {/* Rating - Below on mobile, right side on desktop */}
+                  {/* Rating */}
                   <div className="flex items-center flex-shrink-0">
                     {[...Array(testimonials[currentIndex].rating)].map((_, i) => (
                       <Star key={i} className="h-3 w-3 text-yellow-400 fill-current" />
@@ -125,24 +121,24 @@ const TestimonialCarousel = () => {
             </div>
           </div>
 
-          {/* Right Arrow - Outside content area */}
+          {/* Right Arrow */}
           <button
             onClick={goToNext}
-            className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-white shadow-sm border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200 hover:shadow-md transition-all duration-300 ml-4 flex-shrink-0"
+            className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-sm border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200 transition-all ml-3 flex-shrink-0"
             aria-label="Next testimonial"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-4 w-4" />
           </button>
         </div>
 
         {/* Mobile Navigation */}
-        <div className="flex sm:hidden items-center justify-between mt-4 pt-4 border-t border-gray-100">
+        <div className="flex sm:hidden items-center justify-between mt-3 pt-3 border-t border-gray-100">
           <button
             onClick={goToPrevious}
-            className="flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-sm border border-gray-200 text-gray-500 hover:text-blue-600 transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-full bg-white shadow-sm border border-gray-200 text-gray-500 hover:text-blue-600 transition-colors"
             aria-label="Previous testimonial"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-3.5 w-3.5" />
           </button>
 
           {/* Dots Indicator */}
@@ -151,7 +147,7 @@ const TestimonialCarousel = () => {
               <button
                 key={index}
                 onClick={() => goToSlide(index)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
                   index === currentIndex
                     ? 'bg-blue-600 scale-125'
                     : 'bg-gray-300'
@@ -163,20 +159,20 @@ const TestimonialCarousel = () => {
 
           <button
             onClick={goToNext}
-            className="flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-sm border border-gray-200 text-gray-500 hover:text-blue-600 transition-colors"
+            className="flex items-center justify-center w-7 h-7 rounded-full bg-white shadow-sm border border-gray-200 text-gray-500 hover:text-blue-600 transition-colors"
             aria-label="Next testimonial"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-3.5 w-3.5" />
           </button>
         </div>
 
         {/* Desktop Dots Indicator */}
-        <div className="hidden sm:flex items-center justify-center mt-6 space-x-2">
+        <div className="hidden sm:flex items-center justify-center mt-4 space-x-1.5">
           {testimonials.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
                 index === currentIndex
                   ? 'bg-blue-600 scale-125'
                   : 'bg-gray-300 hover:bg-gray-400'

@@ -1699,52 +1699,35 @@ function App() {
                       <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-orange-100/30 to-transparent rounded-full blur-2xl"></div>
                       
                       <div className="relative">
-                        <div className="flex items-center gap-4 mb-4">
-                          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-lg">
-                            <Sparkles className="h-6 w-6 text-white" />
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-bold text-gray-900">
-                              {user ? 'Your PEAR Wallet' : 'Earn PEAR Tokens'}
-                            </h3>
-                            <p className="text-gray-500 text-sm">
-                              {user ? 'Redeem for exclusive rewards' : 'Take quizzes, unlock rewards'}
-                            </p>
-                          </div>
-                        </div>
-                        
                         {user ? (
-                          <div className="flex items-center gap-3">
-                            <div className="flex-1 bg-white/80 backdrop-blur-sm rounded-xl p-3 border border-amber-200 shadow-sm">
-                              <div className="flex items-center justify-between">
-                                <div>
-                                  <div className="text-2xl font-bold bg-gradient-to-r from-amber-500 to-yellow-600 bg-clip-text text-transparent">
-                                    {isLoadingTokens ? '...' : pearTokenCount}
-                                  </div>
-                                  <div className="text-[10px] font-medium text-gray-500 mt-0.5">PEAR Tokens</div>
+                          <div className="flex items-center gap-4">
+                            {/* PEAR Token Coin with count */}
+                            <div className="relative group/token cursor-pointer flex-shrink-0">
+                              {/* Outer glow ring - pulses */}
+                              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-md opacity-60 group-hover/token:opacity-100 animate-pulse"></div>
+                              {/* Secondary glow */}
+                              <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 opacity-30 group-hover/token:opacity-50 blur-sm transition-opacity"></div>
+                              {/* Main token */}
+                              <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center shadow-lg border-2 border-yellow-300/50 group-hover/token:scale-110 transition-transform duration-300">
+                                {/* Inner highlight */}
+                                <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent"></div>
+                                {/* Shimmer effect */}
+                                <div className="absolute inset-0 rounded-full overflow-hidden">
+                                  <div className="absolute -inset-full bg-gradient-to-r from-transparent via-white/30 to-transparent rotate-45 translate-x-[-100%] group-hover/token:translate-x-[200%] transition-transform duration-1000"></div>
                                 </div>
-                                {/* PEAR Token with glowing effect */}
-                                <div className="relative group/token cursor-pointer">
-                                  {/* Outer glow ring - pulses */}
-                                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-md opacity-60 group-hover/token:opacity-100 animate-pulse"></div>
-                                  {/* Secondary glow */}
-                                  <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 opacity-30 group-hover/token:opacity-50 blur-sm transition-opacity"></div>
-                                  {/* Main token */}
-                                  <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center shadow-lg border-2 border-yellow-300/50 group-hover/token:scale-110 transition-transform duration-300">
-                                    {/* Inner highlight */}
-                                    <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent"></div>
-                                    {/* Shimmer effect */}
-                                    <div className="absolute inset-0 rounded-full overflow-hidden">
-                                      <div className="absolute -inset-full bg-gradient-to-r from-transparent via-white/30 to-transparent rotate-45 translate-x-[-100%] group-hover/token:translate-x-[200%] transition-transform duration-1000"></div>
-                                    </div>
-                                    {/* P letter for PEAR */}
-                                    <span className="relative text-lg font-bold text-white drop-shadow-md">P</span>
-                                  </div>
-                                  {/* Sparkle accents */}
-                                  <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-white rounded-full opacity-80 animate-ping"></div>
-                                </div>
+                                {/* Token count */}
+                                <span className="relative text-xl font-bold text-white drop-shadow-md">
+                                  {isLoadingTokens ? '...' : pearTokenCount}
+                                </span>
                               </div>
                             </div>
+                            
+                            {/* PEAR Tokens label - hidden on mobile */}
+                            <div className="hidden sm:flex flex-col flex-1">
+                              <div className="text-xl font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">PEAR Tokens</div>
+                              <div className="text-sm text-gray-500">Redeem in the store for rewards</div>
+                            </div>
+                            
                             <Link
                               to="/store"
                               className="flex-shrink-0 inline-flex items-center px-4 py-2.5 text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-lg hover:scale-105 transform"
@@ -1755,6 +1738,7 @@ function App() {
                           </div>
                         ) : (
                           <div className="space-y-3">
+                            <h3 className="text-xl font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">Earn PEAR Tokens</h3>
                             <p className="text-gray-600 text-sm">
                               Answer quiz questions to earn tokens and unlock rewards.
                             </p>
