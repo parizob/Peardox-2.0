@@ -1661,15 +1661,15 @@ function App() {
                           <div className="grid grid-cols-3 gap-2">
                             <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2.5 text-center border border-green-100 shadow-sm">
                               <div className="text-xl font-bold" style={{ color: '#1db954' }}>{analyticsData?.totalViews || 0}</div>
-                              <div className="text-[10px] font-medium text-gray-500 mt-0.5">Read</div>
+                              <div className="text-[9px] font-medium text-gray-500 mt-0.5 leading-tight">Total Papers Read</div>
                             </div>
                             <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2.5 text-center border border-green-100 shadow-sm">
                               <div className="text-xl font-bold" style={{ color: '#1db954' }}>{analyticsData?.categoriesViewed?.length || 0}</div>
-                              <div className="text-[10px] font-medium text-gray-500 mt-0.5">Topics</div>
+                              <div className="text-[9px] font-medium text-gray-500 mt-0.5 leading-tight">Total Topics Covered</div>
                             </div>
                             <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2.5 text-center border border-green-100 shadow-sm">
                               <div className="text-xl font-bold" style={{ color: '#1db954' }}>{weeklyData.reduce((sum, day) => sum + day.views, 0)}</div>
-                              <div className="text-[10px] font-medium text-gray-500 mt-0.5">This Week</div>
+                              <div className="text-[9px] font-medium text-gray-500 mt-0.5 leading-tight">Papers This Week</div>
                             </div>
                           </div>
                         ) : (
