@@ -1904,7 +1904,7 @@ function App() {
 
         {/* Articles Grid */}
         {!isLoading && !error && filteredArticles.length > 0 ? (
-          <div className="px-4 sm:px-0">
+          <div id="articles-grid" className="px-4 sm:px-0 scroll-mt-24">
             <div className="grid gap-4 sm:gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
               {currentArticles.map(article => (
                 <ArticleCard 
@@ -1919,17 +1919,27 @@ function App() {
 
             {/* Pagination - Mobile optimized */}
             {totalPages > 1 && (
-              <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-2 mt-8 sm:mt-12 px-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8 sm:mt-12 px-4">
+                {/* Previous Button */}
                 <button
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  onClick={() => {
+                    setCurrentPage(prev => Math.max(prev - 1, 1));
+                    setTimeout(() => {
+                      const articlesSection = document.getElementById('articles-grid');
+                      if (articlesSection) {
+                        articlesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }, 50);
+                  }}
                   disabled={currentPage === 1}
-                  className="w-full sm:w-auto flex items-center justify-center px-4 py-3 sm:py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="w-full sm:w-auto flex items-center justify-center px-5 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 font-medium text-sm"
                 >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  <ChevronLeft className="h-4 w-4 mr-1.5" />
                   Previous
                 </button>
 
-                <div className="flex items-center space-x-1 overflow-x-auto py-2 max-w-full">
+                {/* Page Numbers */}
+                <div className="flex items-center justify-center gap-1.5 py-2">
                   {Array.from({ length: totalPages }, (_, i) => {
                     const pageNum = i + 1;
                     const isActive = pageNum === currentPage;
@@ -1940,11 +1950,11 @@ function App() {
                                    Math.abs(pageNum - currentPage) <= 1;
                     
                     if (!showPage && pageNum === 2 && currentPage > 4) {
-                      return <span key={pageNum} className="px-2 text-gray-400 text-sm">...</span>;
+                      return <span key={pageNum} className="w-10 text-center text-gray-400 text-sm">...</span>;
                     }
                     
                     if (!showPage && pageNum === totalPages - 1 && currentPage < totalPages - 3) {
-                      return <span key={pageNum} className="px-2 text-gray-400 text-sm">...</span>;
+                      return <span key={pageNum} className="w-10 text-center text-gray-400 text-sm">...</span>;
                     }
                     
                     if (!showPage) return null;
@@ -1952,12 +1962,21 @@ function App() {
                     return (
                       <button
                         key={pageNum}
-                        onClick={() => setCurrentPage(pageNum)}
-                        className={`px-3 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base ${
+                        onClick={() => {
+                          setCurrentPage(pageNum);
+                          setTimeout(() => {
+                            const articlesSection = document.getElementById('articles-grid');
+                            if (articlesSection) {
+                              articlesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                          }, 50);
+                        }}
+                        className={`w-10 h-10 rounded-xl font-medium transition-all duration-200 text-sm flex items-center justify-center ${
                           isActive
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                            ? 'text-white shadow-md'
+                            : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300'
                         }`}
+                        style={isActive ? { backgroundColor: '#1db954' } : {}}
                       >
                         {pageNum}
                       </button>
@@ -1965,13 +1984,22 @@ function App() {
                   })}
                 </div>
 
+                {/* Next Button */}
                 <button
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  onClick={() => {
+                    setCurrentPage(prev => Math.min(prev + 1, totalPages));
+                    setTimeout(() => {
+                      const articlesSection = document.getElementById('articles-grid');
+                      if (articlesSection) {
+                        articlesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }, 50);
+                  }}
                   disabled={currentPage === totalPages}
-                  className="w-full sm:w-auto flex items-center justify-center px-4 py-3 sm:py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="w-full sm:w-auto flex items-center justify-center px-5 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 font-medium text-sm"
                 >
                   Next
-                  <ChevronRight className="h-4 w-4 ml-1" />
+                  <ChevronRight className="h-4 w-4 ml-1.5" />
                 </button>
               </div>
             )}
