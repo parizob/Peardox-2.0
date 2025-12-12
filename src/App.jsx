@@ -1481,7 +1481,7 @@ function App() {
                     {/* Spotlight Article - Takes 8 columns on large screens */}
                     <div className="lg:col-span-8 flex">
                   {!spotlightArticle || !spotlightTypingComplete ? (
-                    <div className="relative bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden w-full lg:h-full lg:min-h-[300px]">
+                    <div className="relative bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden w-full lg:h-full min-h-[220px] sm:min-h-[260px] lg:min-h-[300px]">
                       <div className="relative h-full flex flex-col p-6 sm:p-8 lg:p-10 justify-center items-center">
                         <div className="text-center px-2">
                           <h3 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2 overflow-hidden whitespace-nowrap border-r-2 border-gray-800 pr-1 animate-typing" style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', monospace" }}>
@@ -1531,7 +1531,7 @@ function App() {
                         }
                       `}</style>
                       <div 
-                        className="relative bg-white rounded-2xl shadow-lg border border-gray-200 hover:border-amber-300 hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden lg:h-full lg:min-h-[300px]"
+                        className="relative bg-white rounded-2xl shadow-lg border border-gray-200 hover:border-amber-300 hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden lg:h-full min-h-[220px] sm:min-h-[260px] lg:min-h-[300px]"
                         onClick={() => handleArticleClick(spotlightArticle)}
                       >
                         {/* Subtle accent bar */}
