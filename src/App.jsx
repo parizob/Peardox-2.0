@@ -297,7 +297,7 @@ function App() {
   useEffect(() => {
     const typingTimer = setTimeout(() => {
       setSpotlightTypingComplete(true);
-    }, 2500); // 2.5 seconds for typing animation
+    }, 3200); // 2s typing + 1.2s pause before showing spotlight
     return () => clearTimeout(typingTimer);
   }, []);
   
@@ -1482,10 +1482,10 @@ function App() {
                     <div className="lg:col-span-8 flex">
                   {!spotlightArticle || !spotlightTypingComplete ? (
                     <div className="relative bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden w-full lg:h-full lg:min-h-[300px]">
-                      <div className="relative h-full flex flex-col p-5 sm:p-6 lg:p-8 justify-center items-center">
-                        <div className="text-center">
-                          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 overflow-hidden whitespace-nowrap border-r-2 border-amber-500 pr-1 animate-typing">
-                            Welcome to Pearadox
+                      <div className="relative h-full flex flex-col p-6 sm:p-8 lg:p-10 justify-center items-center">
+                        <div className="text-center px-2">
+                          <h3 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2 overflow-hidden whitespace-nowrap border-r-2 border-gray-800 pr-1 animate-typing" style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', monospace" }}>
+                            Welcome to <span className="animate-syntaxHighlight">Pearadox</span>
                           </h3>
                           <p className="text-gray-500 text-sm animate-fadeInDelayed opacity-0">
                             Discovering today's spotlight...
@@ -1494,12 +1494,17 @@ function App() {
                       </div>
                       {/* Typing animation styles */}
                       <style>{`
+                        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
                         @keyframes typing {
                           from { width: 0 }
                           to { width: 100% }
                         }
                         @keyframes blink {
                           50% { border-color: transparent }
+                        }
+                        @keyframes syntaxHighlight {
+                          0%, 60% { color: #111827 }
+                          100% { color: #1db954 }
                         }
                         @keyframes fadeInDelayed {
                           0%, 60% { opacity: 0 }
@@ -1511,6 +1516,9 @@ function App() {
                         }
                         .animate-fadeInDelayed {
                           animation: fadeInDelayed 2.5s ease-out forwards;
+                        }
+                        .animate-syntaxHighlight {
+                          animation: syntaxHighlight 2s ease-out forwards;
                         }
                       `}</style>
                     </div>
