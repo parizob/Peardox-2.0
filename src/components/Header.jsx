@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ChevronDown, Filter, X, Bookmark, User, Info, BookOpen, Upload } from 'lucide-react';
+import { Search, ChevronDown, Filter, X, Bookmark, User, Info, BookOpen, Upload, Menu, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Header = ({
@@ -16,12 +16,15 @@ const Header = ({
 }) => {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [categorySearchTerm, setCategorySearchTerm] = useState('');
   const [scrollY, setScrollY] = useState(0);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
   
   const dropdownRef = useRef(null);
+  const menuDropdownRef = useRef(null);
+  const mobileMenuDropdownRef = useRef(null);
   const mobileDropdownRef = useRef(null);
   const mobileDropdownContentRef = useRef(null);
   const categorySearchRef = useRef(null);
@@ -63,10 +66,17 @@ const Header = ({
       const isOutsideDesktop = dropdownRef.current && !dropdownRef.current.contains(event.target);
       const isOutsideMobile = mobileDropdownRef.current && !mobileDropdownRef.current.contains(event.target);
       const isOutsideMobileContent = mobileDropdownContentRef.current && !mobileDropdownContentRef.current.contains(event.target);
+      const isOutsideDesktopMenu = menuDropdownRef.current && !menuDropdownRef.current.contains(event.target);
+      const isOutsideMobileMenu = mobileMenuDropdownRef.current && !mobileMenuDropdownRef.current.contains(event.target);
       
       if (isOutsideDesktop && isOutsideMobile && isOutsideMobileContent) {
         setIsCategoryDropdownOpen(false);
         setCategorySearchTerm('');
+      }
+      
+      // Only close menu if click is outside both desktop AND mobile menu refs
+      if (isOutsideDesktopMenu && isOutsideMobileMenu) {
+        setIsMenuOpen(false);
       }
     };
 
@@ -141,7 +151,7 @@ const Header = ({
               >
                 <Filter className="h-4 w-4" />
                 <span className="max-w-24 sm:max-w-32 truncate">
-                  {selectedCategory ? selectedCategoryName : 'Area'}
+                  {selectedCategory ? selectedCategoryName : 'Filter'}
                 </span>
                 <ChevronDown className={`h-4 w-4 transition-transform ${
                   isCategoryDropdownOpen ? 'rotate-180' : ''
@@ -204,52 +214,79 @@ const Header = ({
               )}
             </div>
             
-            {/* About Us Link with Tooltip */}
-            <div className="relative group">
-              <Link
-                to="/aboutus"
-                className="flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
-                onClick={() => {
-                  if (isSearchExpanded) {
-                    setIsSearchExpanded(false);
-                  }
-                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-                }}
+            {/* Menu Dropdown */}
+            <div className="relative" ref={menuDropdownRef}>
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                  isMenuOpen
+                    ? 'bg-gray-200 text-gray-900'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
               >
-                <Info className="h-4 w-4" />
-                <span>About Us</span>
-              </Link>
-              {/* Tooltip */}
-              <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
-                <div className="font-medium mb-0.5">Our Mission & Story</div>
-                <div className="text-gray-300">Meet the team democratizing AI research</div>
-                {/* Arrow */}
-                <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-gray-900 rotate-45"></div>
-              </div>
-            </div>
-            
-            {/* Blog Link with Tooltip */}
-            <div className="relative group">
-              <Link
-                to="/blog"
-                className="flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-colors"
-                onClick={() => {
-                  if (isSearchExpanded) {
-                    setIsSearchExpanded(false);
-                  }
-                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-                }}
-              >
-                <BookOpen className="h-4 w-4" />
-                <span>Blog</span>
-              </Link>
-              {/* Tooltip */}
-              <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-lg whitespace-nowrap opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
-                <div className="font-medium mb-0.5">AI Insights & Trends</div>
-                <div className="text-gray-300">Deep dives into the future of intelligence</div>
-                {/* Arrow */}
-                <div className="absolute left-1/2 -translate-x-1/2 -top-1 w-2 h-2 bg-gray-900 rotate-45"></div>
-              </div>
+                <Menu className="h-4 w-4" />
+                <span>Menu</span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {isMenuOpen && (
+                <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+                  <div className="py-2">
+                    <Link
+                      to="/aboutus"
+                      className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMenuOpen(false);
+                        if (isSearchExpanded) setIsSearchExpanded(false);
+                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                      }}
+                    >
+                      <Info className="h-4 w-4 mr-3 text-gray-500" />
+                      <div>
+                        <div className="text-sm font-medium">About Us</div>
+                        <div className="text-xs text-gray-500">Our mission & story</div>
+                      </div>
+                    </Link>
+                    
+                    <Link
+                      to="/blog"
+                      className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMenuOpen(false);
+                        if (isSearchExpanded) setIsSearchExpanded(false);
+                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                      }}
+                    >
+                      <BookOpen className="h-4 w-4 mr-3 text-gray-500" />
+                      <div>
+                        <div className="text-sm font-medium">Blog</div>
+                        <div className="text-xs text-gray-500">Insights & perspectives</div>
+                      </div>
+                    </Link>
+                    
+                    <div className="border-t border-gray-100 my-1"></div>
+                    
+                    <Link
+                      to="/store"
+                      className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMenuOpen(false);
+                        if (isSearchExpanded) setIsSearchExpanded(false);
+                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                      }}
+                    >
+                      <ShoppingBag className="h-4 w-4 mr-3 text-gray-500" />
+                      <div>
+                        <div className="text-sm font-medium">Store</div>
+                        <div className="text-xs text-gray-500">Redeem PEAR tokens</div>
+                      </div>
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
             
             {/* Submit Link with Tooltip */}
@@ -280,37 +317,69 @@ const Header = ({
             </div>
             </div>
             
-            {/* Mobile Navigation */}
-            <div className="md:hidden flex items-center space-x-2">
-              {/* About Us - Mobile */}
-              <Link
-                to="/aboutus"
-                className="flex items-center justify-center p-2 bg-gray-100 text-gray-700 rounded-lg hover:text-blue-600 hover:bg-gray-200 transition-colors flex-shrink-0"
-                onClick={() => {
-                  if (isSearchExpanded) {
-                    setIsSearchExpanded(false);
-                  }
-                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-                }}
-                title="About Pearadox"
+            {/* Mobile Navigation - Menu Button */}
+            <div className="md:hidden relative" ref={mobileMenuDropdownRef}>
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className={`flex items-center justify-center p-2 rounded-lg transition-colors flex-shrink-0 ${
+                  isMenuOpen
+                    ? 'bg-gray-200 text-gray-900'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+                title="Menu"
               >
-                <Info className="h-4 w-4" />
-              </Link>
+                <Menu className="h-4 w-4" />
+              </button>
 
-              {/* Blog - Mobile */}
-              <Link
-                to="/blog"
-                className="flex items-center justify-center p-2 bg-gray-100 text-gray-700 rounded-lg hover:text-blue-600 hover:bg-gray-200 transition-colors flex-shrink-0"
-                onClick={() => {
-                  if (isSearchExpanded) {
-                    setIsSearchExpanded(false);
-                  }
-                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
-                }}
-                title="Pearadox Blog"
-              >
-                <BookOpen className="h-4 w-4" />
-              </Link>
+              {isMenuOpen && (
+                <div className="absolute top-full left-0 mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+                  <div className="py-2">
+                    <Link
+                      to="/aboutus"
+                      className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMenuOpen(false);
+                        if (isSearchExpanded) setIsSearchExpanded(false);
+                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                      }}
+                    >
+                      <Info className="h-4 w-4 mr-3 text-gray-500" />
+                      <span className="text-sm font-medium">About Us</span>
+                    </Link>
+                    
+                    <Link
+                      to="/blog"
+                      className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMenuOpen(false);
+                        if (isSearchExpanded) setIsSearchExpanded(false);
+                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                      }}
+                    >
+                      <BookOpen className="h-4 w-4 mr-3 text-gray-500" />
+                      <span className="text-sm font-medium">Blog</span>
+                    </Link>
+                    
+                    <div className="border-t border-gray-100 my-1"></div>
+                    
+                    <Link
+                      to="/store"
+                      className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMenuOpen(false);
+                        if (isSearchExpanded) setIsSearchExpanded(false);
+                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                      }}
+                    >
+                      <ShoppingBag className="h-4 w-4 mr-3 text-gray-500" />
+                      <span className="text-sm font-medium">Store</span>
+                    </Link>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

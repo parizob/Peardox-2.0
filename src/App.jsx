@@ -1431,10 +1431,10 @@ function App() {
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
               <div className="text-center mb-8 sm:mb-12">
                 <h2 className="font-sans text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight px-2">
-                  AI Research, Simplified
+                Deep Tech. Plain English.
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
-                From learning the basics to mastering the latest — AI research made clear in minutes.
+                Learn, Earn, and Discover — the fastest way to understand AI research.
                 </p>
               </div>
 
@@ -1598,9 +1598,9 @@ function App() {
                             
                             <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
                               <div className="text-lg sm:text-2xl font-bold" style={{ color: '#1db954' }}>
-                                1
+                                Free
                               </div>
-                              <div className="text-[10px] font-semibold text-gray-600 mt-1 text-center">Place</div>
+                              <div className="text-[10px] font-semibold text-gray-600 mt-1 text-center">Access</div>
                             </div>
                           </div>
                         </div>

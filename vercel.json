@@ -38,6 +38,10 @@
     {
       "source": "/update-password",
       "destination": "/index.html"
+    },
+    {
+      "source": "/store",
+      "destination": "/index.html"
     }
   ],
   "buildCommand": "npm run build",
