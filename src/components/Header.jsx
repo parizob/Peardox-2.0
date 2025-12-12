@@ -266,8 +266,6 @@ const Header = ({
                       </div>
                     </Link>
                     
-                    <div className="border-t border-gray-100 my-1"></div>
-                    
                     <Link
                       to="/store"
                       className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
@@ -378,8 +376,6 @@ const Header = ({
                         <BookOpen className="h-4 w-4 mr-3 text-gray-500" />
                         <span className="text-sm font-medium">Blog</span>
                       </Link>
-                      
-                      <div className="border-t border-gray-100 my-1"></div>
                       
                       <Link
                         to="/store"
