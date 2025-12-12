@@ -37,7 +37,8 @@ export const UserProvider = ({ children }) => {
     initializeAuth();
 
     // Listen for auth changes
-    const { unsubscribe } = authAPI.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = authAPI.onAuthStateChange((event, session) => {
+      console.log('🔄 Auth state changed:', event);
       if (event === 'SIGNED_IN' && session?.user) {
         setUser(session.user);
         // Load profile
@@ -49,6 +50,7 @@ export const UserProvider = ({ children }) => {
           }
         });
       } else if (event === 'SIGNED_OUT') {
+        console.log('👋 User signed out, clearing state');
         setUser(null);
         setUserProfile(null);
         setUserSkillLevel('Beginner');
@@ -58,7 +60,7 @@ export const UserProvider = ({ children }) => {
       }
     });
 
-    return () => unsubscribe?.();
+    return () => subscription?.unsubscribe();
   }, []);
 
   // Load saved articles when user changes

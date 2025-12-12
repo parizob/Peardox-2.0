@@ -444,16 +444,32 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
     }
   };
 
-  const handleSignOut = async () => {
-    try {
-      if (authAPI && typeof authAPI.signOut === 'function') {
-        await authAPI.signOut();
-      }
-      onClose();
-    } catch (error) {
-      console.error('Sign out error:', error);
-      onClose();
+  const handleSignOut = async (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
     }
+    console.log('🚪 Sign out button clicked');
+    
+    try {
+      // Import supabase client directly
+      const { supabase } = await import('../lib/supabase');
+      console.log('🔐 Calling supabase.auth.signOut...');
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('❌ Sign out error:', error);
+      } else {
+        console.log('✅ Sign out completed successfully');
+      }
+    } catch (error) {
+      console.error('❌ Sign out exception:', error);
+    }
+    
+    // Close modal
+    onClose();
+    
+    // Navigate to home and reload
+    window.location.href = '/';
   };
 
   const handleSave = async () => {
