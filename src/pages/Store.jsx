@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, ArrowLeft, Sparkles, Coins, Gift, TrendingUp, Zap, Clock, BookOpen, Trophy, ArrowRight } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -7,6 +7,7 @@ import { useUser } from '../contexts/UserContext';
 import { quizAPI } from '../lib/supabase';
 
 const Store = () => {
+  const navigate = useNavigate();
   const {
     savedArticlesFromDB,
     user,
@@ -14,6 +15,33 @@ const Store = () => {
   
   const [pearTokenCount, setPearTokenCount] = useState(0);
   const [isLoadingTokens, setIsLoadingTokens] = useState(false);
+  
+  // Navigate to home and scroll to articles section
+  const handleStartEarning = () => {
+    navigate('/');
+    // Wait for navigation, then scroll to quiz section
+    setTimeout(() => {
+      const quizSection = document.getElementById('quiz-section');
+      if (quizSection) {
+        const headerHeight = 80;
+        const additionalOffset = 20;
+        const elementPosition = quizSection.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerHeight - additionalOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
+  };
+  
+  // Navigate to home and scroll to top
+  const handleBackToHub = () => {
+    navigate('/');
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+  };
   
   // Fetch PEAR tokens
   useEffect(() => {
@@ -147,15 +175,15 @@ const Store = () => {
               </div>
 
               {/* CTA to earn more */}
-              <Link 
-                to="/"
+              <button 
+                onClick={handleStartEarning}
                 className="inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl transition-all hover:opacity-90 hover:scale-105 shadow-lg"
                 style={{ backgroundColor: '#1db954' }}
               >
                 <BookOpen className="h-5 w-5 mr-2" />
                 Start Earning PEAR
                 <ArrowRight className="h-5 w-5 ml-2" />
-              </Link>
+              </button>
             </div>
           </div>
         </section>
@@ -223,8 +251,8 @@ const Store = () => {
         {/* Back Link */}
         <section className="py-8">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
-            <Link 
-              to="/"
+            <button 
+              onClick={handleBackToHub}
               className="inline-flex items-center transition-colors group"
               style={{ color: '#1db954' }}
               onMouseEnter={(e) => e.currentTarget.style.color = '#16a14a'}
@@ -232,7 +260,7 @@ const Store = () => {
             >
               <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
               Back to Research Hub
-            </Link>
+            </button>
           </div>
         </section>
       </main>
