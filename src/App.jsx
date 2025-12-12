@@ -291,6 +291,15 @@ function App() {
   const [lastRefreshDate, setLastRefreshDate] = useState(null);
   const [spotlightArticle, setSpotlightArticle] = useState(null);
   const [isLoadingSpecificArticle, setIsLoadingSpecificArticle] = useState(false);
+  const [spotlightTypingComplete, setSpotlightTypingComplete] = useState(false);
+  
+  // Start typing animation timer on mount
+  useEffect(() => {
+    const typingTimer = setTimeout(() => {
+      setSpotlightTypingComplete(true);
+    }, 2500); // 2.5 seconds for typing animation
+    return () => clearTimeout(typingTimer);
+  }, []);
   
   // Get user state from context
   const {
@@ -787,14 +796,26 @@ function App() {
 
   // Select a consistent daily article for the Research Of The Day spotlight
   // Uses date-based seeding to ensure the same article shows for the entire day
-  // TODO: In the future, replace this with a function that fetches specifically curated/trending articles
-  // For example: await arxivAPI.getSpotlightArticle() or await arxivAPI.getTrendingArticle()
+  // Implements caching for instant load on subsequent visits
   const selectSpotlightArticle = () => {
+    const today = new Date();
+    const dateString = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
+    const cacheKey = `spotlight_${dateString}`;
+    
+    // Try to load from cache first
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        const cachedArticle = JSON.parse(cached);
+        setSpotlightArticle(cachedArticle);
+        console.log('📌 Loaded spotlight from cache:', cachedArticle?.title);
+        return;
+      }
+    } catch (e) {
+      console.log('Cache read error, selecting new article');
+    }
+    
     if (articles.length > 0) {
-      // Create a date-based seed that changes daily
-      const today = new Date();
-      const dateString = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
-      
       // Simple hash function to convert date string to a number
       let hash = 0;
       for (let i = 0; i < dateString.length; i++) {
@@ -809,6 +830,20 @@ function App() {
       
       const selectedArticle = articles[dailyIndex];
       setSpotlightArticle(selectedArticle);
+      
+      // Cache for instant load on next visit
+      try {
+        // Clear old cache entries
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('spotlight_') && key !== cacheKey) {
+            localStorage.removeItem(key);
+          }
+        });
+        localStorage.setItem(cacheKey, JSON.stringify(selectedArticle));
+      } catch (e) {
+        console.log('Cache write error');
+      }
+      
       console.log('📌 Selected daily spotlight article:', selectedArticle?.title, `(index: ${dailyIndex} for date: ${dateString})`);
     }
   };
@@ -1445,23 +1480,48 @@ function App() {
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     {/* Spotlight Article - Takes 8 columns on large screens */}
                     <div className="lg:col-span-8 flex">
-                  {!spotlightArticle ? (
+                  {!spotlightArticle || !spotlightTypingComplete ? (
                     <div className="relative bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden w-full lg:h-full lg:min-h-[300px]">
-                      {/* Content with gentle fade */}
                       <div className="relative h-full flex flex-col p-5 sm:p-6 lg:p-8 justify-center items-center">
-                        <div className="text-center space-y-3">
-                          <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center mx-auto mb-4">
-                            <span className="text-2xl">⭐</span>
-                          </div>
-                          <h3 className="text-xl sm:text-2xl font-bold text-gray-400">
-                            Today's Spotlight
+                        <div className="text-center">
+                          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 overflow-hidden whitespace-nowrap border-r-2 border-amber-500 pr-1 animate-typing">
+                            Welcome to Pearadox
                           </h3>
-                          <p className="text-gray-400 text-sm">Loading featured research...</p>
+                          <p className="text-gray-500 text-sm animate-fadeInDelayed opacity-0">
+                            Discovering today's spotlight...
+                          </p>
                         </div>
                       </div>
+                      {/* Typing animation styles */}
+                      <style>{`
+                        @keyframes typing {
+                          from { width: 0 }
+                          to { width: 100% }
+                        }
+                        @keyframes blink {
+                          50% { border-color: transparent }
+                        }
+                        @keyframes fadeInDelayed {
+                          0%, 60% { opacity: 0 }
+                          100% { opacity: 1 }
+                        }
+                        .animate-typing {
+                          display: inline-block;
+                          animation: typing 2s steps(19, end) forwards, blink 0.75s step-end infinite;
+                        }
+                        .animate-fadeInDelayed {
+                          animation: fadeInDelayed 2.5s ease-out forwards;
+                        }
+                      `}</style>
                     </div>
                   ) : (
-                    <div className="w-full">
+                    <div className="w-full" style={{ animation: 'fadeIn 0.5s ease-out forwards' }}>
+                      <style>{`
+                        @keyframes fadeIn {
+                          from { opacity: 0; transform: translateY(10px); }
+                          to { opacity: 1; transform: translateY(0); }
+                        }
+                      `}</style>
                       <div 
                         className="relative bg-white rounded-2xl shadow-lg border border-gray-200 hover:border-amber-300 hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden lg:h-full lg:min-h-[300px]"
                         onClick={() => handleArticleClick(spotlightArticle)}
@@ -1495,7 +1555,7 @@ function App() {
                           <div className="flex items-center justify-between pt-4 border-t border-gray-100 gap-3">
                             <div className="flex items-center text-xs sm:text-sm text-gray-500 min-w-0 flex-1">
                               <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 flex-shrink-0" />
-                              <span className="truncate">{spotlightArticle.authors.split(',')[0]}{spotlightArticle.authors.split(',').length > 1 ? ' et al.' : ''}</span>
+                              <span className="truncate">{spotlightArticle.authors?.split(',')[0]}{spotlightArticle.authors?.split(',').length > 1 ? ' et al.' : ''}</span>
                               <span className="mx-2 hidden sm:inline">•</span>
                               <span className="hidden sm:inline">{spotlightArticle.publishedDate}</span>
                             </div>
@@ -1505,9 +1565,9 @@ function App() {
                               <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1.5 sm:ml-2" />
                             </button>
                           </div>
-                          </div>
                         </div>
                       </div>
+                    </div>
                   )}
                     </div>
                           
