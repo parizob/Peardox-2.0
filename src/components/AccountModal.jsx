@@ -1007,7 +1007,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                             </div>
                             <div className="ml-4">
                               <p className="text-2xl font-bold text-gray-900">{analyticsData.totalViews || 0}</p>
-                              <p className="text-gray-500 text-sm">Articles Read</p>
+                              <p className="text-gray-500 text-sm">Total Papers Read</p>
                             </div>
                           </div>
                         </div>
@@ -1019,7 +1019,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                             </div>
                             <div className="ml-4">
                               <p className="text-2xl font-bold text-gray-900">{analyticsData.categoriesViewed?.length || 0}</p>
-                              <p className="text-gray-500 text-sm">Categories</p>
+                              <p className="text-gray-500 text-sm">Total Topics Covered</p>
                             </div>
                           </div>
                         </div>
@@ -1031,7 +1031,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                             </div>
                             <div className="ml-4">
                               <p className="text-2xl font-bold text-gray-900">{weeklyData.reduce((sum, day) => sum + day.views, 0)}</p>
-                              <p className="text-gray-500 text-sm">This Week</p>
+                              <p className="text-gray-500 text-sm">Papers This Week</p>
                             </div>
                           </div>
                         </div>
@@ -1053,13 +1053,13 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                                 <div className={`w-16 text-sm font-medium ${day.isToday ? 'font-semibold' : 'text-gray-500'}`} style={day.isToday ? { color: '#1db954' } : {}}>
                                   {day.dayShort}
                                 </div>
-                                <div className="flex-1 bg-gray-200 rounded-full h-6 relative overflow-hidden">
+                                <div className="flex-1 bg-gray-200 rounded-full h-6 overflow-hidden">
                                   <div 
-                                    className="h-full rounded-full transition-all duration-500"
-                                    style={{ width: `${percentage}%`, backgroundColor: '#1db954' }}
+                                    className="h-full rounded-full transition-all duration-500 flex items-center justify-center"
+                                    style={{ width: `${Math.max(percentage, day.views > 0 ? 15 : 0)}%`, backgroundColor: '#1db954' }}
                                   >
                                     {day.views > 0 && (
-                                      <span className="absolute inset-0 flex items-center justify-center text-xs font-medium text-white">
+                                      <span className="text-xs font-medium text-white">
                                         {day.views}
                                       </span>
                                     )}
