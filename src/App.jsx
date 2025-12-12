@@ -1773,7 +1773,7 @@ function App() {
                 <div className="text-center py-6 px-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
                   <p className="text-gray-500 text-sm mb-4 font-medium">Trusted by professionals at</p>
                   <div className="flex flex-wrap justify-center items-center gap-3">
-                    {['Google', 'Microsoft', 'Verizon', 'MIT', 'UCF', 'Cresta'].map((company) => (
+                    {['Google', 'Microsoft', 'Verizon', 'MIT', 'UCF', 'Cresta', 'J.P. Morgan', 'American Express'].map((company) => (
                       <span key={company} className="px-4 py-1.5 bg-gray-50 rounded-full border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-100 transition-colors">
                         {company}
                       </span>
