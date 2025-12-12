@@ -152,7 +152,7 @@ const Header = ({
               >
                 <Filter className="h-4 w-4" />
                 <span className="max-w-24 sm:max-w-32 truncate">
-                  {selectedCategory ? selectedCategoryName : 'Filter'}
+                  {selectedCategory ? selectedCategoryName : 'Topic'}
                 </span>
                 <ChevronDown className={`h-4 w-4 transition-transform ${
                   isCategoryDropdownOpen ? 'rotate-180' : ''
@@ -182,7 +182,7 @@ const Header = ({
                         className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors border-b border-gray-100"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium" style={{ color: '#1db954' }}>Clear Filter</span>
+                          <span className="text-sm font-medium" style={{ color: '#1db954' }}>Clear Topic</span>
                           <X className="h-4 w-4 text-gray-400" />
                         </div>
                       </button>
@@ -328,7 +328,7 @@ const Header = ({
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                   style={selectedCategory ? { backgroundColor: '#1db954' } : {}}
-                  title={selectedCategory ? selectedCategoryName : 'Filter'}
+                  title={selectedCategory ? selectedCategoryName : 'Topic'}
                 >
                   <Filter className="h-4 w-4" />
                 </button>
@@ -549,7 +549,7 @@ const Header = ({
                     className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors border-b border-gray-100"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium" style={{ color: '#1db954' }}>Clear Filter</span>
+                      <span className="text-sm font-medium" style={{ color: '#1db954' }}>Clear Topic</span>
                       <X className="h-4 w-4 text-gray-400" />
                     </div>
                   </button>
