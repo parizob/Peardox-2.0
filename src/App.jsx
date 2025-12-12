@@ -1463,7 +1463,7 @@ function App() {
 
         {/* Main Hero Section with CTA */}
         {!error && !searchTerm && (
-          <div className="pt-2 sm:pt-2 pb-12 sm:pb-20 mb-8 sm:mb-12">
+          <div className="pt-8 sm:pt-2 pb-12 sm:pb-20 mb-8 sm:mb-12">
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
               <div className="text-center mb-8 sm:mb-12">
                 <h2 className="font-sans text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight px-2">
