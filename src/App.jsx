@@ -1722,7 +1722,7 @@ function App() {
                               </div>
                             </div>
                             
-                            {/* PEAR Tokens label - hidden on mobile */}
+                            {/* Desktop: PEAR Tokens label */}
                             <div className="hidden sm:flex flex-col flex-1">
                               <div className="text-xl font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">PEAR Tokens</div>
                               <div className="text-sm text-gray-500">Redeem in the store for rewards</div>
@@ -1730,10 +1730,11 @@ function App() {
                             
                             <Link
                               to="/store"
-                              className="flex-shrink-0 inline-flex items-center px-4 py-2.5 text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-lg hover:scale-105 transform"
+                              className="flex-1 sm:flex-none inline-flex items-center justify-center px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-lg hover:scale-105 transform"
                             >
-                              Store
-                              <ArrowRight className="ml-1.5 w-4 h-4" />
+                              <span className="sm:hidden text-center leading-tight">Redeem<br/>PEAR Tokens</span>
+                              <span className="hidden sm:inline">Store</span>
+                              <ArrowRight className="hidden sm:block ml-1.5 w-4 h-4" />
                             </Link>
                           </div>
                         ) : (

@@ -137,7 +137,7 @@ const Header = ({
         <div className="relative flex items-center justify-between min-w-0">
           
           {/* Left side - Desktop and Mobile Navigation */}
-          <div className="flex items-center space-x-3 min-w-0">
+          <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-3" ref={dropdownRef}>
             <div className="relative">
@@ -318,7 +318,7 @@ const Header = ({
             </div>
             
             {/* Mobile Navigation - Filter and Menu Buttons */}
-            <div className="md:hidden flex items-center space-x-2">
+            <div className="md:hidden flex items-center space-x-2 -ml-1">
               {/* Mobile Filter Button */}
               <div className="relative" ref={mobileDropdownRef}>
                 <button
