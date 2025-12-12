@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, ArrowDown, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle, Sparkles, Shuffle } from 'lucide-react';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
@@ -1626,46 +1627,57 @@ function App() {
               </div>
             </div>
 
-            {/* Second row - Personalize and PEAR Tokens - Compact Design */}
+            {/* Second row - Personalize and PEAR Tokens */}
             <div className="mb-8 sm:mb-12">
               <div className="mx-auto max-w-7xl px-4 sm:px-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    {/* Personalize Section - Compact */}
-                    <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 hover:shadow-lg transition-shadow duration-300">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#1db954' }}>
-                          <User className="h-6 w-6 text-white" />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Personalize Section */}
+                    <div className="relative bg-gradient-to-br from-white via-green-50/30 to-emerald-50/50 rounded-3xl shadow-xl border border-green-100 p-6 sm:p-8 overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                      {/* Decorative elements */}
+                      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-green-200/20 to-emerald-200/10 rounded-full blur-3xl"></div>
+                      <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-green-100/30 to-transparent rounded-full blur-2xl"></div>
+                      
+                      <div className="relative">
+                        <div className="flex items-center gap-4 mb-5">
+                          <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg" style={{ backgroundColor: '#1db954' }}>
+                            <User className="h-7 w-7 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-bold text-gray-900">
+                              {user ? 'Your Research Hub' : 'Personalize Your Feed'}
+                            </h3>
+                            <p className="text-gray-500 text-sm">
+                              {user 
+                                ? `Welcome back, ${userProfile?.full_name || user.email?.split('@')[0] || 'researcher'}!`
+                                : 'Track your learning journey'
+                              }
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-bold text-gray-900 mb-1">
-                            {user ? 'Your Research Hub' : 'Personalize Your Feed'}
-                          </h3>
-                          <p className="text-gray-600 text-sm mb-4">
-                            {user 
-                              ? `Welcome back, ${userProfile?.full_name || user.email?.split('@')[0] || 'researcher'}!`
-                              : 'Create a free account to save articles and track progress.'
-                            }
-                          </p>
-                          
-                          {user ? (
-                            <div className="flex items-center gap-4 text-sm">
-                              <div className="flex items-center gap-1.5">
-                                <span className="font-bold" style={{ color: '#1db954' }}>{analyticsData?.totalViews || 0}</span>
-                                <span className="text-gray-500">read</span>
-                              </div>
-                              <div className="flex items-center gap-1.5">
-                                <span className="font-bold" style={{ color: '#1db954' }}>{analyticsData?.categoriesViewed?.length || 0}</span>
-                                <span className="text-gray-500">topics</span>
-                              </div>
-                              <div className="flex items-center gap-1.5">
-                                <span className="font-bold" style={{ color: '#1db954' }}>{weeklyData.reduce((sum, day) => sum + day.views, 0)}</span>
-                                <span className="text-gray-500">this week</span>
-                              </div>
+                        
+                        {user ? (
+                          <div className="grid grid-cols-3 gap-3">
+                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 text-center border border-green-100 shadow-sm">
+                              <div className="text-2xl font-bold" style={{ color: '#1db954' }}>{analyticsData?.totalViews || 0}</div>
+                              <div className="text-xs font-medium text-gray-500 mt-0.5">Articles Read</div>
                             </div>
-                          ) : (
+                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 text-center border border-green-100 shadow-sm">
+                              <div className="text-2xl font-bold" style={{ color: '#1db954' }}>{analyticsData?.categoriesViewed?.length || 0}</div>
+                              <div className="text-xs font-medium text-gray-500 mt-0.5">Topics Explored</div>
+                            </div>
+                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-3 text-center border border-green-100 shadow-sm">
+                              <div className="text-2xl font-bold" style={{ color: '#1db954' }}>{weeklyData.reduce((sum, day) => sum + day.views, 0)}</div>
+                              <div className="text-xs font-medium text-gray-500 mt-0.5">This Week</div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-4">
+                            <p className="text-gray-600 text-sm">
+                              Create a free account to save articles, track progress, and get personalized recommendations.
+                            </p>
                             <button
                               onClick={handleShowAccount}
-                              className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white rounded-lg transition-all hover:shadow-md"
+                              className="inline-flex items-center px-5 py-2.5 text-sm font-semibold text-white rounded-xl transition-all hover:shadow-lg hover:scale-105 transform"
                               style={{ backgroundColor: '#1db954' }}
                               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
                               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
@@ -1673,46 +1685,69 @@ function App() {
                               Get Started Free
                               <ArrowRight className="ml-2 w-4 h-4" />
                             </button>
-                          )}
-                        </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* PEAR Tokens Section - Compact */}
-                    <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl border border-amber-200 p-5 sm:p-6 hover:shadow-lg transition-shadow duration-300">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center flex-shrink-0 shadow-md">
-                          <Sparkles className="h-6 w-6 text-white" />
+                    {/* PEAR Tokens Section */}
+                    <div className="relative bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50/30 rounded-3xl shadow-xl border border-amber-200 p-6 sm:p-8 overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                      {/* Decorative elements */}
+                      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-amber-200/30 to-yellow-200/20 rounded-full blur-3xl"></div>
+                      <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-orange-100/30 to-transparent rounded-full blur-2xl"></div>
+                      
+                      <div className="relative">
+                        <div className="flex items-center gap-4 mb-5">
+                          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-lg">
+                            <Sparkles className="h-7 w-7 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-bold text-gray-900">
+                              {user ? 'Your PEAR Wallet' : 'Earn PEAR Tokens'}
+                            </h3>
+                            <p className="text-gray-500 text-sm">
+                              {user ? 'Redeem for exclusive rewards' : 'Take quizzes, unlock rewards'}
+                            </p>
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-bold text-gray-900 mb-1">
-                            {user ? 'Your PEAR Wallet' : 'Earn PEAR Tokens'}
-                          </h3>
-                          <p className="text-gray-600 text-sm mb-4">
-                            {user 
-                              ? `You have ${isLoadingTokens ? '...' : pearTokenCount} token${pearTokenCount !== 1 ? 's' : ''} to redeem.`
-                              : 'Take quizzes, earn tokens, unlock rewards.'
-                            }
-                          </p>
-                          
-                          {user ? (
-                            <div className="flex items-center gap-3">
-                              <div className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-amber-400 to-yellow-500 text-white font-bold rounded-lg text-sm shadow-md">
-                                <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-                                {isLoadingTokens ? '...' : pearTokenCount} PEAR
+                        
+                        {user ? (
+                          <div className="flex items-center gap-4">
+                            <div className="flex-1 bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-amber-200 shadow-sm">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <div className="text-3xl font-bold bg-gradient-to-r from-amber-500 to-yellow-600 bg-clip-text text-transparent">
+                                    {isLoadingTokens ? '...' : pearTokenCount}
+                                  </div>
+                                  <div className="text-xs font-medium text-gray-500 mt-0.5">PEAR Tokens</div>
+                                </div>
+                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md">
+                                  <span className="text-xl">🍐</span>
+                                </div>
                               </div>
-                              <span className="text-xs text-gray-500">Store coming soon!</span>
                             </div>
-                          ) : (
+                            <Link
+                              to="/store"
+                              className="flex-shrink-0 inline-flex items-center px-4 py-3 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-lg hover:scale-105 transform"
+                            >
+                              Store
+                              <ArrowRight className="ml-1.5 w-4 h-4" />
+                            </Link>
+                          </div>
+                        ) : (
+                          <div className="space-y-4">
+                            <p className="text-gray-600 text-sm">
+                              Answer quiz questions correctly to earn tokens and unlock exclusive content.
+                            </p>
                             <button
                               onClick={() => setIsAccountOpen(true)}
-                              className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-md hover:scale-105"
+                              className="inline-flex items-center px-5 py-2.5 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-lg hover:scale-105 transform"
                             >
                               Start Earning
                               <ArrowRight className="ml-2 w-4 h-4" />
                             </button>
-                          )}
-                        </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                 </div>
@@ -1748,7 +1783,7 @@ function App() {
               </div>
 
               {/* Field Quiz Button - Compact */}
-              <div id="quiz-section" className="mb-8">
+              <div id="quiz-section" className="mb-6">
                 <FieldQuizButton onClick={handleOpenFieldQuiz} />
               </div>
 
