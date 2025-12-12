@@ -1523,11 +1523,11 @@ function App() {
                       `}</style>
                     </div>
                   ) : (
-                    <div className="w-full" style={{ animation: 'fadeIn 0.5s ease-out forwards' }}>
+                    <div className="w-full" style={{ animation: 'spotlightFadeIn 1s ease-out forwards' }}>
                       <style>{`
-                        @keyframes fadeIn {
-                          from { opacity: 0; transform: translateY(10px); }
-                          to { opacity: 1; transform: translateY(0); }
+                        @keyframes spotlightFadeIn {
+                          0% { opacity: 0; transform: translateY(15px); }
+                          100% { opacity: 1; transform: translateY(0); }
                         }
                       `}</style>
                       <div 
