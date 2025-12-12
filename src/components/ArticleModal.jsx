@@ -338,7 +338,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
       {/* Main Modal */}
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
         <div 
-          className="bg-white rounded-2xl max-w-3xl w-full max-h-[95vh] overflow-hidden shadow-2xl flex flex-col"
+          className="bg-white rounded-2xl max-w-3xl w-full max-h-[85vh] sm:max-h-[90vh] overflow-hidden shadow-2xl flex flex-col"
           style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
         >
           {/* Minimal Header */}

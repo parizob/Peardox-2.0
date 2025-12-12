@@ -626,7 +626,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
     
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
-        <div className="w-full max-w-5xl h-[95vh] sm:h-[90vh] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col lg:flex-row overflow-hidden">
+        <div className="w-full max-w-5xl h-[85vh] sm:h-[88vh] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col lg:flex-row overflow-hidden">
           
           {/* Mobile Header */}
           <div className="lg:hidden bg-white border-b border-gray-100 p-4 flex-shrink-0">
