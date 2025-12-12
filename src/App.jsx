@@ -1876,8 +1876,8 @@ function App() {
         {isLoading && (
           <div className="text-center py-12 sm:py-16">
             <div className="relative inline-block mb-6 sm:mb-8">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-xl"></div>
-              <Loader2 className="relative mx-auto h-16 w-16 sm:h-20 sm:w-20 text-blue-500 animate-spin" />
+              <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-2xl blur-xl"></div>
+              <Loader2 className="relative mx-auto h-16 w-16 sm:h-20 sm:w-20 animate-spin" style={{ color: '#1db954' }} />
             </div>
             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Loading Research Papers</h3>
             <p className="text-gray-500 max-w-md mx-auto text-sm sm:text-base px-4">
@@ -2068,7 +2068,7 @@ function App() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-8 shadow-2xl max-w-sm w-full mx-4">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: '#1db954' }}></div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Loading Article...</h3>
               <p className="text-sm text-gray-600">Fetching the latest research content for you.</p>
             </div>
