@@ -1446,181 +1446,115 @@ function App() {
                     {/* Spotlight Article - Takes 8 columns on large screens */}
                     <div className="lg:col-span-8 flex">
                   {!spotlightArticle ? (
-                    <div className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 overflow-hidden w-full lg:h-full lg:min-h-[320px]">
-                      {/* Subtle animated background */}
-                      <div className="absolute inset-0 bg-gradient-to-br from-amber-50/30 to-orange-50/30"></div>
-                      
+                    <div className="relative bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden w-full lg:h-full lg:min-h-[300px]">
                       {/* Content with gentle fade */}
-                      <div className="relative h-full flex flex-col p-4 sm:p-6 lg:p-8 animate-pulse justify-between">
-                        {/* Top badges skeleton - subtle */}
-                        <div className="flex items-center space-x-2 mb-6 pt-2">
-                          <div className="h-7 w-28 bg-amber-200/40 rounded-full"></div>
-                          <div className="h-7 w-32 bg-gray-200/40 rounded-full"></div>
-                        </div>
-                        
-                        {/* Today's Spotlight text - elegant and simple */}
-                        <div className="flex-1 flex flex-col items-center justify-center">
-                          <div className="text-center space-y-3">
-                            <h3 className="text-2xl sm:text-3xl font-bold text-amber-600/80">
-                              Today's Spotlight
-                            </h3>
-                            <div className="h-1 w-24 bg-gradient-to-r from-transparent via-amber-400/60 to-transparent rounded-full"></div>
+                      <div className="relative h-full flex flex-col p-5 sm:p-6 lg:p-8 justify-center items-center">
+                        <div className="text-center space-y-3">
+                          <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center mx-auto mb-4">
+                            <span className="text-2xl">⭐</span>
                           </div>
-                        </div>
-                        
-                        {/* Bottom skeleton - very subtle */}
-                        <div className="space-y-3">
-                          <div className="h-4 bg-gray-200/40 rounded-lg w-3/4"></div>
-                          <div className="flex items-center justify-between">
-                            <div className="h-8 w-32 bg-amber-100/40 rounded-lg"></div>
-                            <div className="h-10 w-28 bg-amber-200/40 rounded-xl"></div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* Trending badge - subtle */}
-                      <div className="absolute top-6 right-6 animate-pulse">
-                        <div className="bg-gradient-to-br from-amber-200/50 to-orange-200/50 rounded-xl px-4 py-2 shadow-md">
-                          <div className="text-center">
-                            <div className="text-2xl font-bold text-amber-600/60 leading-none mb-0.5">⭐</div>
-                            <div className="text-[10px] font-semibold text-amber-700/60 uppercase tracking-wide">Featured</div>
-                          </div>
+                          <h3 className="text-xl sm:text-2xl font-bold text-gray-400">
+                            Today's Spotlight
+                          </h3>
+                          <p className="text-gray-400 text-sm">Loading featured research...</p>
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <div className="animate-[fadeIn_0.6s_ease-in] w-full">
+                    <div className="w-full">
                       <div 
-                        className="relative bg-gradient-to-br from-white via-amber-50/30 to-orange-50 rounded-3xl shadow-2xl border-2 border-amber-200 hover:border-amber-300 hover:shadow-3xl transition-all duration-500 cursor-pointer group overflow-hidden lg:h-full lg:min-h-[320px]"
-                      onClick={() => handleArticleClick(spotlightArticle)}
-                    >
-                      {/* Animated background decorations */}
-                        <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-amber-300/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
-                        <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-orange-300/20 to-transparent rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-                      
-                      {/* Glowing border effect */}
-                      <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500 blur-sm"></div>
+                        className="relative bg-white rounded-2xl shadow-lg border border-gray-200 hover:border-amber-300 hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden lg:h-full lg:min-h-[300px]"
+                        onClick={() => handleArticleClick(spotlightArticle)}
+                      >
+                        {/* Subtle accent bar */}
+                        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 to-orange-400"></div>
                         
-                        {/* Top right corner badge - hidden on mobile */}
-                        <div className="hidden sm:block absolute top-6 right-6">
-                          <div className="bg-gradient-to-br from-amber-400 to-orange-500 text-white rounded-xl px-4 py-2 shadow-lg transform group-hover:scale-110 transition-transform duration-300">
-                            <div className="text-center">
-                              <div className="text-2xl font-bold leading-none mb-0.5">#1</div>
-                              <div className="text-[10px] font-semibold uppercase tracking-wide">Trending</div>
-                            </div>
-                          </div>
-                        </div>
-                      
-                      {/* Content area */}
-                        <div className="relative h-full flex flex-col p-4 sm:p-6 lg:p-8 justify-between">
-                          {/* Top section - badges with extra spacing */}
-                          <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-6 pt-1 sm:pt-2">
-                            <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md flex-shrink-0">
-                              ⭐ SPOTLIGHT
+                        {/* Content area */}
+                        <div className="relative h-full flex flex-col p-5 sm:p-6 lg:p-8 justify-between">
+                          {/* Top section - badges */}
+                          <div className="flex flex-wrap items-center gap-2 mb-4">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
+                              ⭐ Today's Spotlight
                             </span>
-                            <span className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold bg-white/80 text-gray-800 border border-amber-200 break-words leading-tight">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
                               {spotlightArticle.category}
                             </span>
                           </div>
                           
-                          {/* Middle section - title and description with better spacing */}
-                          <div className="flex-1 mb-3 sm:mb-6 mt-1 sm:mt-2">
-                            <h4 className="text-lg sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 sm:mb-5 leading-tight group-hover:text-amber-700 transition-colors sm:line-clamp-2">
-                            {spotlightArticle.title}
-                          </h4>
-                          
-                            <p className="text-gray-700 text-sm sm:text-base leading-relaxed sm:line-clamp-3">
-                            {spotlightArticle.shortDescription}
-                          </p>
-                        </div>
+                          {/* Middle section - title and description */}
+                          <div className="flex-1 mb-4">
+                            <h4 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 leading-tight group-hover:text-amber-600 transition-colors line-clamp-2">
+                              {spotlightArticle.title}
+                            </h4>
+                            <p className="text-gray-600 text-sm sm:text-base leading-relaxed line-clamp-3">
+                              {spotlightArticle.shortDescription}
+                            </p>
+                          </div>
                         
                           {/* Bottom section - metadata and CTA */}
-                          <div className="space-y-2 sm:space-y-3 flex-shrink-0">
-                            <div className="flex items-center text-xs sm:text-sm text-gray-600">
-                              <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 flex-shrink-0" />
-                              <span className="truncate text-xs sm:text-sm">{spotlightArticle.authors.split(',')[0]}{spotlightArticle.authors.split(',').length > 1 ? ' et al.' : ''}</span>
-                              <span className="mx-1 sm:mx-2 hidden xs:inline">•</span>
-                              <span className="flex-shrink-0 text-xs sm:text-sm hidden xs:inline">{spotlightArticle.publishedDate}</span>
-                        </div>
-                        
-                            <div className="flex items-center justify-between pt-1 sm:pt-2 gap-2">
-                              <div className="text-[10px] sm:text-xs text-amber-700 font-medium bg-amber-50 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg whitespace-nowrap">
-                                📖 Featured
-                              </div>
-                              <div className="inline-flex items-center px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-semibold text-xs sm:text-sm shadow-md hover:shadow-lg transform group-hover:scale-105 transition-all whitespace-nowrap">
-                                <span>Read Now</span>
-                                <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1 sm:ml-2 group-hover:translate-x-1 transition-transform" />
-                              </div>
+                          <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div className="flex items-center text-sm text-gray-500">
+                              <User className="h-4 w-4 mr-2 flex-shrink-0" />
+                              <span className="truncate">{spotlightArticle.authors.split(',')[0]}{spotlightArticle.authors.split(',').length > 1 ? ' et al.' : ''}</span>
+                              <span className="mx-2 hidden sm:inline">•</span>
+                              <span className="hidden sm:inline">{spotlightArticle.publishedDate}</span>
                             </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+                              <button className="inline-flex items-center px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium text-sm transition-colors">
+                                Read Article
+                                <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
+                              </button>
+                            </div>
                           </div>
+                        </div>
+                      </div>
+                  )}
+                    </div>
                           
                     {/* Start Exploring Section - Takes 4 columns on large screens */}
                     <div className="lg:col-span-4 flex">
-                      <div className="bg-gradient-to-br from-white via-green-50/30 to-white rounded-3xl shadow-2xl border border-gray-200 p-4 sm:p-6 lg:p-8 w-full lg:h-full lg:min-h-[320px] flex flex-col justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
-                        {/* Decorative Elements */}
-                        <div className="absolute top-0 left-0 w-48 h-48 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.12) 0%, rgba(22, 161, 74, 0.04) 100%)' }}></div>
-                        
-                        <div className="relative z-10">
-                          {/* Title and badge - matching Personalize structure */}
-                          <div className="mb-6">
-                            <div className="inline-flex items-center px-3 py-1 rounded-full mb-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                              <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#1db954' }}>
-                                🌟 Free Access
-                              </span>
+                      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-5 sm:p-6 w-full lg:h-full lg:min-h-[300px] flex flex-col justify-between">
+                        <div>
+                          {/* Header */}
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
+                              <span className="text-white text-lg">🚀</span>
                             </div>
-                            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 leading-tight">
-                              Start Exploring Instantly
-                            </h3>
-                            <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                              Dive into cutting-edge AI research immediately. Browse thousands of papers from top researchers.
-                            </p>
+                            <div>
+                              <h3 className="text-lg font-bold text-gray-900">Start Exploring</h3>
+                              <p className="text-gray-500 text-xs">Free access to all research</p>
+                            </div>
                           </div>
                           
-                          {/* Feature highlights - metrics styled like Personalize cards */}
-                          <div className="grid grid-cols-3 gap-3 mb-6">
-                            <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
-                              <div className="text-lg sm:text-2xl font-bold" style={{ color: '#1db954' }}>
-                                1M+
-                              </div>
-                              <div className="text-[10px] font-semibold text-gray-600 mt-1 text-center">Authors</div>
+                          <p className="text-gray-600 text-sm leading-relaxed mb-5">
+                            Dive into cutting-edge AI research. Browse thousands of simplified papers from top researchers.
+                          </p>
+                          
+                          {/* Stats */}
+                          <div className="grid grid-cols-3 gap-2 mb-5">
+                            <div className="text-center p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+                              <div className="text-lg font-bold" style={{ color: '#1db954' }}>1M+</div>
+                              <div className="text-[10px] text-gray-500 font-medium">Authors</div>
                             </div>
-                            
-                            <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
-                              <div className="text-lg sm:text-2xl font-bold" style={{ color: '#1db954' }}>
-                                10k+
-                              </div>
-                              <div className="text-[10px] font-semibold text-gray-600 mt-1 text-center">Papers</div>
+                            <div className="text-center p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+                              <div className="text-lg font-bold" style={{ color: '#1db954' }}>10k+</div>
+                              <div className="text-[10px] text-gray-500 font-medium">Papers</div>
                             </div>
-                            
-                            <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
-                              <div className="text-lg sm:text-2xl font-bold" style={{ color: '#1db954' }}>
-                                Free
-                              </div>
-                              <div className="text-[10px] font-semibold text-gray-600 mt-1 text-center">Access</div>
+                            <div className="text-center p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+                              <div className="text-lg font-bold" style={{ color: '#1db954' }}>Free</div>
+                              <div className="text-[10px] text-gray-500 font-medium">Access</div>
                             </div>
                           </div>
                         </div>
                       
-                        {/* CTA Button - matching Personalize placement */}
-                        <div className="text-center relative z-10">
-                          <button
-                              onClick={scrollToArticles}
-                              className="w-full inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 relative overflow-hidden group/btn"
-                              style={{ backgroundColor: '#1db954' }}
-                              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
-                              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
-                          >
-                            {/* Shimmer effect */}
-                              <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-                              <span className="relative z-10">Explore Now</span>
-                              <ArrowDown className="ml-3 w-5 h-5 relative z-10 group-hover/btn:translate-y-1 transition-transform" />
-                          </button>
-                        </div>
+                        {/* CTA Button */}
+                        <button
+                          onClick={scrollToArticles}
+                          className="w-full inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white rounded-xl transition-all hover:opacity-90"
+                          style={{ backgroundColor: '#1db954' }}
+                        >
+                          Explore Now
+                          <ArrowDown className="ml-2 w-4 h-4" />
+                        </button>
                       </div>
                     </div>
                 </div>
