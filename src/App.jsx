@@ -1723,8 +1723,25 @@ function App() {
                                   </div>
                                   <div className="text-[10px] font-medium text-gray-500 mt-0.5">PEAR Tokens</div>
                                 </div>
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md">
-                                  <span className="text-lg">🍐</span>
+                                {/* PEAR Token with glowing effect */}
+                                <div className="relative group/token cursor-pointer">
+                                  {/* Outer glow ring - pulses */}
+                                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-md opacity-60 group-hover/token:opacity-100 animate-pulse"></div>
+                                  {/* Secondary glow */}
+                                  <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 opacity-30 group-hover/token:opacity-50 blur-sm transition-opacity"></div>
+                                  {/* Main token */}
+                                  <div className="relative w-12 h-12 rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center shadow-lg border-2 border-yellow-300/50 group-hover/token:scale-110 transition-transform duration-300">
+                                    {/* Inner highlight */}
+                                    <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent"></div>
+                                    {/* Shimmer effect */}
+                                    <div className="absolute inset-0 rounded-full overflow-hidden">
+                                      <div className="absolute -inset-full bg-gradient-to-r from-transparent via-white/30 to-transparent rotate-45 translate-x-[-100%] group-hover/token:translate-x-[200%] transition-transform duration-1000"></div>
+                                    </div>
+                                    {/* P letter for PEAR */}
+                                    <span className="relative text-lg font-bold text-white drop-shadow-md">P</span>
+                                  </div>
+                                  {/* Sparkle accents */}
+                                  <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-white rounded-full opacity-80 animate-ping"></div>
                                 </div>
                               </div>
                             </div>
