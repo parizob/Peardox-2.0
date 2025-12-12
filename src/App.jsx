@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle, Sparkles, Shuffle } from 'lucide-react';
+import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, ArrowDown, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle, Sparkles, Shuffle } from 'lucide-react';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
@@ -1617,7 +1617,7 @@ function App() {
                             {/* Shimmer effect */}
                               <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
                               <span className="relative z-10">Explore Now</span>
-                              <ArrowRight className="ml-3 w-5 h-5 relative z-10 group-hover/btn:translate-x-1 transition-transform" />
+                              <ArrowDown className="ml-3 w-5 h-5 relative z-10 group-hover/btn:translate-y-1 transition-transform" />
                           </button>
                         </div>
                       </div>
@@ -1626,339 +1626,146 @@ function App() {
               </div>
             </div>
 
-            {/* Second row - Personalize and PEAR Tokens */}
+            {/* Second row - Personalize and PEAR Tokens - Compact Design */}
             <div className="mb-8 sm:mb-12">
               <div className="mx-auto max-w-7xl px-4 sm:px-6">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    {/* Personalize Your Research Section - Takes 6 columns on large screens, positioned below Spotlight */}
-                    <div className="lg:col-span-6">
-                    <div className="bg-gradient-to-br from-white via-gray-50 to-white rounded-3xl shadow-2xl border border-gray-200 p-6 sm:p-8 h-full flex flex-col justify-between relative overflow-hidden group hover:shadow-3xl transition-all duration-500">
-                      {/* Decorative Elements */}
-                      <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.1) 0%, rgba(22, 161, 74, 0.03) 100%)' }}></div>
-                      <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full blur-2xl" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.08) 0%, rgba(22, 161, 74, 0.02) 100%)' }}></div>
-                      
-                      <div className="relative z-10">
-                        {/* Title and badge */}
-                        <div className="mb-6">
-                          <div className="inline-flex items-center px-3 py-1 rounded-full mb-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                            <span className="text-xs font-bold uppercase tracking-wider" style={{ color: '#1db954' }}>
-                              ✨ Tailored For You
-                            </span>
-                          </div>
-                          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 leading-tight">
-                            Personalize Your Research Journey
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {/* Personalize Section - Compact */}
+                    <div className="bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 hover:shadow-lg transition-shadow duration-300">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#1db954' }}>
+                          <User className="h-6 w-6 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg font-bold text-gray-900 mb-1">
+                            {user ? 'Your Research Hub' : 'Personalize Your Feed'}
                           </h3>
-                          <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
-                            AI-curated research that adapts to your expertise and interests.
+                          <p className="text-gray-600 text-sm mb-4">
+                            {user 
+                              ? `Welcome back, ${userProfile?.full_name || user.email?.split('@')[0] || 'researcher'}!`
+                              : 'Create a free account to save articles and track progress.'
+                            }
                           </p>
-                        </div>
-                        
-                        {/* Feature highlights - dynamic based on user status */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                          
                           {user ? (
-                            <>
-                              {/* Logged in: Show user metrics from analytics */}
-                              <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
-                                <div className="text-2xl font-bold" style={{ color: '#1db954' }}>
-                                  {analyticsData?.totalViews || 0}
-                          </div>
-                                <div className="text-[10px] font-semibold text-gray-600 mt-1">Articles Read</div>
-                          </div>
-                      
-                              <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
-                                <div className="text-2xl font-bold" style={{ color: '#1db954' }}>
-                                  {analyticsData?.categoriesViewed?.length || 0}
-                          </div>
-                                <div className="text-[10px] font-semibold text-gray-600 mt-1">Categories</div>
-                        </div>
-                    
-                              <div className="flex flex-col items-center justify-center p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
-                                <div className="text-2xl font-bold" style={{ color: '#1db954' }}>
-                                  {weeklyData.reduce((sum, day) => sum + day.views, 0)}
-                  </div>
-                                <div className="text-[10px] font-semibold text-gray-600 mt-1">This Week</div>
-                </div>
-                            </>
+                            <div className="flex items-center gap-4 text-sm">
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-bold" style={{ color: '#1db954' }}>{analyticsData?.totalViews || 0}</span>
+                                <span className="text-gray-500">read</span>
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-bold" style={{ color: '#1db954' }}>{analyticsData?.categoriesViewed?.length || 0}</span>
+                                <span className="text-gray-500">topics</span>
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <span className="font-bold" style={{ color: '#1db954' }}>{weeklyData.reduce((sum, day) => sum + day.views, 0)}</span>
+                                <span className="text-gray-500">this week</span>
+                              </div>
+                            </div>
                           ) : (
-                            <>
-                              {/* Not logged in: Show benefits */}
-                              <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
-                                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                                  <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
-                                </div>
-                                <div className="text-xs font-semibold text-gray-900">Personalized</div>
-                      </div>
-                      
-                              <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
-                                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                                  <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
-                         </div>
-                                <div className="text-xs font-semibold text-gray-900">Save & Organize</div>
-                       </div>
-
-                              <div className="flex items-center space-x-2 p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-gray-300 transition-all">
-                                <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                                  <CheckCircle className="h-4 w-4" style={{ color: '#1db954' }} />
-                        </div>
-                                <div className="text-xs font-semibold text-gray-900">Track Progress</div>
-                        </div>
-                            </>
+                            <button
+                              onClick={handleShowAccount}
+                              className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white rounded-lg transition-all hover:shadow-md"
+                              style={{ backgroundColor: '#1db954' }}
+                              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+                            >
+                              Get Started Free
+                              <ArrowRight className="ml-2 w-4 h-4" />
+                            </button>
                           )}
                         </div>
-                         </div>
-                         
-                      {/* CTA Button */}
-                      <div className="text-center relative z-10">
-                        {user ? (
-                          <div className="flex items-center justify-center p-4 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-gray-200">
-                            <div className="w-10 h-10 rounded-full flex items-center justify-center mr-3" style={{ backgroundColor: 'rgba(29, 185, 84, 0.1)' }}>
-                              <CheckCircle className="w-5 h-5" style={{ color: '#1db954' }} />
-                         </div>
-                            <div className="text-left">
-                              <div className="font-bold text-gray-900">Welcome back!</div>
-                              <div className="text-gray-600 text-sm">
-                                {(() => {
-                              const displayName = userProfile?.full_name || user.email?.split('@')[0] || 'there';
-                              console.log('👤 CTA Display name:', displayName, 'from profile:', userProfile?.full_name, 'from email:', user.email?.split('@')[0]);
-                              return displayName;
-                                })()}
-                       </div>
-                             </div>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={handleShowAccount}
-                            className="w-full inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 relative overflow-hidden group/btn"
-                            style={{ backgroundColor: '#1db954' }}
-                            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
-                            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
-                          >
-                            {/* Shimmer effect */}
-                            <div className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
-                            <span className="relative z-10">Create Free Account</span>
-                            <ArrowRight className="ml-3 w-5 h-5 relative z-10 group-hover/btn:translate-x-1 transition-transform" />
-                          </button>
-                        )}
                       </div>
-                          </div>
                     </div>
 
-                    {/* PEAR Tokens Section - Takes 6 columns on large screens, next to Personalize */}
-                    <div className="lg:col-span-6 relative bg-gradient-to-br from-amber-50 via-yellow-50/30 to-amber-50 rounded-3xl shadow-2xl border-2 border-amber-200 p-6 sm:p-8 overflow-hidden group hover:shadow-3xl transition-all duration-500 min-h-[320px]">
-                      {/* Background decoration */}
-                      <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(251, 191, 36, 0.3) 0%, rgba(245, 158, 11, 0.1) 100%)' }}></div>
-                      <div className="absolute -bottom-10 -left-10 w-56 h-56 rounded-full blur-3xl opacity-30" style={{ background: 'radial-gradient(circle, rgba(251, 191, 36, 0.2) 0%, transparent 100%)' }}></div>
-                      
-                      <div className="relative z-10 h-full flex flex-col justify-center">
-                        {/* Content changes based on authentication */}
-                        {!user ? (
-                          /* Unauthenticated User View - Engaging CTA */
-                          <div className="text-center lg:text-left">
-                            {/* Token Visual */}
-                            <div className="flex justify-center lg:justify-start mb-6">
-                              <div className="relative w-20 h-20">
-                                {/* Animated rings */}
-                                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 animate-pulse opacity-20"></div>
-                                <div className="absolute inset-2 rounded-full bg-gradient-to-br from-amber-400 to-yellow-500 animate-pulse opacity-40" style={{ animationDelay: '0.5s' }}></div>
-                                {/* Main token */}
-                                <div className="absolute inset-3 rounded-full bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 shadow-2xl flex items-center justify-center">
-                                  <Sparkles className="h-8 w-8 text-white animate-pulse" />
-                                </div>
+                    {/* PEAR Tokens Section - Compact */}
+                    <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-2xl border border-amber-200 p-5 sm:p-6 hover:shadow-lg transition-shadow duration-300">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center flex-shrink-0 shadow-md">
+                          <Sparkles className="h-6 w-6 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg font-bold text-gray-900 mb-1">
+                            {user ? 'Your PEAR Wallet' : 'Earn PEAR Tokens'}
+                          </h3>
+                          <p className="text-gray-600 text-sm mb-4">
+                            {user 
+                              ? `You have ${isLoadingTokens ? '...' : pearTokenCount} token${pearTokenCount !== 1 ? 's' : ''} to redeem.`
+                              : 'Take quizzes, earn tokens, unlock rewards.'
+                            }
+                          </p>
+                          
+                          {user ? (
+                            <div className="flex items-center gap-3">
+                              <div className="inline-flex items-center px-3 py-1.5 bg-gradient-to-r from-amber-400 to-yellow-500 text-white font-bold rounded-lg text-sm shadow-md">
+                                <Sparkles className="h-3.5 w-3.5 mr-1.5" />
+                                {isLoadingTokens ? '...' : pearTokenCount} PEAR
                               </div>
+                              <span className="text-xs text-gray-500">Store coming soon!</span>
                             </div>
-                            
-                            <h3 className="text-2xl sm:text-3xl font-black text-gray-900 mb-3 leading-tight">
-                              Earn <span className="bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">PEAR </span> Tokens
-                            </h3>
-                            <p className="text-gray-700 text-sm sm:text-base mb-4 leading-relaxed">
-                              Test your knowledge with quizzes on every research paper. Answer correctly and earn <span className="font-bold text-amber-600">PEAR </span> tokens — redeemable for exclusive rewards. 
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-3">
-                              <button
-                                onClick={() => setIsAccountOpen(true)}
-                                className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-amber-500 to-yellow-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
-                              >
-                                <Sparkles className="h-4 w-4 mr-2" />
-                                Start Earning
-                              </button>
-                              <div className="inline-flex items-center justify-center px-4 py-3 bg-white/80 backdrop-blur-sm rounded-xl border-2 border-amber-300 shadow-md">
-                                <Brain className="h-4 w-4 mr-2 text-amber-600" />
-                                <span className="font-semibold text-gray-700 text-sm">1 Quiz = 1 Token</span>
-                              </div>
-                            </div>
-                            <p className="text-sm text-gray-500 italic">
-                              Pearadox store coming soon!
-                            </p>
-                          </div>
-                        ) : (
-                          /* Authenticated User View - Personal Wallet */
-                          <div className="text-center">
-                            {/* Wallet Header - Premium Feel */}
-                            <div className="mb-4">
-                              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-full shadow-lg">
-                                <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center">
-                                  <Sparkles className="h-3.5 w-3.5 text-white" />
-                                </div>
-                                <span className="text-white font-black text-sm tracking-wide">PEARADOX WALLET</span>
-                              </div>
-                            </div>
-                            
-                            {/* Token Balance Display - Wallet Style */}
-                            <div className="flex justify-center mb-3">
-                              <div className="relative w-32 h-32 sm:w-36 sm:h-36">
-                                {/* Glowing effect backdrop */}
-                                <div className="absolute -inset-6 rounded-full blur-2xl opacity-50 animate-pulse" style={{ background: 'radial-gradient(circle, rgba(251, 191, 36, 0.6), transparent)' }}></div>
-                                
-                                {/* Outer rotating ring - seamlessly integrated */}
-                                <div className="absolute inset-0 rounded-full border-[6px] border-transparent bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-400 animate-spin" style={{ animationDuration: '3s', WebkitMaskImage: 'linear-gradient(white, white)', maskImage: 'linear-gradient(white, white)' }}>
-                                  <div className="absolute inset-[6px] rounded-full bg-amber-50"></div>
-                                </div>
-                                
-                                {/* Inner rotating ring - opposite direction */}
-                                <div className="absolute inset-3 rounded-full border-[5px] border-transparent bg-gradient-to-bl from-yellow-400 via-amber-500 to-yellow-500" style={{ animation: 'spin 4s linear infinite reverse', WebkitMaskImage: 'linear-gradient(white, white)', maskImage: 'linear-gradient(white, white)' }}>
-                                  <div className="absolute inset-[5px] rounded-full bg-amber-50"></div>
-                                </div>
-                                
-                                {/* Token center - fully integrated */}
-                                <div className="absolute inset-6 rounded-full bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 shadow-2xl flex flex-col items-center justify-center overflow-hidden">
-                                  {/* Animated shine overlay */}
-                                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent animate-pulse"></div>
-                                  <Sparkles className="h-6 w-6 sm:h-7 sm:w-7 text-white mb-0.5 animate-pulse relative z-10" />
-                                  {isLoadingTokens ? (
-                                    <div className="text-xl sm:text-2xl font-black text-white relative z-10 drop-shadow-lg">...</div>
-                                  ) : (
-                                    <div className="text-3xl sm:text-4xl font-black text-white relative z-10 drop-shadow-lg">
-                                      {pearTokenCount}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                            
-                            {/* Balance Amount - Crypto Style */}
-                            <div className="bg-gradient-to-br from-amber-50 to-yellow-50 border-2 border-amber-300 rounded-xl p-2.5 mb-3 shadow-lg">
-                              <div className="flex items-center justify-center gap-1.5 mb-0.5">
-                                <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                                <p className="text-[10px] font-bold text-amber-700 uppercase tracking-wider">Balance</p>
-                              </div>
-                              <p className="text-xl sm:text-2xl font-black bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent leading-tight">
-                                {pearTokenCount} PEAR
-                              </p>
-                              <p className="text-[10px] text-gray-600 font-medium">
-                                Token{pearTokenCount !== 1 ? 's' : ''} Owned
-                              </p>
-                            </div>
-                            
-                            {/* Compact Motivational Message */}
-                            {pearTokenCount === 0 ? (
-                              <p className="text-gray-700 text-sm font-medium">
-                                🚀 Complete quizzes to add to your wallet!
-                              </p>
-                            ) : pearTokenCount < 5 ? (
-                              <p className="text-gray-700 text-sm font-medium">
-                                🌟 Building your portfolio! Next: <span className="font-bold text-amber-600">5 PEAR</span>
-                              </p>
-                            ) : pearTokenCount < 10 ? (
-                              <p className="text-gray-700 text-sm font-medium">
-                                🔥 Growing your holdings! Next: <span className="font-bold text-amber-600">10 PEAR</span>
-                              </p>
-                            ) : (
-                              <div>
-                                <p className="text-amber-700 font-bold text-base mb-1">💎 Premium Holder!</p>
-                                <p className="text-gray-700 text-sm font-medium">Your collection is impressive</p>
-                              </div>
-                            )}
-                            <p className="text-xs text-gray-500 mt-3 italic font-medium">
-                              Pearadox store coming soon!
-                            </p>
-                          </div>
-                        )}
+                          ) : (
+                            <button
+                              onClick={() => setIsAccountOpen(true)}
+                              className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-md hover:scale-105"
+                            >
+                              Start Earning
+                              <ArrowRight className="ml-2 w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
+                </div>
+              </div>
+            </div>
                         
-                    {/* What Our Readers Say Section - Takes full 12 columns */}
-                    <div className="lg:col-span-12">
-                      <div className="relative bg-gradient-to-br from-white via-green-50/20 to-white rounded-3xl shadow-2xl border border-gray-200 p-6 sm:p-8 overflow-hidden group hover:shadow-3xl transition-all duration-500 min-h-[320px]">
-                        {/* Background decoration */}
-                        <div className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.2) 0%, rgba(22, 161, 74, 0.05) 100%)' }}></div>
-                        <div className="absolute -bottom-10 -left-10 w-56 h-56 rounded-full blur-3xl opacity-20" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.15) 0%, transparent 100%)' }}></div>
-                        
-                        <div className="relative z-10 flex flex-col gap-6">
-                          {/* Top Row: Testimonials */}
-                          <TestimonialCarousel />
-                         
-                          {/* Bottom Row: Trust Badges - Centered */}
-                          <div className="text-center pt-4 border-t border-gray-200">
-                            <p className="text-gray-500 text-xs mb-3 font-semibold">Trusted by professionals at</p>
-                            <div className="flex flex-wrap justify-center items-center gap-2 sm:gap-3">
-                              <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">Google</span>
-                              <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">Microsoft</span>
-                              <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">Verizon</span>
-                              <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">MIT</span>
-                              <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">UCF</span>
-                              <span className="px-2.5 py-1 bg-white/90 rounded-lg border border-gray-200 hover:border-green-300 shadow-sm hover:shadow-md transition-all font-semibold text-gray-700 text-[11px] hover:scale-105">Cresta</span>
-                         </div>
-                         </div>
-                       </div>
-                      </div>
+            {/* Testimonials Section - Compact */}
+            <div className="mb-8 sm:mb-12">
+              <div className="mx-auto max-w-7xl px-4 sm:px-6">
+                <div className="bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 hover:shadow-lg transition-shadow duration-300">
+                  <TestimonialCarousel />
+                  
+                  {/* Trust Badges */}
+                  <div className="text-center pt-6 mt-6 border-t border-gray-100">
+                    <p className="text-gray-500 text-xs mb-3 font-medium">Trusted by professionals at</p>
+                    <div className="flex flex-wrap justify-center items-center gap-2">
+                      {['Google', 'Microsoft', 'Verizon', 'MIT', 'UCF', 'Cresta'].map((company) => (
+                        <span key={company} className="px-3 py-1 bg-gray-50 rounded-full border border-gray-200 text-gray-600 text-xs font-medium">
+                          {company}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* Elegant Section Divider */}
-              <div className="my-16 sm:my-20 relative">
-                <div className="mx-auto max-w-4xl px-4 sm:px-6">
-                  <div className="relative py-8">
-                    {/* Subtle gradient background */}
-                    <div className="absolute inset-0 overflow-hidden opacity-30">
-                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-16 rounded-full blur-3xl" style={{ background: 'radial-gradient(circle, rgba(29, 185, 84, 0.15), transparent)' }}></div>
-                         </div>
-
-                    {/* Main divider line */}
-                    <div className="relative flex items-center">
-                      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-200 to-gray-300"></div>
-                      
-                      {/* Center icon - minimal */}
-                      <div className="mx-4 flex items-center space-x-3">
-                        <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'rgba(29, 185, 84, 0.4)' }}></div>
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center border border-gray-200 bg-white shadow-sm">
-                          <svg className="w-4 h-4" style={{ color: '#1db954' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                          </svg>
-                             </div>
-                        <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: 'rgba(29, 185, 84, 0.4)' }}></div>
-                       </div>
-
-                      <div className="flex-1 h-px bg-gradient-to-r from-gray-300 via-gray-200 to-transparent"></div>
-               </div>
-
-                    {/* Optional text - very subtle */}
-                    <div className="text-center mt-4">
-                      <p className="text-xs text-gray-400 font-medium tracking-wide">Research Hub</p>
-                    </div>
-                  </div>
+              {/* Simple Section Divider */}
+              <div className="my-10 sm:my-12">
+                <div className="mx-auto max-w-xl px-4">
+                  <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
                 </div>
               </div>
 
-              {/* Field Quiz Button */}
-              <div id="quiz-section">
+              {/* Field Quiz Button - Compact */}
+              <div id="quiz-section" className="mb-8">
                 <FieldQuizButton onClick={handleOpenFieldQuiz} />
               </div>
 
-              <div id="categories-section" className="text-center mb-8 sm:mb-12">
-                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 px-4">
-                  Pick a Category 
+              {/* Categories Section Header */}
+              <div id="categories-section" className="text-center mb-6 sm:mb-8">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 px-4">
+                  Browse by Topic
                 </h3>
-                <p className="text-gray-600 text-base sm:text-lg px-4 max-w-2xl mx-auto">
-                  Explore cutting-edge research breakthroughs shaping the future
+                <p className="text-gray-500 text-sm sm:text-base px-4 max-w-xl mx-auto">
+                  Select a research area to filter articles
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 max-w-6xl mx-auto px-4 mb-8">
+              {/* Category Grid - Clean Design */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 max-w-5xl mx-auto px-4 mb-8">
                 {displayResearchInterests.map((researchInterest, index) => {
                   const Icon = getCategoryIcon(researchInterest);
-                  const colorScheme = getCategoryColor(researchInterest, index);
                   const isSelected = selectedCategory === researchInterest;
 
                   return (
@@ -1967,80 +1774,54 @@ function App() {
                       onClick={() => {
                         setSelectedCategory(isSelected ? '' : researchInterest);
                       }}
-                      className={`group relative p-5 sm:p-8 rounded-2xl sm:rounded-3xl border-2 transition-all duration-500 hover:scale-105 hover:shadow-2xl ${colorScheme.bg} ${colorScheme.border} ${colorScheme.hoverBorder} ${
+                      className={`group relative p-4 sm:p-5 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
                         isSelected
-                          ? `${colorScheme.selectedBorder} shadow-2xl ring-4 ring-offset-2`
-                          : 'shadow-lg hover:shadow-xl'
+                          ? 'bg-gray-900 border-gray-900 shadow-lg'
+                          : 'bg-white border-gray-200 hover:border-gray-300'
                       }`}
-                      style={{
-                        ...(isSelected && { 
-                          boxShadow: `0 20px 25px -5px ${colorScheme.glow}, 0 10px 10px -5px ${colorScheme.glow}`,
-                          ringColor: colorScheme.glow
-                        })
-                      }}
                     >
-                      {/* Hover gradient overlay */}
-                      <div className="absolute inset-0 rounded-2xl sm:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" 
-                        style={{ 
-                          background: `radial-gradient(circle at top, ${colorScheme.glow}, transparent)` 
-                        }}
-                      ></div>
-
-                      {/* Selected indicator */}
-                      {isSelected && (
-                        <div className="absolute -top-2 -right-2 w-7 h-7 rounded-full flex items-center justify-center shadow-lg animate-bounce" style={{ backgroundColor: '#1db954' }}>
-                          <CheckCircle className="h-4 w-4 text-white" />
-                        </div>
-                      )}
-
-                      <div className="relative flex flex-col items-center justify-center space-y-3 sm:space-y-4 h-24 sm:h-32">
-                        {/* Icon container with enhanced styling */}
-                        <div className={`relative p-3 sm:p-4 rounded-xl sm:rounded-2xl ${colorScheme.iconBg} shadow-md group-hover:shadow-xl transition-all duration-500 flex-shrink-0 transform group-hover:scale-110 group-hover:-rotate-3`}>
-                          <div className="absolute inset-0 rounded-xl sm:rounded-2xl blur-md opacity-0 group-hover:opacity-50 transition-opacity duration-500" 
-                            style={{ backgroundColor: colorScheme.glow.replace('0.15', '0.3') }}
-                          ></div>
-                          <Icon className={`relative h-6 w-6 sm:h-10 sm:w-10 ${colorScheme.iconColor} transition-transform duration-500`} />
+                      <div className="flex flex-col items-center justify-center space-y-2 sm:space-y-3">
+                        {/* Icon */}
+                        <div className={`p-2.5 sm:p-3 rounded-xl transition-colors ${
+                          isSelected 
+                            ? 'bg-white/10' 
+                            : 'bg-gray-100 group-hover:bg-gray-200'
+                        }`}>
+                          <Icon className={`h-5 w-5 sm:h-6 sm:w-6 transition-colors ${
+                            isSelected ? 'text-white' : 'text-gray-600'
+                          }`} />
                         </div>
 
-                        {/* Category name with improved typography */}
-                        <span className="text-xs sm:text-sm font-bold text-gray-900 leading-tight text-center min-h-[2.5rem] sm:min-h-[3rem] flex items-center justify-center px-2">
+                        {/* Category name */}
+                        <span className={`text-xs sm:text-sm font-semibold leading-tight text-center ${
+                          isSelected ? 'text-white' : 'text-gray-700'
+                        }`}>
                           {shortenCategoryName(researchInterest)}
                         </span>
                       </div>
+
+                      {/* Selected checkmark */}
+                      {isSelected && (
+                        <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
+                          <CheckCircle className="h-3 w-3 text-white" />
+                        </div>
+                      )}
                     </button>
                   );
                 })}
                 
-                {/* Random Category Button - 6th square on mobile */}
+                {/* Random Category Button - Mobile only */}
                 <button
                   onClick={handleRandomCategory}
-                  className="group relative p-5 sm:p-8 rounded-2xl sm:rounded-3xl border-2 transition-all duration-500 hover:scale-105 hover:shadow-2xl bg-gradient-to-br from-purple-50 via-pink-50 to-purple-50 border-purple-200 hover:border-purple-400 shadow-lg hover:shadow-xl sm:hidden"
+                  className="group relative p-4 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400 transition-all duration-200 sm:hidden"
                 >
-                  {/* Hover gradient overlay */}
-                  <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" 
-                    style={{ 
-                      background: 'radial-gradient(circle at top, rgba(168, 85, 247, 0.15), transparent)' 
-                    }}
-                  ></div>
-
-                  <div className="relative flex flex-col items-center justify-center space-y-3 h-24">
-                    {/* Icon container with enhanced styling */}
-                    <div className="relative p-3 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 shadow-md group-hover:shadow-xl transition-all duration-500 flex-shrink-0 transform group-hover:scale-110 group-hover:rotate-180">
-                      <div className="absolute inset-0 rounded-xl blur-md opacity-0 group-hover:opacity-50 transition-opacity duration-500" 
-                        style={{ backgroundColor: 'rgba(168, 85, 247, 0.3)' }}
-                      ></div>
-                      <Shuffle className="relative h-6 w-6 text-purple-600 transition-transform duration-500" />
+                  <div className="flex flex-col items-center justify-center space-y-2">
+                    <div className="p-2.5 rounded-xl bg-white">
+                      <Shuffle className="h-5 w-5 text-gray-500 group-hover:rotate-180 transition-transform duration-300" />
                     </div>
-
-                    {/* Button text */}
-                    <span className="text-xs font-bold text-gray-900 leading-tight text-center min-h-[2.5rem] flex items-center justify-center px-2">
-                      Random Pick
+                    <span className="text-xs font-semibold text-gray-600">
+                      Surprise Me
                     </span>
-                  </div>
-                  
-                  {/* Sparkle decoration */}
-                  <div className="absolute -top-1 -right-1 animate-pulse">
-                    <Sparkles className="h-4 w-4 text-purple-500" />
                   </div>
                 </button>
               </div>
