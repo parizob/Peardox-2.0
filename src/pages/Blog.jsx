@@ -99,7 +99,7 @@ There's a strange paradox in the AI conversation right now. Every headline screa
 
 Here's the uncomfortable truth: **You don't need to build anything with AI to transform your output. You just need to learn how to use it.**
 
-The professionals who are quietly becoming unstoppable aren't the ones building AI tools. They're the ones who have mastered the art of AI collaboration - turning ChatGPT, Claude, and other accessible AI systems into tireless partners that make every hour of their work more valuable.
+The professionals who are quietly becoming unstoppable aren't the ones building AI tools. They're the ones who have mastered the art of AI collaboration—turning ChatGPT, Claude, and other accessible AI systems into tireless partners that make every hour of their work more valuable.
 
 Let me show you exactly how.
 
