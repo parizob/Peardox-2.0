@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, Mail, Brain, Sparkles, Settings, Bell, Shield, BookOpen, Target, Zap, Globe, Edit3, Save, Camera, Eye, EyeOff, LogIn, UserPlus, Check, Search, TrendingUp, Calendar, BarChart3 } from 'lucide-react';
+import { X, User, Mail, Brain, Sparkles, Bell, Shield, BookOpen, Target, Zap, Globe, Edit3, Save, Camera, Eye, EyeOff, LogIn, UserPlus, Check, Search, TrendingUp, Calendar, BarChart3 } from 'lucide-react';
 import { authAPI, arxivAPI, viewedArticlesAPI } from '../lib/supabase';
 
 const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onResearchInterestsChange }) => {
@@ -618,7 +618,6 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
   const tabs = [
     { id: 'profile', label: 'Profile', icon: User },
     { id: 'research', label: 'Research Hub', icon: Brain },
-    { id: 'preferences', label: 'AI Preferences', icon: Settings },
     { id: 'achievements', label: 'Achievements', icon: Target }
   ];
 
@@ -1119,32 +1118,6 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                       )}
                     </div>
                   )}
-                </div>
-              )}
-
-              {/* AI Preferences Tab */}
-              {activeTab === 'preferences' && (
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-2xl font-bold text-gray-900">AI Preferences</h3>
-                    <p className="text-gray-500 text-sm mt-1">Customize your AI experience</p>
-                  </div>
-
-                  <div className="flex items-center justify-center min-h-[300px]">
-                    <div className="text-center px-4">
-                      <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <Settings className="h-8 w-8 text-gray-400" />
-                      </div>
-                      <h4 className="text-xl font-bold text-gray-900 mb-2">Coming Soon</h4>
-                      <p className="text-gray-500 max-w-sm mx-auto text-sm">
-                        Customize how AI summarizes papers, set notification preferences, and more.
-                      </p>
-                      <div className="mt-4 inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
-                        <Zap className="h-3 w-3 mr-1.5" />
-                        In Development
-                      </div>
-                    </div>
-                  </div>
                 </div>
               )}
 

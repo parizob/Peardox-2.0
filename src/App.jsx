@@ -1467,10 +1467,10 @@ function App() {
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
               <div className="text-center mb-8 sm:mb-12">
                 <h2 className="font-sans text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight px-2">
-                Deep Tech. Plain English.
+                Unlock the Future
                 </h2>
                 <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
-                Learn, Earn, and Discover — the fastest way to understand AI research.
+                Learn, Earn, and Discover — the fastest way to understand AI research
                 </p>
               </div>
 
