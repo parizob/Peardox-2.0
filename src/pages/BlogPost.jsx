@@ -274,33 +274,50 @@ const BlogPost = () => {
               </div>
             </header>
 
-            {/* Hero Image/Diagram */}
+            {/* Blog Hero Banner */}
             <div className="mb-12">
-              <div className="bg-gradient-to-br from-blue-100 via-indigo-50 to-purple-100 rounded-2xl p-8 sm:p-12">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Target className="h-8 w-8 text-red-600" />
+              <div className="relative overflow-hidden rounded-2xl" style={{ background: 'linear-gradient(135deg, #1db954 0%, #0d9442 50%, #087335 100%)' }}>
+                {/* Decorative elements */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+                <div className="absolute top-1/2 left-1/4 w-2 h-2 bg-white/30 rounded-full"></div>
+                <div className="absolute top-1/3 right-1/3 w-3 h-3 bg-white/20 rounded-full"></div>
+                <div className="absolute bottom-1/4 right-1/4 w-2 h-2 bg-white/25 rounded-full"></div>
+                
+                <div className="relative px-8 py-10 sm:px-12 sm:py-14">
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                    {/* Left side - Message */}
+                    <div className="text-center sm:text-left">
+                      <div className="inline-flex items-center px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white/90 text-xs font-medium mb-4">
+                        <Lightbulb className="h-3 w-3 mr-1.5" />
+                        Perspectives & Insights
+                      </div>
+                      <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
+                        Fresh takes on AI, tech, and the future
+                      </h3>
+                      <p className="text-white/80 text-sm sm:text-base max-w-md">
+                        Straight talk about what matters — no jargon, just ideas worth your time.
+                      </p>
                     </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Academic Silos</h3>
-                    <p className="text-sm text-gray-600">Research locked behind complex language and institutional barriers</p>
-                  </div>
-                  
-                  <div className="text-center">
-                    <ArrowRight className="h-8 w-8 text-blue-600 mx-auto mb-4" />
-                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Heart className="h-6 w-6 text-blue-600" />
+                    
+                    {/* Right side - Visual element */}
+                    <div className="flex items-center gap-3">
+                      <div className="flex -space-x-2">
+                        <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/30">
+                          <Brain className="h-5 w-5 text-white" />
+                        </div>
+                        <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/30">
+                          <Zap className="h-5 w-5 text-white" />
+                        </div>
+                        <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/30">
+                          <TrendingUp className="h-5 w-5 text-white" />
+                        </div>
+                      </div>
+                      <div className="text-white/70 text-sm hidden sm:block">
+                        <span className="font-semibold text-white">Think different.</span><br />
+                        <span>Build smarter.</span>
+                      </div>
                     </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Pearadox Bridge</h3>
-                    <p className="text-sm text-gray-600">Translating complexity into accessible insights</p>
-                  </div>
-                  
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Globe className="h-8 w-8 text-green-600" />
-                    </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Universal Access</h3>
-                    <p className="text-sm text-gray-600">Knowledge accessible to everyone, everywhere</p>
                   </div>
                 </div>
               </div>
