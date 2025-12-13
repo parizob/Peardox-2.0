@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, ArrowLeft, Sparkles, Coins, Gift, TrendingUp, Zap, Clock, BookOpen, Trophy, ArrowRight } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import SavedArticles from '../components/SavedArticles';
+import AccountModal from '../components/AccountModal';
 import { useUser } from '../contexts/UserContext';
 import { quizAPI } from '../lib/supabase';
 
@@ -11,10 +13,15 @@ const Store = () => {
   const {
     savedArticlesFromDB,
     user,
+    userSkillLevel,
+    handleSkillLevelChange,
+    handleResearchInterestsChange,
   } = useUser();
   
   const [pearTokenCount, setPearTokenCount] = useState(0);
   const [isLoadingTokens, setIsLoadingTokens] = useState(false);
+  const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
   
   // Navigate to home and scroll to articles section
   const handleStartEarning = () => {
@@ -73,8 +80,8 @@ const Store = () => {
         selectedCategory=""
         onCategoryChange={() => {}}
         categories={[]}
-        onShowSavedArticles={() => {}}
-        onShowAccount={() => {}}
+        onShowSavedArticles={() => setIsSavedArticlesOpen(true)}
+        onShowAccount={() => setIsAccountOpen(true)}
         savedCount={savedArticlesFromDB.length}
       />
       
@@ -266,6 +273,26 @@ const Store = () => {
       </main>
 
       <Footer />
+
+      {/* Saved Articles Modal */}
+      <SavedArticles
+        isOpen={isSavedArticlesOpen}
+        onClose={() => setIsSavedArticlesOpen(false)}
+        savedArticles={savedArticlesFromDB}
+        onArticleClick={() => {}} // Articles can't be opened from store, but modal can be viewed
+        onToggleFavorite={() => {}}
+        isLoading={false}
+        user={user}
+      />
+
+      {/* Account Modal */}
+      <AccountModal
+        isOpen={isAccountOpen}
+        onClose={() => setIsAccountOpen(false)}
+        userSkillLevel={userSkillLevel}
+        onSkillLevelChange={handleSkillLevelChange}
+        onResearchInterestsChange={handleResearchInterestsChange}
+      />
     </div>
   );
 };

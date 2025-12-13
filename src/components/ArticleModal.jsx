@@ -28,6 +28,28 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
   // Get user context
   const { user, userProfile } = useUser();
   
+  // Format date to human-readable format
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Unknown Date';
+    
+    // If already formatted (e.g., "December 11, 2025"), return as-is
+    if (typeof dateString === 'string' && dateString.match(/^[A-Z][a-z]+ \d{1,2}, \d{4}$/)) {
+      return dateString;
+    }
+    
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'UTC'
+      });
+    } catch {
+      return dateString; // Return original if parsing fails
+    }
+  };
+  
   // Lazy load full abstract when modal opens (only if not already loaded)
   useEffect(() => {
     if (isOpen && article && !fullAbstract && !article.originalAbstract) {
@@ -390,7 +412,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-sm text-gray-500">
               <span className="inline-flex items-center">
                 <Calendar className="w-4 h-4 mr-1.5" />
-                {article.publishedDate}
+                {formatDate(article.publishedDate)}
               </span>
               <span className="inline-flex items-center">
                 <FileText className="w-4 h-4 mr-1.5" />
