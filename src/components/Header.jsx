@@ -292,10 +292,9 @@ const Header = ({
             <div className="relative group">
               <Link
                 to="/submit"
-                className="flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium text-white hover:shadow-lg transition-all"
-                style={{ backgroundColor: '#1db954' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+                className="flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium bg-gray-100 text-gray-700 hover:text-white hover:shadow-lg transition-all duration-200"
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
                 onClick={() => {
                   if (isSearchExpanded) {
                     setIsSearchExpanded(false);
@@ -508,10 +507,9 @@ const Header = ({
             {/* Submit Icon Only */}
             <Link
               to="/submit"
-              className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg text-white hover:shadow-lg transition-all"
-              style={{ backgroundColor: '#1db954' }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+              className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 text-gray-700 hover:text-white hover:shadow-lg transition-all duration-200"
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
               onClick={() => {
                 setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
               }}
