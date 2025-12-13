@@ -101,6 +101,12 @@ export default async function handler(req, res) {
     // Blog posts
     const blogPosts = [
       {
+        url: 'https://www.pearadox.app/blog/ways-ai-can-boost-your-work',
+        lastmod: '2025-12-13T00:00:00.000Z',
+        changefreq: 'monthly',
+        priority: '0.9'
+      },
+      {
         url: 'https://www.pearadox.app/blog/what-makes-an-ai-agent',
         lastmod: '2025-11-15T00:00:00.000Z',
         changefreq: 'monthly',
