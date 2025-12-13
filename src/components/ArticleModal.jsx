@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Heart, ExternalLink, Calendar, Users, Tag, Share2, Brain, Sparkles, BookOpen, GraduationCap, User, Check, MessageCircle, Send, Edit3, Trash2, MoreVertical, CheckCircle, XCircle, HelpCircle, ChevronDown, FileText, ArrowUpRight } from 'lucide-react';
+import { X, Heart, ExternalLink, Calendar, Users, Tag, Share2, Brain, Sparkles, BookOpen, GraduationCap, User, Check, MessageCircle, Send, Edit3, Trash2, MoreVertical, CheckCircle, XCircle, HelpCircle, ChevronDown, ArrowUpRight } from 'lucide-react';
 import { arxivAPI, commentsAPI, quizAPI } from '../lib/supabase';
 import { useUser } from '../contexts/UserContext';
 
@@ -414,9 +414,13 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                 <Calendar className="w-4 h-4 mr-1.5" />
                 {formatDate(article.publishedDate)}
               </span>
-              <span className="inline-flex items-center">
-                <FileText className="w-4 h-4 mr-1.5" />
-                {article.arxivId}
+              <span className="inline-flex items-center flex-wrap gap-1.5">
+                <Tag className="w-4 h-4 mr-0.5" />
+                {getFilteredCategories().map((cat, idx) => (
+                  <span key={idx} className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs">
+                    {cat}
+                  </span>
+                ))}
               </span>
               {commentCount > 0 && (
                 <span className="inline-flex items-center">
