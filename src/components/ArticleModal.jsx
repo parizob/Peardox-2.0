@@ -23,7 +23,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
   const [isQuizOpen, setIsQuizOpen] = useState(false);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showQuizResult, setShowQuizResult] = useState(false);
-  const [hasAnsweredCorrectly, setHasAnsweredCorrectly] = useState(false);
+  const [quizSubmission, setQuizSubmission] = useState(null); // { answer_type: 'true'|'false' } or null if not taken
   
   // Get user context
   const { user, userProfile } = useUser();
@@ -240,20 +240,20 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
   
   const quizData = getQuizData();
 
-  // Check if user has already answered this quiz correctly
+  // Check if user has already taken this quiz (correct or incorrect)
   useEffect(() => {
     if (isQuizOpen && article && (user || userProp)) {
-      const checkAnswerStatus = async () => {
+      const checkSubmissionStatus = async () => {
         try {
           const userId = (user || userProp).id;
-          const hasAnswered = await quizAPI.hasUserAnsweredCorrectly(userId, article.id);
-          setHasAnsweredCorrectly(hasAnswered);
+          const submission = await quizAPI.getUserQuizSubmission(userId, article.id);
+          setQuizSubmission(submission);
         } catch (error) {
-          console.error('Error checking answer status:', error);
+          console.error('Error checking submission status:', error);
         }
       };
       
-      checkAnswerStatus();
+      checkSubmissionStatus();
     }
   }, [isQuizOpen, article, user, userProp]);
 
@@ -262,6 +262,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
     setIsQuizOpen(true);
     setSelectedAnswer(null);
     setShowQuizResult(false);
+    setQuizSubmission(null); // Reset on open, will be fetched by useEffect
   };
 
   const handleCloseQuiz = () => {
@@ -277,26 +278,22 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
   };
 
   const handleSubmitQuiz = async () => {
-    if (selectedAnswer) {
-      setShowQuizResult(true);
-      
+    if (selectedAnswer && (user || userProp)) {
       const isCorrect = selectedAnswer === quizData.correctAnswer;
-      if (isCorrect && (user || userProp)) {
-        setHasAnsweredCorrectly(true);
+      
+      // Record the submission (correct or incorrect) - user only gets one attempt
+      try {
+        const userId = (user || userProp).id;
+        await quizAPI.recordQuizSubmission(userId, article.id, article.arxivId, isCorrect);
         
-        try {
-          const userId = (user || userProp).id;
-          await quizAPI.recordCorrectAnswer(userId, article.id, article.arxivId);
-        } catch (error) {
-          console.error('Failed to record correct answer:', error);
-        }
+        // Update local state to reflect the submission
+        setQuizSubmission({ answer_type: isCorrect ? 'true' : 'false' });
+      } catch (error) {
+        console.error('Failed to record quiz submission:', error);
       }
+      
+      setShowQuizResult(true);
     }
-  };
-
-  const handleRetryQuiz = () => {
-    setSelectedAnswer(null);
-    setShowQuizResult(false);
   };
   
   if (!isOpen || !article) return null;
@@ -757,8 +754,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                   Create Free Account
                 </button>
               </div>
-            ) : hasAnsweredCorrectly ? (
-              // Already completed
+            ) : quizSubmission?.answer_type === 'true' ? (
+              // Already completed correctly
               <div className="p-8 text-center">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1db954' }}>
                   <CheckCircle className="h-8 w-8 text-white" />
@@ -769,6 +766,27 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                   <Sparkles className="h-4 w-4 mr-2" />
                   1 PEAR Token Earned
                 </div>
+              </div>
+            ) : quizSubmission?.answer_type === 'false' ? (
+              // Already attempted but answered incorrectly
+              <div className="p-8 text-center">
+                <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                  <XCircle className="h-8 w-8 text-gray-400" />
+                </div>
+                <h4 className="text-xl font-bold text-gray-900 mb-2">Quiz Already Attempted</h4>
+                <p className="text-gray-600 mb-6 max-w-sm mx-auto">
+                  Unfortunately, you didn't get this one right. Each quiz can only be attempted once, but don't worry — there's plenty more research to explore!
+                </p>
+                <button
+                  onClick={handleCloseQuiz}
+                  className="inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl transition-all"
+                  style={{ backgroundColor: '#1db954' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+                >
+                  <BookOpen className="h-5 w-5 mr-2" />
+                  Explore Other Research
+                </button>
               </div>
             ) : (
               // Quiz questions
@@ -850,7 +868,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                           </div>
                           <div>
                             <h4 className="font-bold text-red-900">Not quite right</h4>
-                            <p className="text-red-700 text-sm">Review the paper and try again</p>
+                            <p className="text-red-700 text-sm">Each quiz can only be attempted once</p>
                           </div>
                         </>
                       )}
@@ -886,21 +904,13 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                       Done
                     </button>
                   ) : (
-                    <>
-                      <button
-                        onClick={handleRetryQuiz}
-                        className="flex-1 py-3 text-white font-semibold rounded-xl transition-all"
-                        style={{ backgroundColor: '#1db954' }}
-                      >
-                        Try Again
-                      </button>
-                      <button
-                        onClick={handleCloseQuiz}
-                        className="px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-colors"
-                      >
-                        Close
-                      </button>
-                    </>
+                    <button
+                      onClick={handleCloseQuiz}
+                      className="w-full py-3 text-white font-semibold rounded-xl transition-all"
+                      style={{ backgroundColor: '#1db954' }}
+                    >
+                      Explore Other Research
+                    </button>
                   )}
                 </div>
               </div>
