@@ -32,8 +32,9 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-# Sitemap
+# Sitemaps
 Sitemap: https://www.pearadox.app/sitemap.xml
+Sitemap: https://www.pearadox.app/sitemap-papers.xml
 
 # Allow article pages (most important for indexing)
 Allow: /article/

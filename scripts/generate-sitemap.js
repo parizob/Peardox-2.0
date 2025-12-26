@@ -35,10 +35,10 @@ async function fetchArticles() {
     // Step 1: Get summaries (like your app does)
     const { data: summariesData, error: summariesError } = await supabase
       .from('summary_papers')
-      .select('id, arxiv_paper_id, beginner_title, intermediate_title, beginner_overview, intermediate_overview, beginner_summary, intermediate_summary')
+      .select('id, arxiv_paper_id, beginner_title, intermediate_title, beginner_overview, intermediate_overview, beginner_summary, intermediate_summary, created_at, updated_at')
       .eq('processing_status', 'completed')
       .order('created_at', { ascending: false })
-      .limit(1500); // Same limit as your app
+      .limit(1500); // Fetch more than 1000 to ensure we have enough after processing
     
     if (summariesError) {
       console.error('❌ Error fetching summaries:', summariesError);
@@ -116,7 +116,9 @@ async function fetchArticles() {
         summaryTitle: summary?.beginner_title,
         summaryOverview: summary?.beginner_overview,
         summaryContent: summary?.beginner_summary,
-        hasSummary: !!(summary?.beginner_title || summary?.beginner_overview || summary?.beginner_summary)
+        hasSummary: !!(summary?.beginner_title || summary?.beginner_overview || summary?.beginner_summary),
+        // Use summary's created_at as the "added to site" date (when paper was summarized)
+        summary_created_at: summary?.created_at
       };
     });
     
@@ -133,7 +135,7 @@ async function fetchArticles() {
       categories_name: Array.isArray(paper.categories_name) && paper.categories_name.length > 0 
         ? paper.categories_name[0] 
         : 'General',
-      created_at: paper.created_at,
+      created_at: paper.summary_created_at || paper.created_at, // Prefer summary creation date
       updated_at: paper.updated_at
     }));
     
@@ -149,7 +151,7 @@ async function fetchArticles() {
   }
 }
 
-// Generate sitemap XML with your actual articles
+// Generate sitemap XML with paper articles only (sitemap-papers.xml)
 function generateSitemapXML(articles, baseUrl = 'https://www.pearadox.app') {
   const currentDate = new Date().toISOString().split('T')[0];
   
@@ -158,66 +160,7 @@ function generateSitemapXML(articles, baseUrl = 'https://www.pearadox.app') {
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0">
-
-  <!-- Main pages -->
-  <url>
-    <loc>${baseUrl}</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  
-  <url>
-    <loc>${baseUrl}/aboutus</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  
-  <url>
-    <loc>${baseUrl}/blog</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>${baseUrl}/submit</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <!-- Blog posts -->
-  <url>
-    <loc>${baseUrl}/blog/what-makes-an-ai-agent</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>${baseUrl}/blog/ai-first-mindset-ferrari-engine</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>${baseUrl}/blog/building-an-app-with-AI</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  
-  <url>
-    <loc>${baseUrl}/blog/democratizing-ai-research</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Article pages -->`;
+  <!-- Research Paper Articles -->`;
 
   // Add article URLs using the same slug generation as your app
   let validUrlCount = 0;
@@ -261,8 +204,8 @@ async function generateWorkingSitemap() {
     console.log('🗺️ Starting working sitemap generation...');
     console.log('🔗 Connecting to Supabase...');
     
-    // Test connection
-    const { error: testError } = await supabase.from('v_summary_papers').select('count').limit(1);
+    // Test connection using the same table we'll query
+    const { error: testError } = await supabase.from('summary_papers').select('id').limit(1);
     if (testError) {
       throw new Error(`Connection test failed: ${testError.message}`);
     }
@@ -275,22 +218,22 @@ async function generateWorkingSitemap() {
       throw new Error('No articles found in database');
     }
     
-    // Sort by published date (newest first) - same as your app
-    const sortedArticles = allArticles.sort((a, b) => 
-      new Date(b.published_date || 0) - new Date(a.published_date || 0)
-    );
+    // Sort by created_at date (newest first) to get most recently added papers
+    const sortedArticles = allArticles
+      .sort((a, b) => new Date(b.created_at || b.published_date || 0) - new Date(a.created_at || a.published_date || 0))
+      .slice(0, 1000); // Limit to 1000 most recent papers
     
-    console.log(`📄 Generating sitemap for ${sortedArticles.length} articles...`);
+    console.log(`📄 Generating sitemap for ${sortedArticles.length} most recent papers...`);
     
     // Generate sitemap with all articles
     const sitemapXML = generateSitemapXML(sortedArticles);
     
-    // Write sitemap to public directory
+    // Write sitemap-papers to public directory
     const publicDir = path.join(__dirname, '..', 'public');
-    const sitemapPath = path.join(publicDir, 'sitemap.xml');
+    const sitemapPath = path.join(publicDir, 'sitemap-papers.xml');
     
     fs.writeFileSync(sitemapPath, sitemapXML, 'utf8');
-    console.log(`✅ Sitemap generated: ${sitemapPath}`);
+    console.log(`✅ Sitemap-papers generated: ${sitemapPath}`);
     
     // Update robots.txt with LLM crawler support
     const robotsTxt = `User-agent: *
@@ -327,8 +270,9 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-# Sitemap
+# Sitemaps
 Sitemap: https://www.pearadox.app/sitemap.xml
+Sitemap: https://www.pearadox.app/sitemap-papers.xml
 
 # Allow article pages (most important for indexing)
 Allow: /article/
@@ -350,10 +294,10 @@ Host: https://www.pearadox.app`;
     fs.writeFileSync(robotsPath, robotsTxt, 'utf8');
     console.log(`✅ Robots.txt updated`);
     
-    console.log('🎉 Working sitemap generation completed successfully!');
+    console.log('🎉 Sitemap-papers generation completed successfully!');
     
     // Show sample URLs
-    console.log('\n📋 Sample article URLs generated:');
+    console.log('\n📋 Sample paper URLs generated:');
     const sampleArticles = sortedArticles.slice(0, 5);
     sampleArticles.forEach(article => {
       const slug = generateSlug(article.title, article.arxivId);
@@ -368,9 +312,9 @@ Host: https://www.pearadox.app`;
     });
     
     console.log(`\n📊 Summary:`);
-    console.log(`   📄 Total articles in database: ${allArticles.length}`);
-    console.log(`   🔗 Valid article URLs generated: ${validUrls.length}`);
-    console.log(`   🗺️ Sitemap includes all main pages plus article pages`);
+    console.log(`   📄 Total papers in database: ${allArticles.length}`);
+    console.log(`   🔗 Valid paper URLs generated: ${validUrls.length}`);
+    console.log(`   🗺️ Sitemap-papers contains only research paper pages`);
     
     return {
       success: true,
@@ -383,66 +327,19 @@ Host: https://www.pearadox.app`;
     };
     
   } catch (error) {
-    console.error('❌ Working sitemap generation failed:', error);
+    console.error('❌ Sitemap-papers generation failed:', error);
     
-    // Generate minimal fallback sitemap
+    // Generate minimal fallback sitemap-papers (empty but valid)
     const fallbackSitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.pearadox.app</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://www.pearadox.app/aboutus</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.pearadox.app/blog</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.pearadox.app/submit</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.pearadox.app/blog/what-makes-an-ai-agent</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.pearadox.app/blog/ai-first-mindset-ferrari-engine</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.pearadox.app/blog/building-an-app-with-AI</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.pearadox.app/blog/democratizing-ai-research</loc>
-    <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
+  <!-- Research Paper Articles - generated on error, will be populated by next successful run -->
 </urlset>`;
 
     const publicDir = path.join(__dirname, '..', 'public');
-    const fallbackPath = path.join(publicDir, 'sitemap.xml');
+    const fallbackPath = path.join(publicDir, 'sitemap-papers.xml');
     
     fs.writeFileSync(fallbackPath, fallbackSitemap, 'utf8');
-    console.log('📝 Fallback sitemap generated');
+    console.log('📝 Fallback sitemap-papers generated (empty)');
     
     return {
       success: false,
@@ -464,23 +361,24 @@ if (require.main === module) {
   generateWorkingSitemap()
     .then((result) => {
       if (result.success) {
-        console.log(`\n🏁 Success! Generated sitemap with ${result.validUrls} article pages out of ${result.totalArticles} total articles.`);
-        console.log('\n🔗 Your article pages are now in the sitemap and ready for search engines!');
+        console.log(`\n🏁 Success! Generated sitemap-papers with ${result.validUrls} paper pages out of ${result.totalArticles} total papers.`);
+        console.log('\n🔗 Your research papers are now in sitemap-papers.xml and ready for search engines!');
         console.log('\n🚀 Next steps:');
-        console.log('   1. Your sitemap is ready at public/sitemap.xml');
-        console.log('   2. Deploy your site to make the sitemap live');
-        console.log('   3. Submit your sitemap to Google Search Console');
+        console.log('   1. Your sitemap-papers is ready at public/sitemap-papers.xml');
+        console.log('   2. Main pages/blog are in public/sitemap.xml');
+        console.log('   3. Deploy your site to make the sitemaps live');
+        console.log('   4. Submit both sitemaps to Google Search Console');
         process.exit(0);
       } else {
-        console.warn(`\n⚠️ Sitemap generation failed: ${result.error}`);
-        console.log('\n✅ Fallback sitemap generated - build can continue');
-        console.log('\n📌 Note: The cron job will regenerate the full sitemap daily at 3 AM UTC');
+        console.warn(`\n⚠️ Sitemap-papers generation failed: ${result.error}`);
+        console.log('\n✅ Fallback sitemap-papers generated - build can continue');
+        console.log('\n📌 Note: The cron job will regenerate the full sitemap-papers daily at 3 AM UTC');
         process.exit(0); // Exit successfully even with fallback
       }
     })
     .catch((error) => {
       console.error('\n💥 Unexpected error:', error);
-      console.log('\n✅ Fallback sitemap should have been generated - build can continue');
+      console.log('\n✅ Fallback sitemap-papers should have been generated - build can continue');
       process.exit(0); // Exit successfully to not block deployment
     });
 }
