@@ -1726,18 +1726,20 @@ export const commentsAPI = {
   }
 };
 
-// Quiz API - Track correct answers
+// Quiz API - Track quiz submissions (correct and incorrect answers)
 export const quizAPI = {
   /**
-   * Record a correct quiz answer for a user
+   * Record a quiz submission for a user (correct or incorrect)
    * @param {string} userId - UUID of the authenticated user
    * @param {number} arxivPaperId - Internal paper ID from v_arxiv_papers.id
    * @param {string} arxivId - ArXiv ID string (e.g., "2301.12345")
+   * @param {boolean} isCorrect - Whether the answer was correct
    * @returns {Promise<Object>} The created record or error
    */
-  async recordCorrectAnswer(userId, arxivPaperId, arxivId) {
+  async recordQuizSubmission(userId, arxivPaperId, arxivId, isCorrect) {
     try {
-      console.log('🎯 Recording correct quiz answer:', { userId, arxivPaperId, arxivId });
+      const answerType = isCorrect ? 'true' : 'false';
+      console.log('🎯 Recording quiz submission:', { userId, arxivPaperId, arxivId, answerType });
       
       if (!userId) {
         console.error('❌ Cannot record quiz answer: user not authenticated');
@@ -1750,20 +1752,21 @@ export const quizAPI = {
       }
       
       const { data, error } = await supabase
-        .from('quiz_correct_answers')
+        .from('quiz_submissions')
         .insert({
           user_id: userId,
           arxiv_paper_id: arxivPaperId,
           arxiv_id: arxivId,
+          answer_type: answerType,
           answered_at: new Date().toISOString()
         })
         .select()
         .single();
       
       if (error) {
-        // Check if it's a unique constraint violation (user already answered correctly)
+        // Check if it's a unique constraint violation (user already answered this quiz)
         if (error.code === '23505') {
-          console.log('ℹ️ User already has a correct answer recorded for this quiz');
+          console.log('ℹ️ User already has a submission recorded for this quiz');
           return { 
             success: true, 
             alreadyRecorded: true,
@@ -1771,25 +1774,34 @@ export const quizAPI = {
           };
         }
         
-        console.error('❌ Error recording correct answer:', error);
+        console.error('❌ Error recording quiz submission:', error);
         throw error;
       }
       
-      console.log('✅ Correct answer recorded successfully');
+      console.log(`✅ Quiz submission recorded successfully (${answerType})`);
       return { 
         success: true, 
         data,
-        alreadyRecorded: false 
+        alreadyRecorded: false,
+        isCorrect
       };
       
     } catch (error) {
-      console.error('❌ Exception in recordCorrectAnswer:', error);
+      console.error('❌ Exception in recordQuizSubmission:', error);
       throw error;
     }
   },
+
+  /**
+   * @deprecated Use recordQuizSubmission instead
+   * Record a correct quiz answer for a user (kept for backward compatibility)
+   */
+  async recordCorrectAnswer(userId, arxivPaperId, arxivId) {
+    return this.recordQuizSubmission(userId, arxivPaperId, arxivId, true);
+  },
   
   /**
-   * Get all correct answers for a user
+   * Get all correct answers for a user (for PEAR token counting)
    * @param {string} userId - UUID of the authenticated user
    * @returns {Promise<Array>} Array of correct answers
    */
@@ -1802,9 +1814,10 @@ export const quizAPI = {
       }
       
       const { data, error } = await supabase
-        .from('quiz_correct_answers')
+        .from('quiz_submissions')
         .select('*')
         .eq('user_id', userId)
+        .eq('answer_type', 'true')
         .order('answered_at', { ascending: false });
       
       if (error) {
@@ -1818,6 +1831,38 @@ export const quizAPI = {
     } catch (error) {
       console.error('❌ Exception in getUserCorrectAnswers:', error);
       throw error;
+    }
+  },
+
+  /**
+   * Get a user's quiz submission for a specific paper
+   * @param {string} userId - UUID of the authenticated user
+   * @param {number} arxivPaperId - Internal paper ID
+   * @returns {Promise<Object|null>} The submission record with answer_type, or null if not taken
+   */
+  async getUserQuizSubmission(userId, arxivPaperId) {
+    try {
+      if (!userId || !arxivPaperId) {
+        return null;
+      }
+      
+      const { data, error } = await supabase
+        .from('quiz_submissions')
+        .select('id, answer_type, answered_at')
+        .eq('user_id', userId)
+        .eq('arxiv_paper_id', arxivPaperId)
+        .single();
+      
+      if (error && error.code !== 'PGRST116') {
+        console.error('❌ Error fetching user quiz submission:', error);
+        return null;
+      }
+      
+      return data || null;
+      
+    } catch (error) {
+      console.error('❌ Exception in getUserQuizSubmission:', error);
+      return null;
     }
   },
   
@@ -1834,10 +1879,11 @@ export const quizAPI = {
       }
       
       const { data, error } = await supabase
-        .from('quiz_correct_answers')
-        .select('id')
+        .from('quiz_submissions')
+        .select('id, answer_type')
         .eq('user_id', userId)
         .eq('arxiv_paper_id', arxivPaperId)
+        .eq('answer_type', 'true')
         .single();
       
       if (error && error.code !== 'PGRST116') {
@@ -1861,9 +1907,10 @@ export const quizAPI = {
   async getQuizCorrectCount(arxivPaperId) {
     try {
       const { count, error } = await supabase
-        .from('quiz_correct_answers')
+        .from('quiz_submissions')
         .select('*', { count: 'exact', head: true })
-        .eq('arxiv_paper_id', arxivPaperId);
+        .eq('arxiv_paper_id', arxivPaperId)
+        .eq('answer_type', 'true');
       
       if (error) {
         console.error('❌ Error getting quiz correct count:', error);
