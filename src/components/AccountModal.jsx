@@ -485,42 +485,62 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
     }
     console.log('🚪 Sign out button clicked');
     
-    try {
-      // Use authAPI if available, fallback to direct supabase
-      if (authAPI && typeof authAPI.signOut === 'function') {
-        console.log('🔐 Calling authAPI.signOut...');
-        await authAPI.signOut();
-        console.log('✅ Sign out via authAPI completed');
-      } else {
-        // Fallback to direct supabase call with global scope
-        const { supabase } = await import('../lib/supabase');
-        console.log('🔐 Calling supabase.auth.signOut with global scope...');
-        const { error } = await supabase.auth.signOut({ scope: 'global' });
-        if (error) {
-          console.error('❌ Sign out error:', error);
-        } else {
-          console.log('✅ Sign out completed successfully');
-        }
-      }
-      
-      // Clear theme context
-      setCurrentUserId?.(null);
-      
-      // Clear any cached data
-      localStorage.removeItem('pearadox-theme');
-      
-    } catch (error) {
-      console.error('❌ Sign out exception:', error);
-      // Even if sign out fails, clear local state
-      setCurrentUserId?.(null);
-      localStorage.removeItem('pearadox-theme');
-    }
-    
-    // Close modal
+    // Close modal first
     onClose();
     
-    // Navigate to home and reload to clear all state
-    window.location.href = '/';
+    try {
+      // Get supabase client
+      const { supabase } = await import('../lib/supabase');
+      
+      console.log('🔐 Calling supabase.auth.signOut with global scope...');
+      const { error } = await supabase.auth.signOut({ scope: 'global' });
+      
+      if (error) {
+        console.error('❌ Sign out error:', error);
+      } else {
+        console.log('✅ Sign out API call completed');
+      }
+    } catch (error) {
+      console.error('❌ Sign out exception:', error);
+    }
+    
+    // Clear theme context
+    setCurrentUserId?.(null);
+    
+    // Manually clear ALL Supabase-related storage (important for production)
+    try {
+      // Clear localStorage - find and remove all Supabase auth tokens
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && (key.startsWith('sb-') || key.includes('supabase') || key === 'pearadox-theme')) {
+          keysToRemove.push(key);
+        }
+      }
+      keysToRemove.forEach(key => {
+        console.log('🧹 Clearing localStorage key:', key);
+        localStorage.removeItem(key);
+      });
+      
+      // Clear sessionStorage as well
+      for (let i = sessionStorage.length - 1; i >= 0; i--) {
+        const key = sessionStorage.key(i);
+        if (key && (key.startsWith('sb-') || key.includes('supabase'))) {
+          console.log('🧹 Clearing sessionStorage key:', key);
+          sessionStorage.removeItem(key);
+        }
+      }
+    } catch (storageError) {
+      console.error('Error clearing storage:', storageError);
+    }
+    
+    console.log('🔄 Forcing page reload...');
+    
+    // Small delay to ensure everything is cleared, then force hard reload
+    setTimeout(() => {
+      // Force a hard reload to clear all cached state
+      window.location.replace('/');
+    }, 100);
   };
 
   const handleSave = async () => {
