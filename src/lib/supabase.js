@@ -835,10 +835,10 @@ export const authAPI = {
   async getProfile(userId) {
     console.log('📋 Getting profile for userId:', userId);
     
-    // Only select essential profile fields
+    // Only select essential profile fields (including mode for dark/light preference)
     const { data, error } = await supabase
       .from('profiles')
-      .select('id, full_name, professional_title, institution, research_interests, skill_level, created_at')
+      .select('id, full_name, professional_title, institution, research_interests, skill_level, created_at, mode')
       .eq('id', userId)
       .single();
     
