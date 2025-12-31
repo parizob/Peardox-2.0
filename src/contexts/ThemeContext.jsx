@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { supabase } from '../lib/supabase';
 
 const ThemeContext = createContext();
 
@@ -11,18 +12,17 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
-  // Track current user ID
-  const [userId, setUserId] = useState(null);
+  // Track current user ID - set by AccountModal
   const userIdRef = useRef(null);
   
-  // Always start with light mode
+  // Dark mode state
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isReady, setIsReady] = useState(false);
+  const isDarkModeRef = useRef(false);
 
-  // Keep ref in sync with state
+  // Keep isDarkModeRef in sync
   useEffect(() => {
-    userIdRef.current = userId;
-  }, [userId]);
+    isDarkModeRef.current = isDarkMode;
+  }, [isDarkMode]);
 
   // Apply theme class to document
   useEffect(() => {
@@ -40,190 +40,84 @@ export const ThemeProvider = ({ children }) => {
     }
   }, [isDarkMode]);
 
-  // Initial auth check - only runs once on mount
+  // On mount, check if there's a session and load theme
   useEffect(() => {
-    let mounted = true;
-    
-    const init = async () => {
+    const loadInitialTheme = async () => {
       try {
-        const { supabase } = await import('../lib/supabase');
         const { data: { session } } = await supabase.auth.getSession();
         
-        if (mounted && session?.user) {
-          const uid = session.user.id;
-          setUserId(uid);
-          userIdRef.current = uid;
+        if (session?.user) {
+          userIdRef.current = session.user.id;
           
-          // Try to load saved mode from localStorage first (faster)
+          // Load from localStorage first
           const savedMode = localStorage.getItem('pearadox-theme');
           if (savedMode === 'dark') {
             setIsDarkMode(true);
-          }
-          
-          // Then try to get from database
-          try {
-            const { data } = await supabase
-              .from('profiles')
-              .select('mode')
-              .eq('id', uid)
-              .single();
-            
-            if (mounted && data?.mode) {
-              const dbDark = data.mode === 'dark';
-              if (dbDark !== (savedMode === 'dark')) {
-                setIsDarkMode(dbDark);
-                localStorage.setItem('pearadox-theme', data.mode);
-              }
-            }
-          } catch (e) {
-            // Ignore profile load errors - use localStorage fallback
-            console.log('ThemeContext: Could not load mode from profile');
+            isDarkModeRef.current = true;
           }
         }
       } catch (e) {
-        console.log('ThemeContext: Init error', e);
-      }
-      
-      if (mounted) {
-        setIsReady(true);
+        console.log('ThemeContext: Error loading initial theme');
       }
     };
     
-    init();
-    
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  // Listen for auth changes (sign in/out)
-  useEffect(() => {
-    let subscription = null;
-    
-    const setupListener = async () => {
-      try {
-        const { supabase } = await import('../lib/supabase');
-        
-        const { data: { subscription: sub } } = supabase.auth.onAuthStateChange(async (event, session) => {
-          console.log('ThemeContext: Auth event:', event);
-          
-          if (event === 'SIGNED_OUT') {
-            setUserId(null);
-            userIdRef.current = null;
-            setIsDarkMode(false);
-            localStorage.removeItem('pearadox-theme');
-          } else if (event === 'SIGNED_IN' && session?.user) {
-            const uid = session.user.id;
-            setUserId(uid);
-            userIdRef.current = uid;
-            
-            // Load mode from database on sign in
-            try {
-              const { data } = await supabase
-                .from('profiles')
-                .select('mode')
-                .eq('id', uid)
-                .single();
-              
-              if (data?.mode === 'dark') {
-                setIsDarkMode(true);
-                localStorage.setItem('pearadox-theme', 'dark');
-              } else {
-                setIsDarkMode(false);
-                localStorage.setItem('pearadox-theme', 'light');
-              }
-            } catch (e) {
-              console.log('ThemeContext: Could not load mode on sign in');
-            }
-          }
-        });
-        
-        subscription = sub;
-      } catch (e) {
-        console.log('ThemeContext: Could not set up auth listener');
-      }
-    };
-    
-    setupListener();
-    
-    return () => {
-      if (subscription) {
-        subscription.unsubscribe();
-      }
-    };
+    loadInitialTheme();
   }, []);
 
   // Toggle dark mode
-  const toggleDarkMode = useCallback(async () => {
+  const toggleDarkMode = useCallback(() => {
     const currentUserId = userIdRef.current;
+    const currentIsDark = isDarkModeRef.current;
     
     if (!currentUserId) {
       console.log('ThemeContext: Toggle requires login');
       return;
     }
     
-    const newMode = !isDarkMode;
+    const newMode = !currentIsDark;
     const modeString = newMode ? 'dark' : 'light';
     
     // Update UI immediately
     setIsDarkMode(newMode);
+    isDarkModeRef.current = newMode;
     localStorage.setItem('pearadox-theme', modeString);
     
     // Save to database in background
-    try {
-      const { supabase } = await import('../lib/supabase');
-      await supabase
-        .from('profiles')
-        .update({ mode: modeString })
-        .eq('id', currentUserId);
-      console.log('ThemeContext: Saved mode to database:', modeString);
-    } catch (e) {
-      console.log('ThemeContext: Could not save mode to database');
-    }
-  }, [isDarkMode]);
-
-  // Set dark mode directly
-  const setDarkModeValue = useCallback(async (enabled) => {
-    const currentUserId = userIdRef.current;
-    
-    if (!currentUserId) {
-      console.log('ThemeContext: Set mode requires login');
-      return;
-    }
-    
-    const modeString = enabled ? 'dark' : 'light';
-    
-    setIsDarkMode(enabled);
-    localStorage.setItem('pearadox-theme', modeString);
-    
-    try {
-      const { supabase } = await import('../lib/supabase');
-      await supabase
-        .from('profiles')
-        .update({ mode: modeString })
-        .eq('id', currentUserId);
-    } catch (e) {
-      console.log('ThemeContext: Could not save mode to database');
-    }
+    supabase
+      .from('profiles')
+      .update({ mode: modeString })
+      .eq('id', currentUserId)
+      .then(({ error }) => {
+        if (error) {
+          console.error('ThemeContext: DB error:', error.message);
+        } else {
+          console.log('ThemeContext: Saved to DB:', modeString);
+        }
+      });
   }, []);
 
   // Sync mode from profile (called by AccountModal after loading profile)
-  const syncModeFromProfile = useCallback((mode) => {
+  const syncModeFromProfile = useCallback((mode, userId) => {
+    if (userId) {
+      userIdRef.current = userId;
+    }
+    
     if (mode === 'dark' || mode === 'light') {
       const newIsDark = mode === 'dark';
       setIsDarkMode(newIsDark);
+      isDarkModeRef.current = newIsDark;
       localStorage.setItem('pearadox-theme', mode);
     }
   }, []);
 
   // Set user ID (called by AccountModal after auth)
   const setCurrentUserId = useCallback((uid) => {
-    setUserId(uid);
     userIdRef.current = uid;
     
     if (!uid) {
-      // User signed out
+      // User signed out - reset to light mode
       setIsDarkMode(false);
+      isDarkModeRef.current = false;
       localStorage.removeItem('pearadox-theme');
     }
   }, []);
@@ -231,11 +125,9 @@ export const ThemeProvider = ({ children }) => {
   const value = {
     isDarkMode,
     toggleDarkMode,
-    setIsDarkMode: setDarkModeValue,
     syncModeFromProfile,
     setCurrentUserId,
-    isLoggedIn: !!userId,
-    isReady
+    isLoggedIn: !!userIdRef.current
   };
 
   return (

@@ -167,6 +167,15 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
 
     let mounted = true;
     let subscription = null;
+    let loadingTimeout = null;
+
+    // Safeguard: always stop loading after 5 seconds max
+    loadingTimeout = setTimeout(() => {
+      if (mounted) {
+        console.log('AccountModal: Loading timeout reached');
+        setLoading(false);
+      }
+    }, 5000);
 
     const checkAuth = async () => {
       try {
@@ -363,6 +372,9 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
 
     return () => {
       mounted = false;
+      if (loadingTimeout) {
+        clearTimeout(loadingTimeout);
+      }
       if (subscription) {
         try {
           subscription.unsubscribe();
@@ -371,6 +383,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
         }
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   // Load analytics data when research tab is active and user is authenticated
