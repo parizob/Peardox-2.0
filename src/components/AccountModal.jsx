@@ -486,23 +486,40 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
     console.log('🚪 Sign out button clicked');
     
     try {
-      // Import supabase client directly
-      const { supabase } = await import('../lib/supabase');
-      console.log('🔐 Calling supabase.auth.signOut...');
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error('❌ Sign out error:', error);
+      // Use authAPI if available, fallback to direct supabase
+      if (authAPI && typeof authAPI.signOut === 'function') {
+        console.log('🔐 Calling authAPI.signOut...');
+        await authAPI.signOut();
+        console.log('✅ Sign out via authAPI completed');
       } else {
-        console.log('✅ Sign out completed successfully');
+        // Fallback to direct supabase call with global scope
+        const { supabase } = await import('../lib/supabase');
+        console.log('🔐 Calling supabase.auth.signOut with global scope...');
+        const { error } = await supabase.auth.signOut({ scope: 'global' });
+        if (error) {
+          console.error('❌ Sign out error:', error);
+        } else {
+          console.log('✅ Sign out completed successfully');
+        }
       }
+      
+      // Clear theme context
+      setCurrentUserId?.(null);
+      
+      // Clear any cached data
+      localStorage.removeItem('pearadox-theme');
+      
     } catch (error) {
       console.error('❌ Sign out exception:', error);
+      // Even if sign out fails, clear local state
+      setCurrentUserId?.(null);
+      localStorage.removeItem('pearadox-theme');
     }
     
     // Close modal
     onClose();
     
-    // Navigate to home and reload
+    // Navigate to home and reload to clear all state
     window.location.href = '/';
   };
 

@@ -758,12 +758,21 @@ export const authAPI = {
   },
 
   async signOut() {
-    console.log('🔐 Signing out user');
-    const { error } = await supabase.auth.signOut();
+    console.log('🔐 Signing out user with global scope');
+    
+    // Use global scope to sign out from all devices/sessions
+    const { error } = await supabase.auth.signOut({ scope: 'global' });
     
     if (error) {
       console.error('❌ Sign out error:', error);
       throw error;
+    }
+    
+    // Clear any local storage items related to auth
+    try {
+      localStorage.removeItem('pearadox-theme');
+    } catch (e) {
+      console.log('Could not clear localStorage');
     }
     
     console.log('✅ Sign out successful');
