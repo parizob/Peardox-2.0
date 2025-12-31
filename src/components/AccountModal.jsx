@@ -827,10 +827,10 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                       disabled={authLoading || (isEditing && userData.researchInterests?.length !== 5)}
                       className={`flex items-center justify-center space-x-2 px-5 py-2.5 rounded-xl transition-all duration-200 disabled:opacity-50 text-sm font-medium ${
                         saveSuccess
-                          ? 'bg-green-100 text-green-700'
+                          ? isDarkMode ? 'bg-green-900 text-green-300' : 'bg-green-100 text-green-700'
                           : isEditing
-                          ? (userData.researchInterests?.length === 5 ? 'text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed')
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          ? (userData.researchInterests?.length === 5 ? 'text-white' : isDarkMode ? 'bg-gray-700 text-gray-400 cursor-not-allowed' : 'bg-gray-200 text-gray-500 cursor-not-allowed')
+                          : isDarkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                       }`}
                       style={isEditing && userData.researchInterests?.length === 5 && !saveSuccess ? { backgroundColor: '#1db954' } : {}}
                     >
@@ -852,8 +852,8 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                   {authError && authError.trim() && (
                     <div className={`p-4 rounded-xl text-sm ${
                       authError.includes('successfully') || authError.includes('saved') || authError.includes('reset')
-                        ? 'bg-green-50 text-green-800 border border-green-200'
-                        : 'bg-red-50 text-red-800 border border-red-200'
+                        ? isDarkMode ? 'bg-green-900/50 text-green-300 border border-green-700' : 'bg-green-50 text-green-800 border border-green-200'
+                        : isDarkMode ? 'bg-red-900/50 text-red-300 border border-red-700' : 'bg-red-50 text-red-800 border border-red-200'
                     }`}>
                       {authError}
                     </div>
@@ -861,14 +861,14 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
 
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Basic Information */}
-                    <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
-                      <h4 className="text-base font-semibold text-gray-900 mb-4 flex items-center">
+                    <div className={`rounded-2xl p-5 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-100'}`}>
+                      <h4 className={`text-base font-semibold mb-4 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         <User className="h-4 w-4 mr-2" style={{ color: '#1db954' }} />
                         Basic Information
                       </h4>
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
+                          <label className={`block text-sm font-medium mb-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Full Name</label>
                           <input
                             type="text"
                             value={userData.name}
@@ -880,38 +880,52 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                             }}
                             disabled={!isEditing}
                             maxLength={24}
-                            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 disabled:text-gray-500 text-sm transition-all"
+                            className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm transition-all ${
+                              isDarkMode 
+                                ? 'bg-gray-700 border-gray-600 text-white disabled:bg-gray-800 disabled:text-gray-400' 
+                                : 'bg-white border-gray-200 disabled:bg-gray-100 disabled:text-gray-500'
+                            }`}
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+                          <label className={`block text-sm font-medium mb-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Email</label>
                           <input
                             type="email"
                             value={userData.email}
                             disabled
-                            className="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-xl text-gray-500 text-sm"
+                            className={`w-full px-4 py-2.5 border rounded-xl text-sm ${
+                              isDarkMode ? 'bg-gray-800 border-gray-600 text-gray-400' : 'bg-gray-100 border-gray-200 text-gray-500'
+                            }`}
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1.5">Professional Title</label>
+                          <label className={`block text-sm font-medium mb-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Professional Title</label>
                           <input
                             type="text"
                             value={userData.title}
                             onChange={(e) => setUserData(prev => ({ ...prev, title: e.target.value }))}
                             disabled={!isEditing}
                             placeholder="e.g. Research Scientist"
-                            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 disabled:text-gray-500 text-sm transition-all"
+                            className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm transition-all ${
+                              isDarkMode 
+                                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-500 disabled:bg-gray-800 disabled:text-gray-400' 
+                                : 'bg-white border-gray-200 disabled:bg-gray-100 disabled:text-gray-500'
+                            }`}
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1.5">Institution</label>
+                          <label className={`block text-sm font-medium mb-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Institution</label>
                           <input
                             type="text"
                             value={userData.institution}
                             onChange={(e) => setUserData(prev => ({ ...prev, institution: e.target.value }))}
                             disabled={!isEditing}
                             placeholder="e.g. Stanford University"
-                            className="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:bg-gray-100 disabled:text-gray-500 text-sm transition-all"
+                            className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm transition-all ${
+                              isDarkMode 
+                                ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-500 disabled:bg-gray-800 disabled:text-gray-400' 
+                                : 'bg-white border-gray-200 disabled:bg-gray-100 disabled:text-gray-500'
+                            }`}
                           />
                         </div>
                       </div>
@@ -920,16 +934,16 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                     {/* Research & Technical Section */}
                     <div className="space-y-6">
                       {/* Research Interests */}
-                      <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
-                        <h4 className="text-base font-semibold text-gray-900 mb-3 flex items-center">
+                      <div className={`rounded-2xl p-5 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-100'}`}>
+                        <h4 className={`text-base font-semibold mb-3 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           <Brain className="h-4 w-4 mr-2" style={{ color: '#1db954' }} />
                           Research Interests
-                          <span className="ml-2 text-xs font-normal text-gray-500 bg-gray-200 px-2 py-0.5 rounded-full">
+                          <span className={`ml-2 text-xs font-normal px-2 py-0.5 rounded-full ${isDarkMode ? 'text-gray-400 bg-gray-700' : 'text-gray-500 bg-gray-200'}`}>
                             {userData.researchInterests?.length || 0}/5
                           </span>
                         </h4>
                         <div className="space-y-3">
-                          <p className="text-xs text-gray-500">Select exactly 5 areas of research interest</p>
+                          <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Select exactly 5 areas of research interest</p>
                           
                           {isEditing && (
                             <div className="relative">
@@ -939,7 +953,9 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                                 placeholder="Search interests..."
                                 value={interestSearch}
                                 onChange={(e) => setInterestSearch(e.target.value)}
-                                className="w-full pl-9 pr-4 py-2 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                                className={`w-full pl-9 pr-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm ${
+                                  isDarkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-500' : 'bg-white border-gray-200'
+                                }`}
                               />
                             </div>
                           )}
@@ -965,8 +981,8 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                                         isSelected
                                           ? 'text-white'
                                           : isEditing 
-                                          ? 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-                                          : 'bg-gray-100 text-gray-600'
+                                          ? isDarkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                                          : isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-600'
                                       } ${isDisabled && !isSelected ? 'opacity-40 cursor-not-allowed' : ''}`}
                                       style={isSelected ? { backgroundColor: '#1db954' } : {}}
                                     >
@@ -979,7 +995,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                           )}
 
                           {isEditing && userData.researchInterests?.length !== 5 && (
-                            <div className="text-xs rounded-lg p-2.5 bg-amber-50 text-amber-700 border border-amber-200">
+                            <div className={`text-xs rounded-lg p-2.5 ${isDarkMode ? 'bg-amber-900/50 text-amber-300 border border-amber-700' : 'bg-amber-50 text-amber-700 border border-amber-200'}`}>
                               {userData.researchInterests?.length > 5 
                                 ? '⚠️ Please remove some interests. You must have exactly 5 selected.'
                                 : `📌 Select ${5 - (userData.researchInterests?.length || 0)} more interest${5 - (userData.researchInterests?.length || 0) === 1 ? '' : 's'} to save.`
@@ -990,8 +1006,8 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                       </div>
 
                       {/* Technical Knowledge */}
-                      <div className="bg-gray-50 rounded-2xl p-5 border border-gray-100">
-                        <h4 className="text-base font-semibold text-gray-900 mb-3 flex items-center">
+                      <div className={`rounded-2xl p-5 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-100'}`}>
+                        <h4 className={`text-base font-semibold mb-3 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           <Sparkles className="h-4 w-4 mr-2" style={{ color: '#1db954' }} />
                           Technical Level
                         </h4>
@@ -1006,8 +1022,8 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                                   userData.skillLevel === level
                                     ? 'text-white shadow-sm'
                                     : isEditing
-                                    ? 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-                                    : 'bg-gray-100 text-gray-500'
+                                    ? isDarkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600' : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                                    : isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'
                                 } ${!isEditing ? 'cursor-default' : ''}`}
                                 style={userData.skillLevel === level ? { backgroundColor: '#1db954' } : {}}
                               >
@@ -1015,7 +1031,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                               </button>
                             ))}
                           </div>
-                          <p className="text-xs text-gray-500">
+                          <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                             {userData.skillLevel === 'Beginner' && "AI summaries will use simpler language and more explanations"}
                             {userData.skillLevel === 'Intermediate' && "AI summaries will include technical terminology and detailed insights"}
                           </p>
@@ -1025,10 +1041,10 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                   </div>
 
                   {/* Reset Button */}
-                  <div className="pt-4 border-t border-gray-100">
+                  <div className={`pt-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
                     <button
                       onClick={() => setShowResetConfirm(true)}
-                      className="text-sm text-gray-500 hover:text-red-600 font-medium transition-colors"
+                      className={`text-sm font-medium transition-colors ${isDarkMode ? 'text-gray-400 hover:text-red-400' : 'text-gray-500 hover:text-red-600'}`}
                     >
                       Reset to Default Categories
                     </button>
