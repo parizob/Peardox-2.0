@@ -13,19 +13,10 @@ export const useTheme = () => {
 export const ThemeProvider = ({ children }) => {
   // Track current user ID for database syncing
   const [userId, setUserId] = useState(null);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
   
-  // Initialize from localStorage or default to light mode
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('pearadox-theme');
-      if (saved) {
-        return saved === 'dark';
-      }
-      // Check system preference as fallback
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    return false;
-  });
+  // Always start with light mode - dark mode is only for logged-in users
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Apply theme class to document
   useEffect(() => {
@@ -33,15 +24,17 @@ export const ThemeProvider = ({ children }) => {
     
     if (isDarkMode) {
       root.classList.add('dark');
-      localStorage.setItem('pearadox-theme', 'dark');
     } else {
       root.classList.remove('dark');
-      localStorage.setItem('pearadox-theme', 'light');
     }
-  }, [isDarkMode]);
+    
+    // Only save to localStorage if user is logged in
+    if (userId) {
+      localStorage.setItem('pearadox-theme', isDarkMode ? 'dark' : 'light');
+    }
+  }, [isDarkMode, userId]);
 
-  // Simple auth listener - just track user ID, don't load profile here
-  // Profile loading is handled by AccountModal to avoid conflicts
+  // Auth listener - track user ID and handle sign out
   useEffect(() => {
     let mounted = true;
     
@@ -51,16 +44,30 @@ export const ThemeProvider = ({ children }) => {
         const { authAPI } = await import('../lib/supabase');
         
         if (!authAPI || typeof authAPI.getCurrentSession !== 'function') {
+          if (mounted) setIsAuthChecked(true);
           return;
         }
         
         const { data: { session } } = await authAPI.getCurrentSession();
         
-        if (session?.user && mounted) {
-          setUserId(session.user.id);
+        if (mounted) {
+          if (session?.user) {
+            setUserId(session.user.id);
+            // Load saved theme preference from localStorage for logged-in users
+            const saved = localStorage.getItem('pearadox-theme');
+            if (saved === 'dark') {
+              setIsDarkMode(true);
+            }
+          } else {
+            // No user - ensure light mode
+            setUserId(null);
+            setIsDarkMode(false);
+          }
+          setIsAuthChecked(true);
         }
       } catch (error) {
         console.log('ThemeContext: Could not check user session');
+        if (mounted) setIsAuthChecked(true);
       }
     };
 
@@ -77,8 +84,18 @@ export const ThemeProvider = ({ children }) => {
             
             if (event === 'SIGNED_IN' && session?.user) {
               setUserId(session.user.id);
+              // Load saved theme preference for newly signed-in user
+              const saved = localStorage.getItem('pearadox-theme');
+              if (saved === 'dark') {
+                setIsDarkMode(true);
+              }
             } else if (event === 'SIGNED_OUT') {
+              // User signed out - revert to light mode
               setUserId(null);
+              setIsDarkMode(false);
+              // Clear the theme preference from localStorage
+              localStorage.removeItem('pearadox-theme');
+              console.log('🌓 User signed out - reverted to light mode');
             }
           });
           
@@ -107,62 +124,57 @@ export const ThemeProvider = ({ children }) => {
     };
   }, []);
 
-  // Listen for system preference changes
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const handleChange = (e) => {
-      // Only auto-switch if user hasn't manually set a preference and isn't logged in
-      const saved = localStorage.getItem('pearadox-theme');
-      if (!saved && !userId) {
-        setIsDarkMode(e.matches);
-      }
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, [userId]);
-
-  // Toggle dark mode and save to database if user is authenticated
+  // Toggle dark mode - only works if user is logged in
   const toggleDarkMode = useCallback(async () => {
+    // Only allow toggling if user is logged in
+    if (!userId) {
+      console.log('🌓 Dark mode toggle requires login');
+      return;
+    }
+    
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
     
-    // Save to database if user is authenticated
-    if (userId) {
-      try {
-        const { authAPI } = await import('../lib/supabase');
-        if (authAPI && typeof authAPI.updateMode === 'function') {
-          await authAPI.updateMode(userId, newMode ? 'dark' : 'light');
-          console.log('🌓 Mode preference saved to database:', newMode ? 'dark' : 'light');
-        }
-      } catch (error) {
-        // Mode column might not exist yet - that's okay, localStorage still works
-        console.log('🌓 Could not save mode to database');
+    // Save to database
+    try {
+      const { authAPI } = await import('../lib/supabase');
+      if (authAPI && typeof authAPI.updateMode === 'function') {
+        await authAPI.updateMode(userId, newMode ? 'dark' : 'light');
+        console.log('🌓 Mode preference saved to database:', newMode ? 'dark' : 'light');
       }
+    } catch (error) {
+      // Mode column might not exist yet - that's okay, localStorage still works
+      console.log('🌓 Could not save mode to database');
     }
   }, [isDarkMode, userId]);
 
-  // Set dark mode directly (also saves to database)
+  // Set dark mode directly - only works if user is logged in
   const setDarkMode = useCallback(async (enabled) => {
+    // Only allow setting if user is logged in
+    if (!userId) {
+      console.log('🌓 Dark mode requires login');
+      return;
+    }
+    
     setIsDarkMode(enabled);
     
-    // Save to database if user is authenticated
-    if (userId) {
-      try {
-        const { authAPI } = await import('../lib/supabase');
-        if (authAPI && typeof authAPI.updateMode === 'function') {
-          await authAPI.updateMode(userId, enabled ? 'dark' : 'light');
-          console.log('🌓 Mode preference saved to database:', enabled ? 'dark' : 'light');
-        }
-      } catch (error) {
-        console.log('🌓 Could not save mode to database');
+    // Save to database
+    try {
+      const { authAPI } = await import('../lib/supabase');
+      if (authAPI && typeof authAPI.updateMode === 'function') {
+        await authAPI.updateMode(userId, enabled ? 'dark' : 'light');
+        console.log('🌓 Mode preference saved to database:', enabled ? 'dark' : 'light');
       }
+    } catch (error) {
+      console.log('🌓 Could not save mode to database');
     }
   }, [userId]);
 
   // Function to sync mode from profile (called by AccountModal after loading profile)
   const syncModeFromProfile = useCallback((mode) => {
+    // Only sync if user is logged in
+    if (!userId) return;
+    
     if (mode === 'dark' || mode === 'light') {
       const newIsDark = mode === 'dark';
       if (newIsDark !== isDarkMode) {
@@ -171,13 +183,14 @@ export const ThemeProvider = ({ children }) => {
         console.log('🌓 Synced mode from profile:', mode);
       }
     }
-  }, [isDarkMode]);
+  }, [isDarkMode, userId]);
 
   const value = {
     isDarkMode,
     toggleDarkMode,
     setIsDarkMode: setDarkMode,
-    syncModeFromProfile
+    syncModeFromProfile,
+    isLoggedIn: !!userId // Expose login state so UI can show/hide toggle
   };
 
   return (
