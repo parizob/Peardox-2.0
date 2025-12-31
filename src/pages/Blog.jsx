@@ -7,6 +7,7 @@ import SavedArticles from '../components/SavedArticles';
 import AccountModal from '../components/AccountModal';
 import ArticleModal from '../components/ArticleModal';
 import { useUser } from '../contexts/UserContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { viewedArticlesAPI } from '../lib/supabase';
 
 const Blog = () => {
@@ -17,6 +18,9 @@ const Blog = () => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [isArticleModalOpen, setIsArticleModalOpen] = useState(false);
+  
+  // Theme context
+  const { isDarkMode } = useTheme();
   
   // Get user state from context
   const {
@@ -1117,7 +1121,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-gray-50'}`}>
       <Header 
         searchTerm=""
         onSearchChange={() => {}}
@@ -1149,12 +1153,12 @@ The knowledge exists. The tools are available. The only question is: are you rea
                     <BookOpen className="h-7 w-7 text-white" />
                   </div>
                   
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3">
-                    <span className="text-gray-900">Pearadox</span>
-                    <span className="text-gray-900"> Blog</span>
+                  <h1 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <span>Pearadox</span>
+                    <span> Blog</span>
                   </h1>
                   
-                  <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                  <p className={`text-base sm:text-lg max-w-2xl mx-auto leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Insights, perspectives, and stories about democratizing AI research and making complex science accessible to everyone.
                   </p>
                 </div>
@@ -1173,7 +1177,9 @@ The knowledge exists. The tools are available. The only question is: are you rea
               }`}
             >
               {blogPosts.map((post) => (
-                <article key={post.id} className="mb-8 sm:mb-16 bg-white rounded-xl sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <article key={post.id} className={`mb-8 sm:mb-16 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ${
+                  isDarkMode ? 'bg-gray-800' : 'bg-white'
+                }`}>
                   {/* Featured Badge */}
                   {post.featured && (
                     <div className="px-6 py-2" style={{ backgroundColor: '#1db954' }}>
@@ -1187,7 +1193,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
                   {/* Post Header */}
                   <div className="p-4 sm:p-8 pb-4 sm:pb-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
-                      <div className="flex items-center text-sm text-gray-500">
+                      <div className={`flex items-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                         <Calendar className="h-4 w-4 mr-2" />
                         <span className="hidden sm:inline">{new Date(post.date).toLocaleDateString('en-US', { 
                           year: 'numeric', 
@@ -1203,17 +1209,17 @@ The knowledge exists. The tools are available. The only question is: are you rea
                         <Clock className="h-4 w-4 mr-2" />
                         <span>{post.readTime}</span>
                       </div>
-                      <div className="flex items-center text-sm text-gray-500">
+                      <div className={`flex items-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                         <User className="h-4 w-4 mr-2" />
                         <span>{post.author}</span>
                       </div>
                     </div>
                     
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+                    <h2 className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       {post.title}
                     </h2>
                     
-                    <p className="text-base sm:text-lg text-gray-600 mb-6 leading-relaxed">
+                    <p className={`text-base sm:text-lg mb-6 leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                       {post.excerpt}
                     </p>
                     
@@ -1222,7 +1228,9 @@ The knowledge exists. The tools are available. The only question is: are you rea
                       {post.tags.map((tag, index) => (
                         <span 
                           key={index}
-                          className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 text-xs sm:text-sm rounded-full font-medium"
+                          className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-full font-medium ${
+                            isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+                          }`}
                         >
                           {tag}
                         </span>
@@ -1258,11 +1266,11 @@ The knowledge exists. The tools are available. The only question is: are you rea
               
               {/* Coming Soon */}
               <div className="text-center py-12">
-                <div className="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-600 rounded-xl">
+                <div className={`inline-flex items-center px-6 py-3 rounded-xl ${isDarkMode ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-600'}`}>
                   <Lightbulb className="h-5 w-5 mr-2" />
                   <span className="font-medium">More insights coming soon...</span>
                 </div>
-                <p className="text-gray-500 mt-4">
+                <p className={`mt-4 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                   Stay tuned for more posts about AI research, decentralization, and making science accessible to everyone.
                 </p>
               </div>

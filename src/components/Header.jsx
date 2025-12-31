@@ -168,17 +168,23 @@ const Header = ({
               </button>
 
               {isCategoryDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-50">
-                  <div className="p-4 border-b border-gray-100">
+                <div className={`absolute top-full left-0 mt-2 w-80 border rounded-lg shadow-xl z-50 ${
+                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                }`}>
+                  <div className={`p-4 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                       <input
                         ref={categorySearchRef}
                         type="text"
                         placeholder="Search categories..."
                         value={categorySearchTerm}
                         onChange={(e) => setCategorySearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className={`w-full pl-10 pr-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                          isDarkMode 
+                            ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                            : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+                        }`}
                       />
                     </div>
                   </div>
@@ -187,11 +193,13 @@ const Header = ({
                     {selectedCategory && (
                       <button
                         onClick={handleClearCategory}
-                        className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors border-b border-gray-100"
+                        className={`w-full px-4 py-3 text-left transition-colors border-b ${
+                          isDarkMode ? 'hover:bg-gray-700 border-gray-700' : 'hover:bg-gray-50 border-gray-100'
+                        }`}
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-sm font-medium" style={{ color: '#1db954' }}>Clear Topic</span>
-                          <X className="h-4 w-4 text-gray-400" />
+                          <X className={`h-4 w-4 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                         </div>
                       </button>
                     )}
@@ -201,20 +209,22 @@ const Header = ({
                         <button
                           key={index}
                           onClick={() => handleCategorySelect(category)}
-                          className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors ${
-                            selectedCategory === category.category_name ? 'bg-green-50' : ''
+                          className={`w-full px-4 py-3 text-left transition-colors ${
+                            selectedCategory === category.category_name 
+                              ? isDarkMode ? 'bg-green-900/30' : 'bg-green-50'
+                              : isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                           }`}
                         >
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`}>
                             {category.category_name}
                           </div>
-                          <div className="text-xs text-gray-500 mt-1">
+                          <div className={`text-xs mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                             {category.subject_class}
                           </div>
                         </button>
                       ))
                     ) : (
-                      <div className="px-4 py-6 text-center text-gray-500 text-sm">
+                      <div className={`px-4 py-6 text-center text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                         No categories found
                       </div>
                     )}
@@ -308,7 +318,9 @@ const Header = ({
             <div className="relative group">
               <Link
                 to="/submit"
-                className="flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium bg-gray-100 text-gray-700 hover:text-white hover:shadow-lg transition-all duration-200"
+                className={`flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium hover:text-white hover:shadow-lg transition-all duration-200 ${
+                  isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
+                }`}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
                 onClick={() => {
@@ -340,7 +352,7 @@ const Header = ({
                   className={`flex items-center justify-center p-2 rounded-lg transition-colors flex-shrink-0 ${
                     selectedCategory
                       ? 'text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      : isDarkMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                   style={selectedCategory ? { backgroundColor: '#1db954' } : {}}
                   title={selectedCategory ? selectedCategoryName : 'Topic'}
@@ -355,8 +367,8 @@ const Header = ({
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
                   className={`flex items-center justify-center p-2 rounded-lg transition-colors flex-shrink-0 ${
                     isMenuOpen
-                      ? 'bg-gray-200 text-gray-900'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-900'
+                      : isDarkMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                   title="Menu"
                 >
@@ -364,11 +376,15 @@ const Header = ({
                 </button>
 
                 {isMenuOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-52 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+                  <div className={`absolute top-full left-0 mt-2 w-52 border rounded-xl shadow-xl z-50 overflow-hidden ${
+                    isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  }`}>
                     <div className="py-2">
                       <Link
                         to="/aboutus"
-                        className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                        className={`flex items-center px-4 py-3 transition-colors ${
+                          isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'
+                        }`}
                         onClick={(e) => {
                           e.stopPropagation();
                           setIsMenuOpen(false);
@@ -376,13 +392,15 @@ const Header = ({
                           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                         }}
                       >
-                        <Info className="h-4 w-4 mr-3 text-gray-500" />
+                        <Info className={`h-4 w-4 mr-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                         <span className="text-sm font-medium">About Us</span>
                       </Link>
                       
                       <Link
                         to="/blog"
-                        className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                        className={`flex items-center px-4 py-3 transition-colors ${
+                          isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'
+                        }`}
                         onClick={(e) => {
                           e.stopPropagation();
                           setIsMenuOpen(false);
@@ -390,13 +408,15 @@ const Header = ({
                           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                         }}
                       >
-                        <BookOpen className="h-4 w-4 mr-3 text-gray-500" />
+                        <BookOpen className={`h-4 w-4 mr-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                         <span className="text-sm font-medium">Blog</span>
                       </Link>
                       
                       <Link
                         to="/store"
-                        className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                        className={`flex items-center px-4 py-3 transition-colors ${
+                          isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'
+                        }`}
                         onClick={(e) => {
                           e.stopPropagation();
                           setIsMenuOpen(false);
@@ -404,7 +424,7 @@ const Header = ({
                           setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                         }}
                       >
-                        <ShoppingBag className="h-4 w-4 mr-3 text-gray-500" />
+                        <ShoppingBag className={`h-4 w-4 mr-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                         <span className="text-sm font-medium">Store</span>
                       </Link>
                     </div>
@@ -434,27 +454,35 @@ const Header = ({
               {/* Search - Desktop only */}
               <div className="hidden md:block w-48 md:w-64">
                 {isSearchExpanded ? (
-                  <div className="flex items-center bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-2 shadow-md w-full">
-                    <Search className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
+                  <div className={`flex items-center border rounded-lg px-2 sm:px-3 py-2 shadow-md w-full ${
+                    isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                  }`}>
+                    <Search className={`h-4 w-4 mr-2 flex-shrink-0 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                     <input
                       type="text"
                       placeholder="Search..."
                       value={searchTerm}
                       onChange={handleSearchChange}
-                      className="bg-transparent flex-1 text-sm focus:outline-none min-w-0"
+                      className={`bg-transparent flex-1 text-sm focus:outline-none min-w-0 ${
+                        isDarkMode ? 'text-white placeholder-gray-500' : 'text-gray-900 placeholder-gray-400'
+                      }`}
                       autoFocus
                     />
                     <button
                       onClick={handleSearchClose}
-                      className="ml-1 sm:ml-2 p-1 hover:bg-gray-100 rounded flex-shrink-0"
+                      className={`ml-1 sm:ml-2 p-1 rounded flex-shrink-0 ${
+                        isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
+                      }`}
                     >
-                      <X className="h-4 w-4 text-gray-400" />
+                      <X className={`h-4 w-4 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                     </button>
                   </div>
                 ) : (
                   <button
                     onClick={handleSearchClick}
-                    className="flex items-center justify-center bg-gray-100 text-gray-700 rounded-lg px-2 sm:px-3 py-2 text-sm font-medium hover:bg-gray-200 transition-colors w-full"
+                    className={`flex items-center justify-center rounded-lg px-2 sm:px-3 py-2 text-sm font-medium transition-colors w-full ${
+                      isDarkMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
                   >
                     <Search className="h-4 w-4 sm:mr-2" />
                     <span className="hidden sm:inline">Search</span>
@@ -501,28 +529,34 @@ const Header = ({
             }`}
           >
             <div 
-              className={`mt-3 pt-3 border-t border-gray-100 transition-transform duration-300 ease-in-out ${
+              className={`mt-3 pt-3 border-t transition-transform duration-300 ease-in-out ${
+                isDarkMode ? 'border-gray-700' : 'border-gray-100'
+              } ${
                 isScrollingDown ? 'transform -translate-y-full' : 'transform translate-y-0'
               }`}
             >
           <div className="flex items-center gap-2 relative">
             {/* Search Bar - Full width */}
             <div className="flex-1 min-w-0">
-              <div className="flex items-center bg-white border border-gray-200 rounded-lg px-3 py-2.5 shadow-sm min-w-0">
-                <Search className="h-4 w-4 text-gray-400 mr-2 flex-shrink-0" />
+              <div className={`flex items-center border rounded-lg px-3 py-2.5 shadow-sm min-w-0 ${
+                isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+              }`}>
+                <Search className={`h-4 w-4 mr-2 flex-shrink-0 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                 <input
                   type="text"
                   placeholder="Search papers..."
                   value={searchTerm}
                   onChange={handleSearchChange}
-                  className="bg-transparent flex-1 text-sm focus:outline-none min-w-0"
+                  className={`bg-transparent flex-1 text-sm focus:outline-none min-w-0 ${
+                    isDarkMode ? 'text-white placeholder-gray-500' : 'text-gray-900 placeholder-gray-400'
+                  }`}
                 />
                 {searchTerm && (
                   <button
                     onClick={handleSearchClose}
-                    className="ml-1 p-1 hover:bg-gray-100 rounded flex-shrink-0"
+                    className={`ml-1 p-1 rounded flex-shrink-0 ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
                   >
-                    <X className="h-4 w-4 text-gray-400" />
+                    <X className={`h-4 w-4 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                   </button>
                 )}
               </div>
@@ -531,7 +565,9 @@ const Header = ({
             {/* Submit Icon Only */}
             <Link
               to="/submit"
-              className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg bg-gray-100 text-gray-700 hover:text-white hover:shadow-lg transition-all duration-200"
+              className={`flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-lg hover:text-white hover:shadow-lg transition-all duration-200 ${
+                isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'
+              }`}
               onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
               onClick={() => {
@@ -549,17 +585,23 @@ const Header = ({
         {/* Mobile Dropdown - Outside overflow container */}
         {!isAboutPage && !isBlogPage && isCategoryDropdownOpen && (
           <div className="md:hidden" ref={mobileDropdownContentRef}>
-            <div className="mx-4 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
-              <div className="p-3 border-b border-gray-100">
+            <div className={`mx-4 mt-2 border rounded-lg shadow-lg z-50 ${
+              isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+            }`}>
+              <div className={`p-3 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                   <input
                     ref={categorySearchRef}
                     type="text"
                     placeholder="Search categories..."
                     value={categorySearchTerm}
                     onChange={(e) => setCategorySearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className={`w-full pl-10 pr-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${
+                      isDarkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                        : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+                    }`}
                   />
                 </div>
               </div>
@@ -568,11 +610,13 @@ const Header = ({
                 {selectedCategory && (
                   <button
                     onClick={handleClearCategory}
-                    className="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors border-b border-gray-100"
+                    className={`w-full px-4 py-3 text-left transition-colors border-b ${
+                      isDarkMode ? 'hover:bg-gray-700 border-gray-700' : 'hover:bg-gray-50 border-gray-100'
+                    }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium" style={{ color: '#1db954' }}>Clear Topic</span>
-                      <X className="h-4 w-4 text-gray-400" />
+                      <X className={`h-4 w-4 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                     </div>
                   </button>
                 )}
@@ -582,20 +626,22 @@ const Header = ({
                     <button
                       key={index}
                       onClick={() => handleCategorySelect(category)}
-                      className={`w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors ${
-                        selectedCategory === category.category_name ? 'bg-green-50' : ''
+                      className={`w-full px-4 py-3 text-left transition-colors ${
+                        selectedCategory === category.category_name 
+                          ? isDarkMode ? 'bg-green-900/30' : 'bg-green-50'
+                          : isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-50'
                       }`}
                     >
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`}>
                         {category.category_name}
                       </div>
-                      <div className="text-xs text-gray-500 mt-1">
+                      <div className={`text-xs mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                         {category.subject_class}
                       </div>
                     </button>
                   ))
                 ) : (
-                  <div className="px-4 py-6 text-center text-gray-500 text-sm">
+                  <div className={`px-4 py-6 text-center text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                     No categories found
                   </div>
                 )}

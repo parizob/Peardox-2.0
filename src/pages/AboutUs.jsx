@@ -7,6 +7,7 @@ import SavedArticles from '../components/SavedArticles';
 import AccountModal from '../components/AccountModal';
 import ArticleModal from '../components/ArticleModal';
 import { useUser } from '../contexts/UserContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { viewedArticlesAPI } from '../lib/supabase';
 
 const AboutUs = () => {
@@ -17,6 +18,9 @@ const AboutUs = () => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [isArticleModalOpen, setIsArticleModalOpen] = useState(false);
+  
+  // Theme context
+  const { isDarkMode } = useTheme();
   
   // Get user state from context
   const {
@@ -148,7 +152,7 @@ const AboutUs = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-gray-50'}`}>
       <Header 
         searchTerm=""
         onSearchChange={() => {}}
@@ -182,11 +186,11 @@ const AboutUs = () => {
                 </Link>
               </div>
               
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                About <span className="text-gray-900">Pearadox</span>
+              <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                About <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>Pearadox</span>
               </h1>
               
-              <p className="text-xl sm:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+              <p className={`text-xl sm:text-2xl max-w-4xl mx-auto leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 We're on a mission to democratize AI research, making cutting-edge discoveries accessible to everyone.
               </p>
             </div>
@@ -200,12 +204,14 @@ const AboutUs = () => {
               }`}
             >
               {stats.map((stat, index) => (
-                <div key={index} className="text-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                <div key={index} className={`text-center p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border ${
+                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                }`}>
                   <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4" style={{ backgroundColor: '#1db954' }}>
                     <stat.icon className="h-6 w-6 text-white" />
                   </div>
-                  <div className="text-3xl font-bold text-gray-900 mb-2">{stat.number}</div>
-                  <div className="text-gray-600 font-medium">{stat.label}</div>
+                  <div className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{stat.number}</div>
+                  <div className={`font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -213,7 +219,7 @@ const AboutUs = () => {
         </section>
 
         {/* Our Story Section */}
-        <section className="py-20 bg-gray-50">
+        <section className={`py-20 ${isDarkMode ? 'bg-gray-800/50' : 'bg-gray-50'}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid lg:grid-cols-2 gap-16 items-center">
               <div 
@@ -223,16 +229,16 @@ const AboutUs = () => {
                   isVisible.story ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'
                 }`}
               >
-                <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+                <h2 className={`text-3xl sm:text-4xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Our Story
                 </h2>
-                <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
+                <div className={`space-y-6 text-lg leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   <p>
                     In a world where groundbreaking AI research is published daily, we noticed a critical gap: 
                     the most important discoveries were trapped behind academic jargon and complex methodologies.
                   </p>
                   <p>
-                    <strong className="text-gray-900">Pearadox was born from a simple belief:</strong> everyone should have access 
+                    <strong className={isDarkMode ? 'text-white' : 'text-gray-900'}>Pearadox was born from a simple belief:</strong> everyone should have access 
                     to the knowledge that's shaping our future, regardless of their academic background or technical expertise.
                   </p>
                   <p>
@@ -251,17 +257,17 @@ const AboutUs = () => {
               >
                 <div className="relative">
                   <div className="absolute inset-0 rounded-3xl transform rotate-3" style={{ backgroundColor: '#1db954' }}></div>
-                  <div className="relative bg-white rounded-3xl p-8 shadow-2xl">
+                  <div className={`relative rounded-3xl p-8 shadow-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
                     <div className="flex items-center mb-6">
                       <div className="w-4 h-4 bg-red-400 rounded-full mr-2"></div>
                       <div className="w-4 h-4 bg-yellow-400 rounded-full mr-2"></div>
                       <div className="w-4 h-4 bg-green-400 rounded-full"></div>
                     </div>
                     <div className="space-y-4">
-                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                      <div className="h-4 bg-green-200 rounded w-full"></div>
-                      <div className="h-4 bg-green-200 rounded w-2/3"></div>
-                      <div className="h-8 bg-green-100 rounded"></div>
+                      <div className={`h-4 rounded w-3/4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}></div>
+                      <div className={`h-4 rounded w-full ${isDarkMode ? 'bg-green-900/50' : 'bg-green-200'}`}></div>
+                      <div className={`h-4 rounded w-2/3 ${isDarkMode ? 'bg-green-900/50' : 'bg-green-200'}`}></div>
+                      <div className={`h-8 rounded ${isDarkMode ? 'bg-green-900/30' : 'bg-green-100'}`}></div>
                       <div className="flex space-x-2">
                         <div className="h-6 w-6 rounded" style={{ backgroundColor: '#1db954' }}></div>
                         <div className="h-6 w-6 rounded" style={{ backgroundColor: '#16a14a' }}></div>
@@ -279,10 +285,10 @@ const AboutUs = () => {
         <section className="py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+              <h2 className={`text-3xl sm:text-4xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 What Drives Us
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className={`text-xl max-w-3xl mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Our core values guide everything we do, from product development to community building.
               </p>
             </div>
@@ -293,7 +299,9 @@ const AboutUs = () => {
                   key={index}
                   data-animate
                   id={`value-${index}`}
-                  className={`text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 ${
+                  className={`text-center p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 ${
+                    isDarkMode ? 'bg-gray-800' : 'bg-white'
+                  } ${
                     isVisible[`value-${index}`] ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
                   }`}
                   style={{ transitionDelay: `${index * 150}ms` }}
@@ -301,8 +309,8 @@ const AboutUs = () => {
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6" style={{ backgroundColor: '#1db954' }}>
                     <value.icon className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">{value.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{value.description}</p>
+                  <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{value.title}</h3>
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{value.description}</p>
                 </div>
               ))}
             </div>
@@ -310,13 +318,13 @@ const AboutUs = () => {
         </section>
 
         {/* Team Section */}
-        <section className="py-20 bg-gray-50">
+        <section className={`py-20 ${isDarkMode ? 'bg-gray-800/50' : 'bg-gray-50'}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+              <h2 className={`text-3xl sm:text-4xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Meet Our Team
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className={`text-xl max-w-3xl mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 A diverse group of researchers, engineers, and designers united by our passion for democratizing knowledge.
               </p>
             </div>
@@ -327,7 +335,9 @@ const AboutUs = () => {
                   key={index}
                   data-animate
                   id={`team-${index}`}
-                  className={`bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2 ${
+                  className={`rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2 ${
+                    isDarkMode ? 'bg-gray-800' : 'bg-white'
+                  } ${
                     isVisible[`team-${index}`] ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
                   }`}
                   style={{ transitionDelay: `${index * 200}ms` }}
@@ -336,9 +346,9 @@ const AboutUs = () => {
                     <member.icon className="h-16 w-16 text-white" />
                   </div>
                   <div className="p-8">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
+                    <h3 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{member.name}</h3>
                     <p className="font-medium mb-4" style={{ color: '#1db954' }}>{member.role}</p>
-                    <p className="text-gray-600 leading-relaxed">{member.description}</p>
+                    <p className={`leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{member.description}</p>
                   </div>
                 </div>
               ))}
@@ -414,10 +424,10 @@ const AboutUs = () => {
                 isVisible.contact ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
               }`}
             >
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
+              <h2 className={`text-3xl sm:text-4xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Let's Build the Future Together
               </h2>
-              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              <p className={`text-xl mb-8 max-w-2xl mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Have questions, ideas, or want to collaborate? We'd love to hear from you.
               </p>
               
@@ -434,7 +444,9 @@ const AboutUs = () => {
                 </a>
                 <Link 
                   to="/"
-                  className="inline-flex items-center px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl transition-all duration-300"
+                  className={`inline-flex items-center px-8 py-4 border-2 font-semibold rounded-xl transition-all duration-300 ${
+                    isDarkMode ? 'border-gray-600 text-gray-300' : 'border-gray-300 text-gray-700'
+                  }`}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.borderColor = '#1db954';
                     e.currentTarget.style.color = '#1db954';

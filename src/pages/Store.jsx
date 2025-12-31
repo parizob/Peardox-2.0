@@ -6,10 +6,12 @@ import Footer from '../components/Footer';
 import SavedArticles from '../components/SavedArticles';
 import AccountModal from '../components/AccountModal';
 import { useUser } from '../contexts/UserContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { quizAPI } from '../lib/supabase';
 
 const Store = () => {
   const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
   const {
     savedArticlesFromDB,
     user,
@@ -73,7 +75,7 @@ const Store = () => {
   }, [user]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-gray-50'}`}>
       <Header 
         searchTerm=""
         onSearchChange={() => {}}
@@ -93,30 +95,38 @@ const Store = () => {
         <section className="py-12 sm:py-20 relative overflow-hidden">
           {/* Background decorations */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-20 left-10 w-72 h-72 bg-green-100 rounded-full blur-3xl opacity-40"></div>
-            <div className="absolute bottom-20 right-10 w-96 h-96 bg-amber-100 rounded-full blur-3xl opacity-40"></div>
+            <div className={`absolute top-20 left-10 w-72 h-72 rounded-full blur-3xl opacity-40 ${isDarkMode ? 'bg-green-900/30' : 'bg-green-100'}`}></div>
+            <div className={`absolute bottom-20 right-10 w-96 h-96 rounded-full blur-3xl opacity-40 ${isDarkMode ? 'bg-amber-900/30' : 'bg-amber-100'}`}></div>
           </div>
 
           <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center relative">
             {/* Coming Soon Badge */}
-            <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-full mb-6">
-              <Clock className="h-4 w-4 text-amber-600 mr-2" />
-              <span className="text-amber-700 font-medium text-sm">Launching Soon</span>
+            <div className={`inline-flex items-center px-4 py-2 border rounded-full mb-6 ${
+              isDarkMode 
+                ? 'bg-amber-900/30 border-amber-700' 
+                : 'bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-200'
+            }`}>
+              <Clock className={`h-4 w-4 mr-2 ${isDarkMode ? 'text-amber-400' : 'text-amber-600'}`} />
+              <span className={`font-medium text-sm ${isDarkMode ? 'text-amber-400' : 'text-amber-700'}`}>Launching Soon</span>
             </div>
 
             {/* Title */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-4">
+            <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               The PEAR <span style={{ color: '#1db954' }}>Store</span>
             </h1>
             
             {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Your knowledge has value. Redeem PEAR tokens for real rewards — including <span className="font-semibold text-gray-800">crypto and merch</span>.
+            <p className={`text-lg sm:text-xl mb-8 max-w-2xl mx-auto leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              Your knowledge has value. Redeem PEAR tokens for real rewards — including <span className={`font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>crypto and merch</span>.
             </p>
 
             {/* Token Display for logged in users */}
             {user && (
-              <div className="inline-flex items-center gap-4 px-6 py-4 bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50/30 rounded-2xl shadow-lg border border-amber-200 mb-8">
+              <div className={`inline-flex items-center gap-4 px-6 py-4 rounded-2xl shadow-lg border mb-8 ${
+                isDarkMode 
+                  ? 'bg-amber-900/20 border-amber-700' 
+                  : 'bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50/30 border-amber-200'
+              }`}>
                 {/* PEAR Token Coin with count - matches main page */}
                 <div className="relative group/token cursor-pointer flex-shrink-0">
                   {/* Outer glow ring - pulses */}
@@ -140,44 +150,52 @@ const Store = () => {
                 
                 <div className="text-left">
                   <p className="text-xl font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">PEAR Tokens</p>
-                  <p className="text-sm text-gray-500">Your current balance</p>
+                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Your current balance</p>
                 </div>
               </div>
             )}
 
             {/* How to Earn PEAR Steps - Inline */}
             <div className="mt-10 max-w-4xl mx-auto">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">How to Earn PEAR</h2>
-              <p className="text-gray-600 text-sm mb-6">It's simple: learn, prove it, and get rewarded.</p>
+              <h2 className={`text-xl sm:text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>How to Earn PEAR</h2>
+              <p className={`text-sm mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>It's simple: learn, prove it, and get rewarded.</p>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+                <div className={`rounded-xl p-4 shadow-sm border text-center hover:shadow-md transition-shadow ${
+                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                }`}>
                   <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-2 text-sm" style={{ backgroundColor: '#1db954' }}>
                     1
                   </div>
-                  <h3 className="font-semibold text-gray-900 text-sm mb-0.5">Explore</h3>
-                  <p className="text-gray-500 text-xs">Browse papers</p>
+                  <h3 className={`font-semibold text-sm mb-0.5 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Explore</h3>
+                  <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Browse papers</p>
                 </div>
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+                <div className={`rounded-xl p-4 shadow-sm border text-center hover:shadow-md transition-shadow ${
+                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                }`}>
                   <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-2 text-sm" style={{ backgroundColor: '#1db954' }}>
                     2
                   </div>
-                  <h3 className="font-semibold text-gray-900 text-sm mb-0.5">Read</h3>
-                  <p className="text-gray-500 text-xs">Learn summaries</p>
+                  <h3 className={`font-semibold text-sm mb-0.5 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Read</h3>
+                  <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Learn summaries</p>
                 </div>
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+                <div className={`rounded-xl p-4 shadow-sm border text-center hover:shadow-md transition-shadow ${
+                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                }`}>
                   <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-2 text-sm" style={{ backgroundColor: '#1db954' }}>
                     3
                   </div>
-                  <h3 className="font-semibold text-gray-900 text-sm mb-0.5">Quiz</h3>
-                  <p className="text-gray-500 text-xs">Test knowledge</p>
+                  <h3 className={`font-semibold text-sm mb-0.5 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Quiz</h3>
+                  <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Test knowledge</p>
                 </div>
-                <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+                <div className={`rounded-xl p-4 shadow-sm border text-center hover:shadow-md transition-shadow ${
+                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                }`}>
                   <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-2 text-sm" style={{ backgroundColor: '#1db954' }}>
                     4
                   </div>
-                  <h3 className="font-semibold text-gray-900 text-sm mb-0.5">Earn</h3>
-                  <p className="text-gray-500 text-xs">Get PEAR tokens</p>
+                  <h3 className={`font-semibold text-sm mb-0.5 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Earn</h3>
+                  <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Get PEAR tokens</p>
                 </div>
               </div>
 
@@ -199,8 +217,8 @@ const Store = () => {
         <section className="py-12 sm:py-16">
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-10">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">What You Can Redeem</h2>
-              <p className="text-gray-600 max-w-xl mx-auto">Stack your PEAR tokens now. When the store opens, you'll have first access to exclusive rewards.</p>
+              <h2 className={`text-2xl sm:text-3xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>What You Can Redeem</h2>
+              <p className={`max-w-xl mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Stack your PEAR tokens now. When the store opens, you'll have first access to exclusive rewards.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -221,14 +239,18 @@ const Store = () => {
               </div>
 
               {/* Premium Features Card */}
-              <div className="relative bg-white rounded-2xl p-6 shadow-lg border border-gray-100 overflow-hidden group hover:scale-[1.02] transition-transform hover:border-green-200 h-full">
+              <div className={`relative rounded-2xl p-6 shadow-lg border overflow-hidden group hover:scale-[1.02] transition-transform h-full ${
+                isDarkMode 
+                  ? 'bg-gray-800 border-gray-700 hover:border-green-700' 
+                  : 'bg-white border-gray-100 hover:border-green-200'
+              }`}>
                 <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400 rounded-full blur-3xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
                 <div className="relative h-full flex flex-col">
                   <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: '#1db954' }}>
                     <Zap className="h-6 w-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Premium Features</h3>
-                  <p className="text-gray-600 text-sm mb-4 flex-1">Unlock advanced AI summaries, priority access to new papers, and exclusive tools.</p>
+                  <h3 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Premium Features</h3>
+                  <p className={`text-sm mb-4 flex-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Unlock advanced AI summaries, priority access to new papers, and exclusive tools.</p>
                   <div className="flex items-center text-amber-600 text-sm font-medium mt-auto">
                     <Sparkles className="h-4 w-4 mr-1" />
                     Exclusive Access
@@ -237,14 +259,18 @@ const Store = () => {
               </div>
 
               {/* Merch Card */}
-              <div className="relative bg-white rounded-2xl p-6 shadow-lg border border-gray-100 overflow-hidden group hover:scale-[1.02] transition-transform hover:border-green-200 h-full">
+              <div className={`relative rounded-2xl p-6 shadow-lg border overflow-hidden group hover:scale-[1.02] transition-transform h-full ${
+                isDarkMode 
+                  ? 'bg-gray-800 border-gray-700 hover:border-green-700' 
+                  : 'bg-white border-gray-100 hover:border-green-200'
+              }`}>
                 <div className="absolute top-0 right-0 w-32 h-32 bg-purple-400 rounded-full blur-3xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
                 <div className="relative h-full flex flex-col">
-                  <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center mb-4">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${isDarkMode ? 'bg-purple-900/50' : 'bg-purple-100'}`}>
                     <Gift className="h-6 w-6 text-purple-600" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Exclusive Merch</h3>
-                  <p className="text-gray-600 text-sm mb-4 flex-1">Rep your Pearadox journey with limited edition merchandise and collectibles.</p>
+                  <h3 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Exclusive Merch</h3>
+                  <p className={`text-sm mb-4 flex-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Rep your Pearadox journey with limited edition merchandise and collectibles.</p>
                   <div className="flex items-center text-purple-600 text-sm font-medium mt-auto">
                     <Trophy className="h-4 w-4 mr-1" />
                     Limited Edition

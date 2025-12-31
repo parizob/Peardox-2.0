@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import AccountModal from '../components/AccountModal';
 import SavedArticles from '../components/SavedArticles';
 import { useUser } from '../contexts/UserContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { supabase } from '../lib/supabase';
 
 const MINIMUM_LOADING_TIME = 5000; // 5 seconds in milliseconds
@@ -14,6 +15,7 @@ const Submit = () => {
   const navigate = useNavigate();
   const categoryDropdownRef = useRef(null);
   const loadingContainerRef = useRef(null);
+  const { isDarkMode } = useTheme();
   const { 
     user, 
     userSkillLevel, 
@@ -251,11 +253,11 @@ const Submit = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-green-50/30 relative overflow-hidden">
+    <div className={`min-h-screen relative overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-green-50/30'}`}>
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-green-400/10 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-green-400/10 to-transparent rounded-full blur-3xl"></div>
+        <div className={`absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl ${isDarkMode ? 'bg-green-900/20' : 'bg-gradient-to-bl from-green-400/10 to-transparent'}`}></div>
+        <div className={`absolute bottom-0 left-0 w-96 h-96 rounded-full blur-3xl ${isDarkMode ? 'bg-green-900/20' : 'bg-gradient-to-tr from-green-400/10 to-transparent'}`}></div>
       </div>
 
       <Header 
@@ -278,7 +280,7 @@ const Submit = () => {
         {/* Back button */}
         <button
           onClick={() => navigate('/')}
-          className="flex items-center text-gray-600 hover:text-gray-900 mb-8 transition-colors group"
+          className={`flex items-center mb-8 transition-colors group ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'}`}
         >
           <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
           <span className="font-medium">Back to Research Hub</span>
@@ -289,10 +291,10 @@ const Submit = () => {
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-6 shadow-lg" style={{ backgroundColor: '#1db954' }}>
             <FileText className="h-10 w-10 text-white" />
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className={`text-4xl sm:text-5xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Submit Your Research
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className={`text-lg max-w-2xl mx-auto leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
             Share your groundbreaking research with the Pearadox community. Help democratize AI knowledge and make complex research accessible to everyone.
           </p>
         </div>
@@ -300,44 +302,46 @@ const Submit = () => {
         {/* Authentication Check */}
         {!user ? (
           // Not Authenticated - Show Sign In Message
-          <div className="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 sm:p-12">
+          <div className={`rounded-3xl shadow-xl border p-8 sm:p-12 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
             <div className="text-center max-w-2xl mx-auto">
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-6" style={{ backgroundColor: '#1db954' }}>
                 <Lock className="h-10 w-10 text-white" />
               </div>
               
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+              <h2 className={`text-2xl sm:text-3xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Account Required
               </h2>
               
-              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+              <p className={`text-lg mb-8 leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 To submit your research paper to Pearadox, you'll need to create a free account. This helps us maintain quality submissions and allows you to track your submission status.
               </p>
 
-              <div className="space-y-4 mb-8 text-left bg-green-50 rounded-xl p-6">
-                <h3 className="font-semibold text-gray-900 mb-3">Benefits of creating an account:</h3>
+              <div className={`space-y-4 mb-8 text-left rounded-xl p-6 ${isDarkMode ? 'bg-green-900/20' : 'bg-green-50'}`}>
+                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Benefits of creating an account:</h3>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Submit and track your research papers</span>
+                  <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Submit and track your research papers</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Save and organize your favorite articles</span>
+                  <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Save and organize your favorite articles</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Get personalized content for your skill level</span>
+                  <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Get personalized content for your skill level</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Join a community of AI researchers and enthusiasts</span>
+                  <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Join a community of AI researchers and enthusiasts</span>
                 </div>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onClick={() => navigate('/')}
-                  className="px-6 py-3 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-all"
+                  className={`px-6 py-3 rounded-xl border-2 font-semibold transition-all ${
+                    isDarkMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                  }`}
                 >
                   Back to Home
                 </button>
@@ -353,14 +357,14 @@ const Submit = () => {
                 </button>
               </div>
 
-              <p className="text-sm text-gray-500 mt-6">
+              <p className={`text-sm mt-6 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                 Already have an account? Click "Create Free Account" to sign in.
               </p>
             </div>
           </div>
         ) : (
           // Authenticated - Show Form or Loading State
-          <div className="bg-white rounded-3xl shadow-xl border border-gray-200 p-8 sm:p-12">
+          <div className={`rounded-3xl shadow-xl border p-8 sm:p-12 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           {submitStatus === 'success' ? (
             // Success State - Celebration
             <div ref={loadingContainerRef} className="flex flex-col items-center justify-center py-20">
@@ -482,7 +486,7 @@ const Submit = () => {
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Title Input */}
             <div>
-              <label htmlFor="title" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="title" className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                 Paper Title *
               </label>
               <input
@@ -492,14 +496,18 @@ const Submit = () => {
                 value={formData.title}
                 onChange={handleInputChange}
                 placeholder="Enter the title of your research paper"
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none text-gray-900"
+                className={`w-full px-4 py-3 rounded-xl border-2 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none ${
+                  isDarkMode 
+                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                    : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+                }`}
                 required
               />
             </div>
 
             {/* Description Textarea */}
             <div>
-              <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="description" className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                 Description / Abstract *
               </label>
               <textarea
@@ -509,36 +517,44 @@ const Submit = () => {
                 onChange={handleInputChange}
                 placeholder="Provide a brief description or abstract of your research (max 500 words)"
                 rows="6"
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none text-gray-900 resize-none"
+                className={`w-full px-4 py-3 rounded-xl border-2 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none resize-none ${
+                  isDarkMode 
+                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                    : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+                }`}
                 required
               />
-              <p className="text-sm text-gray-500 mt-2">
+              <p className={`text-sm mt-2 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                 {formData.description.split(/\s+/).filter(word => word.length > 0).length} / 500 words
               </p>
             </div>
 
             {/* Authors Section */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Authors * <span className="text-sm font-normal text-gray-500">(Up to 20)</span>
+              <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                Authors * <span className={`text-sm font-normal ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>(Up to 20)</span>
               </label>
               <div className="space-y-3">
                 {authors.map((author, index) => (
                   <div key={index} className="flex items-center gap-2">
-                    <User className="h-5 w-5 text-gray-400 flex-shrink-0" />
+                    <User className={`h-5 w-5 flex-shrink-0 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                     <input
                       type="text"
                       value={author}
                       onChange={(e) => handleAuthorChange(index, e.target.value)}
                       placeholder={`Author ${index + 1} name`}
-                      className="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none text-gray-900"
+                      className={`flex-1 px-4 py-3 rounded-xl border-2 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none ${
+                        isDarkMode 
+                          ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                          : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+                      }`}
                       required={index === 0}
                     />
                     {authors.length > 1 && (
                       <button
                         type="button"
                         onClick={() => removeAuthor(index)}
-                        className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                        className={`p-2 text-red-500 rounded-lg transition-colors ${isDarkMode ? 'hover:bg-red-900/30' : 'hover:bg-red-50'}`}
                         title="Remove author"
                       >
                         <X className="h-5 w-5" />
@@ -550,7 +566,7 @@ const Submit = () => {
                   <button
                     type="button"
                     onClick={addAuthor}
-                    className="flex items-center gap-2 px-4 py-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors font-medium"
+                    className={`flex items-center gap-2 px-4 py-2 text-green-600 rounded-lg transition-colors font-medium ${isDarkMode ? 'hover:bg-green-900/30' : 'hover:bg-green-50'}`}
                   >
                     <Plus className="h-5 w-5" />
                     <span>Add Another Author</span>
@@ -561,8 +577,8 @@ const Submit = () => {
 
             {/* Categories Section */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Categories * <span className="text-sm font-normal text-gray-500">(Select 1-5)</span>
+              <label className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
+                Categories * <span className={`text-sm font-normal ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>(Select 1-5)</span>
               </label>
               
               {/* Selected Categories */}
@@ -571,13 +587,15 @@ const Submit = () => {
                   {selectedCategories.map((category) => (
                     <span
                       key={category}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-green-100 text-green-800 rounded-lg text-sm font-medium"
+                      className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium ${
+                        isDarkMode ? 'bg-green-900/30 text-green-400' : 'bg-green-100 text-green-800'
+                      }`}
                     >
                       {category}
                       <button
                         type="button"
                         onClick={() => removeCategory(category)}
-                        className="hover:bg-green-200 rounded-full p-0.5 transition-colors"
+                        className={`rounded-full p-0.5 transition-colors ${isDarkMode ? 'hover:bg-green-800/50' : 'hover:bg-green-200'}`}
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -591,19 +609,25 @@ const Submit = () => {
                 <button
                   type="button"
                   onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none text-left flex items-center justify-between bg-white"
+                  className={`w-full px-4 py-3 rounded-xl border-2 hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all outline-none text-left flex items-center justify-between ${
+                    isDarkMode 
+                      ? 'bg-gray-700 border-gray-600' 
+                      : 'bg-white border-gray-200'
+                  }`}
                   disabled={selectedCategories.length >= 5}
                 >
-                  <span className={selectedCategories.length >= 5 ? 'text-gray-400' : 'text-gray-700'}>
+                  <span className={selectedCategories.length >= 5 ? (isDarkMode ? 'text-gray-500' : 'text-gray-400') : (isDarkMode ? 'text-gray-300' : 'text-gray-700')}>
                     {selectedCategories.length >= 5 ? 'Maximum 5 categories selected' : 'Select categories...'}
                   </span>
-                  <span className="text-sm text-gray-500">
+                  <span className={isDarkMode ? 'text-gray-500' : 'text-gray-500'}>
                     {selectedCategories.length}/5 selected
                   </span>
                 </button>
 
                 {isCategoryDropdownOpen && selectedCategories.length < 5 && (
-                  <div className="absolute z-10 w-full mt-2 bg-white border-2 border-gray-200 rounded-xl shadow-xl max-h-64 overflow-y-auto">
+                  <div className={`absolute z-10 w-full mt-2 border-2 rounded-xl shadow-xl max-h-64 overflow-y-auto ${
+                    isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'
+                  }`}>
                     {availableCategories.map((category) => (
                       <button
                         key={category}
@@ -615,10 +639,16 @@ const Submit = () => {
                           }
                         }}
                         disabled={selectedCategories.includes(category)}
-                        className={`w-full px-4 py-3 text-left hover:bg-green-50 transition-colors border-b border-gray-100 last:border-b-0 ${
+                        className={`w-full px-4 py-3 text-left transition-colors border-b last:border-b-0 ${
+                          isDarkMode ? 'border-gray-600' : 'border-gray-100'
+                        } ${
                           selectedCategories.includes(category)
-                            ? 'bg-green-50 text-green-700 cursor-not-allowed'
-                            : 'text-gray-900'
+                            ? isDarkMode 
+                              ? 'bg-green-900/30 text-green-400 cursor-not-allowed' 
+                              : 'bg-green-50 text-green-700 cursor-not-allowed'
+                            : isDarkMode 
+                              ? 'text-gray-200 hover:bg-gray-600' 
+                              : 'text-gray-900 hover:bg-green-50'
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -633,14 +663,14 @@ const Submit = () => {
                 )}
               </div>
               
-              <p className="text-xs text-gray-500 mt-2">
+              <p className={`text-xs mt-2 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                 Select the research categories that best describe your paper
               </p>
             </div>
 
             {/* File Upload */}
             <div>
-              <label htmlFor="file" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="file" className={`block text-sm font-semibold mb-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                 Upload Research Paper (PDF) *
               </label>
               <div className="relative">
@@ -655,14 +685,18 @@ const Submit = () => {
                 />
                 <label
                   htmlFor="file"
-                  className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-green-500 hover:bg-green-50/50 transition-all group"
+                  className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-xl cursor-pointer hover:border-green-500 transition-all group ${
+                    isDarkMode 
+                      ? 'border-gray-600 hover:bg-green-900/10' 
+                      : 'border-gray-300 hover:bg-green-50/50'
+                  }`}
                 >
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                    <Upload className="h-12 w-12 text-gray-400 group-hover:text-green-600 mb-3 transition-colors" />
-                    <p className="mb-2 text-sm text-gray-700">
+                    <Upload className={`h-12 w-12 mb-3 transition-colors group-hover:text-green-600 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+                    <p className={`mb-2 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       <span className="font-semibold">Click to upload</span> or drag and drop
                     </p>
-                    <p className="text-xs text-gray-500">PDF (MAX. 25MB)</p>
+                    <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>PDF (MAX. 25MB)</p>
                     {fileName && (
                       <p className="mt-3 text-sm text-green-600 font-medium flex items-center">
                         <CheckCircle className="h-4 w-4 mr-1" />
@@ -676,11 +710,11 @@ const Submit = () => {
 
             {/* Status Messages */}
             {submitStatus === 'success' && (
-              <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 flex items-start space-x-3">
+              <div className={`border-2 rounded-xl p-4 flex items-start space-x-3 ${isDarkMode ? 'bg-green-900/20 border-green-800' : 'bg-green-50 border-green-200'}`}>
                 <CheckCircle className="h-6 w-6 text-green-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-semibold text-green-900">Submission Successful!</h4>
-                  <p className="text-green-700 text-sm mt-1">
+                  <h4 className={`font-semibold ${isDarkMode ? 'text-green-400' : 'text-green-900'}`}>Submission Successful!</h4>
+                  <p className={`text-sm mt-1 ${isDarkMode ? 'text-green-300' : 'text-green-700'}`}>
                     Thank you for your submission. We'll review your paper and get back to you soon.
                   </p>
                 </div>
@@ -688,11 +722,11 @@ const Submit = () => {
             )}
 
             {submitStatus === 'error' && (
-              <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 flex items-start space-x-3">
+              <div className={`border-2 rounded-xl p-4 flex items-start space-x-3 ${isDarkMode ? 'bg-red-900/20 border-red-800' : 'bg-red-50 border-red-200'}`}>
                 <AlertCircle className="h-6 w-6 text-red-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-semibold text-red-900">Submission Failed</h4>
-                  <p className="text-red-700 text-sm mt-1">{errorMessage}</p>
+                  <h4 className={`font-semibold ${isDarkMode ? 'text-red-400' : 'text-red-900'}`}>Submission Failed</h4>
+                  <p className={`text-sm mt-1 ${isDarkMode ? 'text-red-300' : 'text-red-700'}`}>{errorMessage}</p>
                 </div>
               </div>
             )}
@@ -702,7 +736,9 @@ const Submit = () => {
               <button
                 type="button"
                 onClick={() => navigate('/')}
-                className="flex-1 px-6 py-4 rounded-xl border-2 border-gray-300 text-gray-700 font-semibold hover:bg-gray-50 transition-all"
+                className={`flex-1 px-6 py-4 rounded-xl border-2 font-semibold transition-all ${
+                  isDarkMode ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                }`}
               >
                 Cancel
               </button>
@@ -732,9 +768,9 @@ const Submit = () => {
 
           {/* Info Box - Always visible when not submitting */}
           {!isSubmitting && (
-          <div className="mt-8 p-6 bg-green-50 border border-green-200 rounded-xl">
-            <h4 className="font-semibold text-green-900 mb-2">Submission Guidelines</h4>
-            <ul className="space-y-2 text-sm text-green-800">
+          <div className={`mt-8 p-6 border rounded-xl ${isDarkMode ? 'bg-green-900/20 border-green-800' : 'bg-green-50 border-green-200'}`}>
+            <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-green-400' : 'text-green-900'}`}>Submission Guidelines</h4>
+            <ul className={`space-y-2 text-sm ${isDarkMode ? 'text-green-300' : 'text-green-800'}`}>
               <li className="flex items-start">
                 <span className="mr-2">•</span>
                 <span>Papers should be in PDF format and not exceed 25MB</span>
