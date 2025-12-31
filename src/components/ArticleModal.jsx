@@ -395,8 +395,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                   onClick={() => onToggleFavorite(article.id)}
                   className={`p-2.5 rounded-full transition-all duration-200 ${
                     isFavorite 
-                      ? 'bg-red-50 text-red-500' 
-                      : 'bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600'
+                      ? isDarkMode ? 'bg-red-900/50 text-red-400' : 'bg-red-50 text-red-500'
+                      : isDarkMode ? 'bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-gray-300' : 'bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600'
                   }`}
                   title={isFavorite ? 'Remove from saved' : 'Save article'}
                 >
@@ -404,15 +404,17 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                 </button>
                 <button
                   onClick={onClose}
-                  className="p-2.5 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+                  className={`p-2.5 rounded-full transition-colors ${
+                    isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'
+                  }`}
                 >
-                  <X className="h-5 w-5 text-gray-500" />
+                  <X className={`h-5 w-5 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                 </button>
               </div>
             </div>
 
             {/* Meta Info Row */}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-sm text-gray-500">
+            <div className={`flex flex-wrap items-center gap-x-4 gap-y-2 mt-4 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
               <span className="inline-flex items-center">
                 <Calendar className="w-4 h-4 mr-1.5" />
                 {formatDate(article.publishedDate)}
@@ -420,7 +422,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
               <span className="inline-flex items-center flex-wrap gap-1.5">
                 <Tag className="w-4 h-4 mr-0.5" />
                 {getFilteredCategories().map((cat, idx) => (
-                  <span key={idx} className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs">
+                  <span key={idx} className={`px-2 py-0.5 rounded-full text-xs ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
                     {cat}
                   </span>
                 ))}
@@ -451,7 +453,9 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                   href={article.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-5 py-2.5 bg-gray-900 text-white font-medium rounded-xl hover:bg-gray-800 transition-all text-sm group"
+                  className={`inline-flex items-center px-5 py-2.5 font-medium rounded-xl transition-all text-sm group ${
+                    isDarkMode ? 'bg-white text-gray-900 hover:bg-gray-100' : 'bg-gray-900 text-white hover:bg-gray-800'
+                  }`}
                 >
                   Read Full Paper
                   <ArrowUpRight className="h-4 w-4 ml-2 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
@@ -470,7 +474,9 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                 
                 <button
                   onClick={handleShare}
-                  className="inline-flex items-center px-5 py-2.5 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-colors text-sm"
+                  className={`inline-flex items-center px-5 py-2.5 font-medium rounded-xl transition-colors text-sm ${
+                    isDarkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
                 >
                   <Share2 className="h-4 w-4 mr-2" />
                   Share
@@ -479,47 +485,53 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
 
               {/* AI Summary - Clean Card */}
               {article.summaryContent && (
-                <section className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 border border-gray-100">
+                <section className={`rounded-2xl p-6 border ${
+                  isDarkMode 
+                    ? 'bg-gradient-to-br from-gray-800 to-gray-800/50 border-gray-700' 
+                    : 'bg-gradient-to-br from-gray-50 to-white border-gray-100'
+                }`}>
                   <div className="flex items-center gap-2 mb-4">
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
                       <Sparkles className="h-4 w-4 text-white" />
                     </div>
-                    <h2 className="font-semibold text-gray-900">AI Summary</h2>
+                    <h2 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>AI Summary</h2>
                   </div>
-                  <div className="text-gray-700 leading-relaxed whitespace-pre-wrap text-[15px]">
+                  <div className={`leading-relaxed whitespace-pre-wrap text-[15px] ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {article.summaryContent}
                   </div>
                 </section>
               )}
 
               {/* Technical Details - Collapsible */}
-              <section className="border border-gray-200 rounded-2xl overflow-hidden">
+              <section className={`border rounded-2xl overflow-hidden ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
                 <button
                   onClick={() => setShowTechnicalDetails(!showTechnicalDetails)}
-                  className="w-full flex items-center justify-between px-6 py-4 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
+                  className={`w-full flex items-center justify-between px-6 py-4 transition-colors text-left ${
+                    isDarkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-50 hover:bg-gray-100'
+                  }`}
                 >
                   <div className="flex items-center gap-3">
-                    <GraduationCap className="h-5 w-5 text-gray-600" />
-                    <span className="font-semibold text-gray-900">Technical Details</span>
+                    <GraduationCap className={`h-5 w-5 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+                    <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Technical Details</span>
                   </div>
                   <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform duration-200 ${showTechnicalDetails ? 'rotate-180' : ''}`} />
                 </button>
                 
                 {showTechnicalDetails && (
-                  <div className="px-6 py-5 space-y-5 bg-white">
+                  <div className={`px-6 py-5 space-y-5 ${isDarkMode ? 'bg-gray-800/50' : 'bg-white'}`}>
                     {/* Original Title */}
                     <div>
-                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Original Title</h4>
-                      <p className="text-gray-800">{article.originalTitle}</p>
+                      <h4 className={`text-xs font-semibold uppercase tracking-wider mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Original Title</h4>
+                      <p className={isDarkMode ? 'text-gray-200' : 'text-gray-800'}>{article.originalTitle}</p>
                     </div>
                     
                     {/* Abstract */}
                     <div>
-                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Research Abstract</h4>
+                      <h4 className={`text-xs font-semibold uppercase tracking-wider mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Research Abstract</h4>
                       {isLoadingAbstract ? (
-                        <p className="text-gray-500 italic">Loading abstract...</p>
+                        <p className={`italic ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Loading abstract...</p>
                       ) : (
-                        <p className="text-gray-700 leading-relaxed text-sm">
+                        <p className={`leading-relaxed text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                           {fullAbstract || article.originalAbstract || article.shortDescription}
                         </p>
                       )}
@@ -527,18 +539,20 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
 
                     {/* Authors */}
                     <div>
-                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Authors</h4>
-                      <p className="text-gray-700 text-sm">{article.authors}</p>
+                      <h4 className={`text-xs font-semibold uppercase tracking-wider mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Authors</h4>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{article.authors}</p>
                     </div>
 
                     {/* Categories */}
                     <div>
-                      <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Research Areas</h4>
+                      <h4 className={`text-xs font-semibold uppercase tracking-wider mb-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Research Areas</h4>
                       <div className="flex flex-wrap gap-2">
                         {getFilteredCategories().map((category, index) => (
                           <span 
                             key={index}
-                            className="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-medium"
+                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                              isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+                            }`}
                           >
                             {category}
                           </span>
@@ -553,9 +567,9 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
               <section className="pt-2">
                 <div className="flex items-center gap-2 mb-6">
                   <MessageCircle className="h-5 w-5" style={{ color: '#1db954' }} />
-                  <h2 className="font-semibold text-gray-900">Discussion</h2>
+                  <h2 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Discussion</h2>
                   {commentCount > 0 && (
-                    <span className="text-sm text-gray-500">({commentCount})</span>
+                    <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>({commentCount})</span>
                   )}
                 </div>
 
@@ -567,7 +581,11 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder="Share your thoughts on this research..."
-                        className="w-full p-4 pr-24 bg-gray-50 border border-gray-200 rounded-xl resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent focus:bg-white transition-all text-sm"
+                        className={`w-full p-4 pr-24 border rounded-xl resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm ${
+                          isDarkMode 
+                            ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:bg-gray-700' 
+                            : 'bg-gray-50 border-gray-200 focus:bg-white'
+                        }`}
                         rows="3"
                         maxLength={2000}
                         disabled={isSubmittingComment}
@@ -575,7 +593,9 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                       <button
                         type="submit"
                         disabled={isSubmittingComment || !newComment.trim()}
-                        className="absolute bottom-3 right-3 p-2.5 rounded-lg text-white disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+                        className={`absolute bottom-3 right-3 p-2.5 rounded-lg text-white disabled:cursor-not-allowed transition-colors ${
+                          isDarkMode ? 'disabled:bg-gray-600' : 'disabled:bg-gray-300'
+                        }`}
                         style={{ backgroundColor: newComment.trim() && !isSubmittingComment ? '#1db954' : undefined }}
                       >
                         {isSubmittingComment ? (
@@ -585,7 +605,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                         )}
                       </button>
                     </div>
-                    <div className="flex justify-between mt-2 text-xs text-gray-400">
+                    <div className={`flex justify-between mt-2 text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
                       <span>{newComment.length}/2000</span>
                     </div>
                     {commentErrors.submit && (
@@ -593,8 +613,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                     )}
                   </form>
                 ) : (
-                  <div className="mb-6 p-4 bg-gray-50 rounded-xl text-center">
-                    <p className="text-gray-600 text-sm">
+                  <div className={`mb-6 p-4 rounded-xl text-center ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                       Sign in to join the discussion
                     </p>
                   </div>
@@ -615,8 +635,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                     </div>
                   ) : comments.length === 0 ? (
                     <div className="text-center py-12">
-                      <MessageCircle className="h-10 w-10 text-gray-200 mx-auto mb-3" />
-                      <p className="text-gray-400 text-sm">No comments yet. Start the conversation!</p>
+                      <MessageCircle className={`h-10 w-10 mx-auto mb-3 ${isDarkMode ? 'text-gray-600' : 'text-gray-200'}`} />
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>No comments yet. Start the conversation!</p>
                     </div>
                   ) : (
                     comments.map((comment) => (
@@ -628,8 +648,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                           <div className="flex-1 min-w-0">
                             <div className="mb-1">
                               <div className="flex items-center gap-2">
-                                <span className="font-medium text-gray-900 text-sm">{comment.user_name}</span>
-                                <span className="text-xs text-gray-400">
+                                <span className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{comment.user_name}</span>
+                                <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
                                   {formatCommentDate(comment.created_at)}
                                   {comment.is_edited && <span className="ml-1">(edited)</span>}
                                 </span>
@@ -637,13 +657,13 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button
                                       onClick={() => handleEditComment(comment)}
-                                      className="p-1 text-gray-400 hover:text-gray-600"
+                                      className={`p-1 ${isDarkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'}`}
                                     >
                                       <Edit3 className="h-3 w-3" />
                                     </button>
                                     <button
                                       onClick={() => handleDeleteComment(comment.id)}
-                                      className="p-1 text-gray-400 hover:text-red-500"
+                                      className={`p-1 ${isDarkMode ? 'text-gray-500 hover:text-red-400' : 'text-gray-400 hover:text-red-500'}`}
                                     >
                                       <Trash2 className="h-3 w-3" />
                                     </button>
@@ -651,7 +671,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                                 )}
                               </div>
                               {(comment.user_title || comment.user_institution) && (
-                                <p className="text-xs text-gray-400 italic mt-0.5">
+                                <p className={`text-xs italic mt-0.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
                                   {comment.user_title}{comment.user_title && comment.user_institution ? ' — ' : ''}{comment.user_institution}
                                 </p>
                               )}
@@ -662,18 +682,20 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                                 <textarea
                                   value={editingCommentText}
                                   onChange={(e) => setEditingCommentText(e.target.value)}
-                                  className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                                  className={`w-full p-3 border rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm ${
+                                    isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-200'
+                                  }`}
                                   rows="3"
                                   maxLength={2000}
                                 />
                                 <div className="flex justify-end gap-2">
-                                  <button onClick={handleCancelEdit} className="px-3 py-1.5 text-gray-600 text-sm font-medium">
+                                  <button onClick={handleCancelEdit} className={`px-3 py-1.5 text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                                     Cancel
                                   </button>
                                   <button
                                     onClick={() => handleSaveEdit(comment.id)}
                                     disabled={!editingCommentText.trim()}
-                                    className="px-3 py-1.5 text-white text-sm font-medium rounded-lg disabled:bg-gray-300"
+                                    className={`px-3 py-1.5 text-white text-sm font-medium rounded-lg ${isDarkMode ? 'disabled:bg-gray-600' : 'disabled:bg-gray-300'}`}
                                     style={{ backgroundColor: editingCommentText.trim() ? '#1db954' : undefined }}
                                   >
                                     Save
@@ -684,7 +706,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                                 )}
                               </div>
                             ) : (
-                              <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
+                              <p className={`text-sm leading-relaxed whitespace-pre-wrap ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                                 {comment.comment_text}
                               </p>
                             )}
@@ -713,22 +735,22 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
       {/* Quiz Modal */}
       {isQuizOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[60]">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto">
+          <div className={`rounded-2xl shadow-2xl max-w-xl w-full max-h-[90vh] overflow-y-auto ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
             {/* Quiz Header */}
-            <div className="px-6 py-5 border-b border-gray-100">
+            <div className={`px-6 py-5 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
                     <Brain className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900">Knowledge Check</h3>
-                    <p className="text-xs text-gray-500">Earn PEAR tokens for correct answers</p>
+                    <h3 className={`font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Knowledge Check</h3>
+                    <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Earn PEAR tokens for correct answers</p>
                   </div>
                 </div>
                 <button
                   onClick={handleCloseQuiz}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className={`p-2 rounded-full transition-colors ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
                 >
                   <X className="h-5 w-5 text-gray-400" />
                 </button>
@@ -742,8 +764,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1db954' }}>
                   <Brain className="h-8 w-8 text-white" />
                 </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2">Unlock Quizzes</h4>
-                <p className="text-gray-600 mb-6 max-w-sm mx-auto">
+                <h4 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Unlock Quizzes</h4>
+                <p className={`mb-6 max-w-sm mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Create a free account to test your knowledge and earn PEAR tokens.
                 </p>
                 <button
@@ -766,9 +788,9 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1db954' }}>
                   <CheckCircle className="h-8 w-8 text-white" />
                 </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2">Already Completed!</h4>
-                <p className="text-gray-600 mb-4">You've already earned your token for this quiz.</p>
-                <div className="inline-flex items-center px-4 py-2 bg-amber-100 text-amber-800 font-bold rounded-lg">
+                <h4 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Already Completed!</h4>
+                <p className={`mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>You've already earned your token for this quiz.</p>
+                <div className={`inline-flex items-center px-4 py-2 font-bold rounded-lg ${isDarkMode ? 'bg-amber-900/50 text-amber-300' : 'bg-amber-100 text-amber-800'}`}>
                   <Sparkles className="h-4 w-4 mr-2" />
                   1 PEAR Token Earned
                 </div>
@@ -776,11 +798,11 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
             ) : quizSubmission?.answer_type === 'false' ? (
               // Already attempted but answered incorrectly
               <div className="p-8 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
                   <XCircle className="h-8 w-8 text-gray-400" />
                 </div>
-                <h4 className="text-xl font-bold text-gray-900 mb-2">Quiz Already Attempted</h4>
-                <p className="text-gray-600 mb-6 max-w-sm mx-auto">
+                <h4 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Quiz Already Attempted</h4>
+                <p className={`mb-6 max-w-sm mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   Unfortunately, you didn't get this one right. Each quiz can only be attempted once, but don't worry — there's plenty more research to explore!
                 </p>
                 <button
@@ -799,7 +821,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
               <div className="p-6 space-y-6">
                 {/* Question */}
                 <div>
-                  <p className="text-gray-900 font-medium text-lg leading-relaxed">{quizData.question}</p>
+                  <p className={`font-medium text-lg leading-relaxed ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{quizData.question}</p>
                 </div>
 
                 {/* Options */}
@@ -817,12 +839,14 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                         disabled={showQuizResult}
                         className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${
                           showAsCorrect
-                            ? 'bg-green-50 border-green-500'
+                            ? isDarkMode ? 'bg-green-900/30 border-green-500' : 'bg-green-50 border-green-500'
                             : showAsIncorrect
-                            ? 'bg-red-50 border-red-500'
+                            ? isDarkMode ? 'bg-red-900/30 border-red-500' : 'bg-red-50 border-red-500'
                             : isSelected
-                            ? 'bg-green-50 border-green-500'
-                            : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                            ? isDarkMode ? 'bg-green-900/30 border-green-500' : 'bg-green-50 border-green-500'
+                            : isDarkMode 
+                              ? 'bg-gray-800 border-gray-700 hover:border-gray-600 hover:bg-gray-700' 
+                              : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                         } ${showQuizResult ? 'cursor-default' : 'cursor-pointer'}`}
                       >
                         <div className="flex items-start gap-3">
@@ -834,13 +858,15 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                                 ? 'bg-red-500 text-white'
                                 : isSelected
                                 ? 'text-white'
-                                : 'bg-gray-100 text-gray-600'
+                                : isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-600'
                             }`}
                             style={isSelected && !showQuizResult ? { backgroundColor: '#1db954' } : {}}
                           >
                             {showAsCorrect ? <Check className="h-4 w-4" /> : showAsIncorrect ? <X className="h-4 w-4" /> : option.id.toUpperCase()}
                           </div>
-                          <p className={`flex-1 text-sm ${showAsCorrect ? 'text-green-900' : showAsIncorrect ? 'text-red-900' : 'text-gray-700'}`}>
+                          <p className={`flex-1 text-sm ${
+                            showAsCorrect ? 'text-green-900' : showAsIncorrect ? 'text-red-900' : isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                          }`}>
                             {option.text}
                           </p>
                         </div>
@@ -853,8 +879,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                 {showQuizResult && (
                   <div className={`rounded-xl p-5 ${
                     selectedAnswer === quizData.correctAnswer
-                      ? 'bg-green-50 border border-green-200'
-                      : 'bg-red-50 border border-red-200'
+                      ? isDarkMode ? 'bg-green-900/30 border border-green-700' : 'bg-green-50 border border-green-200'
+                      : isDarkMode ? 'bg-red-900/30 border border-red-700' : 'bg-red-50 border border-red-200'
                   }`}>
                     <div className="flex items-center gap-3">
                       {selectedAnswer === quizData.correctAnswer ? (
@@ -863,8 +889,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                             <CheckCircle className="h-5 w-5 text-white" />
                           </div>
                           <div>
-                            <h4 className="font-bold text-green-900">Correct! 🎉</h4>
-                            <p className="text-green-700 text-sm">You earned 1 PEAR token</p>
+                            <h4 className={`font-bold ${isDarkMode ? 'text-green-300' : 'text-green-900'}`}>Correct! 🎉</h4>
+                            <p className={`text-sm ${isDarkMode ? 'text-green-400' : 'text-green-700'}`}>You earned 1 PEAR token</p>
                           </div>
                         </>
                       ) : (
@@ -873,8 +899,8 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                             <XCircle className="h-5 w-5 text-white" />
                           </div>
                           <div>
-                            <h4 className="font-bold text-red-900">Not quite right</h4>
-                            <p className="text-red-700 text-sm">Each quiz can only be attempted once</p>
+                            <h4 className={`font-bold ${isDarkMode ? 'text-red-300' : 'text-red-900'}`}>Not quite right</h4>
+                            <p className={`text-sm ${isDarkMode ? 'text-red-400' : 'text-red-700'}`}>Each quiz can only be attempted once</p>
                           </div>
                         </>
                       )}
@@ -889,14 +915,18 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                       <button
                         onClick={handleSubmitQuiz}
                         disabled={!selectedAnswer}
-                        className="flex-1 py-3 text-white font-semibold rounded-xl disabled:bg-gray-200 disabled:text-gray-400 transition-all"
+                        className={`flex-1 py-3 text-white font-semibold rounded-xl transition-all ${
+                          isDarkMode ? 'disabled:bg-gray-700 disabled:text-gray-500' : 'disabled:bg-gray-200 disabled:text-gray-400'
+                        }`}
                         style={{ backgroundColor: selectedAnswer ? '#1db954' : undefined }}
                       >
                         Submit Answer
                       </button>
                       <button
                         onClick={handleCloseQuiz}
-                        className="px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-colors"
+                        className={`px-6 py-3 font-medium rounded-xl transition-colors ${
+                          isDarkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
                       >
                         Cancel
                       </button>
