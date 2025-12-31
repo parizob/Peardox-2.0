@@ -815,7 +815,7 @@ const Submit = () => {
         user={user}
       />
 
-      <Footer onContactClick={() => {}} />
+      <Footer />
     </div>
   );
 };

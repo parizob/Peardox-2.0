@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { X, Mail, Send, Check, AlertCircle } from 'lucide-react';
 import { emailAPI } from '../lib/supabase';
+import { useTheme } from '../contexts/ThemeContext';
 
 const ContactModal = ({ isOpen, onClose }) => {
+  const { isDarkMode } = useTheme();
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -110,63 +113,80 @@ const ContactModal = ({ isOpen, onClose }) => {
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black bg-opacity-50 z-50"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
         onClick={handleClose}
       />
       
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden">
+        <div className={`rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden ${
+          isDarkMode ? 'bg-gray-900' : 'bg-white'
+        }`}>
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-6 text-white">
+          <div 
+            className={`p-6 ${isDarkMode ? 'bg-gray-800 border-b border-gray-700' : 'text-white'}`}
+            style={!isDarkMode ? { backgroundColor: '#1db954' } : {}}
+          >
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <Mail className="h-6 w-6" />
-                <h2 className="text-xl font-bold">Contact Us</h2>
+                <div 
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDarkMode ? '' : 'bg-white/20'}`}
+                  style={isDarkMode ? { backgroundColor: '#1db954' } : {}}
+                >
+                  <Mail className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : ''}`}>Contact Us</h2>
+                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-white/80'}`}>We'd love to hear from you!</p>
+                </div>
               </div>
               <button
                 onClick={handleClose}
                 disabled={isSubmitting}
-                className="p-2 hover:bg-white/20 rounded-full transition-colors disabled:opacity-50"
+                className={`p-2 rounded-full transition-colors disabled:opacity-50 ${
+                  isDarkMode ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-white/20 text-white'
+                }`}
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <p className="text-blue-100 mt-2">
-              We'd love to hear your feedback and suggestions!
-            </p>
           </div>
 
           {/* Form */}
           <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
             {submitStatus === 'success' && (
-              <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center space-x-3">
-                <Check className="h-5 w-5 text-green-600" />
+              <div className={`mb-4 p-4 rounded-xl flex items-center space-x-3 ${
+                isDarkMode ? 'bg-green-900/50 border border-green-700' : 'bg-green-50 border border-green-200'
+              }`}>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#1db954' }}>
+                  <Check className="h-4 w-4 text-white" />
+                </div>
                 <div>
-                  <p className="text-green-800 font-medium">Message sent successfully!</p>
-                  <p className="text-green-600 text-sm">We'll get back to you soon.</p>
+                  <p className={`font-medium ${isDarkMode ? 'text-green-300' : 'text-green-800'}`}>Message sent successfully!</p>
+                  <p className={`text-sm ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>We'll get back to you soon.</p>
                 </div>
               </div>
             )}
 
             {submitStatus === 'error' && (
-              <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-3">
-                <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
+              <div className={`mb-4 p-4 rounded-xl flex items-center space-x-3 ${
+                isDarkMode ? 'bg-red-900/50 border border-red-700' : 'bg-red-50 border border-red-200'
+              }`}>
+                <AlertCircle className={`h-5 w-5 flex-shrink-0 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`} />
                 <div>
-                  <p className="text-red-800 font-medium">{errorMessage}</p>
-                  <p className="text-red-600 text-sm">
-                    {errorMessage.includes('contact us directly') 
-                      ? '' 
-                      : 'Please check your information and try again.'
-                    }
-                  </p>
+                  <p className={`font-medium ${isDarkMode ? 'text-red-300' : 'text-red-800'}`}>{errorMessage}</p>
+                  {!errorMessage.includes('contact us directly') && (
+                    <p className={`text-sm ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
+                      Please check your information and try again.
+                    </p>
+                  )}
                 </div>
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Name *
                 </label>
                 <input
@@ -175,14 +195,18 @@ const ContactModal = ({ isOpen, onClose }) => {
                   value={formData.name}
                   onChange={handleInputChange}
                   disabled={isSubmitting || submitStatus === 'success'}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:opacity-50"
+                  className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent focus:outline-none transition-all text-sm ${
+                    isDarkMode 
+                      ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 disabled:bg-gray-800 disabled:opacity-50' 
+                      : 'bg-white border-gray-200 disabled:bg-gray-50 disabled:opacity-50'
+                  }`}
                   placeholder="Your full name"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Email *
                 </label>
                 <input
@@ -191,14 +215,18 @@ const ContactModal = ({ isOpen, onClose }) => {
                   value={formData.email}
                   onChange={handleInputChange}
                   disabled={isSubmitting || submitStatus === 'success'}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:opacity-50"
+                  className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent focus:outline-none transition-all text-sm ${
+                    isDarkMode 
+                      ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 disabled:bg-gray-800 disabled:opacity-50' 
+                      : 'bg-white border-gray-200 disabled:bg-gray-50 disabled:opacity-50'
+                  }`}
                   placeholder="your.email@example.com"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Subject *
                 </label>
                 <select
@@ -206,22 +234,26 @@ const ContactModal = ({ isOpen, onClose }) => {
                   value={formData.subject}
                   onChange={handleInputChange}
                   disabled={isSubmitting || submitStatus === 'success'}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:opacity-50"
+                  className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent focus:outline-none transition-all text-sm ${
+                    isDarkMode 
+                      ? 'bg-gray-800 border-gray-700 text-white disabled:bg-gray-800 disabled:opacity-50' 
+                      : 'bg-white border-gray-200 disabled:bg-gray-50 disabled:opacity-50'
+                  }`}
                   required
                 >
-                  <option value="">Select a subject</option>
-                  <option value="General Feedback">General Feedback</option>
-                  <option value="Bug Report">Bug Report</option>
-                  <option value="Feature Request">Feature Request</option>
-                  <option value="Account Issues">Account Issues</option>
-                  <option value="Technical Support">Technical Support</option>
-                  <option value="Partnership Inquiry">Partnership Inquiry</option>
-                  <option value="Other">Other</option>
+                  <option value="" className={isDarkMode ? 'bg-gray-800' : ''}>Select a subject</option>
+                  <option value="General Feedback" className={isDarkMode ? 'bg-gray-800' : ''}>General Feedback</option>
+                  <option value="Bug Report" className={isDarkMode ? 'bg-gray-800' : ''}>Bug Report</option>
+                  <option value="Feature Request" className={isDarkMode ? 'bg-gray-800' : ''}>Feature Request</option>
+                  <option value="Account Issues" className={isDarkMode ? 'bg-gray-800' : ''}>Account Issues</option>
+                  <option value="Technical Support" className={isDarkMode ? 'bg-gray-800' : ''}>Technical Support</option>
+                  <option value="Partnership Inquiry" className={isDarkMode ? 'bg-gray-800' : ''}>Partnership Inquiry</option>
+                  <option value="Other" className={isDarkMode ? 'bg-gray-800' : ''}>Other</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Message *
                 </label>
                 <textarea
@@ -230,7 +262,11 @@ const ContactModal = ({ isOpen, onClose }) => {
                   onChange={handleInputChange}
                   disabled={isSubmitting || submitStatus === 'success'}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-50 disabled:opacity-50 resize-none"
+                  className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent focus:outline-none transition-all text-sm resize-none ${
+                    isDarkMode 
+                      ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 disabled:bg-gray-800 disabled:opacity-50' 
+                      : 'bg-white border-gray-200 disabled:bg-gray-50 disabled:opacity-50'
+                  }`}
                   placeholder="Tell us about your experience, suggestions, or any issues you've encountered..."
                   required
                 />
@@ -239,11 +275,14 @@ const ContactModal = ({ isOpen, onClose }) => {
               <button
                 type="submit"
                 disabled={isSubmitting || submitStatus === 'success'}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white py-3 rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                className="w-full text-white py-3 rounded-xl font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
+                style={{ backgroundColor: '#1db954' }}
+                onMouseEnter={(e) => { if (!isSubmitting && submitStatus !== 'success') e.currentTarget.style.backgroundColor = '#16a14a'; }}
+                onMouseLeave={(e) => { if (!isSubmitting && submitStatus !== 'success') e.currentTarget.style.backgroundColor = '#1db954'; }}
               >
                 {isSubmitting ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
                     <span>Sending...</span>
                   </>
                 ) : submitStatus === 'success' ? (
@@ -261,8 +300,8 @@ const ContactModal = ({ isOpen, onClose }) => {
             </form>
 
             <div className="mt-4 text-center">
-              <p className="text-xs text-gray-500">
-                Your message will be sent securely to our team.{' '}
+              <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                Your message will be sent securely to our team.
                 <br />
                 We typically respond within 24 hours.
               </p>
@@ -274,4 +313,4 @@ const ContactModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default ContactModal; 
+export default ContactModal;
