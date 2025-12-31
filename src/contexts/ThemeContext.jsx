@@ -49,19 +49,45 @@ export const ThemeProvider = ({ children }) => {
         if (session?.user) {
           userIdRef.current = session.user.id;
           
-          // Load from localStorage first
+          // Load from localStorage first for authenticated users
           const savedMode = localStorage.getItem('pearadox-theme');
           if (savedMode === 'dark') {
             setIsDarkMode(true);
             isDarkModeRef.current = true;
           }
+        } else {
+          // No session - ensure we're in light mode
+          userIdRef.current = null;
+          setIsDarkMode(false);
+          isDarkModeRef.current = false;
+          localStorage.removeItem('pearadox-theme');
         }
       } catch (e) {
         console.log('ThemeContext: Error loading initial theme');
+        // On error, default to light mode
+        setIsDarkMode(false);
+        isDarkModeRef.current = false;
       }
     };
     
     loadInitialTheme();
+  }, []);
+
+  // Listen for sign out events to revert to light mode
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        console.log('ThemeContext: User signed out - reverting to light mode');
+        userIdRef.current = null;
+        setIsDarkMode(false);
+        isDarkModeRef.current = false;
+        localStorage.removeItem('pearadox-theme');
+      }
+    });
+    
+    return () => {
+      subscription?.unsubscribe();
+    };
   }, []);
 
   // Toggle dark mode
