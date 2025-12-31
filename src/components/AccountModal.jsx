@@ -15,7 +15,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
   const [saveSuccess, setSaveSuccess] = useState(false);
   
   // Theme context for dark mode
-  const { isDarkMode, toggleDarkMode } = useTheme();
+  const { isDarkMode, toggleDarkMode, syncModeFromProfile } = useTheme();
 
   // Research interests state
   const [availableInterests, setAvailableInterests] = useState([]);
@@ -217,6 +217,11 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                       insightsGenerated: 42
                     }
                   });
+                  
+                  // Sync dark mode preference from profile
+                  if (profile.mode && syncModeFromProfile) {
+                    syncModeFromProfile(profile.mode);
+                  }
                 }
               }
             } catch (profileError) {

@@ -884,6 +884,36 @@ export const authAPI = {
     return data;
   },
 
+  // Update user's theme mode preference (light/dark)
+  async updateMode(userId, mode) {
+    if (!userId) {
+      console.warn('⚠️ Cannot update mode: no userId provided');
+      return null;
+    }
+    
+    if (!['light', 'dark'].includes(mode)) {
+      console.error('❌ Invalid mode value:', mode);
+      throw new Error('Mode must be either "light" or "dark"');
+    }
+    
+    console.log('🌓 Updating mode for userId:', userId, 'to:', mode);
+    
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({ mode })
+      .eq('id', userId)
+      .select('mode')
+      .single();
+    
+    if (error) {
+      console.error('❌ Mode update error:', error);
+      throw error;
+    }
+    
+    console.log('✅ Mode updated:', data);
+    return data;
+  },
+
   async ensureProfile(userId, userData) {
     try {
       let profile = await this.getProfile(userId);
