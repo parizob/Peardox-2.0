@@ -1,7 +1,10 @@
 import React from 'react';
 import { Calendar, Heart, ArrowUpRight } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
+  const { isDarkMode } = useTheme();
+  
   const handleFavoriteClick = (e) => {
     e.stopPropagation();
     onToggleFavorite(article.id);
@@ -9,7 +12,11 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
 
   return (
     <div 
-      className="group relative bg-white border border-gray-200 rounded-2xl p-5 sm:p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-gray-300 hover:-translate-y-0.5"
+      className={`group relative border rounded-2xl p-5 sm:p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${
+        isDarkMode 
+          ? 'bg-gray-800 border-gray-700 hover:border-gray-600' 
+          : 'bg-white border-gray-200 hover:border-gray-300'
+      }`}
       onClick={() => onClick(article)}
     >
       {/* Favorite Button */}
@@ -17,8 +24,10 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
         onClick={handleFavoriteClick}
         className={`absolute top-4 right-4 p-2 rounded-full transition-all duration-200 z-10 ${
           isFavorite 
-            ? 'bg-red-50 text-red-500' 
-            : 'bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600'
+            ? 'bg-red-50 text-red-500 dark:bg-red-900/30 dark:text-red-400' 
+            : isDarkMode 
+              ? 'bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-gray-300' 
+              : 'bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600'
         }`}
         title={isFavorite ? 'Remove from saved' : 'Save article'}
       >
@@ -30,12 +39,18 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
       </button>
 
       {/* Title */}
-      <h3 className="text-lg sm:text-xl font-bold text-gray-900 leading-tight mb-3 pr-10 group-hover:text-gray-700 transition-colors duration-200">
+      <h3 className={`text-lg sm:text-xl font-bold leading-tight mb-3 pr-10 transition-colors duration-200 ${
+        isDarkMode 
+          ? 'text-white group-hover:text-gray-200' 
+          : 'text-gray-900 group-hover:text-gray-700'
+      }`}>
         {article.title}
       </h3>
 
       {/* Description */}
-      <p className="text-gray-600 leading-relaxed line-clamp-3 text-sm sm:text-[15px] mb-4">
+      <p className={`leading-relaxed line-clamp-3 text-sm sm:text-[15px] mb-4 ${
+        isDarkMode ? 'text-gray-400' : 'text-gray-600'
+      }`}>
         {article.shortDescription}
       </p>
 
@@ -50,33 +65,43 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
                 {filteredCategories.slice(0, 2).map((category, index) => (
                   <span 
                     key={index}
-                    className="inline-flex items-center px-2.5 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-medium"
+                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                      isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'
+                    }`}
                   >
                     {category}
                   </span>
                 ))}
                 {filteredCategories.length > 2 && (
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-gray-100 text-gray-500 text-xs">
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs ${
+                    isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'
+                  }`}>
                     +{filteredCategories.length - 2}
                   </span>
                 )}
               </>
             ) : (
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-medium">
+              <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'
+              }`}>
                 {article.category}
               </span>
             );
           })()
         ) : (
-          <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-gray-100 text-gray-600 text-xs font-medium">
+          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+            isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'
+          }`}>
             {article.category}
           </span>
         )}
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-        <div className="flex items-center text-sm text-gray-500">
+      <div className={`flex items-center justify-between pt-4 border-t ${
+        isDarkMode ? 'border-gray-700' : 'border-gray-100'
+      }`}>
+        <div className={`flex items-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
           <Calendar className="w-4 h-4 mr-1.5" />
           <span>{article.publishedDate}</span>
         </div>

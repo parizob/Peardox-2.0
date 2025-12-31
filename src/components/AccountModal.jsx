@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, User, Mail, Brain, Sparkles, Bell, Shield, BookOpen, Target, Zap, Globe, Edit3, Save, Camera, Eye, EyeOff, LogIn, UserPlus, Check, Search, TrendingUp, Calendar, BarChart3 } from 'lucide-react';
+import { X, User, Mail, Brain, Sparkles, Bell, Shield, BookOpen, Target, Zap, Globe, Edit3, Save, Camera, Eye, EyeOff, LogIn, UserPlus, Check, Search, TrendingUp, Calendar, BarChart3, Moon, Sun } from 'lucide-react';
 import { authAPI, arxivAPI, viewedArticlesAPI } from '../lib/supabase';
+import { useTheme } from '../contexts/ThemeContext';
 
 const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onResearchInterestsChange }) => {
   const [user, setUser] = useState(null);
@@ -12,6 +13,9 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
   const [saveSuccess, setSaveSuccess] = useState(false);
+  
+  // Theme context for dark mode
+  const { isDarkMode, toggleDarkMode } = useTheme();
 
   // Research interests state
   const [availableInterests, setAvailableInterests] = useState([]);
@@ -641,7 +645,9 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
     
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
-        <div className="w-full max-w-5xl h-[85vh] sm:h-[88vh] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col lg:flex-row overflow-hidden">
+        <div className={`w-full max-w-5xl h-[85vh] sm:h-[88vh] rounded-2xl shadow-2xl border flex flex-col lg:flex-row overflow-hidden ${
+          isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'
+        }`}>
           
           {/* Mobile Header */}
           <div className="lg:hidden bg-white border-b border-gray-100 p-4 flex-shrink-0">
@@ -687,34 +693,42 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
           </div>
 
           {/* Desktop Sidebar */}
-          <div className="hidden lg:flex lg:w-72 bg-gray-50 border-r border-gray-100 p-6 flex-col">
+          <div className={`hidden lg:flex lg:w-72 border-r p-6 flex-col ${
+            isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-100'
+          }`}>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-gray-900">Account</h2>
+              <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Account</h2>
               <button
                 onClick={onClose}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all"
+                className={`p-2 rounded-xl transition-all ${
+                  isDarkMode ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+                }`}
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             {/* Profile Card */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-6 shadow-sm">
+            <div className={`rounded-2xl border p-5 mb-6 shadow-sm ${
+              isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'
+            }`}>
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white text-xl font-bold" style={{ backgroundColor: '#1db954' }}>
                   {initials}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-bold text-gray-900 truncate">{userData.name}</h3>
-                  <p className="text-gray-500 text-sm truncate">{userData.title || 'Pearadox Member'}</p>
+                  <h3 className={`text-base font-bold truncate ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{userData.name}</h3>
+                  <p className={`text-sm truncate ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{userData.title || 'Pearadox Member'}</p>
                 </div>
               </div>
               {userData.institution && (
-                <p className="text-gray-400 text-xs mb-4 truncate">{userData.institution}</p>
+                <p className={`text-xs mb-4 truncate ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{userData.institution}</p>
               )}
               <button
                 onClick={handleSignOut}
-                className="w-full px-4 py-2.5 bg-gray-100 hover:bg-gray-200 rounded-xl text-gray-700 text-sm font-medium transition-colors"
+                className={`w-full px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  isDarkMode ? 'bg-gray-700 hover:bg-gray-600 text-gray-300' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                }`}
               >
                 Sign Out
               </button>
@@ -731,8 +745,8 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                     onClick={() => setActiveTab(tab.id)}
                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm ${
                       isActive
-                        ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-white/60'
+                        ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm border border-gray-200 dark:border-gray-700'
+                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-gray-800/60'
                     }`}
                     style={isActive ? { color: '#1db954' } : {}}
                   >
@@ -742,10 +756,38 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                 );
               })}
             </nav>
+
+            {/* Dark Mode Toggle */}
+            <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+                <div className="flex items-center space-x-3">
+                  {isDarkMode ? (
+                    <Moon className="h-4 w-4 text-indigo-500" />
+                  ) : (
+                    <Sun className="h-4 w-4 text-amber-500" />
+                  )}
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {isDarkMode ? 'Dark Mode' : 'Light Mode'}
+                  </span>
+                </div>
+                <button
+                  onClick={toggleDarkMode}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${
+                    isDarkMode ? 'bg-green-500' : 'bg-gray-300'
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform duration-200 ${
+                      isDarkMode ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 flex flex-col min-h-0 bg-white">
+          <div className={`flex-1 flex flex-col min-h-0 ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
             <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
               
               {/* Mobile Sign Out Button */}
@@ -765,8 +807,8 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                 <div className="space-y-6">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
-                      <h3 className="text-2xl font-bold text-gray-900">Profile Settings</h3>
-                      <p className="text-gray-500 text-sm mt-1">Manage your account information</p>
+                      <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Profile Settings</h3>
+                      <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Manage your account information</p>
                     </div>
                     <button
                       onClick={() => isEditing ? handleSave() : setIsEditing(!isEditing)}

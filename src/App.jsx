@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, ArrowDown, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle, Sparkles, Shuffle } from 'lucide-react';
+import { useTheme } from './contexts/ThemeContext';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
 import ArticleModal from './components/ArticleModal';
@@ -1414,13 +1415,26 @@ function App() {
 
   // handleSkillLevelChange and handleResearchInterestsChange are now provided by UserContext
 
+  // Get dark mode state
+  const { isDarkMode } = useTheme();
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30 relative overflow-hidden">
+    <div className={`min-h-screen relative overflow-hidden transition-colors duration-300 ${
+      isDarkMode 
+        ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' 
+        : 'bg-gradient-to-br from-gray-50 via-white to-blue-50/30'
+    }`}>
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-blue-400/10 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-purple-400/10 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-cyan-300/5 via-blue-300/5 to-purple-300/5 rounded-full blur-3xl"></div>
+        <div className={`absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl ${
+          isDarkMode ? 'bg-gradient-to-bl from-green-900/20 to-transparent' : 'bg-gradient-to-bl from-blue-400/10 to-transparent'
+        }`}></div>
+        <div className={`absolute bottom-0 left-0 w-96 h-96 rounded-full blur-3xl ${
+          isDarkMode ? 'bg-gradient-to-tr from-emerald-900/20 to-transparent' : 'bg-gradient-to-tr from-purple-400/10 to-transparent'
+        }`}></div>
+        <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full blur-3xl ${
+          isDarkMode ? 'bg-gradient-to-r from-green-900/10 via-emerald-900/10 to-teal-900/10' : 'bg-gradient-to-r from-cyan-300/5 via-blue-300/5 to-purple-300/5'
+        }`}></div>
       </div>
 
       <Header 
@@ -1466,10 +1480,14 @@ function App() {
           <div className="pt-8 sm:pt-2 pb-12 sm:pb-20 mb-8 sm:mb-12">
             <div className="mx-auto max-w-6xl px-4 sm:px-6">
               <div className="text-center mb-8 sm:mb-12">
-                <h2 className="font-sans text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight px-2">
+                <h2 className={`font-sans text-4xl sm:text-5xl md:text-6xl font-bold mb-3 sm:mb-4 leading-tight px-2 ${
+                  isDarkMode ? 'text-white' : 'text-gray-900'
+                }`}>
                 Unlock the Future
                 </h2>
-                <p className="text-base sm:text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
+                <p className={`text-base sm:text-lg max-w-3xl mx-auto leading-relaxed px-4 ${
+                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                }`}>
                 Learn, Earn, and Discover — the fastest way to understand AI research
                 </p>
               </div>
@@ -1481,13 +1499,17 @@ function App() {
                     {/* Spotlight Article - Takes 8 columns on large screens */}
                     <div className="lg:col-span-8 flex">
                   {!spotlightArticle || !spotlightTypingComplete ? (
-                    <div className="relative bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden w-full lg:h-full min-h-[220px] sm:min-h-[260px] lg:min-h-[300px]">
+                    <div className={`relative rounded-2xl shadow-lg border overflow-hidden w-full lg:h-full min-h-[220px] sm:min-h-[260px] lg:min-h-[300px] ${
+                      isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                    }`}>
                       <div className="relative h-full flex flex-col p-6 sm:p-8 lg:p-10 justify-center items-center">
                         <div className="text-center px-2">
-                          <h3 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2 overflow-hidden whitespace-nowrap border-r-2 border-gray-800 pr-1 animate-typing" style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', monospace" }}>
+                          <h3 className={`text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold mb-2 overflow-hidden whitespace-nowrap border-r-2 pr-1 animate-typing ${
+                            isDarkMode ? 'text-white border-gray-400' : 'text-gray-900 border-gray-800'
+                          }`} style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', monospace" }}>
                             Welcome to <span className="animate-syntaxHighlight">Pearadox</span>
                           </h3>
-                          <p className="text-gray-500 text-sm animate-fadeInDelayed opacity-0">
+                          <p className={`text-sm animate-fadeInDelayed opacity-0 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                             Discovering today's spotlight...
                           </p>
                         </div>
@@ -1531,7 +1553,11 @@ function App() {
                         }
                       `}</style>
                       <div 
-                        className="relative bg-white rounded-2xl shadow-lg border border-gray-200 hover:border-amber-300 hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden lg:h-full min-h-[220px] sm:min-h-[260px] lg:min-h-[300px]"
+                        className={`relative rounded-2xl shadow-lg border hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden lg:h-full min-h-[220px] sm:min-h-[260px] lg:min-h-[300px] ${
+                          isDarkMode 
+                            ? 'bg-gray-800 border-gray-700 hover:border-amber-500' 
+                            : 'bg-white border-gray-200 hover:border-amber-300'
+                        }`}
                         onClick={() => handleArticleClick(spotlightArticle)}
                       >
                         {/* Subtle accent bar */}
@@ -1541,27 +1567,39 @@ function App() {
                         <div className="relative h-full flex flex-col p-5 sm:p-6 lg:p-8 justify-between">
                           {/* Top section - badges */}
                           <div className="flex flex-wrap items-center gap-2 mb-4">
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
+                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                              isDarkMode ? 'bg-amber-900/50 text-amber-300' : 'bg-amber-100 text-amber-700'
+                            }`}>
                               ⭐ Today's Spotlight
                             </span>
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                              isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'
+                            }`}>
                               {spotlightArticle.category}
                             </span>
                           </div>
                           
                           {/* Middle section - title and description */}
                           <div className="flex-1 mb-4">
-                            <h4 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 leading-tight group-hover:text-amber-600 transition-colors line-clamp-2">
+                            <h4 className={`text-xl sm:text-2xl font-bold mb-3 leading-tight group-hover:text-amber-500 transition-colors line-clamp-2 ${
+                              isDarkMode ? 'text-white' : 'text-gray-900'
+                            }`}>
                               {spotlightArticle.title}
                             </h4>
-                            <p className="text-gray-600 text-sm sm:text-base leading-relaxed line-clamp-3">
+                            <p className={`text-sm sm:text-base leading-relaxed line-clamp-3 ${
+                              isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                            }`}>
                               {spotlightArticle.shortDescription}
                             </p>
                           </div>
                         
                           {/* Bottom section - metadata and CTA */}
-                          <div className="flex items-center justify-between pt-4 border-t border-gray-100 gap-3">
-                            <div className="flex items-center text-xs sm:text-sm text-gray-500 min-w-0 flex-1">
+                          <div className={`flex items-center justify-between pt-4 border-t gap-3 ${
+                            isDarkMode ? 'border-gray-700' : 'border-gray-100'
+                          }`}>
+                            <div className={`flex items-center text-xs sm:text-sm min-w-0 flex-1 ${
+                              isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                            }`}>
                               <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 flex-shrink-0" />
                               <span className="truncate">{spotlightArticle.authors?.split(',')[0]}{spotlightArticle.authors?.split(',').length > 1 ? ' et al.' : ''}</span>
                               <span className="mx-2 hidden sm:inline">•</span>
@@ -1581,7 +1619,9 @@ function App() {
                           
                     {/* Start Exploring Section - Takes 4 columns on large screens */}
                     <div className="lg:col-span-4 flex">
-                      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-5 sm:p-6 w-full lg:h-full lg:min-h-[300px] flex flex-col justify-between">
+                      <div className={`rounded-2xl shadow-lg border p-5 sm:p-6 w-full lg:h-full lg:min-h-[300px] flex flex-col justify-between ${
+                        isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                      }`}>
                         <div>
                           {/* Header */}
                           <div className="flex items-center gap-3 mb-4">
@@ -1589,28 +1629,34 @@ function App() {
                               <Eye className="h-5 w-5 text-white" />
                             </div>
                             <div>
-                              <h3 className="text-lg font-bold text-gray-900">Start Exploring</h3>
-                              <p className="text-gray-500 text-xs">Free access to all research</p>
+                              <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Start Exploring</h3>
+                              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Free access to all research</p>
                             </div>
                           </div>
                           
-                          <p className="text-gray-600 text-sm leading-relaxed mb-5">
+                          <p className={`text-sm leading-relaxed mb-5 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                             Dive into cutting-edge AI research. Browse thousands of simplified papers from top researchers.
                           </p>
                           
                           {/* Stats */}
                           <div className="grid grid-cols-3 gap-2 mb-5">
-                            <div className="text-center p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+                            <div className={`text-center p-2.5 rounded-xl border ${
+                              isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-100'
+                            }`}>
                               <div className="text-lg font-bold" style={{ color: '#1db954' }}>1M+</div>
-                              <div className="text-[10px] text-gray-500 font-medium">Authors</div>
+                              <div className={`text-[10px] font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Authors</div>
                             </div>
-                            <div className="text-center p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+                            <div className={`text-center p-2.5 rounded-xl border ${
+                              isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-100'
+                            }`}>
                               <div className="text-lg font-bold" style={{ color: '#1db954' }}>10k+</div>
-                              <div className="text-[10px] text-gray-500 font-medium">Papers</div>
+                              <div className={`text-[10px] font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Papers</div>
                             </div>
-                            <div className="text-center p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+                            <div className={`text-center p-2.5 rounded-xl border ${
+                              isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-100'
+                            }`}>
                               <div className="text-lg font-bold" style={{ color: '#1db954' }}>Free</div>
-                              <div className="text-[10px] text-gray-500 font-medium">Access</div>
+                              <div className={`text-[10px] font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Access</div>
                             </div>
                           </div>
                         </div>
@@ -1770,11 +1816,17 @@ function App() {
             {/* Trusted By Section */}
             <div className="mb-8 sm:mb-12">
               <div className="mx-auto max-w-7xl px-4 sm:px-6">
-                <div className="text-center py-6 px-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                  <p className="text-gray-500 text-sm mb-4 font-medium">Trusted by professionals at</p>
+                <div className={`text-center py-6 px-4 rounded-2xl border shadow-sm ${
+                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+                }`}>
+                  <p className={`text-sm mb-4 font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Trusted by professionals at</p>
                   <div className="flex flex-wrap justify-center items-center gap-3">
                     {['Google', 'Microsoft', 'Verizon', 'MIT', 'UCF', 'Cresta', 'J.P. Morgan', 'American Express'].map((company) => (
-                      <span key={company} className="px-4 py-1.5 bg-gray-50 rounded-full border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-100 transition-colors">
+                      <span key={company} className={`px-4 py-1.5 rounded-full border text-sm font-medium transition-colors ${
+                        isDarkMode 
+                          ? 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600' 
+                          : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                      }`}>
                         {company}
                       </span>
                     ))}
@@ -1797,10 +1849,10 @@ function App() {
 
               {/* Categories Section Header */}
               <div id="categories-section" className="text-center mb-6 sm:mb-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 px-4">
+                <h3 className={`text-xl sm:text-2xl font-bold mb-2 px-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   Browse by Topic
                 </h3>
-                <p className="text-gray-500 text-sm sm:text-base px-4 max-w-xl mx-auto">
+                <p className={`text-sm sm:text-base px-4 max-w-xl mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                   Select a research area to filter articles
                 </p>
               </div>
@@ -1820,7 +1872,9 @@ function App() {
                       className={`group relative p-4 sm:p-5 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
                         isSelected
                           ? 'bg-gray-900 border-gray-900 shadow-lg'
-                          : 'bg-white border-gray-200 hover:border-gray-300'
+                          : isDarkMode 
+                            ? 'bg-gray-800 border-gray-700 hover:border-gray-600' 
+                            : 'bg-white border-gray-200 hover:border-gray-300'
                       }`}
                     >
                       <div className="flex flex-col items-center justify-center space-y-2 sm:space-y-3">
@@ -1828,16 +1882,18 @@ function App() {
                         <div className={`p-2.5 sm:p-3 rounded-xl transition-colors ${
                           isSelected 
                             ? 'bg-white/10' 
-                            : 'bg-gray-100 group-hover:bg-gray-200'
+                            : isDarkMode 
+                              ? 'bg-gray-700 group-hover:bg-gray-600' 
+                              : 'bg-gray-100 group-hover:bg-gray-200'
                         }`}>
                           <Icon className={`h-5 w-5 sm:h-6 sm:w-6 transition-colors ${
-                            isSelected ? 'text-white' : 'text-gray-600'
+                            isSelected ? 'text-white' : isDarkMode ? 'text-gray-300' : 'text-gray-600'
                           }`} />
                         </div>
 
                         {/* Category name */}
                         <span className={`text-xs sm:text-sm font-semibold leading-tight text-center ${
-                          isSelected ? 'text-white' : 'text-gray-700'
+                          isSelected ? 'text-white' : isDarkMode ? 'text-gray-300' : 'text-gray-700'
                         }`}>
                           {shortenCategoryName(researchInterest)}
                         </span>
@@ -1856,13 +1912,19 @@ function App() {
                 {/* Random Category Button - Mobile only */}
                 <button
                   onClick={handleRandomCategory}
-                  className="group relative p-4 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400 transition-all duration-200 sm:hidden"
+                  className={`group relative p-4 rounded-xl border-2 border-dashed transition-all duration-200 sm:hidden ${
+                    isDarkMode 
+                      ? 'border-gray-600 bg-gray-800 hover:bg-gray-700 hover:border-gray-500' 
+                      : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400'
+                  }`}
                 >
                   <div className="flex flex-col items-center justify-center space-y-2">
-                    <div className="p-2.5 rounded-xl bg-white">
-                      <Shuffle className="h-5 w-5 text-gray-500 group-hover:rotate-180 transition-transform duration-300" />
+                    <div className={`p-2.5 rounded-xl ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
+                      <Shuffle className={`h-5 w-5 group-hover:rotate-180 transition-transform duration-300 ${
+                        isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                      }`} />
                     </div>
-                    <span className="text-xs font-semibold text-gray-600">
+                    <span className={`text-xs font-semibold ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                       Surprise Me
                     </span>
                   </div>
@@ -1891,10 +1953,10 @@ function App() {
           <div className="mb-6 sm:mb-8 px-4 sm:px-0" ref={resultsRef}>
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2">
+                <h3 className={`text-xl sm:text-2xl font-bold mb-1 sm:mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {selectedCategoryDisplay ? `${categories.find(c => c.category_name === selectedCategoryDisplay)?.category_name || selectedCategoryDisplay}` : 'Latest Research'}
                 </h3>
-                <p className="text-gray-600 text-sm sm:text-base">
+                <p className={`text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   {lastRefreshDate ? `Last Refresh: ${lastRefreshDate}` : 'Data loading...'}
                 </p>
               </div>
@@ -1932,7 +1994,11 @@ function App() {
                     }, 50);
                   }}
                   disabled={currentPage === 1}
-                  className="w-full sm:w-auto flex items-center justify-center px-5 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 font-medium text-sm"
+                  className={`w-full sm:w-auto flex items-center justify-center px-5 py-2.5 rounded-xl border disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 font-medium text-sm ${
+                    isDarkMode 
+                      ? 'border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:border-gray-600' 
+                      : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-300'
+                  }`}
                 >
                   <ChevronLeft className="h-4 w-4 mr-1.5" />
                   Previous
@@ -1950,11 +2016,11 @@ function App() {
                                    Math.abs(pageNum - currentPage) <= 1;
                     
                     if (!showPage && pageNum === 2 && currentPage > 4) {
-                      return <span key={pageNum} className="w-10 text-center text-gray-400 text-sm">...</span>;
+                      return <span key={pageNum} className={`w-10 text-center text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>...</span>;
                     }
                     
                     if (!showPage && pageNum === totalPages - 1 && currentPage < totalPages - 3) {
-                      return <span key={pageNum} className="w-10 text-center text-gray-400 text-sm">...</span>;
+                      return <span key={pageNum} className={`w-10 text-center text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>...</span>;
                     }
                     
                     if (!showPage) return null;
@@ -1974,7 +2040,9 @@ function App() {
                         className={`w-10 h-10 rounded-xl font-medium transition-all duration-200 text-sm flex items-center justify-center ${
                           isActive
                             ? 'text-white shadow-md'
-                            : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300'
+                            : isDarkMode 
+                              ? 'bg-gray-800 border border-gray-700 text-gray-300 hover:bg-gray-700 hover:border-gray-600' 
+                              : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300'
                         }`}
                         style={isActive ? { backgroundColor: '#1db954' } : {}}
                       >
@@ -1996,7 +2064,11 @@ function App() {
                     }, 50);
                   }}
                   disabled={currentPage === totalPages}
-                  className="w-full sm:w-auto flex items-center justify-center px-5 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 font-medium text-sm"
+                  className={`w-full sm:w-auto flex items-center justify-center px-5 py-2.5 rounded-xl border disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 font-medium text-sm ${
+                    isDarkMode 
+                      ? 'border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:border-gray-600' 
+                      : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-300'
+                  }`}
                 >
                   Next
                   <ChevronRight className="h-4 w-4 ml-1.5" />

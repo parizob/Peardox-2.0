@@ -3,7 +3,145 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-gray-50 text-gray-900;
+  /* Light mode (default) */
+  :root {
+    --bg-primary: #f9fafb;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f3f4f6;
+    --bg-accent: #ecfdf5;
+    
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-tertiary: #6b7280;
+    --text-muted: #9ca3af;
+    
+    --border-primary: #e5e7eb;
+    --border-secondary: #d1d5db;
+    
+    --accent-primary: #1db954;
+    --accent-hover: #16a14a;
+    
+    --card-bg: #ffffff;
+    --card-border: #e5e7eb;
+    --card-shadow: rgba(0, 0, 0, 0.1);
+    
+    --modal-bg: #ffffff;
+    --modal-overlay: rgba(0, 0, 0, 0.6);
+    
+    --input-bg: #ffffff;
+    --input-border: #d1d5db;
+    --input-focus: #1db954;
   }
-} 
+
+  /* Dark mode */
+  .dark {
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #242424;
+    --bg-accent: #0d2818;
+    
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --text-tertiary: #9ca3af;
+    --text-muted: #6b7280;
+    
+    --border-primary: #2d2d2d;
+    --border-secondary: #404040;
+    
+    --accent-primary: #1db954;
+    --accent-hover: #22c55e;
+    
+    --card-bg: #1a1a1a;
+    --card-border: #2d2d2d;
+    --card-shadow: rgba(0, 0, 0, 0.4);
+    
+    --modal-bg: #1a1a1a;
+    --modal-overlay: rgba(0, 0, 0, 0.8);
+    
+    --input-bg: #242424;
+    --input-border: #404040;
+    --input-focus: #1db954;
+  }
+
+  body {
+    @apply transition-colors duration-200;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+  }
+
+  /* Dark mode scrollbar */
+  .dark ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .dark ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: var(--border-secondary);
+    border-radius: 5px;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: #525252;
+  }
+}
+
+@layer components {
+  /* Dark mode specific component styles */
+  .dark-card {
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+  }
+
+  .dark-input {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-primary);
+  }
+
+  .dark-input:focus {
+    border-color: var(--input-focus);
+  }
+
+  .dark-input::placeholder {
+    color: var(--text-muted);
+  }
+}
+
+@layer utilities {
+  /* Utility classes for dark mode */
+  .bg-theme-primary {
+    background-color: var(--bg-primary);
+  }
+
+  .bg-theme-secondary {
+    background-color: var(--bg-secondary);
+  }
+
+  .bg-theme-tertiary {
+    background-color: var(--bg-tertiary);
+  }
+
+  .text-theme-primary {
+    color: var(--text-primary);
+  }
+
+  .text-theme-secondary {
+    color: var(--text-secondary);
+  }
+
+  .text-theme-tertiary {
+    color: var(--text-tertiary);
+  }
+
+  .border-theme-primary {
+    border-color: var(--border-primary);
+  }
+
+  .border-theme-secondary {
+    border-color: var(--border-secondary);
+  }
+}

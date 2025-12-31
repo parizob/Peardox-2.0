@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Heart, ExternalLink, Calendar, Users, Tag, Share2, Brain, Sparkles, BookOpen, GraduationCap, User, Check, MessageCircle, Send, Edit3, Trash2, MoreVertical, CheckCircle, XCircle, HelpCircle, ChevronDown, ArrowUpRight } from 'lucide-react';
 import { arxivAPI, commentsAPI, quizAPI } from '../lib/supabase';
 import { useUser } from '../contexts/UserContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, user: userProp, onOpenAccountModal }) => {
   const [showCopiedPopup, setShowCopiedPopup] = useState(false);
@@ -27,6 +28,9 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
   
   // Get user context
   const { user, userProfile } = useUser();
+  
+  // Get theme context
+  const { isDarkMode } = useTheme();
   
   // Format date to human-readable format
   const formatDate = (dateString) => {
@@ -357,11 +361,13 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
       {/* Main Modal */}
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 z-50">
         <div 
-          className="bg-white rounded-2xl max-w-3xl w-full max-h-[85vh] sm:max-h-[90vh] overflow-hidden shadow-2xl flex flex-col"
+          className={`rounded-2xl max-w-3xl w-full max-h-[85vh] sm:max-h-[90vh] overflow-hidden shadow-2xl flex flex-col ${
+            isDarkMode ? 'bg-gray-900' : 'bg-white'
+          }`}
           style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
         >
           {/* Minimal Header */}
-          <div className="flex-shrink-0 px-6 sm:px-8 pt-6 pb-4 border-b border-gray-100">
+          <div className={`flex-shrink-0 px-6 sm:px-8 pt-6 pb-4 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 {/* Skill Level Badge */}
@@ -378,7 +384,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                 )}
                 
                 {/* Title */}
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight tracking-tight">
+                <h1 className={`text-xl sm:text-2xl font-bold leading-tight tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {article.title}
                 </h1>
               </div>
@@ -434,7 +440,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
               
               {/* Key Insight - The Star of the Show */}
               <section>
-                <p className="text-lg sm:text-xl text-gray-700 leading-relaxed font-light">
+                <p className={`text-lg sm:text-xl leading-relaxed font-light ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   {article.shortDescription}
                 </p>
               </section>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, ChevronDown, Filter, X, Bookmark, User, Info, BookOpen, Upload, Menu, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Header = ({
   searchTerm,
@@ -21,6 +22,9 @@ const Header = ({
   const [scrollY, setScrollY] = useState(0);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isScrollingDown, setIsScrollingDown] = useState(false);
+  
+  // Theme context
+  const { isDarkMode } = useTheme();
   
   const dropdownRef = useRef(null);
   const menuDropdownRef = useRef(null);
@@ -130,8 +134,12 @@ const Header = ({
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       scrollY > 10 
-        ? 'bg-white/95 backdrop-blur-lg shadow-lg' 
-        : 'bg-white/90 backdrop-blur-sm'
+        ? isDarkMode 
+          ? 'bg-gray-900/95 backdrop-blur-lg shadow-lg border-b border-gray-800' 
+          : 'bg-white/95 backdrop-blur-lg shadow-lg' 
+        : isDarkMode 
+          ? 'bg-gray-900/90 backdrop-blur-sm' 
+          : 'bg-white/90 backdrop-blur-sm'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="relative flex items-center justify-between min-w-0">
@@ -146,7 +154,7 @@ const Header = ({
                 className={`flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   selectedCategory
                     ? 'text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : isDarkMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
                 style={selectedCategory ? { backgroundColor: '#1db954' } : {}}
               >
@@ -221,8 +229,8 @@ const Header = ({
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                   isMenuOpen
-                    ? 'bg-gray-200 text-gray-900'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-900'
+                    : isDarkMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
                 <Menu className="h-4 w-4" />
@@ -231,11 +239,15 @@ const Header = ({
               </button>
 
               {isMenuOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 overflow-hidden">
+                <div className={`absolute top-full left-0 mt-2 w-56 border rounded-xl shadow-xl z-50 overflow-hidden ${
+                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+                }`}>
                   <div className="py-2">
                     <Link
                       to="/aboutus"
-                      className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                      className={`flex items-center px-4 py-3 transition-colors ${
+                        isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'
+                      }`}
                       onClick={(e) => {
                         e.stopPropagation();
                         setIsMenuOpen(false);
@@ -243,16 +255,18 @@ const Header = ({
                         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                       }}
                     >
-                      <Info className="h-4 w-4 mr-3 text-gray-500" />
+                      <Info className={`h-4 w-4 mr-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                       <div>
                         <div className="text-sm font-medium">About Us</div>
-                        <div className="text-xs text-gray-500">Our mission & story</div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Our mission & story</div>
                       </div>
                     </Link>
                     
                     <Link
                       to="/blog"
-                      className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                      className={`flex items-center px-4 py-3 transition-colors ${
+                        isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'
+                      }`}
                       onClick={(e) => {
                         e.stopPropagation();
                         setIsMenuOpen(false);
@@ -260,16 +274,18 @@ const Header = ({
                         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                       }}
                     >
-                      <BookOpen className="h-4 w-4 mr-3 text-gray-500" />
+                      <BookOpen className={`h-4 w-4 mr-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                       <div>
                         <div className="text-sm font-medium">Blog</div>
-                        <div className="text-xs text-gray-500">Insights & perspectives</div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Insights & perspectives</div>
                       </div>
                     </Link>
                     
                     <Link
                       to="/store"
-                      className="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                      className={`flex items-center px-4 py-3 transition-colors ${
+                        isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'
+                      }`}
                       onClick={(e) => {
                         e.stopPropagation();
                         setIsMenuOpen(false);
@@ -277,10 +293,10 @@ const Header = ({
                         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                       }}
                     >
-                      <ShoppingBag className="h-4 w-4 mr-3 text-gray-500" />
+                      <ShoppingBag className={`h-4 w-4 mr-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                       <div>
                         <div className="text-sm font-medium">Store</div>
-                        <div className="text-xs text-gray-500">Redeem PEAR tokens</div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Redeem PEAR tokens</div>
                       </div>
                     </Link>
                   </div>
@@ -406,7 +422,7 @@ const Header = ({
                 alt="Pearadox" 
                 className="h-6 w-6 sm:h-8 sm:w-8"
               />
-              <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
+              <h1 className={`text-lg sm:text-xl md:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Pearadox
               </h1>
             </Link>
@@ -449,7 +465,11 @@ const Header = ({
               {/* Saved Articles */}
               <button
                 onClick={onShowSavedArticles}
-                className="relative p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                className={`relative p-2 rounded-lg transition-colors ${
+                  isDarkMode 
+                    ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
               >
                 <Bookmark className="h-4 w-4" />
                 {savedCount > 0 && (
@@ -462,7 +482,11 @@ const Header = ({
               {/* Account */}
               <button
                 onClick={onShowAccount}
-                className="p-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                className={`p-2 rounded-lg transition-colors ${
+                  isDarkMode 
+                    ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
               >
                 <User className="h-4 w-4" />
               </button>
