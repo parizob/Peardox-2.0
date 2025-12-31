@@ -655,41 +655,46 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
         }`}>
           
           {/* Mobile Header */}
-          <div className="lg:hidden bg-white border-b border-gray-100 p-4 flex-shrink-0">
+          <div className={`lg:hidden border-b p-4 flex-shrink-0 ${
+            isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+          }`}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
                 <div className="w-11 h-11 rounded-xl flex items-center justify-center text-white text-base font-bold" style={{ backgroundColor: '#1db954' }}>
                   {initials}
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-gray-900">{userData.name}</h3>
-                  <p className="text-gray-500 text-xs">{userData.title || 'Pearadox Member'}</p>
+                  <h3 className={`text-base font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{userData.name}</h3>
+                  <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{userData.title || 'Pearadox Member'}</p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all"
+                className={`p-2 rounded-xl transition-all ${
+                  isDarkMode ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+                }`}
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
             
             {/* Mobile Navigation */}
-            <nav className="flex space-x-1 bg-gray-50 rounded-xl p-1">
+            <nav className="flex space-x-1 bg-gray-50 dark:bg-gray-800 rounded-xl p-1">
               {tabs.map(tab => {
                 const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex-1 flex flex-col items-center justify-center space-y-1 px-1 py-2.5 rounded-lg transition-all duration-200 text-xs ${
-                      activeTab === tab.id
-                        ? 'bg-white text-gray-900 shadow-sm'
-                        : 'text-gray-500 hover:text-gray-700'
+                    className={`flex-1 flex flex-col items-center justify-center space-y-1 px-1 py-2.5 rounded-lg transition-all duration-300 ease-out text-xs ${
+                      isActive
+                        ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
                     }`}
-                    style={activeTab === tab.id ? { color: '#1db954' } : {}}
+                    style={isActive ? { color: '#1db954' } : {}}
                   >
-                    <Icon className="h-4 w-4 flex-shrink-0" />
+                    <Icon className={`h-4 w-4 flex-shrink-0 transition-transform duration-300 ${isActive ? 'scale-110' : ''}`} />
                     <span className="font-medium text-center leading-tight">{tab.label.split(' ')[0]}</span>
                   </button>
                 );
@@ -748,14 +753,14 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm ${
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-300 ease-out text-sm border ${
                       isActive
-                        ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm border border-gray-200 dark:border-gray-700'
-                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-gray-800/60'
+                        ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm border-gray-200 dark:border-gray-700'
+                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-gray-800/60 border-transparent'
                     }`}
                     style={isActive ? { color: '#1db954' } : {}}
                   >
-                    <Icon className="h-4 w-4 flex-shrink-0" />
+                    <Icon className={`h-4 w-4 flex-shrink-0 transition-transform duration-300 ${isActive ? 'scale-110' : ''}`} />
                     <span className="font-medium">{tab.label}</span>
                   </button>
                 );
@@ -800,7 +805,9 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                 <div className="lg:hidden mb-6">
                   <button
                     onClick={handleSignOut}
-                    className="w-full px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-medium transition-colors"
+                    className={`w-full px-4 py-3 rounded-xl font-medium transition-colors ${
+                      isDarkMode ? 'bg-gray-700 hover:bg-gray-600 text-gray-300' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                    }`}
                   >
                     Sign Out
                   </button>
@@ -1033,8 +1040,8 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
               {activeTab === 'research' && (
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900">Research Analytics</h3>
-                    <p className="text-gray-500 text-sm mt-1">Track your reading progress and insights</p>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Research Analytics</h3>
+                    <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Track your reading progress and insights</p>
                   </div>
 
                   {analyticsLoading ? (
@@ -1043,17 +1050,17 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                         <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1db954' }}>
                           <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent"></div>
                         </div>
-                        <p className="text-gray-500">Loading analytics...</p>
+                        <p className={isDarkMode ? 'text-gray-400' : 'text-gray-500'}>Loading analytics...</p>
                       </div>
                     </div>
                   ) : !analyticsData ? (
                     <div className="flex items-center justify-center min-h-[300px]">
                       <div className="text-center px-4">
-                        <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
                           <Brain className="h-8 w-8 text-gray-400" />
                         </div>
-                        <h4 className="text-xl font-bold text-gray-900 mb-2">Start Your Research Journey</h4>
-                        <p className="text-gray-500 max-w-sm mx-auto text-sm">
+                        <h4 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Start Your Research Journey</h4>
+                        <p className={`max-w-sm mx-auto text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                           Begin reading articles to see your personalized analytics here.
                         </p>
                       </div>
@@ -1062,48 +1069,48 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                     <div className="space-y-6">
                       {/* Stats Grid */}
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+                        <div className={`rounded-xl p-5 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-100'}`}>
                           <div className="flex items-center">
                             <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
                               <BookOpen className="h-5 w-5 text-white" />
                             </div>
                             <div className="ml-4">
-                              <p className="text-2xl font-bold text-gray-900">{analyticsData.totalViews || 0}</p>
-                              <p className="text-gray-500 text-sm">Total Papers Read</p>
+                              <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{analyticsData.totalViews || 0}</p>
+                              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total Papers Read</p>
                             </div>
                           </div>
                         </div>
 
-                        <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+                        <div className={`rounded-xl p-5 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-100'}`}>
                           <div className="flex items-center">
                             <div className="w-10 h-10 rounded-xl bg-blue-500 flex items-center justify-center">
                               <BarChart3 className="h-5 w-5 text-white" />
                             </div>
                             <div className="ml-4">
-                              <p className="text-2xl font-bold text-gray-900">{analyticsData.categoriesViewed?.length || 0}</p>
-                              <p className="text-gray-500 text-sm">Total Topics Covered</p>
+                              <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{analyticsData.categoriesViewed?.length || 0}</p>
+                              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total Topics Covered</p>
                             </div>
                           </div>
                         </div>
 
-                        <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+                        <div className={`rounded-xl p-5 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-100'}`}>
                           <div className="flex items-center">
                             <div className="w-10 h-10 rounded-xl bg-purple-500 flex items-center justify-center">
                               <Calendar className="h-5 w-5 text-white" />
                             </div>
                             <div className="ml-4">
-                              <p className="text-2xl font-bold text-gray-900">{weeklyData.reduce((sum, day) => sum + day.views, 0)}</p>
-                              <p className="text-gray-500 text-sm">Papers This Week</p>
+                              <p className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{weeklyData.reduce((sum, day) => sum + day.views, 0)}</p>
+                              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Papers This Week</p>
                             </div>
                           </div>
                         </div>
                       </div>
 
                       {/* Weekly Chart */}
-                      <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+                      <div className={`rounded-xl p-5 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-100'}`}>
                         <div className="flex items-center mb-4">
-                          <TrendingUp className="h-5 w-5 text-gray-600 mr-2" />
-                          <h4 className="text-base font-semibold text-gray-900">This Week</h4>
+                          <TrendingUp className={`h-5 w-5 mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+                          <h4 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>This Week</h4>
                         </div>
                         <div className="space-y-3">
                           {weeklyData.map((day, index) => {
@@ -1112,10 +1119,10 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                             
                             return (
                               <div key={index} className="flex items-center space-x-3">
-                                <div className={`w-16 text-sm font-medium ${day.isToday ? 'font-semibold' : 'text-gray-500'}`} style={day.isToday ? { color: '#1db954' } : {}}>
+                                <div className={`w-16 text-sm font-medium ${day.isToday ? 'font-semibold' : isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} style={day.isToday ? { color: '#1db954' } : {}}>
                                   {day.dayShort}
                                 </div>
-                                <div className="flex-1 bg-gray-200 rounded-full h-6 overflow-hidden">
+                                <div className={`flex-1 rounded-full h-6 overflow-hidden ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
                                   <div 
                                     className="h-full rounded-full transition-all duration-500 flex items-center justify-center"
                                     style={{ width: `${Math.max(percentage, day.views > 0 ? 15 : 0)}%`, backgroundColor: '#1db954' }}
@@ -1135,10 +1142,10 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
 
                       {/* Top Categories */}
                       {categoryStats.length > 0 && (
-                        <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+                        <div className={`rounded-xl p-5 border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-100'}`}>
                           <div className="flex items-center mb-4">
-                            <BarChart3 className="h-5 w-5 text-gray-600 mr-2" />
-                            <h4 className="text-base font-semibold text-gray-900">Top Categories</h4>
+                            <BarChart3 className={`h-5 w-5 mr-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`} />
+                            <h4 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Top Categories</h4>
                           </div>
                           <div className="space-y-3">
                             {categoryStats.map((category, index) => {
@@ -1148,10 +1155,10 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                               return (
                                 <div key={index} className="space-y-1.5">
                                   <div className="flex items-center justify-between text-sm">
-                                    <span className="text-gray-700 font-medium truncate flex-1">{category.category}</span>
-                                    <span className="text-gray-500 ml-2">{category.views}</span>
+                                    <span className={`font-medium truncate flex-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{category.category}</span>
+                                    <span className={`ml-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{category.views}</span>
                                   </div>
-                                  <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
+                                  <div className={`rounded-full h-2 overflow-hidden ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
                                     <div 
                                       className="h-full rounded-full transition-all duration-500"
                                       style={{ width: `${percentage}%`, backgroundColor: '#1db954' }}
@@ -1172,20 +1179,20 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
               {activeTab === 'achievements' && (
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-2xl font-bold text-gray-900">Achievements</h3>
-                    <p className="text-gray-500 text-sm mt-1">Track your research milestones</p>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Achievements</h3>
+                    <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Track your research milestones</p>
                   </div>
 
                   <div className="flex items-center justify-center min-h-[300px]">
                     <div className="text-center px-4">
-                      <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
                         <Target className="h-8 w-8 text-gray-400" />
                       </div>
-                      <h4 className="text-xl font-bold text-gray-900 mb-2">Coming Soon</h4>
-                      <p className="text-gray-500 max-w-sm mx-auto text-sm">
+                      <h4 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Coming Soon</h4>
+                      <p className={`max-w-sm mx-auto text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                         Earn badges, track milestones, and celebrate your research journey.
                       </p>
-                      <div className="mt-4 inline-flex items-center px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
+                      <div className={`mt-4 inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
                         <Globe className="h-3 w-3 mr-1.5" />
                         In Development
                       </div>
