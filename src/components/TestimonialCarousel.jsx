@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Star, Quote } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 const TestimonialCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { isDarkMode } = useTheme();
 
   // Sample testimonial data - 6 tiles (shortened for better fit)
   const testimonials = [
@@ -57,18 +59,26 @@ const TestimonialCarousel = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-white via-blue-50/30 to-white rounded-3xl shadow-xl border border-gray-200 p-5 sm:p-6 h-full flex flex-col justify-between relative overflow-hidden group hover:shadow-2xl transition-all duration-500">
+    <div className={`rounded-3xl shadow-xl border p-5 sm:p-6 h-full flex flex-col justify-between relative overflow-hidden group hover:shadow-2xl transition-all duration-500 ${
+      isDarkMode 
+        ? 'bg-gradient-to-br from-gray-800 via-gray-800 to-gray-800/90 border-gray-700' 
+        : 'bg-gradient-to-br from-white via-blue-50/30 to-white border-gray-200'
+    }`}>
       {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" style={{ background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.03) 100%)' }}></div>
-      <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full blur-2xl" style={{ background: 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(37, 99, 235, 0.02) 100%)' }}></div>
+      <div className={`absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 ${
+        isDarkMode ? 'bg-blue-900/20' : ''
+      }`} style={!isDarkMode ? { background: 'radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.03) 100%)' } : {}}></div>
+      <div className={`absolute -bottom-10 -left-10 w-32 h-32 rounded-full blur-2xl ${
+        isDarkMode ? 'bg-blue-900/10' : ''
+      }`} style={!isDarkMode ? { background: 'radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, rgba(37, 99, 235, 0.02) 100%)' } : {}}></div>
       
       <div className="relative z-10 flex-1 flex flex-col">
         {/* Header */}
         <div className="mb-4">
-          <h3 className="text-lg sm:text-xl font-bold text-gray-900 leading-tight">
+          <h3 className={`text-lg sm:text-xl font-bold leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             What Our Readers Say
           </h3>
-          <p className="text-gray-500 text-xs sm:text-sm">
+          <p className={`text-xs sm:text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
             Trusted by professionals worldwide
           </p>
         </div>
@@ -78,7 +88,11 @@ const TestimonialCarousel = () => {
           {/* Left Arrow */}
           <button
             onClick={goToPrevious}
-            className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-sm border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200 transition-all mr-3 flex-shrink-0"
+            className={`hidden sm:flex items-center justify-center w-8 h-8 rounded-full shadow-sm border transition-all mr-3 flex-shrink-0 ${
+              isDarkMode 
+                ? 'bg-gray-700 border-gray-600 text-gray-400 hover:text-green-400 hover:border-green-600' 
+                : 'bg-white border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200'
+            }`}
             aria-label="Previous testimonial"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -95,17 +109,17 @@ const TestimonialCarousel = () => {
               {/* Content */}
               <div className="flex-1 min-w-0">
                 {/* Quote */}
-                <blockquote className="text-gray-700 text-sm leading-relaxed mb-2">
+                <blockquote className={`text-sm leading-relaxed mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   "{testimonials[currentIndex].content}"
                 </blockquote>
                 
                 {/* Author & Rating */}
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-gray-900 text-xs">
+                    <div className={`font-semibold text-xs ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       {testimonials[currentIndex].name}
                     </div>
-                    <div className="text-gray-500 text-[10px]">
+                    <div className={`text-[10px] ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                       {testimonials[currentIndex].role} • {testimonials[currentIndex].company}
                     </div>
                   </div>
@@ -124,7 +138,11 @@ const TestimonialCarousel = () => {
           {/* Right Arrow */}
           <button
             onClick={goToNext}
-            className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-sm border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200 transition-all ml-3 flex-shrink-0"
+            className={`hidden sm:flex items-center justify-center w-8 h-8 rounded-full shadow-sm border transition-all ml-3 flex-shrink-0 ${
+              isDarkMode 
+                ? 'bg-gray-700 border-gray-600 text-gray-400 hover:text-green-400 hover:border-green-600' 
+                : 'bg-white border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200'
+            }`}
             aria-label="Next testimonial"
           >
             <ChevronRight className="h-4 w-4" />
@@ -132,10 +150,14 @@ const TestimonialCarousel = () => {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="flex sm:hidden items-center justify-between mt-3 pt-3 border-t border-gray-100">
+        <div className={`flex sm:hidden items-center justify-between mt-3 pt-3 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
           <button
             onClick={goToPrevious}
-            className="flex items-center justify-center w-7 h-7 rounded-full bg-white shadow-sm border border-gray-200 text-gray-500 hover:text-blue-600 transition-colors"
+            className={`flex items-center justify-center w-7 h-7 rounded-full shadow-sm border transition-colors ${
+              isDarkMode 
+                ? 'bg-gray-700 border-gray-600 text-gray-400 hover:text-green-400' 
+                : 'bg-white border-gray-200 text-gray-500 hover:text-blue-600'
+            }`}
             aria-label="Previous testimonial"
           >
             <ChevronLeft className="h-3.5 w-3.5" />
@@ -149,8 +171,8 @@ const TestimonialCarousel = () => {
                 onClick={() => goToSlide(index)}
                 className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
                   index === currentIndex
-                    ? 'bg-blue-600 scale-125'
-                    : 'bg-gray-300'
+                    ? isDarkMode ? 'bg-green-500 scale-125' : 'bg-blue-600 scale-125'
+                    : isDarkMode ? 'bg-gray-600' : 'bg-gray-300'
                 }`}
                 aria-label={`Go to testimonial ${index + 1}`}
               />
@@ -159,7 +181,11 @@ const TestimonialCarousel = () => {
 
           <button
             onClick={goToNext}
-            className="flex items-center justify-center w-7 h-7 rounded-full bg-white shadow-sm border border-gray-200 text-gray-500 hover:text-blue-600 transition-colors"
+            className={`flex items-center justify-center w-7 h-7 rounded-full shadow-sm border transition-colors ${
+              isDarkMode 
+                ? 'bg-gray-700 border-gray-600 text-gray-400 hover:text-green-400' 
+                : 'bg-white border-gray-200 text-gray-500 hover:text-blue-600'
+            }`}
             aria-label="Next testimonial"
           >
             <ChevronRight className="h-3.5 w-3.5" />
@@ -174,8 +200,8 @@ const TestimonialCarousel = () => {
               onClick={() => goToSlide(index)}
               className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
                 index === currentIndex
-                  ? 'bg-blue-600 scale-125'
-                  : 'bg-gray-300 hover:bg-gray-400'
+                  ? isDarkMode ? 'bg-green-500 scale-125' : 'bg-blue-600 scale-125'
+                  : isDarkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-300 hover:bg-gray-400'
               }`}
               aria-label={`Go to testimonial ${index + 1}`}
             />

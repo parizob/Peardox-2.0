@@ -1683,10 +1683,18 @@ function App() {
                   {/* Left Column - Research Hub + PEAR Wallet stacked */}
                   <div className="flex flex-col gap-6">
                     {/* Personalize Section */}
-                    <div className="relative bg-gradient-to-br from-white via-green-50/30 to-emerald-50/50 rounded-3xl shadow-xl border border-green-100 p-6 overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                    <div className={`relative rounded-3xl shadow-xl border p-6 overflow-hidden group hover:shadow-2xl transition-all duration-500 ${
+                      isDarkMode 
+                        ? 'bg-gradient-to-br from-gray-800 via-gray-800 to-gray-800/90 border-gray-700' 
+                        : 'bg-gradient-to-br from-white via-green-50/30 to-emerald-50/50 border-green-100'
+                    }`}>
                       {/* Decorative elements */}
-                      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-green-200/20 to-emerald-200/10 rounded-full blur-3xl"></div>
-                      <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-green-100/30 to-transparent rounded-full blur-2xl"></div>
+                      <div className={`absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl ${
+                        isDarkMode ? 'bg-green-900/20' : 'bg-gradient-to-br from-green-200/20 to-emerald-200/10'
+                      }`}></div>
+                      <div className={`absolute -bottom-10 -left-10 w-32 h-32 rounded-full blur-2xl ${
+                        isDarkMode ? 'bg-green-900/10' : 'bg-gradient-to-br from-green-100/30 to-transparent'
+                      }`}></div>
                       
                       <div className="relative">
                         <div className="flex items-center gap-4 mb-4">
@@ -1694,10 +1702,10 @@ function App() {
                             <User className="h-6 w-6 text-white" />
                           </div>
                           <div>
-                            <h3 className="text-lg font-bold text-gray-900">
+                            <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                               {user ? 'Your Research Hub' : 'Personalize Your Feed'}
                             </h3>
-                            <p className="text-gray-500 text-sm">
+                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                               {user 
                                 ? `Welcome back, ${userProfile?.full_name || user.email?.split('@')[0] || 'researcher'}!`
                                 : 'Track your learning journey'
@@ -1708,22 +1716,28 @@ function App() {
                         
                         {user ? (
                           <div className="grid grid-cols-3 gap-2">
-                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2.5 text-center border border-green-100 shadow-sm">
+                            <div className={`backdrop-blur-sm rounded-xl p-2.5 text-center border shadow-sm ${
+                              isDarkMode ? 'bg-gray-700/80 border-gray-600' : 'bg-white/80 border-green-100'
+                            }`}>
                               <div className="text-xl font-bold" style={{ color: '#1db954' }}>{analyticsData?.totalViews || 0}</div>
-                              <div className="text-[9px] font-medium text-gray-500 mt-0.5 leading-tight">Total Papers Read</div>
+                              <div className={`text-[9px] font-medium mt-0.5 leading-tight ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total Papers Read</div>
                             </div>
-                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2.5 text-center border border-green-100 shadow-sm">
+                            <div className={`backdrop-blur-sm rounded-xl p-2.5 text-center border shadow-sm ${
+                              isDarkMode ? 'bg-gray-700/80 border-gray-600' : 'bg-white/80 border-green-100'
+                            }`}>
                               <div className="text-xl font-bold" style={{ color: '#1db954' }}>{analyticsData?.categoriesViewed?.length || 0}</div>
-                              <div className="text-[9px] font-medium text-gray-500 mt-0.5 leading-tight">Total Topics Covered</div>
+                              <div className={`text-[9px] font-medium mt-0.5 leading-tight ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total Topics Covered</div>
                             </div>
-                            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-2.5 text-center border border-green-100 shadow-sm">
+                            <div className={`backdrop-blur-sm rounded-xl p-2.5 text-center border shadow-sm ${
+                              isDarkMode ? 'bg-gray-700/80 border-gray-600' : 'bg-white/80 border-green-100'
+                            }`}>
                               <div className="text-xl font-bold" style={{ color: '#1db954' }}>{weeklyData.reduce((sum, day) => sum + day.views, 0)}</div>
-                              <div className="text-[9px] font-medium text-gray-500 mt-0.5 leading-tight">Papers This Week</div>
+                              <div className={`text-[9px] font-medium mt-0.5 leading-tight ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Papers This Week</div>
                             </div>
                           </div>
                         ) : (
                           <div className="space-y-3">
-                            <p className="text-gray-600 text-sm">
+                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                               Create a free account to save articles and track progress.
                             </p>
                             <button
@@ -1742,10 +1756,18 @@ function App() {
                     </div>
 
                     {/* PEAR Tokens Section */}
-                    <div className="relative bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50/30 rounded-3xl shadow-xl border border-amber-200 p-6 overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                    <div className={`relative rounded-3xl shadow-xl border p-6 overflow-hidden group hover:shadow-2xl transition-all duration-500 ${
+                      isDarkMode 
+                        ? 'bg-gradient-to-br from-gray-800 via-amber-900/20 to-gray-800 border-amber-700/50' 
+                        : 'bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50/30 border-amber-200'
+                    }`}>
                       {/* Decorative elements */}
-                      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-amber-200/30 to-yellow-200/20 rounded-full blur-3xl"></div>
-                      <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-orange-100/30 to-transparent rounded-full blur-2xl"></div>
+                      <div className={`absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl ${
+                        isDarkMode ? 'bg-amber-900/30' : 'bg-gradient-to-br from-amber-200/30 to-yellow-200/20'
+                      }`}></div>
+                      <div className={`absolute -bottom-10 -left-10 w-32 h-32 rounded-full blur-2xl ${
+                        isDarkMode ? 'bg-orange-900/20' : 'bg-gradient-to-br from-orange-100/30 to-transparent'
+                      }`}></div>
                       
                       <div className="relative">
                         {user ? (
@@ -1773,8 +1795,8 @@ function App() {
                             
                             {/* Desktop: PEAR Tokens label */}
                             <div className="hidden sm:flex flex-col flex-1">
-                              <div className="text-xl font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">PEAR Tokens</div>
-                              <div className="text-sm text-gray-500">Redeem in the store for rewards</div>
+                              <div className="text-xl font-bold bg-gradient-to-r from-amber-500 to-yellow-500 bg-clip-text text-transparent">PEAR Tokens</div>
+                              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Redeem in the store for rewards</div>
                             </div>
                             
                             <Link
@@ -1788,8 +1810,8 @@ function App() {
                           </div>
                         ) : (
                           <div className="space-y-3">
-                            <h3 className="text-xl font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">Earn PEAR Tokens</h3>
-                            <p className="text-gray-600 text-sm">
+                            <h3 className="text-xl font-bold bg-gradient-to-r from-amber-500 to-yellow-500 bg-clip-text text-transparent">Earn PEAR Tokens</h3>
+                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                               Answer quiz questions to earn tokens and unlock rewards.
                             </p>
                             <button
