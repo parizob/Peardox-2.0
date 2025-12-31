@@ -581,7 +581,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                         value={newComment}
                         onChange={(e) => setNewComment(e.target.value)}
                         placeholder="Share your thoughts on this research..."
-                        className={`w-full p-4 pr-24 border rounded-xl resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all text-sm ${
+                        className={`w-full p-4 pr-24 border rounded-xl resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent focus:outline-none transition-all text-sm ${
                           isDarkMode 
                             ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:bg-gray-700' 
                             : 'bg-gray-50 border-gray-200 focus:bg-white'
@@ -682,7 +682,7 @@ const ArticleModal = ({ article, isOpen, onClose, isFavorite, onToggleFavorite, 
                                 <textarea
                                   value={editingCommentText}
                                   onChange={(e) => setEditingCommentText(e.target.value)}
-                                  className={`w-full p-3 border rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm ${
+                                  className={`w-full p-3 border rounded-lg resize-none focus:ring-2 focus:ring-green-500 focus:border-transparent focus:outline-none text-sm ${
                                     isDarkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-200'
                                   }`}
                                   rows="3"
