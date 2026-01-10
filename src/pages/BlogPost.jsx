@@ -43,6 +43,17 @@ const BlogPost = () => {
 
   // Blog posts data - in a real app, this would come from an API
   const blogPosts = {
+    "ai-first-fallacy-enterprise-ai": {
+      id: 6,
+      title: "The \"AI First\" Fallacy: Why Enterprise AI Stalls and How to Build Systems That Survive",
+      slug: "ai-first-fallacy-enterprise-ai",
+      excerpt: "Enterprise AI doesn't fail because the models are getting dumber. It fails because organizations are getting distracted. Here's the blueprint for building production-grade AI that survives the first week of contact with real users.",
+      author: "The Pearadox Team",
+      date: "2026-01-10",
+      readTime: "14 min read",
+      tags: ["Enterprise AI", "Production AI", "AI Strategy", "RAG", "AI Agents", "UX Design"],
+      featured: true
+    },
     "ways-ai-can-boost-your-work": {
       id: 5,
       title: "Stop Building, Start Using: 15 Ways AI Can Make You Unstoppable at Work Today",
@@ -52,7 +63,7 @@ const BlogPost = () => {
       date: "2025-12-13",
       readTime: "6 min read",
       tags: ["AI Productivity", "Work Efficiency", "Practical AI", "Career Development", "Collaboration", "Automation"],
-      featured: true
+      featured: false
     },
     "what-makes-an-ai-agent": {
       id: 4,
@@ -324,6 +335,455 @@ const BlogPost = () => {
             </div>
 
             {/* Dynamic Article Content */}
+            {slug === 'ai-first-fallacy-enterprise-ai' && (
+              <div className="prose prose-lg max-w-none">
+                
+                {/* Opening Hook */}
+                <p className="text-xl text-gray-700 leading-relaxed mb-8">
+                  We are currently living through the Great Demo Era. It's a time when you can record a Loom of a chatbot doing something mildly impressive, post it to Slack, and get a standing ovation from the C-suite. But three months later, that "game-changer" is a ghost town. No one uses it. The API costs are high. And the Product Manager is quietly pivoting to "something with agents."
+                </p>
+
+                <div className="bg-red-50 border-l-4 border-red-400 p-6 mb-8">
+                  <p className="text-red-800 font-medium">
+                    <strong>The graveyard of dead Proofs of Concept (PoCs) is getting crowded.</strong> If you want to avoid adding to the pile, you have to stop building AI features and start building AI alignment.
+                  </p>
+                </div>
+
+                <p className="text-gray-700 leading-relaxed mb-8">
+                  Here is the blueprint for building production-grade AI that survives the first week of contact with real users.
+                </p>
+
+                {/* Section 1 */}
+                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6 flex items-center">
+                  <span className="w-10 h-10 rounded-full flex items-center justify-center mr-4 text-white font-bold" style={{ backgroundColor: '#1db954' }}>1</span>
+                  Stop Asking "What Can AI Do?"
+                </h2>
+
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-8">
+                  <p className="text-amber-900 font-semibold text-lg mb-2">
+                    "We need to add AI to our platform"
+                  </p>
+                  <p className="text-amber-800">
+                    This is the most expensive sentence in modern business.
+                  </p>
+                </div>
+
+                <p className="text-gray-700 leading-relaxed mb-6">
+                  It's what I call the <strong>Solution-Looking-for-a-Problem (SLAP)</strong>. When you start with the technology, you've already narrowed your vision. You start looking for nails because you just bought a very expensive, very shiny hammer.
+                </p>
+
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6 mb-8">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#1db954' }}>
+                      <Target className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-900 mb-2">The Reality Check</h4>
+                      <p className="text-gray-700">
+                        Enterprise AI doesn't start in a Jupyter Notebook. It starts in a spreadsheet, a support queue, or a frustrated Slack thread.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="text-gray-700 leading-relaxed mb-6">
+                  If you can't explain the value of your AI project to a five-year-old without using the words "Neural," "Large Language Model," or "Generative," you don't have a product — you have a hobby.
+                </p>
+
+                <div className="bg-gray-900 text-white rounded-xl p-6 mb-8">
+                  <h4 className="font-bold text-green-400 mb-3 flex items-center">
+                    <CheckCircle className="h-5 w-5 mr-2" />
+                    Actionable Step
+                  </h4>
+                  <p className="text-gray-300 mb-4">
+                    Write down your problem statement. If you find yourself writing "Help users leverage AI to…" delete it. Start over.
+                  </p>
+                  <div className="bg-gray-800 rounded-lg p-4">
+                    <p className="text-green-400 font-mono text-sm">
+                      ✓ "Reduce the time it takes for a billing specialist to find a contract clause from 20 minutes to 20 seconds."
+                    </p>
+                  </div>
+                </div>
+
+                {/* Section 2 */}
+                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6 flex items-center">
+                  <span className="w-10 h-10 rounded-full flex items-center justify-center mr-4 text-white font-bold" style={{ backgroundColor: '#1db954' }}>2</span>
+                  The "Boring Problem" Litmus Test
+                </h2>
+
+                <p className="text-gray-700 leading-relaxed mb-6">
+                  The best AI use cases are often the ones that sound incredibly tedious. Why? Because <strong>boring problems are usually stable, high-volume, and expensive</strong>.
+                </p>
+
+                <p className="text-gray-700 leading-relaxed mb-6">
+                  If you're trying to use AI to "reinvent the creative soul of the company," good luck measuring the ROI on that. But if you're using AI to categorize 50,000 messy support tags, you can calculate the value on a napkin.
+                </p>
+
+                <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 mb-8 shadow-lg">
+                  <h4 className="font-bold text-gray-900 text-lg mb-6 text-center">The Three Rs Framework</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="text-center p-4 bg-blue-50 rounded-xl">
+                      <div className="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <BarChart className="h-7 w-7 text-white" />
+                      </div>
+                      <h5 className="font-bold text-gray-900 mb-2">Repetitive</h5>
+                      <p className="text-gray-600 text-sm">Does a human do this 100+ times a day?</p>
+                    </div>
+                    <div className="text-center p-4 bg-purple-50 rounded-xl">
+                      <div className="w-14 h-14 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <BookOpen className="h-7 w-7 text-white" />
+                      </div>
+                      <h5 className="font-bold text-gray-900 mb-2">Recordable</h5>
+                      <p className="text-gray-600 text-sm">Is there a clear audit trail of what "good" looks like?</p>
+                    </div>
+                    <div className="text-center p-4 bg-orange-50 rounded-xl">
+                      <div className="w-14 h-14 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <Globe className="h-7 w-7 text-white" />
+                      </div>
+                      <h5 className="font-bold text-gray-900 mb-2">Regulated</h5>
+                      <p className="text-gray-600 text-sm">Is the cost of a mistake high, but the logic for a "right" answer clear?</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4 mb-8">
+                  <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
+                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-gray-700">"Our sales reps spend 4 hours a week summarizing CRM notes before calls."</p>
+                  </div>
+                  <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
+                    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <p className="text-gray-700">"Legal spends 15% of their time checking for NDA expiration dates."</p>
+                  </div>
+                </div>
+
+                <div className="bg-gray-100 rounded-xl p-6 mb-8 text-center">
+                  <p className="text-gray-700 font-medium italic">
+                    AI should earn its way into your stack. It shouldn't be invited just because it's famous.
+                  </p>
+                </div>
+
+                {/* Section 3 */}
+                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6 flex items-center">
+                  <span className="w-10 h-10 rounded-full flex items-center justify-center mr-4 text-white font-bold" style={{ backgroundColor: '#1db954' }}>3</span>
+                  The 90/10 Rule: The Model is Not the Product
+                </h2>
+
+                <div className="bg-red-50 border-l-4 border-red-400 p-6 mb-8">
+                  <p className="text-red-800">
+                    There is a common delusion that once you pick the right model (GPT-4o? Claude 3.5? Llama 3?), the work is 90% done. <strong>It's the exact opposite.</strong>
+                  </p>
+                </div>
+
+                <p className="text-gray-700 leading-relaxed mb-6">
+                  In a production environment, the model is about <strong>10% of the complexity</strong>. If the model is the "brain," then a true Enterprise Agent needs hands, a memory, and a map.
+                </p>
+
+                <div className="bg-gradient-to-br from-gray-900 to-gray-800 text-white rounded-2xl p-8 mb-8">
+                  <h4 className="text-xl font-bold mb-6 text-center">The Orchestration Layer</h4>
+                  
+                  <div className="space-y-6">
+                    {/* The Hands */}
+                    <div className="bg-white/10 rounded-xl p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                          <Zap className="h-5 w-5 text-white" />
+                        </div>
+                        <h5 className="font-bold text-lg">The Hands: Tool Use & API Integration</h5>
+                      </div>
+                      <p className="text-gray-300 mb-4">
+                        The "Magic" of modern AI isn't that it can write poetry — it's that it can <strong className="text-white">Function Call</strong>. A sophisticated agent knows how to look at a user request and decide: "I need to query the SQL database for this customer's last five orders before I can answer this."
+                      </p>
+                      <div className="bg-white/5 rounded-lg p-4 text-sm">
+                        <p className="text-amber-400 mb-2">⚠️ The Catch:</p>
+                        <p className="text-gray-400">The agent is only as good as the tools you give it. If your internal APIs are messy or undocumented, your AI will fail. Tool-readiness is AI-readiness.</p>
+                      </div>
+                    </div>
+
+                    {/* The Memory */}
+                    <div className="bg-white/10 rounded-xl p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                          <Brain className="h-5 w-5 text-white" />
+                        </div>
+                        <h5 className="font-bold text-lg">The Memory: Context & State</h5>
+                      </div>
+                      <p className="text-gray-300 mb-4">
+                        In the enterprise, "Goldfish Memory" is a dealbreaker. If a user has to re-explain their problem every time they click a new page, they will abandon the tool.
+                      </p>
+                      <div className="grid grid-cols-2 gap-4 mt-4">
+                        <div className="bg-white/5 rounded-lg p-3">
+                          <p className="text-green-400 font-semibold text-sm">Short-term Memory</p>
+                          <p className="text-gray-400 text-xs">Keeping the current conversation flow coherent</p>
+                        </div>
+                        <div className="bg-white/5 rounded-lg p-3">
+                          <p className="text-green-400 font-semibold text-sm">Long-term Memory</p>
+                          <p className="text-gray-400 text-xs">User preferences, past mistakes, organizational "tribal knowledge"</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* The Map */}
+                    <div className="bg-white/10 rounded-xl p-6">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                          <Globe className="h-5 w-5 text-white" />
+                        </div>
+                        <h5 className="font-bold text-lg">The Map: RAG & Data Moats</h5>
+                      </div>
+                      <p className="text-gray-300">
+                        Your model was trained on the internet, but it wasn't trained on <strong className="text-white">your data</strong>. Retrieval-Augmented Generation (RAG) is how you give the agent a map of your specific business. By grounding the agent in your real-time documentation, contracts, and data, you transform it from a "hallucination machine" into a specialized expert.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-green-50 border-l-4 p-6 mb-8" style={{ borderColor: '#1db954' }}>
+                  <h4 className="font-bold text-gray-900 mb-2 flex items-center">
+                    <Lightbulb className="h-5 w-5 mr-2" style={{ color: '#1db954' }} />
+                    The Pearadox Perspective
+                  </h4>
+                  <p className="text-gray-700">
+                    The "Agent" isn't the model. The Agent is the <strong>orchestrator</strong> of these three things. It is the logic that decides when to reach for a tool, when to look in memory, and when to ask the user for more information. If you only focus on the model, you're building a brain without a nervous system. It's smart, but it can't move, feel, or react.
+                  </p>
+                </div>
+
+                {/* Section 4 */}
+                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6 flex items-center">
+                  <span className="w-10 h-10 rounded-full flex items-center justify-center mr-4 text-white font-bold" style={{ backgroundColor: '#1db954' }}>4</span>
+                  UX: Moving Beyond the Chatbox
+                </h2>
+
+                <p className="text-gray-700 leading-relaxed mb-6">
+                  We need to have a serious talk about the "Chat Interface."
+                </p>
+
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-8">
+                  <p className="text-amber-900 font-medium">
+                    <strong>Chat is often the laziest form of UX.</strong> It puts the "burden of work" on the user. The user has to figure out what to ask, how to prompt it, and how to verify if the answer is a lie.
+                  </p>
+                </div>
+
+                <div className="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden mb-8 shadow-lg">
+                  <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                    <h4 className="font-bold text-gray-900">Great Enterprise AI is Often Invisible</h4>
+                  </div>
+                  <div className="p-6 space-y-4">
+                    <div className="flex items-start gap-4">
+                      <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-red-600 font-bold">✕</span>
+                      </div>
+                      <div>
+                        <p className="text-gray-600 line-through">A chatbot that says "I can summarize this for you"</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#dcfce7' }}>
+                        <span className="font-bold" style={{ color: '#1db954' }}>✓</span>
+                      </div>
+                      <div>
+                        <p className="text-gray-900 font-medium">Just show the summary in the sidebar</p>
+                      </div>
+                    </div>
+                    <div className="border-t border-gray-100 pt-4"></div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-red-600 font-bold">✕</span>
+                      </div>
+                      <div>
+                        <p className="text-gray-600 line-through">A "Generate Email" prompt</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#dcfce7' }}>
+                        <span className="font-bold" style={{ color: '#1db954' }}>✓</span>
+                      </div>
+                      <div>
+                        <p className="text-gray-900 font-medium">Provide three suggested drafts based on the last interaction</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gray-900 text-white rounded-xl p-6 mb-8">
+                  <h4 className="font-bold text-green-400 mb-3">💡 Pro-Tip</h4>
+                  <p className="text-gray-300">
+                    If your AI requires a "Prompt Engineering Guide" for your employees to use it, your UX has failed. The system should be intuitive enough that a tired person on a Friday afternoon can use it successfully.
+                  </p>
+                </div>
+
+                {/* Section 5 */}
+                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6 flex items-center">
+                  <span className="w-10 h-10 rounded-full flex items-center justify-center mr-4 text-white font-bold" style={{ backgroundColor: '#1db954' }}>5</span>
+                  Trust is the Only Metric That Matters
+                </h2>
+
+                <p className="text-gray-700 leading-relaxed mb-6">
+                  Shipping AI isn't the finish line; it's the starting point. But after launch, the goal isn't to get the user to marvel at your technical prowess.
+                </p>
+
+                <div className="bg-green-50 border-l-4 p-6 mb-8" style={{ borderColor: '#1db954' }}>
+                  <p className="text-gray-800 font-medium">
+                    In fact, if the user is constantly thinking, <strong>"Wow, this AI is impressive,"</strong> you've probably failed the UX test. True trust is built when the technology gets out of the way.
+                  </p>
+                </div>
+
+                <h3 className="text-xl font-bold text-gray-900 mt-8 mb-4">Seamlessness Over Sophistication</h3>
+
+                <p className="text-gray-700 leading-relaxed mb-6">
+                  The best enterprise AI feels like an invisible hand, not a new piece of software to learn. It should be so deeply embedded into the existing workflow that the customer doesn't feel like they are "using AI" — they just feel like they're getting their job done faster.
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                  <div className="bg-blue-50 rounded-xl p-6">
+                    <h4 className="font-bold text-gray-900 mb-3 flex items-center">
+                      <Heart className="h-5 w-5 text-blue-600 mr-2" />
+                      Cater to the Experience
+                    </h4>
+                    <p className="text-gray-700 text-sm">
+                      The system's priority isn't to show off its reasoning; it's to ensure the customer reaches their goal, whether that's completing a purchase or resolving a billing error.
+                    </p>
+                  </div>
+                  <div className="bg-purple-50 rounded-xl p-6">
+                    <h4 className="font-bold text-gray-900 mb-3 flex items-center">
+                      <Target className="h-5 w-5 text-purple-600 mr-2" />
+                      Don't Add Complexity
+                    </h4>
+                    <p className="text-gray-700 text-sm">
+                      If the user has to double-check the AI's work or navigate a complex new interface, you haven't solved a problem — you've just shifted the cognitive load.
+                    </p>
+                  </div>
+                </div>
+
+                <h3 className="text-xl font-bold text-gray-900 mt-8 mb-4">Happiness as the Primary KPI</h3>
+
+                <p className="text-gray-700 leading-relaxed mb-6">
+                  In the enterprise, we often get bogged down in technical metrics: perplexity, tokens per second, accuracy scores. But the only metric that keeps a system in production is <strong>Customer Success</strong>.
+                </p>
+
+                <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 mb-8 shadow-lg">
+                  <h4 className="font-bold text-gray-900 mb-4">Ask Yourself:</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <p className="text-gray-700">Does the AI make the purchasing process frictionless?</p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <p className="text-gray-700">Does it provide a solution that actually solves the user's pain point on the first try?</p>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <p className="text-gray-700">Does the user walk away feeling empowered rather than frustrated?</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gray-100 rounded-xl p-6 mb-8 text-center">
+                  <p className="text-gray-800 font-medium">
+                    If the system doesn't lead to a happier, more productive human, the technical capabilities don't matter. <strong>You aren't building a model; you are building a solution.</strong>
+                  </p>
+                </div>
+
+                {/* Section 6 */}
+                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6 flex items-center">
+                  <span className="w-10 h-10 rounded-full flex items-center justify-center mr-4 text-white font-bold" style={{ backgroundColor: '#1db954' }}>6</span>
+                  Closing the Gap: From Research to Reality
+                </h2>
+
+                <p className="text-gray-700 leading-relaxed mb-6">
+                  AI research moves at lightspeed. Every week, a new paper on ArXiv shows what's possible, but enterprises don't live in a world of unlimited compute and perfectly clean datasets. There is a <strong>massive translation gap</strong> between the "cutting edge" and the "production line."
+                </p>
+
+                <div className="bg-white border-2 border-red-200 rounded-2xl p-6 mb-8 shadow-lg">
+                  <h4 className="font-bold text-red-600 mb-4">Research papers focus on benchmarks; enterprises focus on constraints:</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-red-600 font-bold">$</span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900">Cost</p>
+                        <p className="text-gray-600 text-sm">You can't spend $5 on a query to save $2 of human time.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-red-600 font-bold">⚖</span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900">Compliance</p>
+                        <p className="text-gray-600 text-sm">You cannot "hallucinate" a contract or leak PII.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <span className="text-red-600 font-bold">🔒</span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900">Data Silos</p>
+                        <p className="text-gray-600 text-sm">Your knowledge is trapped in legacy systems and messy APIs.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <h3 className="text-xl font-bold text-gray-900 mt-8 mb-4">The New Standard: Hype to Habit</h3>
+
+                <p className="text-gray-700 leading-relaxed mb-6">
+                  Building AI isn't about knowing the latest technique; it's about sequencing the work correctly. To move from "Can we build it?" to "Should we build it?", you must first align all stakeholders — Product, Engineering, Legal, and Design — on a single, common goal to solve a common problem.
+                </p>
+
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 rounded-2xl p-8 mb-8" style={{ borderColor: '#1db954' }}>
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#1db954' }}>
+                      <Lightbulb className="h-8 w-8 text-white" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-900 text-lg mb-2">Why We Built Pearadox</h4>
+                      <p className="text-gray-700 mb-4">
+                        We realized the biggest bottleneck to AI adoption isn't a lack of models — it's a lack of clarity. We help you bridge the gap between research and reality, translating raw capabilities into actionable, shippable workflows.
+                      </p>
+                      <p className="font-medium" style={{ color: '#1db954' }}>
+                        Don't try to tackle the entire enterprise at once. Ship an MVP that solves one specific bottleneck, then iterate.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Closing */}
+                <div className="bg-gray-900 text-white rounded-2xl p-8 mb-8">
+                  <h3 className="text-2xl font-bold mb-4 text-center">The Bottom Line</h3>
+                  <p className="text-gray-300 text-lg leading-relaxed mb-6 text-center">
+                    The future of your business won't be decided by who has the most powerful model. It will be decided by who builds the most <strong className="text-white">invisible, reliable systems</strong>.
+                  </p>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-green-400">Don't just ship AI. Ship a better business.</p>
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <div className="border-t border-gray-200 pt-8">
+                  <p className="text-gray-600 text-center mb-4">
+                    Ready to build AI that actually ships? Start by defining the problem, not the technology.
+                  </p>
+                  <div className="flex justify-center">
+                    <Link 
+                      to="/"
+                      className="inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl transition-all hover:shadow-lg"
+                      style={{ backgroundColor: '#1db954' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+                    >
+                      Explore Research on Pearadox
+                      <ArrowRight className="h-5 w-5 ml-2" />
+                    </Link>
+                  </div>
+                </div>
+                
+              </div>
+            )}
+
             {slug === 'ways-ai-can-boost-your-work' && (
               <div className="prose prose-lg max-w-none">
                 

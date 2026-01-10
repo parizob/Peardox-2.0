@@ -90,6 +90,18 @@ const Blog = () => {
   // Blog posts data
   const blogPosts = [
     {
+      id: 6,
+      title: "The \"AI First\" Fallacy: Why Enterprise AI Stalls and How to Build Systems That Survive",
+      slug: "ai-first-fallacy-enterprise-ai",
+      excerpt: "Enterprise AI doesn't fail because the models are getting dumber. It fails because organizations are getting distracted. Here's the blueprint for building production-grade AI that survives the first week of contact with real users.",
+      content: ``,
+      author: "The Pearadox Team",
+      date: "2026-01-10",
+      readTime: "14 min read",
+      tags: ["Enterprise AI", "Production AI", "AI Strategy", "RAG", "AI Agents", "UX Design"],
+      featured: true
+    },
+    {
       id: 5,
       title: "Stop Building, Start Using: 15 Ways AI Can Make You Unstoppable at Work Today",
       slug: "ways-ai-can-boost-your-work",
@@ -301,7 +313,7 @@ Your move.
       date: "2025-12-13",
       readTime: "6 min read",
       tags: ["AI Productivity", "Work Efficiency", "Practical AI", "Career Development", "Collaboration", "Automation"],
-      featured: true
+      featured: false
     },
     {
       id: 4,
