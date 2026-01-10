@@ -7,6 +7,7 @@ import SavedArticles from '../components/SavedArticles';
 import AccountModal from '../components/AccountModal';
 import ArticleModal from '../components/ArticleModal';
 import { useUser } from '../contexts/UserContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { viewedArticlesAPI } from '../lib/supabase';
 
 const BlogPost = () => {
@@ -18,6 +19,9 @@ const BlogPost = () => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState(null);
   const [isArticleModalOpen, setIsArticleModalOpen] = useState(false);
+  
+  // Theme context
+  const { isDarkMode } = useTheme();
   
   // Get user state from context
   const {
@@ -180,10 +184,10 @@ const BlogPost = () => {
   // Return 404 if post not found
   if (!blogPost) {
         return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-gray-50'}`}>
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Post Not Found</h1>
-          <p className="text-gray-600 mb-8">The blog post you're looking for doesn't exist.</p>
+          <h1 className={`text-4xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Post Not Found</h1>
+          <p className={`mb-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>The blog post you're looking for doesn't exist.</p>
           <Link 
             to="/blog"
             className="inline-flex items-center px-6 py-3 text-white rounded-xl transition-colors"
@@ -200,7 +204,7 @@ const BlogPost = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-gray-50'}`}>
       <Header 
         searchTerm=""
         onSearchChange={() => {}}
@@ -250,12 +254,12 @@ const BlogPost = () => {
                 </div>
               )}
               
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+              <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {blogPost.title}
               </h1>
               
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 space-y-4 sm:space-y-0">
-                <div className="flex items-center text-gray-600">
+                <div className={`flex items-center ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   <Calendar className="h-4 w-4 mr-2" />
                   <span>{new Date(blogPost.date).toLocaleDateString('en-US', { 
                     year: 'numeric', 
@@ -266,7 +270,7 @@ const BlogPost = () => {
                   <Clock className="h-4 w-4 mr-2" />
                   <span>{blogPost.readTime}</span>
                 </div>
-                <div className="flex items-center text-gray-600">
+                <div className={`flex items-center ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                   <User className="h-4 w-4 mr-2" />
                   <span>{blogPost.author}</span>
                 </div>
@@ -277,7 +281,7 @@ const BlogPost = () => {
                 {blogPost.tags.map((tag, index) => (
                   <span 
                     key={index}
-                    className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full font-medium"
+                    className={`px-3 py-1 text-sm rounded-full font-medium ${isDarkMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'}`}
                   >
                     {tag}
                   </span>
@@ -339,54 +343,54 @@ const BlogPost = () => {
               <div className="prose prose-lg max-w-none">
                 
                 {/* Opening Hook */}
-                <p className="text-xl text-gray-700 leading-relaxed mb-8">
+                <p className={`text-xl leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   We are currently living through the Great Demo Era. It's a time when you can record a Loom of a chatbot doing something mildly impressive, post it to Slack, and get a standing ovation from the C-suite. But three months later, that "game-changer" is a ghost town. No one uses it. The API costs are high. And the Product Manager is quietly pivoting to "something with agents."
                 </p>
 
-                <div className="bg-red-50 border-l-4 border-red-400 p-6 mb-8">
-                  <p className="text-red-800 font-medium">
+                <div className={`border-l-4 border-red-400 p-6 mb-8 ${isDarkMode ? 'bg-red-900/30' : 'bg-red-50'}`}>
+                  <p className={`font-medium ${isDarkMode ? 'text-red-300' : 'text-red-800'}`}>
                     <strong>The graveyard of dead Proofs of Concept (PoCs) is getting crowded.</strong> If you want to avoid adding to the pile, you have to stop building AI features and start building AI alignment.
                   </p>
                 </div>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Here is the blueprint for building production-grade AI that survives the first week of contact with real users.
                 </p>
 
                 {/* Section 1 */}
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6 flex items-center">
+                <h2 className={`text-2xl font-bold mt-12 mb-6 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   <span className="w-10 h-10 rounded-full flex items-center justify-center mr-4 text-white font-bold" style={{ backgroundColor: '#1db954' }}>1</span>
                   Stop Asking "What Can AI Do?"
                 </h2>
 
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-8">
-                  <p className="text-amber-900 font-semibold text-lg mb-2">
+                <div className={`rounded-xl p-6 mb-8 border ${isDarkMode ? 'bg-amber-900/30 border-amber-700/50' : 'bg-amber-50 border-amber-200'}`}>
+                  <p className={`font-semibold text-lg mb-2 ${isDarkMode ? 'text-amber-300' : 'text-amber-900'}`}>
                     "We need to add AI to our platform"
                   </p>
-                  <p className="text-amber-800">
+                  <p className={isDarkMode ? 'text-amber-400' : 'text-amber-800'}>
                     This is the most expensive sentence in modern business.
                   </p>
                 </div>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   It's what I call the <strong>Solution-Looking-for-a-Problem (SLAP)</strong>. When you start with the technology, you've already narrowed your vision. You start looking for nails because you just bought a very expensive, very shiny hammer.
                 </p>
 
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6 mb-8">
+                <div className={`rounded-xl p-6 mb-8 border ${isDarkMode ? 'bg-green-900/20 border-green-700/50' : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200'}`}>
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#1db954' }}>
                       <Target className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-gray-900 mb-2">The Reality Check</h4>
-                      <p className="text-gray-700">
+                      <h4 className={`font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Reality Check</h4>
+                      <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
                         Enterprise AI doesn't start in a Jupyter Notebook. It starts in a spreadsheet, a support queue, or a frustrated Slack thread.
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   If you can't explain the value of your AI project to a five-year-old without using the words "Neural," "Large Language Model," or "Generative," you don't have a product — you have a hobby.
                 </p>
 
@@ -406,76 +410,76 @@ const BlogPost = () => {
                 </div>
 
                 {/* Section 2 */}
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6 flex items-center">
+                <h2 className={`text-2xl font-bold mt-12 mb-6 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   <span className="w-10 h-10 rounded-full flex items-center justify-center mr-4 text-white font-bold" style={{ backgroundColor: '#1db954' }}>2</span>
                   The "Boring Problem" Litmus Test
                 </h2>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   The best AI use cases are often the ones that sound incredibly tedious. Why? Because <strong>boring problems are usually stable, high-volume, and expensive</strong>.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   If you're trying to use AI to "reinvent the creative soul of the company," good luck measuring the ROI on that. But if you're using AI to categorize 50,000 messy support tags, you can calculate the value on a napkin.
                 </p>
 
-                <div className="bg-white border-2 border-gray-200 rounded-2xl p-8 mb-8 shadow-lg">
-                  <h4 className="font-bold text-gray-900 text-lg mb-6 text-center">The Three Rs Framework</h4>
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <h4 className={`font-bold text-lg mb-6 text-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Three Rs Framework</h4>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="text-center p-4 bg-blue-50 rounded-xl">
+                    <div className={`text-center p-4 rounded-xl ${isDarkMode ? 'bg-blue-900/30' : 'bg-blue-50'}`}>
                       <div className="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
                         <BarChart className="h-7 w-7 text-white" />
                       </div>
-                      <h5 className="font-bold text-gray-900 mb-2">Repetitive</h5>
-                      <p className="text-gray-600 text-sm">Does a human do this 100+ times a day?</p>
+                      <h5 className={`font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Repetitive</h5>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Does a human do this 100+ times a day?</p>
                     </div>
-                    <div className="text-center p-4 bg-purple-50 rounded-xl">
+                    <div className={`text-center p-4 rounded-xl ${isDarkMode ? 'bg-purple-900/30' : 'bg-purple-50'}`}>
                       <div className="w-14 h-14 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
                         <BookOpen className="h-7 w-7 text-white" />
                       </div>
-                      <h5 className="font-bold text-gray-900 mb-2">Recordable</h5>
-                      <p className="text-gray-600 text-sm">Is there a clear audit trail of what "good" looks like?</p>
+                      <h5 className={`font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Recordable</h5>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Is there a clear audit trail of what "good" looks like?</p>
                     </div>
-                    <div className="text-center p-4 bg-orange-50 rounded-xl">
+                    <div className={`text-center p-4 rounded-xl ${isDarkMode ? 'bg-orange-900/30' : 'bg-orange-50'}`}>
                       <div className="w-14 h-14 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-3">
                         <Globe className="h-7 w-7 text-white" />
                       </div>
-                      <h5 className="font-bold text-gray-900 mb-2">Regulated</h5>
-                      <p className="text-gray-600 text-sm">Is the cost of a mistake high, but the logic for a "right" answer clear?</p>
+                      <h5 className={`font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Regulated</h5>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Is the cost of a mistake high, but the logic for a "right" answer clear?</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-4 mb-8">
-                  <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
+                  <div className={`flex items-start gap-3 p-4 rounded-lg border ${isDarkMode ? 'bg-green-900/20 border-green-700/50' : 'bg-green-50 border-green-200'}`}>
                     <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                    <p className="text-gray-700">"Our sales reps spend 4 hours a week summarizing CRM notes before calls."</p>
+                    <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>"Our sales reps spend 4 hours a week summarizing CRM notes before calls."</p>
                   </div>
-                  <div className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
+                  <div className={`flex items-start gap-3 p-4 rounded-lg border ${isDarkMode ? 'bg-green-900/20 border-green-700/50' : 'bg-green-50 border-green-200'}`}>
                     <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                    <p className="text-gray-700">"Legal spends 15% of their time checking for NDA expiration dates."</p>
+                    <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>"Legal spends 15% of their time checking for NDA expiration dates."</p>
                   </div>
                 </div>
 
-                <div className="bg-gray-100 rounded-xl p-6 mb-8 text-center">
-                  <p className="text-gray-700 font-medium italic">
+                <div className={`rounded-xl p-6 mb-8 text-center ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
+                  <p className={`font-medium italic ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     AI should earn its way into your stack. It shouldn't be invited just because it's famous.
                   </p>
                 </div>
 
                 {/* Section 3 */}
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6 flex items-center">
+                <h2 className={`text-2xl font-bold mt-12 mb-6 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   <span className="w-10 h-10 rounded-full flex items-center justify-center mr-4 text-white font-bold" style={{ backgroundColor: '#1db954' }}>3</span>
                   The 90/10 Rule: The Model is Not the Product
                 </h2>
 
-                <div className="bg-red-50 border-l-4 border-red-400 p-6 mb-8">
-                  <p className="text-red-800">
+                <div className={`border-l-4 border-red-400 p-6 mb-8 ${isDarkMode ? 'bg-red-900/30' : 'bg-red-50'}`}>
+                  <p className={isDarkMode ? 'text-red-300' : 'text-red-800'}>
                     There is a common delusion that once you pick the right model (GPT-4o? Claude 3.5? Llama 3?), the work is 90% done. <strong>It's the exact opposite.</strong>
                   </p>
                 </div>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   In a production environment, the model is about <strong>10% of the complexity</strong>. If the model is the "brain," then a true Enterprise Agent needs hands, a memory, and a map.
                 </p>
 
@@ -538,68 +542,68 @@ const BlogPost = () => {
                   </div>
                 </div>
 
-                <div className="bg-green-50 border-l-4 p-6 mb-8" style={{ borderColor: '#1db954' }}>
-                  <h4 className="font-bold text-gray-900 mb-2 flex items-center">
+                <div className={`border-l-4 p-6 mb-8 ${isDarkMode ? 'bg-green-900/20' : 'bg-green-50'}`} style={{ borderColor: '#1db954' }}>
+                  <h4 className={`font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     <Lightbulb className="h-5 w-5 mr-2" style={{ color: '#1db954' }} />
                     The Pearadox Perspective
                   </h4>
-                  <p className="text-gray-700">
+                  <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
                     The "Agent" isn't the model. The Agent is the <strong>orchestrator</strong> of these three things. It is the logic that decides when to reach for a tool, when to look in memory, and when to ask the user for more information. If you only focus on the model, you're building a brain without a nervous system. It's smart, but it can't move, feel, or react.
                   </p>
                 </div>
 
                 {/* Section 4 */}
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6 flex items-center">
+                <h2 className={`text-2xl font-bold mt-12 mb-6 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   <span className="w-10 h-10 rounded-full flex items-center justify-center mr-4 text-white font-bold" style={{ backgroundColor: '#1db954' }}>4</span>
                   UX: Moving Beyond the Chatbox
                 </h2>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   We need to have a serious talk about the "Chat Interface."
                 </p>
 
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-8">
-                  <p className="text-amber-900 font-medium">
+                <div className={`rounded-xl p-6 mb-8 border ${isDarkMode ? 'bg-amber-900/30 border-amber-700/50' : 'bg-amber-50 border-amber-200'}`}>
+                  <p className={`font-medium ${isDarkMode ? 'text-amber-300' : 'text-amber-900'}`}>
                     <strong>Chat is often the laziest form of UX.</strong> It puts the "burden of work" on the user. The user has to figure out what to ask, how to prompt it, and how to verify if the answer is a lie.
                   </p>
                 </div>
 
-                <div className="bg-white border-2 border-gray-200 rounded-2xl overflow-hidden mb-8 shadow-lg">
-                  <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                    <h4 className="font-bold text-gray-900">Great Enterprise AI is Often Invisible</h4>
+                <div className={`rounded-2xl overflow-hidden mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className={`px-6 py-4 border-b ${isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
+                    <h4 className={`font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Great Enterprise AI is Often Invisible</h4>
                   </div>
                   <div className="p-6 space-y-4">
                     <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isDarkMode ? 'bg-red-900/50' : 'bg-red-100'}`}>
                         <span className="text-red-600 font-bold">✕</span>
                       </div>
                       <div>
-                        <p className="text-gray-600 line-through">A chatbot that says "I can summarize this for you"</p>
+                        <p className={`line-through ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>A chatbot that says "I can summarize this for you"</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#dcfce7' }}>
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: isDarkMode ? 'rgba(29, 185, 84, 0.2)' : '#dcfce7' }}>
                         <span className="font-bold" style={{ color: '#1db954' }}>✓</span>
                       </div>
                       <div>
-                        <p className="text-gray-900 font-medium">Just show the summary in the sidebar</p>
+                        <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Just show the summary in the sidebar</p>
                       </div>
                     </div>
-                    <div className="border-t border-gray-100 pt-4"></div>
+                    <div className={`border-t pt-4 ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}></div>
                     <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isDarkMode ? 'bg-red-900/50' : 'bg-red-100'}`}>
                         <span className="text-red-600 font-bold">✕</span>
                       </div>
                       <div>
-                        <p className="text-gray-600 line-through">A "Generate Email" prompt</p>
+                        <p className={`line-through ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>A "Generate Email" prompt</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#dcfce7' }}>
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: isDarkMode ? 'rgba(29, 185, 84, 0.2)' : '#dcfce7' }}>
                         <span className="font-bold" style={{ color: '#1db954' }}>✓</span>
                       </div>
                       <div>
-                        <p className="text-gray-900 font-medium">Provide three suggested drafts based on the last interaction</p>
+                        <p className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Provide three suggested drafts based on the last interaction</p>
                       </div>
                     </div>
                   </div>
@@ -613,135 +617,135 @@ const BlogPost = () => {
                 </div>
 
                 {/* Section 5 */}
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6 flex items-center">
+                <h2 className={`text-2xl font-bold mt-12 mb-6 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   <span className="w-10 h-10 rounded-full flex items-center justify-center mr-4 text-white font-bold" style={{ backgroundColor: '#1db954' }}>5</span>
                   Trust is the Only Metric That Matters
                 </h2>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Shipping AI isn't the finish line; it's the starting point. But after launch, the goal isn't to get the user to marvel at your technical prowess.
                 </p>
 
-                <div className="bg-green-50 border-l-4 p-6 mb-8" style={{ borderColor: '#1db954' }}>
-                  <p className="text-gray-800 font-medium">
+                <div className={`border-l-4 p-6 mb-8 ${isDarkMode ? 'bg-green-900/20' : 'bg-green-50'}`} style={{ borderColor: '#1db954' }}>
+                  <p className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
                     In fact, if the user is constantly thinking, <strong>"Wow, this AI is impressive,"</strong> you've probably failed the UX test. True trust is built when the technology gets out of the way.
                   </p>
                 </div>
 
-                <h3 className="text-xl font-bold text-gray-900 mt-8 mb-4">Seamlessness Over Sophistication</h3>
+                <h3 className={`text-xl font-bold mt-8 mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Seamlessness Over Sophistication</h3>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   The best enterprise AI feels like an invisible hand, not a new piece of software to learn. It should be so deeply embedded into the existing workflow that the customer doesn't feel like they are "using AI" — they just feel like they're getting their job done faster.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <div className="bg-blue-50 rounded-xl p-6">
-                    <h4 className="font-bold text-gray-900 mb-3 flex items-center">
+                  <div className={`rounded-xl p-6 ${isDarkMode ? 'bg-blue-900/30' : 'bg-blue-50'}`}>
+                    <h4 className={`font-bold mb-3 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       <Heart className="h-5 w-5 text-blue-600 mr-2" />
                       Cater to the Experience
                     </h4>
-                    <p className="text-gray-700 text-sm">
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       The system's priority isn't to show off its reasoning; it's to ensure the customer reaches their goal, whether that's completing a purchase or resolving a billing error.
                     </p>
                   </div>
-                  <div className="bg-purple-50 rounded-xl p-6">
-                    <h4 className="font-bold text-gray-900 mb-3 flex items-center">
+                  <div className={`rounded-xl p-6 ${isDarkMode ? 'bg-purple-900/30' : 'bg-purple-50'}`}>
+                    <h4 className={`font-bold mb-3 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       <Target className="h-5 w-5 text-purple-600 mr-2" />
                       Don't Add Complexity
                     </h4>
-                    <p className="text-gray-700 text-sm">
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                       If the user has to double-check the AI's work or navigate a complex new interface, you haven't solved a problem — you've just shifted the cognitive load.
                     </p>
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-gray-900 mt-8 mb-4">Happiness as the Primary KPI</h3>
+                <h3 className={`text-xl font-bold mt-8 mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Happiness as the Primary KPI</h3>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   In the enterprise, we often get bogged down in technical metrics: perplexity, tokens per second, accuracy scores. But the only metric that keeps a system in production is <strong>Customer Success</strong>.
                 </p>
 
-                <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 mb-8 shadow-lg">
-                  <h4 className="font-bold text-gray-900 mb-4">Ask Yourself:</h4>
+                <div className={`rounded-2xl p-6 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <h4 className={`font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Ask Yourself:</h4>
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                      <p className="text-gray-700">Does the AI make the purchasing process frictionless?</p>
+                      <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Does the AI make the purchasing process frictionless?</p>
                     </div>
                     <div className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                      <p className="text-gray-700">Does it provide a solution that actually solves the user's pain point on the first try?</p>
+                      <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Does it provide a solution that actually solves the user's pain point on the first try?</p>
                     </div>
                     <div className="flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                      <p className="text-gray-700">Does the user walk away feeling empowered rather than frustrated?</p>
+                      <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Does the user walk away feeling empowered rather than frustrated?</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-gray-100 rounded-xl p-6 mb-8 text-center">
-                  <p className="text-gray-800 font-medium">
+                <div className={`rounded-xl p-6 mb-8 text-center ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
+                  <p className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-800'}`}>
                     If the system doesn't lead to a happier, more productive human, the technical capabilities don't matter. <strong>You aren't building a model; you are building a solution.</strong>
                   </p>
                 </div>
 
                 {/* Section 6 */}
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6 flex items-center">
+                <h2 className={`text-2xl font-bold mt-12 mb-6 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   <span className="w-10 h-10 rounded-full flex items-center justify-center mr-4 text-white font-bold" style={{ backgroundColor: '#1db954' }}>6</span>
                   Closing the Gap: From Research to Reality
                 </h2>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   AI research moves at lightspeed. Every week, a new paper on ArXiv shows what's possible, but enterprises don't live in a world of unlimited compute and perfectly clean datasets. There is a <strong>massive translation gap</strong> between the "cutting edge" and the "production line."
                 </p>
 
-                <div className="bg-white border-2 border-red-200 rounded-2xl p-6 mb-8 shadow-lg">
-                  <h4 className="font-bold text-red-600 mb-4">Research papers focus on benchmarks; enterprises focus on constraints:</h4>
+                <div className={`rounded-2xl p-6 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-red-900/50' : 'bg-white border-red-200'}`}>
+                  <h4 className={`font-bold mb-4 ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>Research papers focus on benchmarks; enterprises focus on constraints:</h4>
                   <div className="space-y-4">
                     <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${isDarkMode ? 'bg-red-900/50' : 'bg-red-100'}`}>
                         <span className="text-red-600 font-bold">$</span>
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900">Cost</p>
-                        <p className="text-gray-600 text-sm">You can't spend $5 on a query to save $2 of human time.</p>
+                        <p className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Cost</p>
+                        <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>You can't spend $5 on a query to save $2 of human time.</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${isDarkMode ? 'bg-red-900/50' : 'bg-red-100'}`}>
                         <span className="text-red-600 font-bold">⚖</span>
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900">Compliance</p>
-                        <p className="text-gray-600 text-sm">You cannot "hallucinate" a contract or leak PII.</p>
+                        <p className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Compliance</p>
+                        <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>You cannot "hallucinate" a contract or leak PII.</p>
                       </div>
                     </div>
                     <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${isDarkMode ? 'bg-red-900/50' : 'bg-red-100'}`}>
                         <span className="text-red-600 font-bold">🔒</span>
                       </div>
                       <div>
-                        <p className="font-semibold text-gray-900">Data Silos</p>
-                        <p className="text-gray-600 text-sm">Your knowledge is trapped in legacy systems and messy APIs.</p>
+                        <p className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Data Silos</p>
+                        <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Your knowledge is trapped in legacy systems and messy APIs.</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <h3 className="text-xl font-bold text-gray-900 mt-8 mb-4">The New Standard: Hype to Habit</h3>
+                <h3 className={`text-xl font-bold mt-8 mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The New Standard: Hype to Habit</h3>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Building AI isn't about knowing the latest technique; it's about sequencing the work correctly. To move from "Can we build it?" to "Should we build it?", you must first align all stakeholders — Product, Engineering, Legal, and Design — on a single, common goal to solve a common problem.
                 </p>
 
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 rounded-2xl p-8 mb-8" style={{ borderColor: '#1db954' }}>
+                <div className={`rounded-2xl p-8 mb-8 border-2 ${isDarkMode ? 'bg-green-900/20 border-green-700/50' : 'bg-gradient-to-r from-green-50 to-emerald-50'}`} style={{ borderColor: isDarkMode ? undefined : '#1db954' }}>
                   <div className="flex items-start gap-4">
                     <div className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#1db954' }}>
                       <Lightbulb className="h-8 w-8 text-white" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-gray-900 text-lg mb-2">Why We Built Pearadox</h4>
-                      <p className="text-gray-700 mb-4">
+                      <h4 className={`font-bold text-lg mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Why We Built Pearadox</h4>
+                      <p className={`mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                         We realized the biggest bottleneck to AI adoption isn't a lack of models — it's a lack of clarity. We help you bridge the gap between research and reality, translating raw capabilities into actionable, shippable workflows.
                       </p>
                       <p className="font-medium" style={{ color: '#1db954' }}>
@@ -763,8 +767,8 @@ const BlogPost = () => {
                 </div>
 
                 {/* CTA */}
-                <div className="border-t border-gray-200 pt-8">
-                  <p className="text-gray-600 text-center mb-4">
+                <div className={`border-t pt-8 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                  <p className={`text-center mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Ready to build AI that actually ships? Start by defining the problem, not the technology.
                   </p>
                   <div className="flex justify-center">
@@ -787,208 +791,208 @@ const BlogPost = () => {
             {slug === 'ways-ai-can-boost-your-work' && (
               <div className="prose prose-lg max-w-none">
                 
-                <p className="text-xl text-gray-700 leading-relaxed mb-8">
+                <p className={`text-xl leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   There's a strange paradox in the AI conversation right now. Every headline screams about building AI products, training models, and the race to create the next breakthrough application. Meanwhile, right in front of us sits the most powerful productivity multiplier in human history—and most people are barely scratching the surface of what it can do for their everyday work.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Here's the uncomfortable truth: <strong>You don't need to build anything with AI to transform your output. You just need to learn how to use it.</strong>
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   The professionals who are quietly becoming unstoppable aren't the ones building AI tools. They're the ones who have mastered the art of AI collaboration — turning ChatGPT, Claude, and other accessible AI systems into tireless partners that make every hour of their work more valuable.
                 </p>
 
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6">The Mindset Shift: From Tool to Teammate</h2>
+                <h2 className={`text-2xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Mindset Shift: From Tool to Teammate</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Before we dive into tactics, we need to reframe how we think about AI assistance. Most people treat AI like a search engine — type a query, get an answer, move on. But that's like using a smartphone only to make phone calls.
                 </p>
 
-                <div className="bg-green-50 border-l-4 border-green-400 p-6 mb-8">
-                  <p className="text-green-800 font-medium">
+                <div className={`border-l-4 border-green-400 p-6 mb-8 ${isDarkMode ? 'bg-green-900/20' : 'bg-green-50'}`}>
+                  <p className={`font-medium ${isDarkMode ? 'text-green-300' : 'text-green-800'}`}>
                     <strong>The real power of AI emerges when you treat it as a thinking partner.</strong> Not a replacement for your expertise, but an amplifier of it. Not an oracle with all the answers, but a collaborator who can help you think through problems, generate options, and refine your work.
                   </p>
                 </div>
 
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6">15 Ways to Make AI Your Unfair Advantage</h2>
+                <h2 className={`text-2xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>15 Ways to Make AI Your Unfair Advantage</h2>
 
                 <div className="space-y-6 mb-12">
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center mr-3 text-blue-600 font-bold text-sm">1</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-blue-600 font-bold text-sm ${isDarkMode ? 'bg-blue-900/50' : 'bg-blue-100'}`}>1</span>
                       The Strategic Sparring Partner
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">Stuck on a strategic decision? AI excels at helping you think through complex problems from multiple angles.</p>
-                    <p className="text-gray-500 text-xs italic">Ask AI to play devil's advocate and challenge your approach.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Stuck on a strategic decision? AI excels at helping you think through complex problems from multiple angles.</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Ask AI to play devil's advocate and challenge your approach.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center mr-3 text-blue-600 font-bold text-sm">2</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-blue-600 font-bold text-sm ${isDarkMode ? 'bg-blue-900/50' : 'bg-blue-100'}`}>2</span>
                       The SQL Query Generator
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">"I know what data I need, but I can't remember the exact syntax." Sound familiar?</p>
-                    <p className="text-gray-500 text-xs italic">Describe your data need in plain English and AI generates the query.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>"I know what data I need, but I can't remember the exact syntax." Sound familiar?</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Describe your data need in plain English and AI generates the query.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center mr-3 text-blue-600 font-bold text-sm">3</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-blue-600 font-bold text-sm ${isDarkMode ? 'bg-blue-900/50' : 'bg-blue-100'}`}>3</span>
                       The Excel Formula Whisperer
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">Excel formulas are one of the most Googled topics. Why spend 20 minutes hunting?</p>
-                    <p className="text-gray-500 text-xs italic">What used to take 15-30 minutes now takes 30 seconds.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Excel formulas are one of the most Googled topics. Why spend 20 minutes hunting?</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>What used to take 15-30 minutes now takes 30 seconds.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center mr-3 text-blue-600 font-bold text-sm">4</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-blue-600 font-bold text-sm ${isDarkMode ? 'bg-blue-900/50' : 'bg-blue-100'}`}>4</span>
                       The Presentation Image Creator
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">Your slides need visuals, but stock photos feel generic.</p>
-                    <p className="text-gray-500 text-xs italic">AI image generators create custom illustrations for your specific message.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Your slides need visuals, but stock photos feel generic.</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>AI image generators create custom illustrations for your specific message.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-blue-100 rounded-full flex items-center justify-center mr-3 text-blue-600 font-bold text-sm">5</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-blue-600 font-bold text-sm ${isDarkMode ? 'bg-blue-900/50' : 'bg-blue-100'}`}>5</span>
                       The PowerPoint Architect
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">Before you open PowerPoint, use AI to structure your story.</p>
-                    <p className="text-gray-500 text-xs italic">The biggest presentation mistakes are structural — AI helps you get architecture right.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Before you open PowerPoint, use AI to structure your story.</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>The biggest presentation mistakes are structural — AI helps you get architecture right.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-purple-100 rounded-full flex items-center justify-center mr-3 text-purple-600 font-bold text-sm">6</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-purple-600 font-bold text-sm ${isDarkMode ? 'bg-purple-900/50' : 'bg-purple-100'}`}>6</span>
                       The Collaborative Ideator
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">Brainstorming alone is limited by your own mental patterns. AI breaks those patterns.</p>
-                    <p className="text-gray-500 text-xs italic">Ask AI to approach your problem from unexpected perspectives.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Brainstorming alone is limited by your own mental patterns. AI breaks those patterns.</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Ask AI to approach your problem from unexpected perspectives.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-purple-100 rounded-full flex items-center justify-center mr-3 text-purple-600 font-bold text-sm">7</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-purple-600 font-bold text-sm ${isDarkMode ? 'bg-purple-900/50' : 'bg-purple-100'}`}>7</span>
                       The First Draft Generator
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">The blank page is the enemy of productivity. AI eliminates it.</p>
-                    <p className="text-gray-500 text-xs italic">AI writes the first draft; you write the final one.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>The blank page is the enemy of productivity. AI eliminates it.</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>AI writes the first draft; you write the final one.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-purple-100 rounded-full flex items-center justify-center mr-3 text-purple-600 font-bold text-sm">8</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-purple-600 font-bold text-sm ${isDarkMode ? 'bg-purple-900/50' : 'bg-purple-100'}`}>8</span>
                       The Critical Reviewer
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">Your work always improves with a second set of eyes. AI never gets tired of reviewing.</p>
-                    <p className="text-gray-500 text-xs italic">Instant, objective feedback at any hour, with zero social awkwardness.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Your work always improves with a second set of eyes. AI never gets tired of reviewing.</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Instant, objective feedback at any hour, with zero social awkwardness.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center mr-3 text-green-600 font-bold text-sm">9</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-green-600 font-bold text-sm ${isDarkMode ? 'bg-green-900/50' : 'bg-green-100'}`}>9</span>
                       The Code Companion
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">You don't need to be a developer to benefit from AI coding assistance.</p>
-                    <p className="text-gray-500 text-xs italic">Automate repetitive tasks even if you're not a programmer.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>You don't need to be a developer to benefit from AI coding assistance.</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Automate repetitive tasks even if you're not a programmer.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center mr-3 text-green-600 font-bold text-sm">10</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-green-600 font-bold text-sm ${isDarkMode ? 'bg-green-900/50' : 'bg-green-100'}`}>10</span>
                       The Rapid Prototyper
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">Want to test an idea before investing serious time? AI accelerates concept validation.</p>
-                    <p className="text-gray-500 text-xs italic">Ideas that took weeks to develop can now be explored in hours.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Want to test an idea before investing serious time? AI accelerates concept validation.</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Ideas that took weeks to develop can now be explored in hours.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-green-100 rounded-full flex items-center justify-center mr-3 text-green-600 font-bold text-sm">11</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-green-600 font-bold text-sm ${isDarkMode ? 'bg-green-900/50' : 'bg-green-100'}`}>11</span>
                       The Workflow Optimizer
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">Every job has repetitive processes that consume more time than they should.</p>
-                    <p className="text-gray-500 text-xs italic">A 30-minute weekly process automated = 26 hours saved per year.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Every job has repetitive processes that consume more time than they should.</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>A 30-minute weekly process automated = 26 hours saved per year.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center mr-3 text-orange-600 font-bold text-sm">12</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-orange-600 font-bold text-sm ${isDarkMode ? 'bg-orange-900/50' : 'bg-orange-100'}`}>12</span>
                       The Meeting Preparer
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">Walk into every meeting prepared to contribute meaningfully.</p>
-                    <p className="text-gray-500 text-xs italic">You appear exceptionally prepared and insightful — because you are.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Walk into every meeting prepared to contribute meaningfully.</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>You appear exceptionally prepared and insightful — because you are.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center mr-3 text-orange-600 font-bold text-sm">13</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-orange-600 font-bold text-sm ${isDarkMode ? 'bg-orange-900/50' : 'bg-orange-100'}`}>13</span>
                       The Learning Accelerator
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">Need to get up to speed on a new topic quickly?</p>
-                    <p className="text-gray-500 text-xs italic">What would take days of scattered reading becomes a focused learning session.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Need to get up to speed on a new topic quickly?</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>What would take days of scattered reading becomes a focused learning session.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-orange-100 rounded-full flex items-center justify-center mr-3 text-orange-600 font-bold text-sm">14</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-orange-600 font-bold text-sm ${isDarkMode ? 'bg-orange-900/50' : 'bg-orange-100'}`}>14</span>
                       The Communication Translator
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">Different audiences need different messages.</p>
-                    <p className="text-gray-500 text-xs italic">Adapt content for engineering, executives, or clients with one request.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Different audiences need different messages.</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Adapt content for engineering, executives, or clients with one request.</p>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center">
-                      <span className="w-7 h-7 bg-red-100 rounded-full flex items-center justify-center mr-3 text-red-600 font-bold text-sm">15</span>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h3 className={`text-lg font-bold mb-2 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <span className={`w-7 h-7 rounded-full flex items-center justify-center mr-3 text-red-600 font-bold text-sm ${isDarkMode ? 'bg-red-900/50' : 'bg-red-100'}`}>15</span>
                       The Decision Documenter
                     </h3>
-                    <p className="text-gray-700 text-sm mb-2">Good decisions need good documentation — but who has time?</p>
-                    <p className="text-gray-500 text-xs italic">Clear documentation created in 60 seconds for future reference.</p>
+                    <p className={`text-sm mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Good decisions need good documentation — but who has time?</p>
+                    <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Clear documentation created in 60 seconds for future reference.</p>
                   </div>
                 </div>
 
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6">The Compound Effect</h2>
+                <h2 className={`text-2xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Compound Effect</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Here's what most people miss: these 15 applications don't just add efficiency — they multiply it. When you save 30 minutes on SQL queries, those 30 minutes go into higher-value strategic work. When you eliminate first-draft anxiety, you produce more content of higher quality. When you walk into meetings better prepared, you make better decisions that cascade through your organization.
                 </p>
 
-                <div className="bg-gradient-to-r from-blue-50 to-green-50 p-8 rounded-xl mb-12">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">Why This Matters More Than Building</h3>
-                  <p className="text-gray-700 leading-relaxed mb-4">
+                <div className={`p-8 rounded-xl mb-12 ${isDarkMode ? 'bg-gradient-to-r from-blue-900/30 to-green-900/30' : 'bg-gradient-to-r from-blue-50 to-green-50'}`}>
+                  <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Why This Matters More Than Building</h3>
+                  <p className={`leading-relaxed mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     The tech industry's obsession with "building with AI" has created a blind spot. For 95% of professionals, the bigger opportunity is in using AI to amplify their existing expertise.
                   </p>
-                  <p className="text-gray-700 leading-relaxed font-medium">
+                  <p className={`leading-relaxed font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                     If you're a marketing manager, becoming 30% more productive at your core job is worth far more than spending months learning to build AI applications you'll rarely use.
                   </p>
                 </div>
 
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6">Getting Started Today</h2>
+                <h2 className={`text-2xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Getting Started Today</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 text-center">
-                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className={`p-6 rounded-xl shadow-lg border text-center ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-blue-900/50' : 'bg-blue-100'}`}>
                       <span className="text-blue-600 font-bold text-xl">1</span>
                     </div>
-                    <h4 className="font-bold text-gray-900 mb-2">This Week</h4>
-                    <p className="text-gray-600 text-sm">Pick three workflows from this list. Try each one at least twice.</p>
+                    <h4 className={`font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>This Week</h4>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Pick three workflows from this list. Try each one at least twice.</p>
                   </div>
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 text-center">
-                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className={`p-6 rounded-xl shadow-lg border text-center ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-green-900/50' : 'bg-green-100'}`}>
                       <span className="text-green-600 font-bold text-xl">2</span>
                     </div>
-                    <h4 className="font-bold text-gray-900 mb-2">This Month</h4>
-                    <p className="text-gray-600 text-sm">Identify which applications save you the most time.</p>
+                    <h4 className={`font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>This Month</h4>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Identify which applications save you the most time.</p>
                   </div>
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 text-center">
-                    <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className={`p-6 rounded-xl shadow-lg border text-center ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 ${isDarkMode ? 'bg-purple-900/50' : 'bg-purple-100'}`}>
                       <span className="text-purple-600 font-bold text-xl">3</span>
                     </div>
-                    <h4 className="font-bold text-gray-900 mb-2">This Quarter</h4>
-                    <p className="text-gray-600 text-sm">Make AI collaboration habitual, not occasional.</p>
+                    <h4 className={`font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>This Quarter</h4>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Make AI collaboration habitual, not occasional.</p>
                   </div>
                 </div>
 
@@ -1023,33 +1027,33 @@ const BlogPost = () => {
             {slug === 'what-makes-an-ai-agent' && (
               <div className="prose prose-lg max-w-none">
                 
-                <p className="text-xl text-gray-700 leading-relaxed mb-8">
+                <p className={`text-xl leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Walk into any tech conference today, scroll through LinkedIn, or browse AI startup pitches, and you'll hear the term "AI Agent" thrown around with remarkable frequency. ChatGPT is an agent. A simple Python script that calls an API is an agent. Your automated email responder is apparently an agent. Even that basic if-then workflow you built last week? Also an agent, according to some marketing materials.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   But here's the uncomfortable truth: <strong>most of what we call "AI Agents" today aren't actually agents at all.</strong>
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   This isn't just semantic nitpicking. The confusion around what constitutes an "agent" versus what makes a system "agentic" reflects a deeper misunderstanding about the fundamental nature of autonomous systems. When everything becomes an agent, nothing is—and we lose sight of what we're actually building toward.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Let's cut through the noise and explore what agency really means, why state matters more than you think, and how we can build truly agentic systems that live up to the transformative potential of artificial intelligence.
                 </p>
 
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6">The Agent Identity Crisis</h2>
+                <h2 className={`text-2xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Agent Identity Crisis</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   The word "agent" comes from the Latin "agere," meaning "to act." In its purest form, an agent is something that acts independently on behalf of another entity. This definition seems simple enough, but when we apply it to AI systems, things get complicated fast.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Consider these systems, all commonly called "AI Agents":
                 </p>
 
-                <div className="bg-gray-50 rounded-lg p-6 mb-8">
+                <div className={`rounded-lg p-6 mb-8 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
                   <ul className="space-y-4">
                     <li><strong>The Chatbot</strong>: Responds to user inputs with generated text, maintains no memory between conversations.</li>
                     <li><strong>The Function-Calling LLM</strong>: Can invoke external APIs and tools based on user requests, but resets after each interaction.</li>
@@ -1058,43 +1062,43 @@ const BlogPost = () => {
                   </ul>
                 </div>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Which of these is truly an "agent"? The answer depends entirely on how we define agency—and this is where the confusion begins.
                 </p>
 
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6">Agency: The Spectrum of Independence</h2>
+                <h2 className={`text-2xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Agency: The Spectrum of Independence</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Agency isn't binary. It's not a simple yes-or-no question of whether something is an agent. Instead, agency exists on a spectrum, with systems exhibiting varying degrees of autonomous behavior.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   At one end, we have <strong>reactive systems</strong>—they respond to inputs with outputs, following predetermined patterns or learned behaviors. Think of a customer service chatbot that can answer questions about your account balance. It's useful, it processes language intelligently, and it performs actions. But it's fundamentally reactive, operating only in response to external stimuli.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Moving along the spectrum, we encounter <strong>goal-directed systems</strong>—these maintain objectives and can plan sequences of actions to achieve them. A system that can break down "research this topic" into subtasks like "search for relevant papers," "summarize key findings," and "identify knowledge gaps" demonstrates higher agency than a simple question-answering system.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   At the far end lies <strong>autonomous agency</strong>—systems that can form their own goals, adapt their strategies based on outcomes, and operate independently over extended periods. These systems don't just execute predefined objectives; they can recognize when objectives should change and modify their behavior accordingly.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   But agency alone isn't enough to make a system truly "agentic." There's another critical dimension that's often overlooked: <strong>state</strong>.
                 </p>
 
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6">State: The Hidden Foundation of Intelligence</h2>
+                <h2 className={`text-2xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>State: The Hidden Foundation of Intelligence</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   State is memory with purpose. It's not just the ability to remember what happened—it's the capacity to use that memory to inform future decisions, maintain context across interactions, and build understanding over time.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Most systems we call "AI Agents" today are <strong>stateless</strong>. Each interaction begins fresh, with no memory of previous conversations or accumulated knowledge. Like a brilliant person with severe anterograde amnesia, they can display remarkable intelligence in the moment but cannot learn, adapt, or build on their experiences.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   <strong>Stateful systems</strong>, by contrast, maintain persistent memory that influences future behavior. They can:
                 </p>
 
@@ -1123,13 +1127,13 @@ const BlogPost = () => {
                   </ul>
                 </div>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   The combination of state and agency creates something qualitatively different from either component alone. A stateless system with high agency can execute complex plans but can't learn from failure. A stateful system with low agency can remember everything but struggles to act independently on that knowledge.
                 </p>
 
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6">The Agentic Sweet Spot: High Agency + Statefulness</h2>
+                <h2 className={`text-2xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Agentic Sweet Spot: High Agency + Statefulness</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   When we talk about "agentic systems," we're really describing AI that combines <strong>high agency</strong> with <strong>robust statefulness</strong>. These systems don't just respond to prompts or execute predetermined workflows—they operate more like autonomous colleagues who:
                 </p>
 
@@ -1143,7 +1147,7 @@ const BlogPost = () => {
                   </ul>
                 </div>
 
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Consider the difference between these two AI systems:
                 </p>
 
@@ -1162,13 +1166,13 @@ const BlogPost = () => {
                   </div>
                 </div>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   System B is what we mean when we talk about truly agentic AI.
                 </p>
 
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6">Why This Distinction Matters</h2>
+                <h2 className={`text-2xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Why This Distinction Matters</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   The conflation of "AI Agent" with "any AI system that does things" isn't just a marketing problem—it's a strategic one that affects how we design, deploy, and integrate AI into our organizations and lives.
                 </p>
 
@@ -1193,48 +1197,48 @@ const BlogPost = () => {
                   </div>
                 </div>
 
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6">Building Toward True Agency</h2>
+                <h2 className={`text-2xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Building Toward True Agency</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   As we design the next generation of AI systems, the path toward true agency becomes clearer:
                 </p>
 
                 <div className="space-y-6 mb-8">
                   <div className="border-l-4 border-blue-600 pl-6">
                     <h3 className="font-semibold text-gray-900 mb-2">Start with Purpose</h3>
-                    <p className="text-gray-700">
+                    <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
                       Define what autonomous behavior actually means for your specific use case. What decisions should the system make independently? What goals should it pursue without constant human guidance?
                     </p>
                   </div>
                   <div className="border-l-4 border-green-600 pl-6">
                     <h3 className="font-semibold text-gray-900 mb-2">Design for Memory</h3>
-                    <p className="text-gray-700">
+                    <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
                       Build systems that can maintain and utilize persistent state. This isn't just about storing conversation history—it's about creating memory systems that inform decision-making and enable learning.
                     </p>
                   </div>
                   <div className="border-l-4 border-purple-600 pl-6">
                     <h3 className="font-semibold text-gray-900 mb-2">Enable Adaptation</h3>
-                    <p className="text-gray-700">
+                    <p className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
                       Create mechanisms for systems to modify their behavior based on outcomes. This might involve reinforcement learning, dynamic prompting, or sophisticated feedback loops.
                     </p>
                   </div>
                 </div>
 
-                <h2 className="text-2xl font-bold text-gray-900 mt-12 mb-6">The Real Promise of Agentic AI</h2>
+                <h2 className={`text-2xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Real Promise of Agentic AI</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   When we talk about AI transforming how we work, learn, and solve problems, we're really talking about the potential of truly agentic systems. Not just smart tools that respond to our requests, but intelligent partners that can maintain long-term goals, learn from experience, and operate autonomously in service of shared objectives.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   This isn't science fiction—the building blocks exist today. What we need is clearer thinking about what we're building and why. We need to move beyond the label of "AI Agent" and focus on the underlying capabilities that make systems genuinely useful over time.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   The next breakthrough in AI won't just be about larger models or faster inference. It will be about creating systems that combine the planning capabilities of high-agency AI with the learning capabilities of stateful systems, resulting in AI that truly deserves the title "agentic."
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Because when we build AI that can genuinely act as our partners—systems that remember, learn, adapt, and pursue goals autonomously—we're not just automating tasks. We're augmenting human intelligence itself.
                 </p>
 
@@ -1242,7 +1246,7 @@ const BlogPost = () => {
                   The future belongs to agentic AI. But first, we need to understand what that actually means.
                 </p>
 
-                <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-8 mb-12">
+                <div className={`rounded-xl p-8 mb-12 ${isDarkMode ? 'bg-gradient-to-r from-blue-900/30 to-green-900/30' : 'bg-gradient-to-r from-blue-50 to-green-50'}`}>
                   <h3 className="text-xl font-semibold text-gray-900 mb-4">Ready to Build Truly Agentic Systems?</h3>
                   <p className="text-gray-700 mb-6">
                     Start by defining your agency requirements clearly. What decisions should your AI make independently? What memory does it need to be effective over time? How will it learn and adapt? The answers to these questions will guide you toward AI that doesn't just respond—but truly acts.
@@ -1273,19 +1277,19 @@ const BlogPost = () => {
             {slug === 'ai-first-mindset-ferrari-engine' && (
               <div className="prose prose-lg max-w-none">
                 
-                <p className="text-xl text-gray-700 leading-relaxed mb-8">
+                <p className={`text-xl leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Picture this: You're building the world's most advanced Formula 1 racing car. You have the finest aerodynamic design, the lightest carbon fiber chassis, and precision-engineered components worth millions. But then, instead of installing a high-performance racing engine, you drop in a reliable diesel truck engine.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   It would run. It might even be dependable. But it would fundamentally miss the point.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   This is exactly what happens when we approach AI-powered products with traditional software development mindsets. We're building Ferraris with truck engines—and wondering why they don't perform like we imagined.
                 </p>
 
-                <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">The Engine Changes Everything</h2>
+                <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Engine Changes Everything</h2>
                 
                 <div className="bg-blue-50 border-l-4 border-blue-400 p-6 mb-8">
                   <div className="flex items-start">
@@ -1297,11 +1301,11 @@ const BlogPost = () => {
                   </div>
                 </div>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   In traditional software development, the "engine" is relatively simple: databases store information, servers process requests, and user interfaces display results. The logic is predictable, the outputs are deterministic, and the user experience flows in linear, well-defined paths.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   But when AI becomes your engine, everything changes:
                 </p>
 
@@ -1333,13 +1337,13 @@ const BlogPost = () => {
                   </div>
                 </div>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   You cannot simply bolt AI capabilities onto a traditionally-designed product any more than you can bolt a rocket engine onto a horse-drawn carriage. The entire architecture—technical, experiential, and conceptual—must be redesigned around this fundamentally different kind of power.
                 </p>
 
-                <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">What AI-First Really Means</h2>
+                <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>What AI-First Really Means</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Building with an AI-first mindset isn't about using the latest machine learning models or having the most sophisticated algorithms. It's about recognizing that when intelligence becomes your core capability, every other aspect of your product must be reimagined to harness and showcase that intelligence effectively.
                 </p>
 
@@ -1379,14 +1383,14 @@ const BlogPost = () => {
                   </div>
                 </div>
 
-                <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">The Ferrari Architecture: Building for Intelligence</h2>
+                <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Ferrari Architecture: Building for Intelligence</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   When you're building a Ferrari, every component is designed around performance. The suspension isn't just about comfort—it's engineered to keep the tires connected to the road at 200 mph. Similarly, when building AI-first products, every component must be designed around intelligence.
                 </p>
 
-                <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 mb-12">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Real-World AI-First Architecture: Pearadox Case Study</h3>
+                <div className={`rounded-2xl p-8 mb-12 ${isDarkMode ? 'bg-gradient-to-r from-purple-900/30 to-pink-900/30' : 'bg-gradient-to-r from-purple-100 to-pink-100'}`}>
+                  <h3 className={`text-2xl font-bold mb-6 text-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Real-World AI-First Architecture: Pearadox Case Study</h3>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div>
                       <h4 className="font-semibold text-purple-900 mb-4">Traditional Approach Would Build:</h4>
@@ -1410,14 +1414,14 @@ const BlogPost = () => {
                   </div>
                 </div>
 
-                <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Avoiding the Truck Engine Trap</h2>
+                <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Avoiding the Truck Engine Trap</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   The biggest mistake in AI-first development is trying to apply traditional software development approaches to intelligent systems. Here are the most common traps and how to avoid them:
                 </p>
 
                 <div className="space-y-6 mb-12">
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
                     <div className="flex items-start">
                       <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4 mt-1 flex-shrink-0">
                         <span className="text-gray-900 font-bold text-lg">1</span>
@@ -1438,7 +1442,7 @@ const BlogPost = () => {
                     </div>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
                     <div className="flex items-start">
                       <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4 mt-1 flex-shrink-0">
                         <span className="text-gray-900 font-bold text-lg">2</span>
@@ -1459,7 +1463,7 @@ const BlogPost = () => {
                     </div>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
                     <div className="flex items-start">
                       <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mr-4 mt-1 flex-shrink-0">
                         <span className="text-gray-900 font-bold text-lg">3</span>
@@ -1481,14 +1485,14 @@ const BlogPost = () => {
                   </div>
                 </div>
 
-                <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">The Competitive Advantage of AI-First</h2>
+                <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Competitive Advantage of AI-First</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Companies that truly embrace AI-first thinking don't just build better products—they create entirely new categories of value that traditional approaches cannot match.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                  <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl">
+                  <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-blue-900/30' : 'bg-gradient-to-r from-blue-50 to-cyan-50'}`}>
                     <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center">
                       <Users className="h-6 w-6 mr-3 text-blue-600" />
                       Network Effects Through Intelligence
@@ -1498,7 +1502,7 @@ const BlogPost = () => {
                     </p>
                   </div>
 
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl">
+                  <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-green-900/30' : 'bg-gradient-to-r from-green-50 to-emerald-50'}`}>
                     <h3 className="text-lg font-bold text-green-900 mb-4 flex items-center">
                       <Target className="h-6 w-6 mr-3 text-green-600" />
                       Personalization at Scale
@@ -1508,7 +1512,7 @@ const BlogPost = () => {
                     </p>
                   </div>
 
-                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl">
+                  <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-purple-900/30' : 'bg-gradient-to-r from-purple-50 to-pink-50'}`}>
                     <h3 className="text-lg font-bold text-purple-900 mb-4 flex items-center">
                       <Lightbulb className="h-6 w-6 mr-3 text-purple-600" />
                       Proactive Value Creation
@@ -1518,7 +1522,7 @@ const BlogPost = () => {
                     </p>
                   </div>
 
-                  <div className="bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-xl">
+                  <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-orange-900/30' : 'bg-gradient-to-r from-orange-50 to-red-50'}`}>
                     <h3 className="text-lg font-bold text-orange-900 mb-4 flex items-center">
                       <TrendingUp className="h-6 w-6 mr-3 text-orange-600" />
                       Continuous Evolution
@@ -1529,13 +1533,13 @@ const BlogPost = () => {
                   </div>
                 </div>
 
-                <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">The Ferrari You're Building</h2>
+                <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Ferrari You're Building</h2>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Your AI-powered product isn't just software with some machine learning sprinkled on top. It's a Ferrari—a precision instrument designed around the incredible power of artificial intelligence.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Every line of code, every design decision, every user interaction should be optimized for one thing: unleashing the full potential of intelligent systems to create value that was impossible before.
                 </p>
 
@@ -1573,15 +1577,15 @@ const BlogPost = () => {
             {slug === 'democratizing-ai-research' && (
               <div className="prose prose-lg max-w-none">
               
-              <p className="text-xl text-gray-700 leading-relaxed mb-8">
+              <p className={`text-xl leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 Imagine a world where groundbreaking discoveries in artificial intelligence remain hidden in academic papers, accessible only to those with advanced degrees and institutional access. Now imagine the opposite: a world where every teacher, entrepreneur, student, and curious mind can understand and apply the latest AI breakthroughs to solve real problems in their communities.
               </p>
 
-              <p className="text-gray-700 leading-relaxed mb-8">
+              <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 This is the vision driving Pearadox — and it's more than just an ideal. It's an urgent necessity for our collective future.
               </p>
 
-              <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">The Knowledge Acceleration Crisis</h2>
+              <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Knowledge Acceleration Crisis</h2>
               
               <div className="bg-yellow-50 border-l-4 border-yellow-400 p-6 mb-8">
                 <div className="flex items-start">
@@ -1593,11 +1597,11 @@ const BlogPost = () => {
                 </div>
               </div>
 
-              <p className="text-gray-700 leading-relaxed mb-8">
+              <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 We're living through the most rapid period of scientific advancement in human history. These discoveries have the potential to revolutionize healthcare, education, climate science, and countless other fields that touch every aspect of human life.
               </p>
 
-              <p className="text-gray-700 leading-relaxed mb-8">
+              <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 But here's the problem: <strong className="text-gray-900">most of this knowledge never makes it beyond the ivory tower.</strong>
               </p>
 
@@ -1629,9 +1633,9 @@ const BlogPost = () => {
                 </div>
               </div>
 
-              <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Why Democratization Matters</h2>
+              <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Why Democratization Matters</h2>
 
-              <p className="text-gray-700 leading-relaxed mb-8">
+              <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 When we make AI research accessible to everyone, three powerful things happen:
               </p>
 
@@ -1685,47 +1689,47 @@ const BlogPost = () => {
               </div>
 
               {/* Impact Visualization */}
-              <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-2xl p-8 mb-12">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">The Ripple Effect of Democratized Knowledge</h3>
+              <div className={`rounded-2xl p-8 mb-12 ${isDarkMode ? 'bg-gradient-to-r from-purple-900/30 to-pink-900/30' : 'bg-gradient-to-r from-purple-100 to-pink-100'}`}>
+                <h3 className={`text-2xl font-bold mb-6 text-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Ripple Effect of Democratized Knowledge</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                   <div className="text-center">
                     <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Users className="h-6 w-6 text-blue-600" />
                     </div>
                     <h4 className="font-semibold text-gray-900 mb-2">Individual</h4>
-                    <p className="text-sm text-gray-600">Better decisions, new opportunities</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Better decisions, new opportunities</p>
                   </div>
                   <div className="text-center">
                     <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Target className="h-6 w-6 text-green-600" />
                     </div>
                     <h4 className="font-semibold text-gray-900 mb-2">Community</h4>
-                    <p className="text-sm text-gray-600">Local innovation, shared knowledge</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Local innovation, shared knowledge</p>
                   </div>
                   <div className="text-center">
                     <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Lightbulb className="h-6 w-6 text-yellow-600" />
                     </div>
                     <h4 className="font-semibold text-gray-900 mb-2">Industry</h4>
-                    <p className="text-sm text-gray-600">Faster adoption, better solutions</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Faster adoption, better solutions</p>
                   </div>
                   <div className="text-center">
                     <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
                       <Globe className="h-6 w-6 text-purple-600" />
                     </div>
                     <h4 className="font-semibold text-gray-900 mb-2">Society</h4>
-                    <p className="text-sm text-gray-600">Accelerated progress, reduced inequality</p>
+                    <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Accelerated progress, reduced inequality</p>
                   </div>
                 </div>
               </div>
 
-              <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Join the Revolution</h2>
+              <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Join the Revolution</h2>
 
-              <p className="text-gray-700 leading-relaxed mb-8">
+              <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 The democratization of AI research isn't a spectator sport. It requires active participation from all of us—researchers willing to communicate beyond their peers, institutions willing to prioritize accessibility, and individuals willing to engage with complex ideas.
               </p>
 
-              <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-8 mb-12">
+              <div className={`rounded-xl p-8 mb-12 ${isDarkMode ? 'bg-gradient-to-r from-blue-900/30 to-green-900/30' : 'bg-gradient-to-r from-blue-50 to-green-50'}`}>
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">What You Can Do</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -1751,7 +1755,7 @@ const BlogPost = () => {
                 At Pearadox, we're just getting started. Every paper we translate, every insight we share, every person we reach is a step toward a more inclusive, innovative, and equitable future.
               </p>
 
-              <p className="text-gray-700 leading-relaxed mb-8">
+              <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                 The knowledge exists. The tools are available. The only question is: are you ready to be part of the solution?
               </p>
 
@@ -1780,22 +1784,22 @@ const BlogPost = () => {
             {slug === 'building-an-app-with-AI' && (
               <div className="prose prose-lg max-w-none">
                 
-                <p className="text-xl text-gray-700 leading-relaxed mb-8">
+                <p className={`text-xl leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   What if I told you that the only thing standing between you and building your dream app isn't technical knowledge, team size, or budget—it's just getting started? The era of "you need to be a programmer" is over. Today, anyone with curiosity and creativity can build, deploy, and share sophisticated AI-powered applications with the world.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   No computer science degree. No development team. No massive budget. Just you, your ideas, and $20 to turn them into reality. Let me show you exactly how to unlock your creative potential and join the ranks of solo app creators changing the world.
                 </p>
 
-                <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Your Creative Freedom Toolkit</h2>
+                <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Your Creative Freedom Toolkit</h2>
                 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   These aren't just cheaper alternatives—they're actually better than what big companies use. The barriers that once required entire development teams have been eliminated. Now it's just you and your imagination.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                  <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-xl">
+                  <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-purple-900/30' : 'bg-gradient-to-r from-purple-50 to-blue-50'}`}>
                     <h3 className="text-lg font-bold text-purple-900 mb-3 flex items-center">
                       <BarChart className="h-6 w-6 mr-3 text-purple-600" />
                       Cursor ($20/month)
@@ -1805,7 +1809,7 @@ const BlogPost = () => {
                     </p>
                   </div>
 
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl">
+                  <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-green-900/30' : 'bg-gradient-to-r from-green-50 to-emerald-50'}`}>
                     <h3 className="text-lg font-bold text-green-900 mb-3 flex items-center">
                       <Globe className="h-6 w-6 mr-3 text-green-600" />
                       Vercel (Free)
@@ -1815,7 +1819,7 @@ const BlogPost = () => {
                     </p>
                   </div>
 
-                  <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl">
+                  <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-blue-900/30' : 'bg-gradient-to-r from-blue-50 to-cyan-50'}`}>
                     <h3 className="text-lg font-bold text-blue-900 mb-3 flex items-center">
                       <BookOpen className="h-6 w-6 mr-3 text-blue-600" />
                       GitHub (Free)
@@ -1825,7 +1829,7 @@ const BlogPost = () => {
                     </p>
                   </div>
 
-                  <div className="bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-xl">
+                  <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-orange-900/30' : 'bg-gradient-to-r from-orange-50 to-red-50'}`}>
                     <h3 className="text-lg font-bold text-orange-900 mb-3 flex items-center">
                       <Zap className="h-6 w-6 mr-3 text-orange-600" />
                       Resend ($0-20/month)
@@ -1852,20 +1856,20 @@ const BlogPost = () => {
                   </div>
                 </div>
 
-                <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Your Step-by-Step Setup Guide</h2>
+                <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Your Step-by-Step Setup Guide</h2>
                 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Ready to become an app creator? Here's exactly how to set up your creative freedom toolkit. Follow these steps, and in 30 minutes you'll be building your first app.
                 </p>
 
                 <div className="bg-gradient-to-r from-green-50 to-blue-50 p-8 rounded-xl mb-12">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                  <h3 className={`text-xl font-bold mb-6 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     <CheckCircle className="h-6 w-6 mr-3 text-green-600" />
                     Step 1: Create Your GitHub Account (5 minutes)
                   </h3>
-                  <div className="space-y-4 text-gray-700">
+                  <div className={`space-y-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     <p><strong>What it does:</strong> GitHub is like Google Drive for your app code. It saves everything, tracks changes, and connects to your other tools.</p>
-                    <div className="bg-white p-4 rounded-lg">
+                    <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
                       <p className="font-medium mb-2">Action steps:</p>
                       <ol className="list-decimal list-inside space-y-1 text-sm">
                         <li>Go to <span className="font-mono bg-gray-100 px-2 py-1 rounded">github.com</span></li>
@@ -1879,13 +1883,13 @@ const BlogPost = () => {
                 </div>
 
                 <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-8 rounded-xl mb-12">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                  <h3 className={`text-xl font-bold mb-6 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     <CheckCircle className="h-6 w-6 mr-3 text-purple-600" />
                     Step 2: Download Cursor (10 minutes)
                   </h3>
-                  <div className="space-y-4 text-gray-700">
+                  <div className={`space-y-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     <p><strong>What it does:</strong> Cursor is your AI coding partner. You describe what you want, it writes the code. It's like having a senior developer who never gets tired.</p>
-                    <div className="bg-white p-4 rounded-lg">
+                    <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
                       <p className="font-medium mb-2">Action steps:</p>
                       <ol className="list-decimal list-inside space-y-1 text-sm">
                         <li>Visit <span className="font-mono bg-gray-100 px-2 py-1 rounded">cursor.sh</span></li>
@@ -1900,13 +1904,13 @@ const BlogPost = () => {
                 </div>
 
                 <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-8 rounded-xl mb-12">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                  <h3 className={`text-xl font-bold mb-6 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     <CheckCircle className="h-6 w-6 mr-3 text-blue-600" />
                     Step 3: Set Up Vercel (5 minutes)
                   </h3>
-                  <div className="space-y-4 text-gray-700">
+                  <div className={`space-y-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     <p><strong>What it does:</strong> Vercel takes your code from GitHub and instantly makes it a live website that anyone can visit. Zero server management.</p>
-                    <div className="bg-white p-4 rounded-lg">
+                    <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
                       <p className="font-medium mb-2">Action steps:</p>
                       <ol className="list-decimal list-inside space-y-1 text-sm">
                         <li>Go to <span className="font-mono bg-gray-100 px-2 py-1 rounded">vercel.com</span></li>
@@ -1920,13 +1924,13 @@ const BlogPost = () => {
                 </div>
 
                 <div className="bg-gradient-to-r from-orange-50 to-red-50 p-4 sm:p-8 rounded-xl mb-12 overflow-hidden">
-                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 flex items-center">
+                  <h3 className={`text-lg sm:text-xl font-bold mb-4 sm:mb-6 flex items-center ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3 text-orange-600 flex-shrink-0" />
                     Step 4: Create Your First App (10 minutes)
                   </h3>
-                  <div className="space-y-4 text-gray-700">
+                  <div className={`space-y-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     <p><strong>The magic moment:</strong> Watch your idea become reality in real-time.</p>
-                    <div className="bg-white p-3 sm:p-4 rounded-lg overflow-hidden">
+                    <div className={`p-3 sm:p-4 rounded-lg overflow-hidden ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
                       <p className="font-medium mb-2">Action steps:</p>
                       <ol className="list-decimal list-inside space-y-2 text-sm">
                         <li><strong>In Cursor:</strong> Press <span className="font-mono bg-gray-100 px-2 py-1 rounded text-xs sm:text-sm">Ctrl+Shift+P</span> (or Cmd on Mac)</li>
@@ -1945,34 +1949,34 @@ const BlogPost = () => {
                 </div>
 
                 <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-8 rounded-xl mb-12">
-                  <h3 className="text-xl font-bold text-gray-900 mb-6">How Everything Connects</h3>
+                  <h3 className={`text-xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>How Everything Connects</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                    <div className="bg-white p-4 rounded-lg">
+                    <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
                       <div className="text-2xl mb-2">💭</div>
                       <p className="font-medium">You have an idea</p>
-                      <p className="text-sm text-gray-600">Tell Cursor what you want</p>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Tell Cursor what you want</p>
                     </div>
-                    <div className="bg-white p-4 rounded-lg">
+                    <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
                       <div className="text-2xl mb-2">⚡</div>
                       <p className="font-medium">Cursor writes code</p>
-                      <p className="text-sm text-gray-600">Saves automatically to GitHub</p>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Saves automatically to GitHub</p>
                     </div>
-                    <div className="bg-white p-4 rounded-lg">
+                    <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
                       <div className="text-2xl mb-2">🌍</div>
                       <p className="font-medium">Vercel makes it live</p>
-                      <p className="text-sm text-gray-600">Your app is now on the internet!</p>
+                      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Your app is now on the internet!</p>
                     </div>
                   </div>
                 </div>
 
-                <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Your Creative Potential Unleashed</h2>
+                <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Your Creative Potential Unleashed</h2>
                 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Now that you have the setup, let's talk about what you can actually build. The answer? Literally anything you can imagine.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-xl">
+                  <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-purple-900/30' : 'bg-gradient-to-r from-purple-50 to-pink-50'}`}>
                     <h3 className="text-lg font-bold text-purple-900 mb-4 flex items-center">
                       <Heart className="h-5 w-5 mr-2 text-purple-600" />
                       Personal Tools
@@ -1986,7 +1990,7 @@ const BlogPost = () => {
                     </ul>
                   </div>
 
-                  <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl">
+                  <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-blue-900/30' : 'bg-gradient-to-r from-blue-50 to-cyan-50'}`}>
                     <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center">
                       <Users className="h-5 w-5 mr-2 text-blue-600" />
                       Community Solutions
@@ -2000,7 +2004,7 @@ const BlogPost = () => {
                     </ul>
                   </div>
 
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl">
+                  <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-green-900/30' : 'bg-gradient-to-r from-green-50 to-emerald-50'}`}>
                     <h3 className="text-lg font-bold text-green-900 mb-4 flex items-center">
                       <Lightbulb className="h-5 w-5 mr-2 text-green-600" />
                       Creative Projects
@@ -2014,7 +2018,7 @@ const BlogPost = () => {
                     </ul>
                   </div>
 
-                  <div className="bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-xl">
+                  <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-orange-900/30' : 'bg-gradient-to-r from-orange-50 to-red-50'}`}>
                     <h3 className="text-lg font-bold text-orange-900 mb-4 flex items-center">
                       <Target className="h-5 w-5 mr-2 text-orange-600" />
                       Business Ideas
@@ -2030,27 +2034,27 @@ const BlogPost = () => {
                 </div>
 
                 <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-8 rounded-xl mb-12">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">The Beautiful Truth About AI Development</h3>
+                  <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Beautiful Truth About AI Development</h3>
                   <p className="text-gray-700 leading-relaxed mb-4">
                     You don't need to understand databases, servers, APIs, or any technical jargon. Just talk to Cursor like you're explaining your idea to a friend:
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-white p-4 rounded-lg">
+                    <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
                       <p className="font-medium text-green-800 mb-2">💭 What you say:</p>
                       <p className="text-sm italic">"I want an app where I can log my daily mood and see patterns over time"</p>
                     </div>
-                    <div className="bg-white p-4 rounded-lg">
+                    <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
                       <p className="font-medium text-blue-800 mb-2">⚡ What Cursor creates:</p>
                       <p className="text-sm">A beautiful mood tracking app with charts, data storage, and insights—complete with a professional design</p>
                     </div>
                   </div>
                 </div>
 
-                <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Real Success Stories</h2>
+                <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Real Success Stories</h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h4 className="font-bold text-gray-900 mb-2">StudentAI</h4>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h4 className={`font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>StudentAI</h4>
                     <p className="text-sm text-gray-600 mb-3">Solo developer, no CS background</p>
                     <ul className="text-sm text-gray-700 space-y-1">
                       <li>• 3 weeks to launch</li>
@@ -2059,8 +2063,8 @@ const BlogPost = () => {
                     </ul>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h4 className="font-bold text-gray-900 mb-2">LocalBiz Assistant</h4>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h4 className={`font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>LocalBiz Assistant</h4>
                     <p className="text-sm text-gray-600 mb-3">Small business owner turned developer</p>
                     <ul className="text-sm text-gray-700 space-y-1">
                       <li>• 6 weeks to launch</li>
@@ -2069,8 +2073,8 @@ const BlogPost = () => {
                     </ul>
                   </div>
 
-                  <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
-                    <h4 className="font-bold text-gray-900 mb-2">Research Hub</h4>
+                  <div className={`p-6 rounded-xl shadow-lg border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'}`}>
+                    <h4 className={`font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Research Hub</h4>
                     <p className="text-sm text-gray-600 mb-3">PhD student (like Pearadox!)</p>
                     <ul className="text-sm text-gray-700 space-y-1">
                       <li>• 4 weeks to launch</li>
@@ -2080,9 +2084,9 @@ const BlogPost = () => {
                   </div>
                 </div>
 
-                <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Why This Changes Everything</h2>
+                <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Why This Changes Everything</h2>
                 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   We're witnessing the most significant shift in creative power since the printing press. For the first time in history, the tools to build software are as accessible as a word processor. This isn't just about making apps—it's about unleashing human creativity on a global scale.
                 </p>
 
@@ -2099,7 +2103,7 @@ const BlogPost = () => {
                     </ul>
                   </div>
 
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl">
+                  <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-green-900/30' : 'bg-gradient-to-r from-green-50 to-emerald-50'}`}>
                     <h3 className="text-lg font-bold text-green-900 mb-4">The New Way (With AI)</h3>
                     <ul className="text-green-800 space-y-2 text-sm">
                       <li>✅ Just describe what you want</li>
@@ -2133,13 +2137,13 @@ const BlogPost = () => {
                   </div>
                 </div>
 
-                <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">The World is Waiting for Your Ideas</h2>
+                <h2 className={`text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The World is Waiting for Your Ideas</h2>
                 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Right now, someone, somewhere, has a problem that only you can solve. Maybe it's your neighbor struggling with something you take for granted. Maybe it's a global challenge that needs a fresh perspective. Maybe it's just something that would make your own life a little bit better.
                 </p>
 
-                <p className="text-gray-700 leading-relaxed mb-8">
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   The difference between you and the next big app creator isn't talent, education, or connections. It's simply taking the first step.
                 </p>
 
@@ -2150,15 +2154,15 @@ const BlogPost = () => {
                   </p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div className="bg-white bg-opacity-20 p-4 rounded-lg">
+                    <div className={`bg-opacity-20 p-4 rounded-lg ${isDarkMode ? 'bg-gray-600' : 'bg-white'}`}>
                       <h4 className="font-bold mb-2">🚀 Week 1</h4>
                       <p className="text-sm">Set up your toolkit and build your first working app</p>
                     </div>
-                    <div className="bg-white bg-opacity-20 p-4 rounded-lg">
+                    <div className={`bg-opacity-20 p-4 rounded-lg ${isDarkMode ? 'bg-gray-600' : 'bg-white'}`}>
                       <h4 className="font-bold mb-2">📱 Week 2</h4>
                       <p className="text-sm">Add features, improve design, share with friends</p>
                     </div>
-                    <div className="bg-white bg-opacity-20 p-4 rounded-lg">
+                    <div className={`bg-opacity-20 p-4 rounded-lg ${isDarkMode ? 'bg-gray-600' : 'bg-white'}`}>
                       <h4 className="font-bold mb-2">🌟 Week 3</h4>
                       <p className="text-sm">Launch publicly, gather feedback, start building your next idea</p>
                     </div>
@@ -2170,7 +2174,7 @@ const BlogPost = () => {
                 </div>
 
                 <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-8 rounded-xl mb-12">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">A Personal Promise</h3>
+                  <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>A Personal Promise</h3>
                   <p className="text-gray-700 leading-relaxed mb-4">
                     If you follow this guide and still can't build a working app within 30 days, the problem isn't your ability—it's that we haven't explained it clearly enough. The tools are that powerful, and you are that capable.
                   </p>
