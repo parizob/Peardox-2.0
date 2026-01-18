@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Sparkles, BookOpen, ArrowRight, Eye, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Sparkles, BookOpen, ArrowRight, Eye, ShoppingCart, ChevronLeft, ChevronRight, HelpCircle, X } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SavedArticles from '../components/SavedArticles';
@@ -25,11 +25,11 @@ const Store = () => {
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [showBackImage, setShowBackImage] = useState(false);
+  const [showHowToEarn, setShowHowToEarn] = useState(false);
   
   // Navigate to home and scroll to articles section
   const handleStartEarning = () => {
     navigate('/');
-    // Wait for navigation, then scroll to quiz section
     setTimeout(() => {
       const quizSection = document.getElementById('quiz-section');
       if (quizSection) {
@@ -100,128 +100,127 @@ const Store = () => {
       <div className="h-24 sm:h-20"></div>
 
       <main className="relative z-10">
-        {/* Hero Section */}
-        <section className="py-8 sm:py-12 relative overflow-hidden">
+        {/* Compact Hero with Balance */}
+        <section className="pt-6 pb-4 sm:pt-8 sm:pb-6 relative overflow-hidden">
           {/* Background decorations */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className={`absolute top-20 left-10 w-72 h-72 rounded-full blur-3xl opacity-40 ${isDarkMode ? 'bg-green-900/30' : 'bg-green-100'}`}></div>
-            <div className={`absolute bottom-20 right-10 w-96 h-96 rounded-full blur-3xl opacity-40 ${isDarkMode ? 'bg-amber-900/30' : 'bg-amber-100'}`}></div>
+            <div className={`absolute top-10 left-10 w-64 h-64 rounded-full blur-3xl opacity-30 ${isDarkMode ? 'bg-green-900/30' : 'bg-green-100'}`}></div>
+            <div className={`absolute top-20 right-10 w-72 h-72 rounded-full blur-3xl opacity-30 ${isDarkMode ? 'bg-amber-900/30' : 'bg-amber-100'}`}></div>
           </div>
 
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center relative">
-            {/* Title */}
-            <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              The PEAR <span style={{ color: '#1db954' }}>Store</span>
-            </h1>
-            
-            {/* Subtitle */}
-            <p className={`text-lg sm:text-xl mb-8 max-w-2xl mx-auto leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Your knowledge has value. Redeem PEAR tokens for real rewards — including <span className={`font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>exclusive merch and crypto</span>.
-            </p>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 relative">
+            {/* Header Row: Title + Balance */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+              <div>
+                <h1 className={`text-3xl sm:text-4xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  The PEAR <span style={{ color: '#1db954' }}>Store</span>
+                </h1>
+                <p className={`text-sm sm:text-base mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Redeem your tokens for exclusive rewards
+                </p>
+              </div>
 
-            {/* Token Display for logged in users */}
-            {user && (
-              <div className={`inline-flex items-center gap-4 px-6 py-4 rounded-2xl shadow-lg border mb-8 ${
-                isDarkMode 
-                  ? 'bg-amber-900/20 border-amber-700' 
-                  : 'bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50/30 border-amber-200'
-              }`}>
-                {/* PEAR Token Coin with count - matches main page */}
-                <div className="relative group/token cursor-pointer flex-shrink-0">
-                  {/* Outer glow ring - pulses */}
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-md opacity-60 group-hover/token:opacity-100 animate-pulse"></div>
-                  {/* Secondary glow */}
-                  <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 opacity-30 group-hover/token:opacity-50 blur-sm transition-opacity"></div>
-                  {/* Main token */}
-                  <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center shadow-lg border-2 border-yellow-300/50 group-hover/token:scale-110 transition-transform duration-300">
-                    {/* Inner highlight */}
-                    <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent"></div>
-                    {/* Shimmer effect */}
-                    <div className="absolute inset-0 rounded-full overflow-hidden">
-                      <div className="absolute -inset-full bg-gradient-to-r from-transparent via-white/30 to-transparent rotate-45 translate-x-[-100%] group-hover/token:translate-x-[200%] transition-transform duration-1000"></div>
+              {/* Token Balance - Compact */}
+              {user && (
+                <div className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-md border ${
+                  isDarkMode 
+                    ? 'bg-amber-900/20 border-amber-700/50' 
+                    : 'bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200'
+                }`}>
+                  <div className="relative">
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-md opacity-60 animate-pulse"></div>
+                    <div className="relative w-10 h-10 rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center shadow-lg border border-yellow-300/50">
+                      <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent"></div>
+                      <span className="relative text-lg font-bold text-white drop-shadow-md">
+                        {isLoadingTokens ? '...' : pearTokenCount}
+                      </span>
                     </div>
-                    {/* Token count */}
-                    <span className="relative text-2xl font-bold text-white drop-shadow-md">
-                      {isLoadingTokens ? '...' : pearTokenCount}
-                    </span>
                   </div>
+                  <div className="text-left">
+                    <p className="text-sm font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">PEAR Tokens</p>
+                    <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Your balance</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* How to Earn - Compact Toggle */}
+            <button
+              onClick={() => setShowHowToEarn(!showHowToEarn)}
+              className={`inline-flex items-center gap-2 text-sm font-medium transition-colors ${
+                isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <HelpCircle className="h-4 w-4" />
+              How do I earn PEAR tokens?
+              <ChevronRight className={`h-4 w-4 transition-transform ${showHowToEarn ? 'rotate-90' : ''}`} />
+            </button>
+
+            {/* Expandable How to Earn Section */}
+            {showHowToEarn && (
+              <div className={`mt-4 p-5 rounded-xl border ${
+                isDarkMode ? 'bg-gray-800/50 border-gray-700' : 'bg-white border-gray-200'
+              }`}>
+                <div className="flex items-start justify-between mb-4">
+                  <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Earn tokens by reading papers and answering quiz questions correctly
+                  </p>
+                  <button 
+                    onClick={() => setShowHowToEarn(false)}
+                    className={`ml-2 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${
+                      isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                    }`}
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
                 </div>
                 
-                <div className="text-left">
-                  <p className="text-xl font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">PEAR Tokens</p>
-                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Your current balance</p>
+                {/* Steps - Vertical on mobile, Horizontal on desktop */}
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 sm:gap-4 mb-5">
+                  {[
+                    { num: '1', label: 'Explore', sub: 'Browse research papers' },
+                    { num: '2', label: 'Read', sub: 'Learn from AI summaries' },
+                    { num: '3', label: 'Quiz', sub: 'Test your knowledge' },
+                    { num: '4', label: 'Earn', sub: 'Get PEAR tokens' },
+                  ].map((step, i) => (
+                    <div key={i} className={`flex sm:flex-col items-center sm:items-center gap-3 sm:gap-2 p-3 rounded-lg ${
+                      isDarkMode ? 'bg-gray-700/50' : 'bg-gray-50'
+                    }`}>
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white text-lg sm:text-xl font-bold shadow-md flex-shrink-0" style={{ backgroundColor: '#1db954' }}>
+                        {step.num}
+                      </div>
+                      <div className="sm:text-center">
+                        <p className={`text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{step.label}</p>
+                        <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{step.sub}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
+
+                <button 
+                  onClick={handleStartEarning}
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-2.5 text-white text-sm font-semibold rounded-lg transition-all hover:opacity-90 hover:scale-105 shadow-md"
+                  style={{ backgroundColor: '#1db954' }}
+                >
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  Start Earning PEAR
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </button>
               </div>
             )}
-
-            {/* How to Earn PEAR Steps - Inline */}
-            <div className="mt-6 max-w-4xl mx-auto">
-              <h2 className={`text-xl sm:text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>How to Earn PEAR</h2>
-              <p className={`text-sm mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>It's simple: learn, prove it, and get rewarded.</p>
-
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-8">
-                <div className={`rounded-xl p-4 shadow-sm border text-center hover:shadow-md transition-shadow ${
-                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
-                }`}>
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-2 text-sm" style={{ backgroundColor: '#1db954' }}>
-                    1
-                  </div>
-                  <h3 className={`font-semibold text-sm mb-0.5 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Explore</h3>
-                  <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Browse papers</p>
-                </div>
-                <div className={`rounded-xl p-4 shadow-sm border text-center hover:shadow-md transition-shadow ${
-                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
-                }`}>
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-2 text-sm" style={{ backgroundColor: '#1db954' }}>
-                    2
-                  </div>
-                  <h3 className={`font-semibold text-sm mb-0.5 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Read</h3>
-                  <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Learn summaries</p>
-                </div>
-                <div className={`rounded-xl p-4 shadow-sm border text-center hover:shadow-md transition-shadow ${
-                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
-                }`}>
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-2 text-sm" style={{ backgroundColor: '#1db954' }}>
-                    3
-                  </div>
-                  <h3 className={`font-semibold text-sm mb-0.5 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Quiz</h3>
-                  <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Test knowledge</p>
-                </div>
-                <div className={`rounded-xl p-4 shadow-sm border text-center hover:shadow-md transition-shadow ${
-                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
-                }`}>
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold mx-auto mb-2 text-sm" style={{ backgroundColor: '#1db954' }}>
-                    4
-                  </div>
-                  <h3 className={`font-semibold text-sm mb-0.5 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Earn</h3>
-                  <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Get PEAR tokens</p>
-                </div>
-              </div>
-
-              {/* CTA to earn more */}
-              <button 
-                onClick={handleStartEarning}
-                className="inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl transition-all hover:opacity-90 hover:scale-105 shadow-lg"
-                style={{ backgroundColor: '#1db954' }}
-              >
-                <BookOpen className="h-5 w-5 mr-2" />
-                Start Earning PEAR
-                <ArrowRight className="h-5 w-5 ml-2" />
-              </button>
-            </div>
           </div>
         </section>
 
-        {/* Rewards Preview Section */}
-        <section className="py-12 sm:py-16">
+        {/* Products Section - Main Focus */}
+        <section className="py-8 sm:py-10">
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-10">
-              <h2 className={`text-2xl sm:text-3xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>What You Can Redeem</h2>
-              <p className={`max-w-xl mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Stack your PEAR tokens and redeem them for exclusive rewards.</p>
+            <div className="mb-6">
+              <h2 className={`text-xl sm:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Available Rewards</h2>
+              <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Redeem your tokens for these exclusive items</p>
             </div>
 
             {/* Product Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl">
               
               {/* Pearadox T-Shirt Card */}
               <div className={`rounded-xl shadow-md border overflow-hidden hover:shadow-lg transition-shadow ${
@@ -389,22 +388,43 @@ const Store = () => {
               </div>
             </div>
 
-            {/* More Coming Soon Teaser */}
-            <div className={`mt-8 text-center p-5 rounded-xl border border-dashed ${
-              isDarkMode ? 'border-gray-700 bg-gray-800/50' : 'border-gray-300 bg-gray-50'
+            {/* More Coming Soon - Subtle */}
+            <div className={`mt-6 flex items-center gap-3 py-3 px-4 rounded-lg ${
+              isDarkMode ? 'bg-gray-800/30' : 'bg-gray-50'
             }`}>
-              <Sparkles className={`h-8 w-8 mx-auto mb-3 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
-              <h3 className={`font-semibold mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>More rewards coming soon!</h3>
-              <p className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                Keep stacking PEAR tokens. Premium features and more merch are on the way.
+              <Sparkles className={`h-5 w-5 ${isDarkMode ? 'text-amber-500' : 'text-amber-500'}`} />
+              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <span className="font-medium">More rewards coming soon!</span> Premium features and additional merch on the way.
               </p>
             </div>
           </div>
         </section>
 
+        {/* Not logged in? Call to action */}
+        {!user && (
+          <section className="py-6">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6">
+              <div className={`p-5 rounded-xl border text-center ${
+                isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+              }`}>
+                <p className={`text-sm mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Sign in to view your PEAR token balance and start redeeming rewards
+                </p>
+                <button 
+                  onClick={() => setIsAccountOpen(true)}
+                  className="inline-flex items-center px-5 py-2.5 text-white text-sm font-semibold rounded-lg transition-all hover:opacity-90 shadow-md"
+                  style={{ backgroundColor: '#1db954' }}
+                >
+                  Sign In to Get Started
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Back Link */}
-        <section className="py-8">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+        <section className="py-6">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <button 
               onClick={handleBackToHub}
               className="inline-flex items-center transition-colors group"
@@ -426,7 +446,7 @@ const Store = () => {
         isOpen={isSavedArticlesOpen}
         onClose={() => setIsSavedArticlesOpen(false)}
         savedArticles={savedArticlesFromDB}
-        onArticleClick={() => {}} // Articles can't be opened from store, but modal can be viewed
+        onArticleClick={() => {}}
         onToggleFavorite={() => {}}
         isLoading={false}
         user={user}
