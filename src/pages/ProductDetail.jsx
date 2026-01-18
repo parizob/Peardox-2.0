@@ -27,6 +27,45 @@ const ProductDetail = () => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState('M');
+  const [insufficientBalanceError, setInsufficientBalanceError] = useState(false);
+
+  const TSHIRT_PRICE = 50;
+
+  // Handle redeem attempt
+  const handleRedeemTshirt = () => {
+    if (!user) {
+      setIsAccountOpen(true);
+      return;
+    }
+    
+    if (pearTokenCount < TSHIRT_PRICE) {
+      setInsufficientBalanceError(true);
+      // Auto-hide after 5 seconds
+      setTimeout(() => setInsufficientBalanceError(false), 5000);
+      return;
+    }
+    
+    // TODO: Implement actual redemption logic
+    console.log('Proceeding with redemption...');
+  };
+
+  // Navigate to home and scroll to quiz section (same as "Explore Now" button)
+  const handleStartEarning = () => {
+    navigate('/');
+    setTimeout(() => {
+      const quizSection = document.getElementById('quiz-section');
+      if (quizSection) {
+        const headerHeight = 80;
+        const additionalOffset = 20;
+        const elementPosition = quizSection.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerHeight - additionalOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
+  };
 
   // Scroll to top on mount
   useEffect(() => {
@@ -258,12 +297,35 @@ const ProductDetail = () => {
 
               {/* Redeem Button */}
               <button 
-                className="w-full flex items-center justify-center px-6 py-4 text-white font-semibold rounded-xl transition-all hover:opacity-90 hover:scale-[1.02] shadow-lg mb-6"
+                onClick={handleRedeemTshirt}
+                className="w-full flex items-center justify-center px-6 py-4 text-white font-semibold rounded-xl transition-all hover:opacity-90 hover:scale-[1.02] shadow-lg"
                 style={{ backgroundColor: '#1db954' }}
               >
                 <ShoppingCart className="h-5 w-5 mr-2" />
                 Redeem for {product.price} PEAR
               </button>
+
+              {/* Insufficient Balance Error */}
+              {insufficientBalanceError && (
+                <div className={`mt-4 mb-6 p-4 rounded-xl border ${
+                  isDarkMode ? 'bg-red-900/20 border-red-800' : 'bg-red-50 border-red-200'
+                }`}>
+                  <p className={`text-sm font-medium ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
+                    Insufficient balance! You need {TSHIRT_PRICE} PEAR tokens to redeem this item.
+                  </p>
+                  <button 
+                    onClick={() => { setInsufficientBalanceError(false); handleStartEarning(); }}
+                    className={`text-sm underline font-medium mt-2 ${
+                      isDarkMode ? 'text-red-400 hover:text-red-300' : 'text-red-500 hover:text-red-700'
+                    }`}
+                  >
+                    Earn more tokens →
+                  </button>
+                </div>
+              )}
+
+              {/* Spacer when no error */}
+              {!insufficientBalanceError && <div className="mb-6"></div>}
 
               {/* Features */}
               <div className={`p-5 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>

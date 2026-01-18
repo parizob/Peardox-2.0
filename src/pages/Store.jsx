@@ -26,8 +26,29 @@ const Store = () => {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [showBackImage, setShowBackImage] = useState(false);
   const [showHowToEarn, setShowHowToEarn] = useState(false);
+  const [insufficientBalanceError, setInsufficientBalanceError] = useState(false);
+
+  const TSHIRT_PRICE = 50;
+
+  // Handle redeem attempt
+  const handleRedeemTshirt = () => {
+    if (!user) {
+      setIsAccountOpen(true);
+      return;
+    }
+    
+    if (pearTokenCount < TSHIRT_PRICE) {
+      setInsufficientBalanceError(true);
+      // Auto-hide after 5 seconds
+      setTimeout(() => setInsufficientBalanceError(false), 5000);
+      return;
+    }
+    
+    // TODO: Implement actual redemption logic
+    console.log('Proceeding with redemption...');
+  };
   
-  // Navigate to home and scroll to articles section
+  // Navigate to home and scroll to quiz section (same as "Explore Now" button)
   const handleStartEarning = () => {
     navigate('/');
     setTimeout(() => {
@@ -307,6 +328,7 @@ const Store = () => {
                       Details
                     </button>
                     <button 
+                      onClick={handleRedeemTshirt}
                       className="flex-1 inline-flex items-center justify-center px-3 py-2 text-white font-medium text-xs rounded-lg transition-all hover:opacity-90 hover:scale-105 shadow-sm"
                       style={{ backgroundColor: '#1db954' }}
                     >
@@ -314,6 +336,21 @@ const Store = () => {
                       Redeem
                     </button>
                   </div>
+
+                  {/* Insufficient Balance Error */}
+                  {insufficientBalanceError && (
+                    <div className="mt-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                      <p className="text-xs text-red-600 dark:text-red-400 font-medium">
+                        Insufficient balance! You need {TSHIRT_PRICE} PEAR tokens to redeem this item.
+                      </p>
+                      <button 
+                        onClick={() => { setInsufficientBalanceError(false); handleStartEarning(); }}
+                        className="text-xs text-red-500 dark:text-red-400 underline font-medium hover:text-red-700 dark:hover:text-red-300 mt-1"
+                      >
+                        Earn more tokens →
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
 
