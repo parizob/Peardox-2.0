@@ -9,6 +9,7 @@ import BlogPost from './pages/BlogPost';
 import Submit from './pages/Submit';
 import UpdatePassword from './pages/UpdatePassword';
 import Store from './pages/Store';
+import ProductDetail from './pages/ProductDetail';
 
 const AppRouter = () => {
   return (
@@ -24,6 +25,7 @@ const AppRouter = () => {
             <Route path="/submit" element={<Submit />} />
             <Route path="/update-password" element={<UpdatePassword />} />
             <Route path="/store" element={<Store />} />
+            <Route path="/store/:productId" element={<ProductDetail />} />
           </Routes>
         </UserProvider>
       </ThemeProvider>

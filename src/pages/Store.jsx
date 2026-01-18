@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingBag, ArrowLeft, Sparkles, Coins, Gift, TrendingUp, Zap, Clock, BookOpen, Trophy, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Sparkles, BookOpen, ArrowRight, Eye, ShoppingCart, ChevronLeft, ChevronRight } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SavedArticles from '../components/SavedArticles';
@@ -24,6 +24,7 @@ const Store = () => {
   const [isLoadingTokens, setIsLoadingTokens] = useState(false);
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [showBackImage, setShowBackImage] = useState(false);
   
   // Navigate to home and scroll to articles section
   const handleStartEarning = () => {
@@ -50,6 +51,14 @@ const Store = () => {
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 100);
+  };
+
+  // Navigate to product detail and scroll to top
+  const handleViewDetails = () => {
+    navigate('/store/pearadox_tshirt');
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }, 0);
   };
   
   // Fetch PEAR tokens
@@ -92,7 +101,7 @@ const Store = () => {
 
       <main className="relative z-10">
         {/* Hero Section */}
-        <section className="py-12 sm:py-20 relative overflow-hidden">
+        <section className="py-8 sm:py-12 relative overflow-hidden">
           {/* Background decorations */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className={`absolute top-20 left-10 w-72 h-72 rounded-full blur-3xl opacity-40 ${isDarkMode ? 'bg-green-900/30' : 'bg-green-100'}`}></div>
@@ -100,16 +109,6 @@ const Store = () => {
           </div>
 
           <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center relative">
-            {/* Coming Soon Badge */}
-            <div className={`inline-flex items-center px-4 py-2 border rounded-full mb-6 ${
-              isDarkMode 
-                ? 'bg-amber-900/30 border-amber-700' 
-                : 'bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-200'
-            }`}>
-              <Clock className={`h-4 w-4 mr-2 ${isDarkMode ? 'text-amber-400' : 'text-amber-600'}`} />
-              <span className={`font-medium text-sm ${isDarkMode ? 'text-amber-400' : 'text-amber-700'}`}>Launching Soon</span>
-            </div>
-
             {/* Title */}
             <h1 className={`text-4xl sm:text-5xl md:text-6xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               The PEAR <span style={{ color: '#1db954' }}>Store</span>
@@ -117,7 +116,7 @@ const Store = () => {
             
             {/* Subtitle */}
             <p className={`text-lg sm:text-xl mb-8 max-w-2xl mx-auto leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Your knowledge has value. Redeem PEAR tokens for real rewards — including <span className={`font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>crypto and merch</span>.
+              Your knowledge has value. Redeem PEAR tokens for real rewards — including <span className={`font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>exclusive merch and crypto</span>.
             </p>
 
             {/* Token Display for logged in users */}
@@ -156,7 +155,7 @@ const Store = () => {
             )}
 
             {/* How to Earn PEAR Steps - Inline */}
-            <div className="mt-10 max-w-4xl mx-auto">
+            <div className="mt-6 max-w-4xl mx-auto">
               <h2 className={`text-xl sm:text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>How to Earn PEAR</h2>
               <p className={`text-sm mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>It's simple: learn, prove it, and get rewarded.</p>
 
@@ -218,65 +217,187 @@ const Store = () => {
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="text-center mb-10">
               <h2 className={`text-2xl sm:text-3xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>What You Can Redeem</h2>
-              <p className={`max-w-xl mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Stack your PEAR tokens now. When the store opens, you'll have first access to exclusive rewards.</p>
+              <p className={`max-w-xl mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Stack your PEAR tokens and redeem them for exclusive rewards.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {/* Crypto Card */}
-              <div className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 text-white overflow-hidden group hover:scale-[1.02] transition-transform h-full">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-green-500 rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
-                <div className="relative h-full flex flex-col">
-                  <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-4">
-                    <Coins className="h-6 w-6 text-green-400" />
+            {/* Product Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
+              
+              {/* Pearadox T-Shirt Card */}
+              <div className={`rounded-xl shadow-md border overflow-hidden hover:shadow-lg transition-shadow ${
+                isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+              }`}>
+                {/* Image with hover arrows */}
+                <div 
+                  className="relative aspect-[4/3] group cursor-pointer"
+                  onMouseEnter={() => {}}
+                >
+                  <img 
+                    src={showBackImage ? '/Pearadox_Tshirt_Back.png' : '/Pearadox_Tshirt_Front.png'}
+                    alt={`Pearadox T-Shirt ${showBackImage ? 'Back' : 'Front'}`}
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Limited Edition Badge */}
+                  <div className="absolute top-2 left-2 px-2 py-0.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-white text-[10px] font-bold rounded-full shadow-md">
+                    LIMITED EDITION
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Crypto Rewards</h3>
-                  <p className="text-gray-400 text-sm mb-4 flex-1">Convert PEAR tokens to USDC and other cryptocurrencies. Real value for real learning.</p>
-                  <div className="flex items-center text-green-400 text-sm font-medium mt-auto">
-                    <TrendingUp className="h-4 w-4 mr-1" />
-                    High Value
+                  
+                  {/* Navigation Arrows - show contextually on hover */}
+                  {showBackImage && (
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); setShowBackImage(false); }}
+                      className={`absolute left-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all ${
+                        isDarkMode ? 'bg-gray-900/80 hover:bg-gray-900 text-white' : 'bg-white/90 hover:bg-white text-gray-900'
+                      } shadow-md`}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
+                  )}
+                  {!showBackImage && (
+                    <button 
+                      onClick={(e) => { e.stopPropagation(); setShowBackImage(true); }}
+                      className={`absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all ${
+                        isDarkMode ? 'bg-gray-900/80 hover:bg-gray-900 text-white' : 'bg-white/90 hover:bg-white text-gray-900'
+                      } shadow-md`}
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  )}
+                  
+                  {/* Image indicator dots */}
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className={`w-1.5 h-1.5 rounded-full transition-colors ${!showBackImage ? 'bg-white' : 'bg-white/50'}`}></div>
+                    <div className={`w-1.5 h-1.5 rounded-full transition-colors ${showBackImage ? 'bg-white' : 'bg-white/50'}`}></div>
+                  </div>
+                </div>
+
+                {/* Card Content */}
+                <div className="p-4">
+                  <span className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: '#1db954' }}>Exclusive Merch</span>
+                  <h3 className={`text-base font-bold mt-0.5 mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    Pearadox T-Shirt
+                  </h3>
+                  <p className={`text-xs mb-3 line-clamp-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Premium cotton tee with the iconic Pearadox logo.
+                  </p>
+
+                  {/* Price with shiny token */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="relative">
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-[3px] opacity-60"></div>
+                      <div className="relative w-5 h-5 rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center shadow-sm border border-yellow-300/50">
+                        <div className="absolute inset-0.5 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent"></div>
+                      </div>
+                    </div>
+                    <span className="text-sm font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+                      50 PEAR
+                    </span>
+                  </div>
+
+                  {/* Buttons */}
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={handleViewDetails}
+                      className={`flex-1 inline-flex items-center justify-center px-3 py-2 rounded-lg font-medium text-xs transition-all hover:scale-105 border ${
+                        isDarkMode 
+                          ? 'bg-gray-700 border-gray-600 text-white hover:bg-gray-600' 
+                          : 'bg-gray-100 border-gray-200 text-gray-900 hover:bg-gray-200'
+                      }`}
+                    >
+                      <Eye className="h-3.5 w-3.5 mr-1" />
+                      Details
+                    </button>
+                    <button 
+                      className="flex-1 inline-flex items-center justify-center px-3 py-2 text-white font-medium text-xs rounded-lg transition-all hover:opacity-90 hover:scale-105 shadow-sm"
+                      style={{ backgroundColor: '#1db954' }}
+                    >
+                      <ShoppingCart className="h-3.5 w-3.5 mr-1" />
+                      Redeem
+                    </button>
                   </div>
                 </div>
               </div>
 
-              {/* Premium Features Card */}
-              <div className={`relative rounded-2xl p-6 shadow-lg border overflow-hidden group hover:scale-[1.02] transition-transform h-full ${
-                isDarkMode 
-                  ? 'bg-gray-800 border-gray-700 hover:border-green-700' 
-                  : 'bg-white border-gray-100 hover:border-green-200'
+              {/* USDC Card with Coming Soon Banner */}
+              <div className={`relative rounded-xl shadow-md border overflow-hidden ${
+                isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
               }`}>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400 rounded-full blur-3xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
-                <div className="relative h-full flex flex-col">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: '#1db954' }}>
-                    <Zap className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Premium Features</h3>
-                  <p className={`text-sm mb-4 flex-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Unlock advanced AI summaries, priority access to new papers, and exclusive tools.</p>
-                  <div className="flex items-center text-amber-600 text-sm font-medium mt-auto">
-                    <Sparkles className="h-4 w-4 mr-1" />
-                    Exclusive Access
+                {/* Coming Soon Diagonal Banner */}
+                <div className="absolute top-0 right-0 z-20 w-28 h-28 overflow-visible">
+                  <div className="absolute top-[18px] -right-[28px] w-[120px] bg-gray-500 text-white text-[10px] font-bold py-1 text-center transform rotate-45 shadow-md">
+                    COMING SOON
                   </div>
                 </div>
-              </div>
 
-              {/* Merch Card */}
-              <div className={`relative rounded-2xl p-6 shadow-lg border overflow-hidden group hover:scale-[1.02] transition-transform h-full ${
-                isDarkMode 
-                  ? 'bg-gray-800 border-gray-700 hover:border-green-700' 
-                  : 'bg-white border-gray-100 hover:border-green-200'
-              }`}>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-400 rounded-full blur-3xl opacity-10 group-hover:opacity-20 transition-opacity"></div>
-                <div className="relative h-full flex flex-col">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${isDarkMode ? 'bg-purple-900/50' : 'bg-purple-100'}`}>
-                    <Gift className="h-6 w-6 text-purple-600" />
+                {/* Greyed out overlay */}
+                <div className="absolute inset-0 bg-gray-500/20 z-10 pointer-events-none"></div>
+
+                {/* Image */}
+                <div className={`relative aspect-[4/3] flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-blue-50 to-blue-100'}`}>
+                  <img 
+                    src="/USD_Coin_logo.png"
+                    alt="USDC"
+                    className="w-20 h-20 object-contain opacity-70"
+                  />
+                </div>
+
+                {/* Card Content */}
+                <div className="p-4">
+                  <span className="text-[10px] font-semibold uppercase tracking-wide text-blue-500">Crypto Rewards</span>
+                  <h3 className={`text-base font-bold mt-0.5 mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    USDC
+                  </h3>
+                  <p className={`text-xs mb-3 line-clamp-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Convert PEAR tokens to USDC stablecoin.
+                  </p>
+
+                  {/* Price with shiny token */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="relative">
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-[3px] opacity-60"></div>
+                      <div className="relative w-5 h-5 rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center shadow-sm border border-yellow-300/50">
+                        <div className="absolute inset-0.5 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent"></div>
+                      </div>
+                    </div>
+                    <span className="text-sm font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+                      100 PEAR = $1
+                    </span>
                   </div>
-                  <h3 className={`text-xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Exclusive Merch</h3>
-                  <p className={`text-sm mb-4 flex-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Rep your Pearadox journey with limited edition merchandise and collectibles.</p>
-                  <div className="flex items-center text-purple-600 text-sm font-medium mt-auto">
-                    <Trophy className="h-4 w-4 mr-1" />
-                    Limited Edition
+
+                  {/* Buttons - Disabled */}
+                  <div className="flex gap-2">
+                    <button 
+                      disabled
+                      className={`flex-1 inline-flex items-center justify-center px-3 py-2 rounded-lg font-medium text-xs border cursor-not-allowed opacity-50 ${
+                        isDarkMode 
+                          ? 'bg-gray-700 border-gray-600 text-gray-400' 
+                          : 'bg-gray-100 border-gray-200 text-gray-500'
+                      }`}
+                    >
+                      <Eye className="h-3.5 w-3.5 mr-1" />
+                      Details
+                    </button>
+                    <button 
+                      disabled
+                      className="flex-1 inline-flex items-center justify-center px-3 py-2 font-medium text-xs rounded-lg cursor-not-allowed opacity-50 bg-gray-400 text-white"
+                    >
+                      <ShoppingCart className="h-3.5 w-3.5 mr-1" />
+                      Redeem
+                    </button>
                   </div>
                 </div>
               </div>
+            </div>
+
+            {/* More Coming Soon Teaser */}
+            <div className={`mt-8 text-center p-5 rounded-xl border border-dashed ${
+              isDarkMode ? 'border-gray-700 bg-gray-800/50' : 'border-gray-300 bg-gray-50'
+            }`}>
+              <Sparkles className={`h-8 w-8 mx-auto mb-3 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
+              <h3 className={`font-semibold mb-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>More rewards coming soon!</h3>
+              <p className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                Keep stacking PEAR tokens. Premium features and more merch are on the way.
+              </p>
             </div>
           </div>
         </section>
