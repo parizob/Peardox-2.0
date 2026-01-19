@@ -5,9 +5,10 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SavedArticles from '../components/SavedArticles';
 import AccountModal from '../components/AccountModal';
+import RedemptionModal from '../components/RedemptionModal';
 import { useUser } from '../contexts/UserContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { quizAPI } from '../lib/supabase';
+import { quizAPI, redemptionAPI } from '../lib/supabase';
 
 const Store = () => {
   const navigate = useNavigate();
@@ -21,31 +22,41 @@ const Store = () => {
   } = useUser();
   
   const [pearTokenCount, setPearTokenCount] = useState(0);
+  const [totalRedeemed, setTotalRedeemed] = useState(0);
   const [isLoadingTokens, setIsLoadingTokens] = useState(false);
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [isRedemptionModalOpen, setIsRedemptionModalOpen] = useState(false);
   const [showBackImage, setShowBackImage] = useState(false);
   const [showHowToEarn, setShowHowToEarn] = useState(false);
   const [insufficientBalanceError, setInsufficientBalanceError] = useState(false);
 
-  const TSHIRT_PRICE = 50;
+  const TSHIRT_PRICE = 1;
 
-  // Handle redeem attempt
+  // Calculate available balance (earned - redeemed)
+  const availableBalance = pearTokenCount - totalRedeemed;
+
+  // Handle redeem button click - open modal or show error
   const handleRedeemTshirt = () => {
     if (!user) {
       setIsAccountOpen(true);
       return;
     }
     
-    if (pearTokenCount < TSHIRT_PRICE) {
+    if (availableBalance < TSHIRT_PRICE) {
       setInsufficientBalanceError(true);
-      // Auto-hide after 5 seconds
       setTimeout(() => setInsufficientBalanceError(false), 5000);
       return;
     }
     
-    // TODO: Implement actual redemption logic
-    console.log('Proceeding with redemption...');
+    // Open redemption modal
+    setIsRedemptionModalOpen(true);
+  };
+
+  // Handle successful redemption from modal
+  const handleRedemptionSuccess = () => {
+    // Update total redeemed locally
+    setTotalRedeemed(prev => prev + TSHIRT_PRICE);
   };
   
   // Navigate to home and scroll to quiz section (same as "Explore Now" button)
@@ -82,17 +93,23 @@ const Store = () => {
     }, 0);
   };
   
-  // Fetch PEAR tokens
+  // Fetch PEAR tokens and redemptions
   useEffect(() => {
     const loadPearTokens = async () => {
       if (user) {
         setIsLoadingTokens(true);
         try {
+          // Load earned tokens
           const correctAnswers = await quizAPI.getUserCorrectAnswers(user.id);
           setPearTokenCount(correctAnswers.length);
+          
+          // Load total redeemed
+          const redeemed = await redemptionAPI.getUserTotalRedeemed(user.id);
+          setTotalRedeemed(redeemed);
         } catch (error) {
           console.error('Error loading PEAR tokens:', error);
           setPearTokenCount(0);
+          setTotalRedeemed(0);
         } finally {
           setIsLoadingTokens(false);
         }
@@ -153,13 +170,13 @@ const Store = () => {
                     <div className="relative w-10 h-10 rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center shadow-lg border border-yellow-300/50">
                       <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent"></div>
                       <span className="relative text-lg font-bold text-white drop-shadow-md">
-                        {isLoadingTokens ? '...' : pearTokenCount}
+                        {isLoadingTokens ? '...' : availableBalance}
                       </span>
                     </div>
                   </div>
                   <div className="text-left">
                     <p className="text-sm font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">PEAR Tokens</p>
-                    <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Your balance</p>
+                    <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Available balance</p>
                   </div>
                 </div>
               )}
@@ -310,7 +327,7 @@ const Store = () => {
                       </div>
                     </div>
                     <span className="text-sm font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
-                      50 PEAR
+                      1 PEAR
                     </span>
                   </div>
 
@@ -329,7 +346,7 @@ const Store = () => {
                     </button>
                     <button 
                       onClick={handleRedeemTshirt}
-                      className="flex-1 inline-flex items-center justify-center px-3 py-2 text-white font-medium text-xs rounded-lg transition-all hover:opacity-90 hover:scale-105 shadow-sm"
+                      className="flex-1 inline-flex items-center justify-center px-3 py-2 text-white font-medium text-xs rounded-lg transition-all shadow-sm hover:opacity-90 hover:scale-105"
                       style={{ backgroundColor: '#1db954' }}
                     >
                       <ShoppingCart className="h-3.5 w-3.5 mr-1" />
@@ -351,6 +368,7 @@ const Store = () => {
                       </button>
                     </div>
                   )}
+
                 </div>
               </div>
 
@@ -496,6 +514,18 @@ const Store = () => {
         userSkillLevel={userSkillLevel}
         onSkillLevelChange={handleSkillLevelChange}
         onResearchInterestsChange={handleResearchInterestsChange}
+      />
+
+      {/* Redemption Modal */}
+      <RedemptionModal
+        isOpen={isRedemptionModalOpen}
+        onClose={() => setIsRedemptionModalOpen(false)}
+        user={user}
+        itemId="pearadox_tshirt"
+        itemName="Pearadox T-Shirt"
+        itemPrice={TSHIRT_PRICE}
+        availableBalance={availableBalance}
+        onRedemptionSuccess={handleRedemptionSuccess}
       />
     </div>
   );

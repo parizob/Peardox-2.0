@@ -13,7 +13,7 @@ import TestimonialCarousel from './components/TestimonialCarousel';
 import FieldQuiz from './components/FieldQuiz';
 import FieldQuizButton from './components/FieldQuizButton';
 import { useUser } from './contexts/UserContext';
-import { arxivAPI, authAPI, savedArticlesAPI, viewedArticlesAPI, quizAPI, supabase } from './lib/supabase';
+import { arxivAPI, authAPI, savedArticlesAPI, viewedArticlesAPI, quizAPI, redemptionAPI, supabase } from './lib/supabase';
 
 // Comprehensive category to icon mapping
 const getCategoryIcon = (categoryName) => {
@@ -319,7 +319,11 @@ function App() {
   
   // PEAR token state
   const [pearTokenCount, setPearTokenCount] = useState(0);
+  const [totalRedeemed, setTotalRedeemed] = useState(0);
   const [isLoadingTokens, setIsLoadingTokens] = useState(false);
+  
+  // Calculate available balance (earned - redeemed)
+  const availableBalance = pearTokenCount - totalRedeemed;
   
   // Default research interests fallback
   const defaultResearchInterests = [
@@ -711,23 +715,31 @@ function App() {
     };
   }, []);
 
-  // Load PEAR token count for authenticated users
+  // Load PEAR token count and redemptions for authenticated users
   useEffect(() => {
     const loadPearTokens = async () => {
       if (user) {
         setIsLoadingTokens(true);
         try {
+          // Load earned tokens
           const correctAnswers = await quizAPI.getUserCorrectAnswers(user.id);
           setPearTokenCount(correctAnswers.length);
-          console.log(`🪙 User has ${correctAnswers.length} PEAR tokens`);
+          
+          // Load total redeemed
+          const redeemed = await redemptionAPI.getUserTotalRedeemed(user.id);
+          setTotalRedeemed(redeemed);
+          
+          console.log(`🪙 User has ${correctAnswers.length} earned, ${redeemed} redeemed, ${correctAnswers.length - redeemed} available PEAR tokens`);
         } catch (error) {
           console.error('❌ Error loading PEAR tokens:', error);
           setPearTokenCount(0);
+          setTotalRedeemed(0);
         } finally {
           setIsLoadingTokens(false);
         }
       } else {
         setPearTokenCount(0);
+        setTotalRedeemed(0);
       }
     };
 
@@ -1788,7 +1800,7 @@ function App() {
                                 </div>
                                 {/* Token count */}
                                 <span className="relative text-xl font-bold text-white drop-shadow-md">
-                                  {isLoadingTokens ? '...' : pearTokenCount}
+                                  {isLoadingTokens ? '...' : availableBalance}
                                 </span>
                               </div>
                             </div>

@@ -5,9 +5,10 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SavedArticles from '../components/SavedArticles';
 import AccountModal from '../components/AccountModal';
+import RedemptionModal from '../components/RedemptionModal';
 import { useUser } from '../contexts/UserContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { quizAPI } from '../lib/supabase';
+import { quizAPI, redemptionAPI } from '../lib/supabase';
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -22,31 +23,40 @@ const ProductDetail = () => {
   } = useUser();
   
   const [pearTokenCount, setPearTokenCount] = useState(0);
+  const [totalRedeemed, setTotalRedeemed] = useState(0);
   const [isLoadingTokens, setIsLoadingTokens] = useState(false);
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [isRedemptionModalOpen, setIsRedemptionModalOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
-  const [selectedSize, setSelectedSize] = useState('M');
   const [insufficientBalanceError, setInsufficientBalanceError] = useState(false);
 
-  const TSHIRT_PRICE = 50;
+  const TSHIRT_PRICE = 1;
 
-  // Handle redeem attempt
+  // Calculate available balance (earned - redeemed)
+  const availableBalance = pearTokenCount - totalRedeemed;
+
+  // Handle redeem button click - open modal or show error
   const handleRedeemTshirt = () => {
     if (!user) {
       setIsAccountOpen(true);
       return;
     }
     
-    if (pearTokenCount < TSHIRT_PRICE) {
+    if (availableBalance < TSHIRT_PRICE) {
       setInsufficientBalanceError(true);
-      // Auto-hide after 5 seconds
       setTimeout(() => setInsufficientBalanceError(false), 5000);
       return;
     }
     
-    // TODO: Implement actual redemption logic
-    console.log('Proceeding with redemption...');
+    // Open redemption modal
+    setIsRedemptionModalOpen(true);
+  };
+
+  // Handle successful redemption from modal
+  const handleRedemptionSuccess = () => {
+    // Update total redeemed locally
+    setTotalRedeemed(prev => prev + TSHIRT_PRICE);
   };
 
   // Navigate to home and scroll to quiz section (same as "Explore Now" button)
@@ -77,12 +87,11 @@ const ProductDetail = () => {
     id: 'pearadox_tshirt',
     name: 'Pearadox T-Shirt',
     description: 'Rep your Pearadox journey with our premium cotton tee. Features the iconic Pearadox logo on the front and a unique design on the back. Perfect for researchers, learners, and AI enthusiasts who want to show their commitment to democratizing knowledge.',
-    price: 50,
+    price: 1,
     images: [
       '/Pearadox_Tshirt_Front.png',
       '/Pearadox_Tshirt_Back.png'
     ],
-    sizes: ['S', 'M', 'L', 'XL', '2XL', '3XL'],
     features: [
       '100% Premium Cotton',
       'Unisex modern fit',
@@ -90,25 +99,31 @@ const ProductDetail = () => {
       'Machine washable'
     ],
     shipping: 'Free worldwide shipping on all orders. Estimated delivery: 7-14 business days.',
-    returns: '30-day satisfaction guarantee. If you\'re not happy with your purchase, we\'ll refund your PEAR tokens.',
   };
 
-  // Fetch PEAR tokens
+  // Fetch PEAR tokens and redemptions
   useEffect(() => {
     const loadPearTokens = async () => {
       if (user) {
         setIsLoadingTokens(true);
         try {
+          // Load earned tokens
           const correctAnswers = await quizAPI.getUserCorrectAnswers(user.id);
           setPearTokenCount(correctAnswers.length);
+          
+          // Load total redeemed
+          const redeemed = await redemptionAPI.getUserTotalRedeemed(user.id);
+          setTotalRedeemed(redeemed);
         } catch (error) {
           console.error('Error loading PEAR tokens:', error);
           setPearTokenCount(0);
+          setTotalRedeemed(0);
         } finally {
           setIsLoadingTokens(false);
         }
       } else {
         setPearTokenCount(0);
+        setTotalRedeemed(0);
       }
     };
 
@@ -257,8 +272,8 @@ const ProductDetail = () => {
                 {/* User Balance */}
                 {user && (
                   <p className={`mt-3 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Your balance: <span className="font-semibold text-amber-600">{isLoadingTokens ? '...' : pearTokenCount} PEAR</span>
-                    {pearTokenCount >= product.price && (
+                    Your balance: <span className="font-semibold text-amber-600">{isLoadingTokens ? '...' : availableBalance} PEAR</span>
+                    {availableBalance >= product.price && (
                       <span className="ml-2 text-green-500 font-medium">✓ Enough to redeem!</span>
                     )}
                   </p>
@@ -270,35 +285,10 @@ const ProductDetail = () => {
                 {product.description}
               </p>
 
-              {/* Size Selection */}
-              <div className="mb-6">
-                <label className={`block text-sm font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Select Size
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {product.sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                        selectedSize === size
-                          ? 'text-white shadow-lg'
-                          : isDarkMode 
-                            ? 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700' 
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
-                      }`}
-                      style={selectedSize === size ? { backgroundColor: '#1db954' } : {}}
-                    >
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* Redeem Button */}
               <button 
                 onClick={handleRedeemTshirt}
-                className="w-full flex items-center justify-center px-6 py-4 text-white font-semibold rounded-xl transition-all hover:opacity-90 hover:scale-[1.02] shadow-lg"
+                className="w-full flex items-center justify-center px-6 py-4 text-white font-semibold rounded-xl transition-all shadow-lg hover:opacity-90 hover:scale-[1.02]"
                 style={{ backgroundColor: '#1db954' }}
               >
                 <ShoppingCart className="h-5 w-5 mr-2" />
@@ -307,7 +297,7 @@ const ProductDetail = () => {
 
               {/* Insufficient Balance Error */}
               {insufficientBalanceError && (
-                <div className={`mt-4 mb-6 p-4 rounded-xl border ${
+                <div className={`mt-4 p-4 rounded-xl border ${
                   isDarkMode ? 'bg-red-900/20 border-red-800' : 'bg-red-50 border-red-200'
                 }`}>
                   <p className={`text-sm font-medium ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
@@ -324,8 +314,8 @@ const ProductDetail = () => {
                 </div>
               )}
 
-              {/* Spacer when no error */}
-              {!insufficientBalanceError && <div className="mb-6"></div>}
+              {/* Spacer */}
+              <div className="mb-6"></div>
 
               {/* Features */}
               <div className={`p-5 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
@@ -377,6 +367,18 @@ const ProductDetail = () => {
         userSkillLevel={userSkillLevel}
         onSkillLevelChange={handleSkillLevelChange}
         onResearchInterestsChange={handleResearchInterestsChange}
+      />
+
+      {/* Redemption Modal */}
+      <RedemptionModal
+        isOpen={isRedemptionModalOpen}
+        onClose={() => setIsRedemptionModalOpen(false)}
+        user={user}
+        itemId="pearadox_tshirt"
+        itemName="Pearadox T-Shirt"
+        itemPrice={TSHIRT_PRICE}
+        availableBalance={availableBalance}
+        onRedemptionSuccess={handleRedemptionSuccess}
       />
     </div>
   );

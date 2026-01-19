@@ -1283,6 +1283,69 @@ export const emailAPI = {
       console.error('❌ Email sending failed:', error);
       throw new Error(error.message || 'Failed to send email. Please try again.');
     }
+  },
+
+  async sendRedemptionEmail(userName, userEmail, itemName, size, shippingAddress) {
+    try {
+      console.log('📧 Sending redemption notification email...');
+      
+      // Format the shipping address
+      const addressParts = [
+        shippingAddress.street,
+        shippingAddress.city,
+        shippingAddress.state,
+        shippingAddress.zip,
+        shippingAddress.country
+      ].filter(Boolean);
+      const formattedAddress = addressParts.join(', ');
+      
+      // Create detailed message for the redemption
+      const message = `
+NEW PEAR STORE REDEMPTION
+
+Customer Details:
+- Name: ${userName}
+- Email: ${userEmail}
+
+Order Details:
+- Item: ${itemName}
+- Size: ${size}
+
+Shipping Address:
+${shippingAddress.street}
+${shippingAddress.city}, ${shippingAddress.state} ${shippingAddress.zip}
+${shippingAddress.country}
+
+Please process this redemption and ship the item to the customer.
+      `.trim();
+      
+      // Call the Supabase Edge Function
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: userName,
+          email: userEmail,
+          subject: `PEAR Redemption: ${itemName} (Size ${size})`,
+          message: message
+        }
+      });
+
+      if (error) {
+        console.error('❌ Supabase Edge Function error:', error);
+        throw new Error(error.message || 'Failed to send redemption email');
+      }
+
+      if (!data || !data.success) {
+        console.error('❌ Edge Function returned unsuccessful response:', data);
+        throw new Error(data?.error || 'Failed to send redemption email');
+      }
+
+      console.log('✅ Redemption email sent successfully via Edge Function:', data.id);
+      return data;
+
+    } catch (error) {
+      console.error('❌ Redemption email sending failed:', error);
+      throw new Error(error.message || 'Failed to send redemption email. Please try again.');
+    }
   }
 };
 
@@ -1961,6 +2024,157 @@ export const quizAPI = {
     } catch (error) {
       console.error('❌ Exception in getQuizCorrectCount:', error);
       return 0;
+    }
+  }
+};
+
+// API functions for PEAR token redemptions
+export const redemptionAPI = {
+  /**
+   * Create a new redemption record
+   * @param {string} userId - UUID of the authenticated user
+   * @param {string} itemId - Unique item identifier (e.g., 'pearadox_tshirt')
+   * @param {string} itemName - Human-readable item name
+   * @param {number} pearAmount - Amount of PEAR tokens to redeem
+   * @param {string|null} size - Size for merchandise (null for non-merch)
+   * @param {Object|null} shippingAddress - Shipping address object
+   * @returns {Promise<Object>} The created redemption record or error
+   */
+  async createRedemption(userId, itemId, itemName, pearAmount, size = null, shippingAddress = null) {
+    try {
+      console.log('🎁 Creating redemption:', { userId, itemId, itemName, pearAmount, size, shippingAddress });
+      
+      if (!userId) {
+        console.error('❌ Cannot create redemption: user not authenticated');
+        throw new Error('User must be authenticated to redeem items');
+      }
+      
+      if (!itemId || !itemName || !pearAmount) {
+        console.error('❌ Cannot create redemption: missing required fields');
+        throw new Error('Item ID, name, and PEAR amount are required');
+      }
+      
+      const { data, error } = await supabase
+        .from('pear_redemptions')
+        .insert({
+          user_id: userId,
+          item_id: itemId,
+          item_name: itemName,
+          pear_amount: pearAmount,
+          size: size,
+          shipping_address: shippingAddress,
+          status: 'pending',
+          redeemed_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('❌ Error creating redemption:', error);
+        throw error;
+      }
+      
+      console.log('✅ Redemption created successfully:', data);
+      return { success: true, data };
+      
+    } catch (error) {
+      console.error('❌ Exception in createRedemption:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get all redemptions for a user
+   * @param {string} userId - UUID of the authenticated user
+   * @returns {Promise<Array>} Array of redemption records
+   */
+  async getUserRedemptions(userId) {
+    try {
+      if (!userId) {
+        return [];
+      }
+      
+      const { data, error } = await supabase
+        .from('pear_redemptions')
+        .select('*')
+        .eq('user_id', userId)
+        .order('redeemed_at', { ascending: false });
+      
+      if (error) {
+        console.error('❌ Error fetching user redemptions:', error);
+        throw error;
+      }
+      
+      console.log(`✅ Found ${data?.length || 0} redemptions for user`);
+      return data || [];
+      
+    } catch (error) {
+      console.error('❌ Exception in getUserRedemptions:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Get total PEAR tokens redeemed by a user
+   * @param {string} userId - UUID of the authenticated user
+   * @returns {Promise<number>} Total PEAR tokens redeemed
+   */
+  async getUserTotalRedeemed(userId) {
+    try {
+      if (!userId) {
+        return 0;
+      }
+      
+      const { data, error } = await supabase
+        .from('pear_redemptions')
+        .select('pear_amount')
+        .eq('user_id', userId)
+        .neq('status', 'cancelled');
+      
+      if (error) {
+        console.error('❌ Error fetching user total redeemed:', error);
+        return 0;
+      }
+      
+      const total = (data || []).reduce((sum, r) => sum + (r.pear_amount || 0), 0);
+      console.log(`✅ User has redeemed ${total} PEAR tokens total`);
+      return total;
+      
+    } catch (error) {
+      console.error('❌ Exception in getUserTotalRedeemed:', error);
+      return 0;
+    }
+  },
+
+  /**
+   * Update shipping address for a pending redemption
+   * @param {string} redemptionId - ID of the redemption
+   * @param {Object} shippingAddress - Shipping address object
+   * @returns {Promise<Object>} Updated redemption record
+   */
+  async updateShippingAddress(redemptionId, shippingAddress) {
+    try {
+      const { data, error } = await supabase
+        .from('pear_redemptions')
+        .update({ 
+          shipping_address: shippingAddress,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', redemptionId)
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('❌ Error updating shipping address:', error);
+        throw error;
+      }
+      
+      console.log('✅ Shipping address updated:', data);
+      return { success: true, data };
+      
+    } catch (error) {
+      console.error('❌ Exception in updateShippingAddress:', error);
+      throw error;
     }
   }
 };
