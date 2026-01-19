@@ -31,7 +31,7 @@ const Store = () => {
   const [showHowToEarn, setShowHowToEarn] = useState(false);
   const [insufficientBalanceError, setInsufficientBalanceError] = useState(false);
 
-  const TSHIRT_PRICE = 1;
+  const TSHIRT_PRICE = 50;
 
   // Calculate available balance (earned - redeemed)
   const availableBalance = pearTokenCount - totalRedeemed;
@@ -327,7 +327,7 @@ const Store = () => {
                       </div>
                     </div>
                     <span className="text-sm font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
-                      1 PEAR
+                      50 PEAR
                     </span>
                   </div>
 

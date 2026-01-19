@@ -31,7 +31,7 @@ const ProductDetail = () => {
   const [activeImage, setActiveImage] = useState(0);
   const [insufficientBalanceError, setInsufficientBalanceError] = useState(false);
 
-  const TSHIRT_PRICE = 1;
+  const TSHIRT_PRICE = 50;
 
   // Calculate available balance (earned - redeemed)
   const availableBalance = pearTokenCount - totalRedeemed;
@@ -87,7 +87,7 @@ const ProductDetail = () => {
     id: 'pearadox_tshirt',
     name: 'Pearadox T-Shirt',
     description: 'Rep your Pearadox journey with our premium cotton tee. Features the iconic Pearadox logo on the front and a unique design on the back. Perfect for researchers, learners, and AI enthusiasts who want to show their commitment to democratizing knowledge.',
-    price: 1,
+    price: 50,
     images: [
       '/Pearadox_Tshirt_Front.png',
       '/Pearadox_Tshirt_Back.png'
