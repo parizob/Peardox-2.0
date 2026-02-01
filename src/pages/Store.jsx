@@ -509,7 +509,7 @@ const Store = () => {
                     Amazon Gift Card
                   </h3>
                   <p className={`text-xs mb-3 line-clamp-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Redeem PEAR tokens for Amazon gift cards.
+                    Redeem your PEAR tokens for an Amazon gift card.
                   </p>
 
                   {/* Price with shiny token */}
@@ -521,7 +521,7 @@ const Store = () => {
                       </div>
                     </div>
                     <span className="text-sm font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
-                      100 PEAR = $1
+                      1000 PEAR = $10
                     </span>
                   </div>
 
