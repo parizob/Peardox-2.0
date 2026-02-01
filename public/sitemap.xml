@@ -14,7 +14,7 @@
   </url>
   <url>
     <loc>https://www.pearadox.app/blog</loc>
-    <lastmod>2025-11-27</lastmod>
+    <lastmod>2026-02-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -25,10 +25,16 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.pearadox.app/blog/ai-80-percent-noise-master-10-words</loc>
+    <lastmod>2026-02-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.pearadox.app/blog/ai-first-fallacy-enterprise-ai</loc>
     <lastmod>2026-01-10</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.pearadox.app/blog/ways-ai-can-boost-your-work</loc>

@@ -90,6 +90,18 @@ const Blog = () => {
   // Blog posts data
   const blogPosts = [
     {
+      id: 7,
+      title: "AI is 80% Noise. Master These 10 Words and Ignore the Rest.",
+      slug: "ai-80-percent-noise-master-10-words",
+      excerpt: "The tech industry wants you to believe AI is a complex, ever-shifting puzzle that requires a PhD to solve. They're wrong. If you understand 10 core concepts, you understand the engine of the next decade.",
+      content: ``,
+      author: "The Pearadox Team",
+      date: "2026-02-01",
+      readTime: "10 min read",
+      tags: ["AI Fundamentals", "LLM", "RAG", "AI Agents", "Education", "Beginner Guide"],
+      featured: true
+    },
+    {
       id: 6,
       title: "The \"AI First\" Fallacy: Why Enterprise AI Stalls and How to Build Systems That Survive",
       slug: "ai-first-fallacy-enterprise-ai",
@@ -99,7 +111,7 @@ const Blog = () => {
       date: "2026-01-10",
       readTime: "14 min read",
       tags: ["Enterprise AI", "Production AI", "AI Strategy", "RAG", "AI Agents", "UX Design"],
-      featured: true
+      featured: false
     },
     {
       id: 5,

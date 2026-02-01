@@ -47,6 +47,17 @@ const BlogPost = () => {
 
   // Blog posts data - in a real app, this would come from an API
   const blogPosts = {
+    "ai-80-percent-noise-master-10-words": {
+      id: 7,
+      title: "AI is 80% Noise. Master These 10 Words and Ignore the Rest.",
+      slug: "ai-80-percent-noise-master-10-words",
+      excerpt: "The tech industry wants you to believe AI is a complex, ever-shifting puzzle that requires a PhD to solve. They're wrong. If you understand 10 core concepts, you understand the engine of the next decade.",
+      author: "The Pearadox Team",
+      date: "2026-02-01",
+      readTime: "10 min read",
+      tags: ["AI Fundamentals", "LLM", "RAG", "AI Agents", "Education", "Beginner Guide"],
+      featured: true
+    },
     "ai-first-fallacy-enterprise-ai": {
       id: 6,
       title: "The \"AI First\" Fallacy: Why Enterprise AI Stalls and How to Build Systems That Survive",
@@ -56,7 +67,7 @@ const BlogPost = () => {
       date: "2026-01-10",
       readTime: "14 min read",
       tags: ["Enterprise AI", "Production AI", "AI Strategy", "RAG", "AI Agents", "UX Design"],
-      featured: true
+      featured: false
     },
     "ways-ai-can-boost-your-work": {
       id: 5,
@@ -339,6 +350,258 @@ const BlogPost = () => {
             </div>
 
             {/* Dynamic Article Content */}
+            {slug === 'ai-80-percent-noise-master-10-words' && (
+              <div className="prose prose-lg max-w-none">
+                
+                {/* Opening Hook */}
+                <h2 className={`text-2xl sm:text-3xl font-bold mt-8 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  The 80% Rule: Understand AI in 10 Words
+                </h2>
+
+                <p className={`text-xl leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  The tech industry wants you to believe AI is a complex, ever-shifting puzzle that requires a PhD to solve. They're wrong. They're selling you complexity to keep you buying subscriptions.
+                </p>
+
+                <div className={`border-l-4 p-6 mb-8 ${isDarkMode ? 'bg-green-900/30 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                  <p className={`font-medium ${isDarkMode ? 'text-green-300' : 'text-green-800'}`}>
+                    <strong>The truth?</strong> If you understand 10 core concepts, you understand the engine of the next decade. Everything else is just a paint job.
+                  </p>
+                </div>
+
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  To make this stick, imagine you've just hired a <strong>Super Intern</strong>. This intern has read every book in the world's largest library, but they don't have a personal memory of their own... yet.
+                </p>
+
+                {/* Concept 1: LLM */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>1</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Large Language Model (LLM)</h3>
+                  </div>
+                  <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <p className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <strong>The Description:</strong> The "brain" of the operation; a mathematical system trained on massive datasets to understand and predict human language patterns.
+                    </p>
+                  </div>
+                  <div className={`p-4 rounded-lg border-l-4 ${isDarkMode ? 'bg-green-900/20 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                    <p className={isDarkMode ? 'text-green-300' : 'text-green-800'}>
+                      <strong>The Analogy:</strong> This is the Super Intern's <em>Education</em>. They've read the entire library. They are incredibly well-read, but they don't "know" things like a human does; they just know which words usually follow other words.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Concept 2: Generative AI */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>2</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Generative AI</h3>
+                  </div>
+                  <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <p className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <strong>The Description:</strong> A category of AI that doesn't just analyze data, but creates entirely new content like text, code, or images.
+                    </p>
+                  </div>
+                  <div className={`p-4 rounded-lg border-l-4 ${isDarkMode ? 'bg-green-900/20 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                    <p className={isDarkMode ? 'text-green-300' : 'text-green-800'}>
+                      <strong>The Analogy:</strong> This is the Super Intern's <em>Output</em>. When you ask them to write a memo, they aren't just copying and pasting from the library; they are drafting a brand-new document from scratch based on their education.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Concept 3: Context Window */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>3</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Context Window</h3>
+                  </div>
+                  <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <p className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <strong>The Description:</strong> The "short-term memory" of the AI. It's the limit on how much information the model can "see" and process in a single conversation.
+                    </p>
+                  </div>
+                  <div className={`p-4 rounded-lg border-l-4 ${isDarkMode ? 'bg-green-900/20 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                    <p className={isDarkMode ? 'text-green-300' : 'text-green-800'}>
+                      <strong>The Analogy:</strong> This is the Intern's <em>Desk Space</em>. If the desk is small, they have to throw away the first page of your report to make room for the last page. If they have a massive desk (like Gemini's 2M context), they can keep your entire company history in front of them at once.
+                    </p>
+                  </div>
+                  <div className={`mt-4 p-4 rounded-lg border ${isDarkMode ? 'bg-yellow-900/20 border-yellow-700/50' : 'bg-yellow-50 border-yellow-200'}`}>
+                    <p className={`flex items-start gap-2 ${isDarkMode ? 'text-yellow-300' : 'text-yellow-800'}`}>
+                      <Lightbulb className="h-5 w-5 mt-1 flex-shrink-0" />
+                      <span><strong>The Tech Info:</strong> While the "Desk" is the window, <em>Tokens</em> are the units used to measure it. Think of tokens as "Scrabble tiles"—roughly 750 words equal 1,000 tokens. This is how companies like OpenAI or Anthropic charge you. Input (what you say) is usually cheap, but Output (what the AI says) can cost 3–5x more because it requires more "brain power" to create.</span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Concept 4: Inference */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>4</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Inference</h3>
+                  </div>
+                  <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <p className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <strong>The Description:</strong> The act of the AI actually "thinking" and producing an answer to a specific prompt.
+                    </p>
+                  </div>
+                  <div className={`p-4 rounded-lg border-l-4 ${isDarkMode ? 'bg-green-900/20 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                    <p className={isDarkMode ? 'text-green-300' : 'text-green-800'}>
+                      <strong>The Analogy:</strong> This is <em>The Lightning Round</em>. When you ask a question and the Intern fires off an answer based on their training, that moment of active processing is "inference."
+                    </p>
+                  </div>
+                </div>
+
+                {/* Concept 5: Hallucination */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>5</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Hallucination</h3>
+                  </div>
+                  <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <p className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <strong>The Description:</strong> When a model confidently generates information that is factually incorrect or nonsensical.
+                    </p>
+                  </div>
+                  <div className={`p-4 rounded-lg border-l-4 ${isDarkMode ? 'bg-green-900/20 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                    <p className={isDarkMode ? 'text-green-300' : 'text-green-800'}>
+                      <strong>The Analogy:</strong> This is the <em>Confident Guess</em>. Because the Intern wants to please you, if they don't know your client's name, they might confidently call them "John Smith" simply because that sounds like a plausible name.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Concept 6: RAG */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>6</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>RAG (Retrieval-Augmented Generation)</h3>
+                  </div>
+                  <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <p className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <strong>The Description:</strong> A technique that gives the AI access to specific, external data (like your company files) to improve accuracy.
+                    </p>
+                  </div>
+                  <div className={`p-4 rounded-lg border-l-4 ${isDarkMode ? 'bg-green-900/20 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                    <p className={isDarkMode ? 'text-green-300' : 'text-green-800'}>
+                      <strong>The Analogy:</strong> This is the <em>Open-Book Test</em>. Instead of letting the Intern guess facts from memory, you hand them a specific folder. Now, they look at the folder first before answering.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Concept 7: Agent */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>7</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Agent (Agentic)</h3>
+                  </div>
+                  <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <p className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <strong>The Description:</strong> An AI system that is given a goal and the tools to achieve it independently, rather than just answering a prompt.
+                    </p>
+                  </div>
+                  <div className={`p-4 rounded-lg border-l-4 ${isDarkMode ? 'bg-green-900/20 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                    <p className={isDarkMode ? 'text-green-300' : 'text-green-800'}>
+                      <strong>The Analogy:</strong> This is <em>Delegation</em>. Instead of asking the Intern, "What is a good flight to NYC?", you say, "Find a flight under $400 and book it." An agent doesn't just talk; it <em>does</em>.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Concept 8: MCP */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>8</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>MCP (Model Context Protocol)</h3>
+                  </div>
+                  <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <p className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <strong>The Description:</strong> A new universal standard that allows AI models to "plug into" your data (Google Drive, Slack, GitHub) without custom coding.
+                    </p>
+                  </div>
+                  <div className={`p-4 rounded-lg border-l-4 ${isDarkMode ? 'bg-green-900/20 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                    <p className={isDarkMode ? 'text-green-300' : 'text-green-800'}>
+                      <strong>The Analogy:</strong> This is the <em>Universal Keycard</em>. It's the single badge that lets your Intern walk into any room in the office to get the data they need without needing a different key for every door.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Concept 9: A2A */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>9</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Agent-to-Agent (A2A)</h3>
+                  </div>
+                  <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <p className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <strong>The Description:</strong> A framework where different AI agents communicate and negotiate with each other directly.
+                    </p>
+                  </div>
+                  <div className={`p-4 rounded-lg border-l-4 ${isDarkMode ? 'bg-green-900/20 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                    <p className={isDarkMode ? 'text-green-300' : 'text-green-800'}>
+                      <strong>The Analogy:</strong> This is the <em>Intern-to-Intern Meeting</em>. Your Super Intern calls the airline's Super Intern to negotiate a refund. You aren't involved in the call; you just get the result.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Concept 10: Reasoning */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>10</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Reasoning</h3>
+                  </div>
+                  <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <p className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      <strong>The Description:</strong> The ability of a model to "think" in steps, checking its own logic before providing a final answer.
+                    </p>
+                  </div>
+                  <div className={`p-4 rounded-lg border-l-4 ${isDarkMode ? 'bg-green-900/20 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                    <p className={isDarkMode ? 'text-green-300' : 'text-green-800'}>
+                      <strong>The Analogy:</strong> This is the <em>"Think Out Loud" Phase</em>. Instead of blurting out the first answer, the Intern grabs a notepad, scribbles out three ways to solve your problem, realizes two are wrong, and then gives you the best one.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Conclusion Section */}
+                <div className={`rounded-2xl p-8 mt-12 mb-8 ${isDarkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900' : 'bg-gradient-to-br from-gray-50 to-white'} border-2 ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                  <h2 className={`text-2xl sm:text-3xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    Conclusion
+                  </h2>
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Understanding AI doesn't require a computer science degree; it requires a map. By viewing the LLM as the "Education" and RAG as the "Open Book," you can start to see why some AI projects succeed while others hallucinate.
+                  </p>
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    At Pearadox, we believe that the future of work isn't just about having the smartest "Intern" — it's about having the right <strong>MCP connections</strong> and <strong>Reasoning steps</strong> to make them a reliable part of your team. Once you speak the language, you can start building the future.
+                  </p>
+                </div>
+
+                {/* Call to Action */}
+                <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-2xl p-8 mt-8">
+                  <h4 className="text-xl font-bold mb-4">Now You Speak the Language</h4>
+                  <p className="mb-4 text-white/90">
+                    You've just learned the 10 words that cut through 80% of the noise. Bookmark this page, share it with your team, and the next time someone throws jargon at you, you'll know exactly what they mean.
+                  </p>
+                  <p className="text-white/80 text-sm">
+                    <em>Because in the age of AI, the real power isn't in the technology — it's in understanding what the technology can actually do.</em>
+                  </p>
+                </div>
+
+                {/* Final CTA */}
+                <div className={`text-center mt-12 p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
+                  <p className={`text-lg mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Ready to put these concepts into action? Start by exploring the latest AI research — translated for humans.
+                  </p>
+                  <Link 
+                    to="/"
+                    className="inline-flex items-center px-8 py-4 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                    style={{ backgroundColor: '#1db954' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+                  >
+                    Explore Research on Pearadox
+                    <ArrowRight className="h-5 w-5 ml-2" />
+                  </Link>
+                </div>
+
+              </div>
+            )}
+
             {slug === 'ai-first-fallacy-enterprise-ai' && (
               <div className="prose prose-lg max-w-none">
                 
