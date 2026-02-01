@@ -21,8 +21,8 @@ const USDCRedemptionModal = ({
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
-  const PEAR_TO_USD = 1; // 1 PEAR = $1 USDC
-  const MIN_REDEEM = 1; // Minimum 1 PEAR
+  const PEAR_TO_USD = 100; // 100 PEAR = $1 USDC
+  const MIN_REDEEM = 100; // Minimum 100 PEAR
 
   // Calculate max redeemable (in PEAR, rounded down to nearest 100)
   const maxRedeemable = Math.floor(availableBalance / PEAR_TO_USD) * PEAR_TO_USD;
@@ -86,8 +86,9 @@ const USDCRedemptionModal = ({
 
   const handleAmountChange = (e) => {
     const value = parseInt(e.target.value) || 0;
-    // Clamp between min and max
-    const clamped = Math.max(MIN_REDEEM, Math.min(value, maxRedeemable));
+    // Round to nearest 100 and clamp between min and max
+    const rounded = Math.round(value / 100) * 100;
+    const clamped = Math.max(MIN_REDEEM, Math.min(rounded, maxRedeemable));
     setRedeemAmount(clamped);
   };
 
@@ -284,7 +285,7 @@ const USDCRedemptionModal = ({
                         type="range"
                         min={MIN_REDEEM}
                         max={maxRedeemable || MIN_REDEEM}
-                        step={1}
+                        step={100}
                         value={redeemAmount}
                         onChange={handleAmountChange}
                         disabled={isSubmitting || submitStatus === 'success' || maxRedeemable < MIN_REDEEM}
@@ -300,7 +301,7 @@ const USDCRedemptionModal = ({
                       </div>
                     </div>
                     <p className={`text-xs mt-1.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                      Available: {availableBalance} PEAR (max ${availableBalance} USDC)
+                      Available: {availableBalance} PEAR (max ${Math.floor(availableBalance / 100)} USDC)
                     </p>
                   </div>
 

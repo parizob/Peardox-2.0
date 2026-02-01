@@ -35,7 +35,7 @@ const Store = () => {
   const [isUSDCRedemptionModalOpen, setIsUSDCRedemptionModalOpen] = useState(false);
 
   const TSHIRT_PRICE = 50;
-  const USDC_MIN_PRICE = 1; // Minimum 1 PEAR = $1 USDC
+  const USDC_MIN_PRICE = 100; // Minimum 100 PEAR = $1 USDC
 
   // Calculate available balance (earned - redeemed)
   const availableBalance = pearTokenCount - totalRedeemed;
@@ -435,7 +435,7 @@ const Store = () => {
                       </div>
                     </div>
                     <span className="text-sm font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
-                      1 PEAR = $1
+                      100 PEAR = $1
                     </span>
                   </div>
 
