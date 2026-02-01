@@ -21,8 +21,8 @@ const USDCRedemptionModal = ({
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
 
-  const PEAR_TO_USD = 100; // 100 PEAR = $1 USDC
-  const MIN_REDEEM = 100; // Minimum 100 PEAR
+  const PEAR_TO_USD = 1; // 1 PEAR = $1 USDC
+  const MIN_REDEEM = 1; // Minimum 1 PEAR
 
   // Calculate max redeemable (in PEAR, rounded down to nearest 100)
   const maxRedeemable = Math.floor(availableBalance / PEAR_TO_USD) * PEAR_TO_USD;
@@ -55,19 +55,23 @@ const USDCRedemptionModal = ({
       }
     };
 
-    if (isOpen) {
+    if (isOpen && submitStatus !== 'success') {
       loadUserProfile();
-      // Reset form state when modal opens
+      // Reset form state when modal opens (but not if showing success)
       setSubmitStatus(null);
       setErrorMessage('');
       setEthereumAddress('');
       setRedeemAmount(Math.min(maxRedeemable, MIN_REDEEM) || MIN_REDEEM);
     }
-  }, [isOpen, user, maxRedeemable]);
+  }, [isOpen, user, maxRedeemable, submitStatus]);
 
-  // Validate Ethereum address format
+  // Validate Ethereum address or ENS domain format
   const isValidEthereumAddress = (address) => {
-    return /^0x[a-fA-F0-9]{40}$/.test(address);
+    // Standard Ethereum address (0x + 40 hex characters)
+    const isHexAddress = /^0x[a-fA-F0-9]{40}$/.test(address);
+    // ENS domain (.eth or .xyz)
+    const isENSDomain = /^[a-zA-Z0-9-]+\.(eth|xyz)$/.test(address);
+    return isHexAddress || isENSDomain;
   };
 
   const handleAddressChange = (e) => {
@@ -82,9 +86,8 @@ const USDCRedemptionModal = ({
 
   const handleAmountChange = (e) => {
     const value = parseInt(e.target.value) || 0;
-    // Round to nearest 100 and clamp between min and max
-    const rounded = Math.round(value / 100) * 100;
-    const clamped = Math.max(MIN_REDEEM, Math.min(rounded, maxRedeemable));
+    // Clamp between min and max
+    const clamped = Math.max(MIN_REDEEM, Math.min(value, maxRedeemable));
     setRedeemAmount(clamped);
   };
 
@@ -100,7 +103,7 @@ const USDCRedemptionModal = ({
 
     if (!isValidEthereumAddress(ethereumAddress.trim())) {
       setSubmitStatus('error');
-      setErrorMessage('Please enter a valid Ethereum address (0x followed by 40 hex characters)');
+      setErrorMessage('Please enter a valid Ethereum address (0x...) or ENS domain (.eth/.xyz)');
       return;
     }
 
@@ -156,12 +159,10 @@ const USDCRedemptionModal = ({
         onRedemptionSuccess(redeemAmount);
       }
       
-      // Close modal after 2.5 seconds
+      // Close modal after 3 seconds and navigate back
       setTimeout(() => {
         onClose();
-        setSubmitStatus(null);
-        setErrorMessage('');
-      }, 2500);
+      }, 3000);
       
     } catch (error) {
       console.error('❌ USDC redemption failed:', error);
@@ -174,9 +175,11 @@ const USDCRedemptionModal = ({
 
   const handleClose = () => {
     if (!isSubmitting) {
-      onClose();
+      // Reset state when closing
       setSubmitStatus(null);
       setErrorMessage('');
+      setEthereumAddress('');
+      onClose();
     }
   };
 
@@ -233,26 +236,32 @@ const USDCRedemptionModal = ({
               <div className="flex items-center justify-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-2 border-t-transparent" style={{ borderColor: '#3b82f6', borderTopColor: 'transparent' }}></div>
               </div>
+            ) : submitStatus === 'success' ? (
+              /* Success Screen - Replaces Form */
+              <div className="text-center py-8">
+                <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: '#1db954' }}>
+                  <Check className="h-10 w-10 text-white" />
+                </div>
+                <h3 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  Redemption Submitted!
+                </h3>
+                <p className={`text-lg mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                  <span className="font-semibold text-blue-500">${usdcAmount} USDC</span> is on its way
+                </p>
+                <div className={`p-4 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
+                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    The Pearadox team will review and process your redemption shortly. USDC will be sent to your wallet within <strong>1-3 business days</strong>.
+                  </p>
+                </div>
+                <div className={`p-3 rounded-lg text-sm font-mono break-all ${isDarkMode ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-600'}`}>
+                  {ethereumAddress}
+                </div>
+                <p className={`mt-4 text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                  Closing automatically...
+                </p>
+              </div>
             ) : (
               <>
-                {submitStatus === 'success' && (
-                  <div className={`mb-4 p-4 rounded-xl flex items-center space-x-3 ${
-                    isDarkMode ? 'bg-green-900/50 border border-green-700' : 'bg-green-50 border border-green-200'
-                  }`}>
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#1db954' }}>
-                      <Check className="h-4 w-4 text-white" />
-                    </div>
-                    <div>
-                      <p className={`font-medium ${isDarkMode ? 'text-green-300' : 'text-green-800'}`}>
-                        💰 Redemption Successful!
-                      </p>
-                      <p className={`text-sm ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
-                        ${usdcAmount} USDC will be sent to your wallet.
-                      </p>
-                    </div>
-                  </div>
-                )}
-
                 {submitStatus === 'error' && (
                   <div className={`mb-4 p-4 rounded-xl flex items-center space-x-3 ${
                     isDarkMode ? 'bg-red-900/50 border border-red-700' : 'bg-red-50 border border-red-200'
@@ -275,7 +284,7 @@ const USDCRedemptionModal = ({
                         type="range"
                         min={MIN_REDEEM}
                         max={maxRedeemable || MIN_REDEEM}
-                        step={100}
+                        step={1}
                         value={redeemAmount}
                         onChange={handleAmountChange}
                         disabled={isSubmitting || submitStatus === 'success' || maxRedeemable < MIN_REDEEM}
@@ -291,7 +300,7 @@ const USDCRedemptionModal = ({
                       </div>
                     </div>
                     <p className={`text-xs mt-1.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                      Available: {availableBalance} PEAR (max ${Math.floor(availableBalance / 100)} USDC)
+                      Available: {availableBalance} PEAR (max ${availableBalance} USDC)
                     </p>
                   </div>
 
@@ -312,12 +321,12 @@ const USDCRedemptionModal = ({
                             ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 disabled:bg-gray-800 disabled:opacity-50' 
                             : 'bg-white border-gray-200 disabled:bg-gray-50 disabled:opacity-50'
                         }`}
-                        placeholder="0x..."
+                        placeholder="0x... or name.eth"
                         required
                       />
                     </div>
                     <p className={`text-xs mt-1.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                      USDC will be sent on the Base Network. Make sure your wallet supports Base L2.
+                      Enter your wallet address or ENS domain (.eth, .xyz). USDC sent via Base Network.
                     </p>
                   </div>
 

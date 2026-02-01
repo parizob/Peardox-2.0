@@ -34,7 +34,7 @@ const ProductDetail = () => {
   const [isUSDCRedemptionModalOpen, setIsUSDCRedemptionModalOpen] = useState(false);
 
   const TSHIRT_PRICE = 50;
-  const USDC_MIN_PRICE = 100; // Minimum 100 PEAR = $1 USDC
+  const USDC_MIN_PRICE = 1; // Minimum 1 PEAR = $1 USDC
 
   // Calculate available balance (earned - redeemed)
   const availableBalance = pearTokenCount - totalRedeemed;
@@ -133,16 +133,16 @@ const ProductDetail = () => {
     usdc: {
       id: 'usdc',
       name: 'USDC',
-      description: 'Convert your PEAR tokens into USDC stablecoin. USDC is a fully-reserved stablecoin pegged 1:1 to the US dollar, providing you with real-world value for your learning achievements.',
-      price: 100, // 100 PEAR = $1 USDC
+      description: 'Convert your PEAR tokens into the USDC stablecoin. USDC is a fully-reserved stablecoin pegged 1:1 to the US dollar, providing you with real-world value for your learning achievements.',
+      price: 1, // 1 PEAR = $1 USDC
       images: [
         '/USD_Coin_logo.png'
       ],
       features: [
-        'Direct conversion: 100 PEAR = $1 USDC',
+        'Direct conversion: 1 PEAR = $1 USDC',
         'Sent via Base Network (low fees)',
         'Instant processing',
-        'No minimum withdrawal after 100 PEAR'
+        'No minimum withdrawal'
       ],
       shipping: null,
       category: 'Crypto Rewards',
@@ -336,7 +336,7 @@ const ProductDetail = () => {
                   </div>
                   <div>
                     <p className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
-                      {productId === 'usdc' ? '100 PEAR = $1 USDC' : `${product.price} PEAR Tokens`}
+                      {productId === 'usdc' ? '1 PEAR = $1 USDC' : `${product.price} PEAR Tokens`}
                     </p>
                   </div>
                 </div>
@@ -347,7 +347,7 @@ const ProductDetail = () => {
                     Your balance: <span className="font-semibold text-amber-600">{isLoadingTokens ? '...' : availableBalance} PEAR</span>
                     {productId === 'usdc' ? (
                       availableBalance >= USDC_MIN_PRICE && (
-                        <span className="ml-2 text-green-500 font-medium">✓ You can redeem ${Math.floor(availableBalance / 100)} USDC!</span>
+                        <span className="ml-2 text-green-500 font-medium">✓ You can redeem ${availableBalance} USDC!</span>
                       )
                     ) : (
                       availableBalance >= product.price && (
