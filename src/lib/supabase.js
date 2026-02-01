@@ -1346,6 +1346,58 @@ Please process this redemption and ship the item to the customer.
       console.error('❌ Redemption email sending failed:', error);
       throw new Error(error.message || 'Failed to send redemption email. Please try again.');
     }
+  },
+
+  async sendUSDCRedemptionEmail(userName, userEmail, usdcAmount, pearAmount, ethereumAddress) {
+    try {
+      console.log('📧 Sending USDC redemption notification email...');
+      
+      // Create detailed message for the USDC redemption
+      const message = `
+NEW USDC REDEMPTION REQUEST
+
+Customer Details:
+- Name: ${userName}
+- Email: ${userEmail}
+
+Redemption Details:
+- PEAR Tokens: ${pearAmount} PEAR
+- USDC Amount: $${usdcAmount} USDC
+
+Wallet Details:
+- Network: Base (Coinbase L2)
+- Ethereum Address: ${ethereumAddress}
+
+Please process this USDC transfer to the customer's wallet.
+      `.trim();
+      
+      // Call the Supabase Edge Function
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: userName,
+          email: userEmail,
+          subject: `USDC Redemption: $${usdcAmount} USDC (${pearAmount} PEAR)`,
+          message: message
+        }
+      });
+
+      if (error) {
+        console.error('❌ Supabase Edge Function error:', error);
+        throw new Error(error.message || 'Failed to send USDC redemption email');
+      }
+
+      if (!data || !data.success) {
+        console.error('❌ Edge Function returned unsuccessful response:', data);
+        throw new Error(data?.error || 'Failed to send USDC redemption email');
+      }
+
+      console.log('✅ USDC redemption email sent successfully via Edge Function:', data.id);
+      return data;
+
+    } catch (error) {
+      console.error('❌ USDC redemption email sending failed:', error);
+      throw new Error(error.message || 'Failed to send USDC redemption email. Please try again.');
+    }
   }
 };
 

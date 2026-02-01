@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import SavedArticles from '../components/SavedArticles';
 import AccountModal from '../components/AccountModal';
 import RedemptionModal from '../components/RedemptionModal';
+import USDCRedemptionModal from '../components/USDCRedemptionModal';
 import { useUser } from '../contexts/UserContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { quizAPI, redemptionAPI } from '../lib/supabase';
@@ -30,8 +31,11 @@ const Store = () => {
   const [showBackImage, setShowBackImage] = useState(false);
   const [showHowToEarn, setShowHowToEarn] = useState(false);
   const [insufficientBalanceError, setInsufficientBalanceError] = useState(false);
+  const [insufficientBalanceErrorUSDC, setInsufficientBalanceErrorUSDC] = useState(false);
+  const [isUSDCRedemptionModalOpen, setIsUSDCRedemptionModalOpen] = useState(false);
 
   const TSHIRT_PRICE = 50;
+  const USDC_MIN_PRICE = 100; // Minimum 100 PEAR = $1 USDC
 
   // Calculate available balance (earned - redeemed)
   const availableBalance = pearTokenCount - totalRedeemed;
@@ -57,6 +61,29 @@ const Store = () => {
   const handleRedemptionSuccess = () => {
     // Update total redeemed locally
     setTotalRedeemed(prev => prev + TSHIRT_PRICE);
+  };
+
+  // Handle USDC redeem button click
+  const handleRedeemUSDC = () => {
+    if (!user) {
+      setIsAccountOpen(true);
+      return;
+    }
+    
+    if (availableBalance < USDC_MIN_PRICE) {
+      setInsufficientBalanceErrorUSDC(true);
+      setTimeout(() => setInsufficientBalanceErrorUSDC(false), 5000);
+      return;
+    }
+    
+    // Open USDC redemption modal
+    setIsUSDCRedemptionModalOpen(true);
+  };
+
+  // Handle successful USDC redemption from modal
+  const handleUSDCRedemptionSuccess = (amount) => {
+    // Update total redeemed locally
+    setTotalRedeemed(prev => prev + amount);
   };
   
   // Navigate to home and scroll to quiz section (same as "Explore Now" button)
@@ -258,7 +285,7 @@ const Store = () => {
             </div>
 
             {/* Product Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-4xl">
               
               {/* Pearadox T-Shirt Card */}
               <div className={`rounded-xl shadow-md border overflow-hidden hover:shadow-lg transition-shadow ${
@@ -372,7 +399,87 @@ const Store = () => {
                 </div>
               </div>
 
-              {/* USDC Card with Coming Soon Banner */}
+              {/* USDC Card - Active */}
+              <div className={`rounded-xl shadow-md border overflow-hidden hover:shadow-lg transition-shadow ${
+                isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
+              }`}>
+                {/* Image */}
+                <div className={`relative aspect-[4/3] flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-blue-50 to-blue-100'}`}>
+                  <img 
+                    src="/USD_Coin_logo.png"
+                    alt="USDC"
+                    className="w-20 h-20 object-contain"
+                  />
+                  {/* Crypto Badge */}
+                  <div className="absolute top-2 left-2 px-2 py-0.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-[10px] font-bold rounded-full shadow-md">
+                    CRYPTO REWARD
+                  </div>
+                </div>
+
+                {/* Card Content */}
+                <div className="p-4">
+                  <span className="text-[10px] font-semibold uppercase tracking-wide text-blue-500">Crypto Rewards</span>
+                  <h3 className={`text-base font-bold mt-0.5 mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    USDC
+                  </h3>
+                  <p className={`text-xs mb-3 line-clamp-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Convert your PEAR tokens to the USDC stablecoin.
+                  </p>
+
+                  {/* Price with shiny token */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="relative">
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-[3px] opacity-60"></div>
+                      <div className="relative w-5 h-5 rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center shadow-sm border border-yellow-300/50">
+                        <div className="absolute inset-0.5 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent"></div>
+                      </div>
+                    </div>
+                    <span className="text-sm font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
+                      100 PEAR = $1
+                    </span>
+                  </div>
+
+                  {/* Buttons - Active */}
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => { navigate('/store/usdc'); setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 0); }}
+                      className={`flex-1 inline-flex items-center justify-center px-3 py-2 rounded-lg font-medium text-xs transition-all hover:scale-105 border ${
+                        isDarkMode 
+                          ? 'bg-gray-700 border-gray-600 text-white hover:bg-gray-600' 
+                          : 'bg-gray-100 border-gray-200 text-gray-900 hover:bg-gray-200'
+                      }`}
+                    >
+                      <Eye className="h-3.5 w-3.5 mr-1" />
+                      Details
+                    </button>
+                    <button 
+                      onClick={handleRedeemUSDC}
+                      className="flex-1 inline-flex items-center justify-center px-3 py-2 text-white font-medium text-xs rounded-lg transition-all shadow-sm hover:opacity-90 hover:scale-105"
+                      style={{ backgroundColor: '#1db954' }}
+                    >
+                      <ShoppingCart className="h-3.5 w-3.5 mr-1" />
+                      Redeem
+                    </button>
+                  </div>
+
+                  {/* Insufficient Balance Error for USDC */}
+                  {insufficientBalanceErrorUSDC && (
+                    <div className="mt-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                      <p className="text-xs text-red-600 dark:text-red-400 font-medium">
+                        Insufficient balance! You need at least {USDC_MIN_PRICE} PEAR tokens to redeem USDC.
+                      </p>
+                      <button 
+                        onClick={() => { setInsufficientBalanceErrorUSDC(false); handleStartEarning(); }}
+                        className="text-xs text-red-500 dark:text-red-400 underline font-medium hover:text-red-700 dark:hover:text-red-300 mt-1"
+                      >
+                        Earn more tokens →
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Amazon Gift Card with Coming Soon Banner */}
               <div className={`relative rounded-xl shadow-md border overflow-hidden ${
                 isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
               }`}>
@@ -387,22 +494,22 @@ const Store = () => {
                 <div className="absolute inset-0 bg-gray-500/20 z-10 pointer-events-none"></div>
 
                 {/* Image */}
-                <div className={`relative aspect-[4/3] flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-blue-50 to-blue-100'}`}>
+                <div className={`relative aspect-[4/3] flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-orange-50 to-amber-100'}`}>
                   <img 
-                    src="/USD_Coin_logo.png"
-                    alt="USDC"
-                    className="w-20 h-20 object-contain opacity-70"
+                    src="/Amazon_Giftcard.png"
+                    alt="Amazon Gift Card"
+                    className="w-24 h-24 object-contain opacity-70"
                   />
                 </div>
 
                 {/* Card Content */}
                 <div className="p-4">
-                  <span className="text-[10px] font-semibold uppercase tracking-wide text-blue-500">Crypto Rewards</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wide text-orange-500">Gift Cards</span>
                   <h3 className={`text-base font-bold mt-0.5 mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    USDC
+                    Amazon Gift Card
                   </h3>
                   <p className={`text-xs mb-3 line-clamp-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Convert PEAR tokens to USDC stablecoin.
+                    Redeem PEAR tokens for Amazon gift cards.
                   </p>
 
                   {/* Price with shiny token */}
@@ -526,6 +633,15 @@ const Store = () => {
         itemPrice={TSHIRT_PRICE}
         availableBalance={availableBalance}
         onRedemptionSuccess={handleRedemptionSuccess}
+      />
+
+      {/* USDC Redemption Modal */}
+      <USDCRedemptionModal
+        isOpen={isUSDCRedemptionModalOpen}
+        onClose={() => setIsUSDCRedemptionModalOpen(false)}
+        user={user}
+        availableBalance={availableBalance}
+        onRedemptionSuccess={handleUSDCRedemptionSuccess}
       />
     </div>
   );

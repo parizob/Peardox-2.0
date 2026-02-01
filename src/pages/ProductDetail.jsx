@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, ShoppingCart, Check, Truck, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Check, Truck, ChevronLeft, ChevronRight, Wallet, AlertTriangle } from 'lucide-react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SavedArticles from '../components/SavedArticles';
 import AccountModal from '../components/AccountModal';
 import RedemptionModal from '../components/RedemptionModal';
+import USDCRedemptionModal from '../components/USDCRedemptionModal';
 import { useUser } from '../contexts/UserContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { quizAPI, redemptionAPI } from '../lib/supabase';
@@ -30,8 +31,10 @@ const ProductDetail = () => {
   const [isRedemptionModalOpen, setIsRedemptionModalOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [insufficientBalanceError, setInsufficientBalanceError] = useState(false);
+  const [isUSDCRedemptionModalOpen, setIsUSDCRedemptionModalOpen] = useState(false);
 
   const TSHIRT_PRICE = 50;
+  const USDC_MIN_PRICE = 100; // Minimum 100 PEAR = $1 USDC
 
   // Calculate available balance (earned - redeemed)
   const availableBalance = pearTokenCount - totalRedeemed;
@@ -59,6 +62,29 @@ const ProductDetail = () => {
     setTotalRedeemed(prev => prev + TSHIRT_PRICE);
   };
 
+  // Handle USDC redeem button click
+  const handleRedeemUSDC = () => {
+    if (!user) {
+      setIsAccountOpen(true);
+      return;
+    }
+    
+    if (availableBalance < USDC_MIN_PRICE) {
+      setInsufficientBalanceError(true);
+      setTimeout(() => setInsufficientBalanceError(false), 5000);
+      return;
+    }
+    
+    // Open USDC redemption modal
+    setIsUSDCRedemptionModalOpen(true);
+  };
+
+  // Handle successful USDC redemption from modal
+  const handleUSDCRedemptionSuccess = (amount) => {
+    // Update total redeemed locally
+    setTotalRedeemed(prev => prev + amount);
+  };
+
   // Navigate to home and scroll to quiz section (same as "Explore Now" button)
   const handleStartEarning = () => {
     navigate('/');
@@ -83,23 +109,49 @@ const ProductDetail = () => {
   }, []);
   
   // Product data
-  const product = {
-    id: 'pearadox_tshirt',
-    name: 'Pearadox T-Shirt',
-    description: 'Rep your Pearadox journey with our premium cotton tee. Features the iconic Pearadox logo on the front and a unique design on the back. Perfect for researchers, learners, and AI enthusiasts who want to show their commitment to democratizing knowledge.',
-    price: 50,
-    images: [
-      '/Pearadox_Tshirt_Front.png',
-      '/Pearadox_Tshirt_Back.png'
-    ],
-    features: [
-      '100% Premium Cotton',
-      'Unisex modern fit',
-      'High-quality screen printed graphics',
-      'Machine washable'
-    ],
-    shipping: 'Free worldwide shipping on all orders. Estimated delivery: 7-14 business days.',
+  const products = {
+    pearadox_tshirt: {
+      id: 'pearadox_tshirt',
+      name: 'Pearadox T-Shirt',
+      description: 'Rep your Pearadox journey with our premium cotton tee. Features the iconic Pearadox logo on the front and a unique design on the back. Perfect for researchers, learners, and AI enthusiasts who want to show their commitment to democratizing knowledge.',
+      price: 50,
+      images: [
+        '/Pearadox_Tshirt_Front.png',
+        '/Pearadox_Tshirt_Back.png'
+      ],
+      features: [
+        '100% Premium Cotton',
+        'Unisex modern fit',
+        'High-quality screen printed graphics',
+        'Machine washable'
+      ],
+      shipping: 'Free worldwide shipping on all orders. Estimated delivery: 7-14 business days.',
+      category: 'Exclusive Merch',
+      badge: 'LIMITED EDITION',
+      badgeColor: 'from-amber-500 to-yellow-500',
+    },
+    usdc: {
+      id: 'usdc',
+      name: 'USDC',
+      description: 'Convert your PEAR tokens into USDC stablecoin. USDC is a fully-reserved stablecoin pegged 1:1 to the US dollar, providing you with real-world value for your learning achievements.',
+      price: 100, // 100 PEAR = $1 USDC
+      images: [
+        '/USD_Coin_logo.png'
+      ],
+      features: [
+        'Direct conversion: 100 PEAR = $1 USDC',
+        'Sent via Base Network (low fees)',
+        'Instant processing',
+        'No minimum withdrawal after 100 PEAR'
+      ],
+      shipping: null,
+      category: 'Crypto Rewards',
+      badge: 'CRYPTO REWARD',
+      badgeColor: 'from-blue-500 to-blue-600',
+    }
   };
+
+  const product = products[productId];
 
   // Fetch PEAR tokens and redemptions
   useEffect(() => {
@@ -139,7 +191,7 @@ const ProductDetail = () => {
   };
 
   // Handle 404 for unknown products
-  if (productId !== 'pearadox_tshirt') {
+  if (!product) {
     return (
       <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
         <div className="text-center">
@@ -191,64 +243,84 @@ const ProductDetail = () => {
             {/* Image Gallery */}
             <div>
               {/* Main Image */}
-              <div className={`relative aspect-square rounded-2xl overflow-hidden mb-4 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
-                <img 
-                  src={product.images[activeImage]}
-                  alt={`${product.name} - View ${activeImage + 1}`}
-                  className="w-full h-full object-cover"
-                />
+              <div className={`relative rounded-2xl overflow-hidden mb-4 ${
+                productId === 'usdc' 
+                  ? `aspect-square flex items-center justify-center ${isDarkMode ? 'bg-gray-800' : 'bg-gradient-to-br from-blue-50 to-blue-100'}`
+                  : `aspect-square ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`
+              }`}>
+                {productId === 'usdc' ? (
+                  <img 
+                    src={product.images[0]}
+                    alt={product.name}
+                    className="w-40 h-40 object-contain"
+                  />
+                ) : (
+                  <img 
+                    src={product.images[activeImage]}
+                    alt={`${product.name} - View ${activeImage + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                )}
                 
-                {/* Navigation Arrows */}
-                <button 
-                  onClick={prevImage}
-                  className={`absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                    isDarkMode ? 'bg-gray-900/80 hover:bg-gray-900 text-white' : 'bg-white/80 hover:bg-white text-gray-900'
-                  } shadow-lg`}
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </button>
-                <button 
-                  onClick={nextImage}
-                  className={`absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                    isDarkMode ? 'bg-gray-900/80 hover:bg-gray-900 text-white' : 'bg-white/80 hover:bg-white text-gray-900'
-                  } shadow-lg`}
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
+                {/* Navigation Arrows - Only for T-shirt */}
+                {productId === 'pearadox_tshirt' && (
+                  <>
+                    <button 
+                      onClick={prevImage}
+                      className={`absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                        isDarkMode ? 'bg-gray-900/80 hover:bg-gray-900 text-white' : 'bg-white/80 hover:bg-white text-gray-900'
+                      } shadow-lg`}
+                    >
+                      <ChevronLeft className="h-6 w-6" />
+                    </button>
+                    <button 
+                      onClick={nextImage}
+                      className={`absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                        isDarkMode ? 'bg-gray-900/80 hover:bg-gray-900 text-white' : 'bg-white/80 hover:bg-white text-gray-900'
+                      } shadow-lg`}
+                    >
+                      <ChevronRight className="h-6 w-6" />
+                    </button>
+                  </>
+                )}
 
-                {/* Limited Edition Badge */}
-                <div className="absolute top-4 left-4 px-4 py-1.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-white text-sm font-bold rounded-full shadow-lg">
-                  LIMITED EDITION
+                {/* Product Badge */}
+                <div className={`absolute top-4 left-4 px-4 py-1.5 bg-gradient-to-r ${product.badgeColor} text-white text-sm font-bold rounded-full shadow-lg`}>
+                  {product.badge}
                 </div>
               </div>
 
-              {/* Thumbnails */}
-              <div className="flex gap-3 justify-center">
-                {product.images.map((img, index) => (
-                  <button 
-                    key={index}
-                    onClick={() => setActiveImage(index)}
-                    className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
-                      activeImage === index 
-                        ? 'border-green-500 ring-2 ring-green-500/30' 
-                        : isDarkMode ? 'border-gray-700 hover:border-gray-600' : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <img 
-                      src={img} 
-                      alt={`View ${index + 1}`} 
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
+              {/* Thumbnails - Only for T-shirt */}
+              {productId === 'pearadox_tshirt' && (
+                <div className="flex gap-3 justify-center">
+                  {product.images.map((img, index) => (
+                    <button 
+                      key={index}
+                      onClick={() => setActiveImage(index)}
+                      className={`relative w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
+                        activeImage === index 
+                          ? 'border-green-500 ring-2 ring-green-500/30' 
+                          : isDarkMode ? 'border-gray-700 hover:border-gray-600' : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <img 
+                        src={img} 
+                        alt={`View ${index + 1}`} 
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Product Info */}
             <div>
               {/* Title & Price */}
               <div className="mb-6">
-                <span className="text-sm font-semibold uppercase tracking-wide" style={{ color: '#1db954' }}>Exclusive Merch</span>
+                <span className="text-sm font-semibold uppercase tracking-wide" style={{ color: productId === 'usdc' ? '#3b82f6' : '#1db954' }}>
+                  {product.category}
+                </span>
                 <h1 className={`text-3xl sm:text-4xl font-bold mt-1 mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                   {product.name}
                 </h1>
@@ -264,7 +336,7 @@ const ProductDetail = () => {
                   </div>
                   <div>
                     <p className="text-2xl font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
-                      {product.price} PEAR Tokens
+                      {productId === 'usdc' ? '100 PEAR = $1 USDC' : `${product.price} PEAR Tokens`}
                     </p>
                   </div>
                 </div>
@@ -273,8 +345,14 @@ const ProductDetail = () => {
                 {user && (
                   <p className={`mt-3 text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Your balance: <span className="font-semibold text-amber-600">{isLoadingTokens ? '...' : availableBalance} PEAR</span>
-                    {availableBalance >= product.price && (
-                      <span className="ml-2 text-green-500 font-medium">✓ Enough to redeem!</span>
+                    {productId === 'usdc' ? (
+                      availableBalance >= USDC_MIN_PRICE && (
+                        <span className="ml-2 text-green-500 font-medium">✓ You can redeem ${Math.floor(availableBalance / 100)} USDC!</span>
+                      )
+                    ) : (
+                      availableBalance >= product.price && (
+                        <span className="ml-2 text-green-500 font-medium">✓ Enough to redeem!</span>
+                      )
                     )}
                   </p>
                 )}
@@ -285,14 +363,40 @@ const ProductDetail = () => {
                 {product.description}
               </p>
 
+              {/* USDC Wallet Warning */}
+              {productId === 'usdc' && (
+                <div className={`mb-6 p-4 rounded-xl border ${isDarkMode ? 'bg-amber-900/20 border-amber-700/50' : 'bg-amber-50 border-amber-200'}`}>
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className={`h-5 w-5 flex-shrink-0 mt-0.5 ${isDarkMode ? 'text-amber-400' : 'text-amber-600'}`} />
+                    <div>
+                      <p className={`font-semibold ${isDarkMode ? 'text-amber-300' : 'text-amber-800'}`}>
+                        Ethereum Wallet Required
+                      </p>
+                      <p className={`text-sm mt-1 ${isDarkMode ? 'text-amber-400/80' : 'text-amber-700'}`}>
+                        All USDC payments are issued via the <strong>Base Network</strong>. To receive funds, you will need an Ethereum wallet (such as MetaMask, Coinbase Wallet, or Rainbow).
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Redeem Button */}
               <button 
-                onClick={handleRedeemTshirt}
+                onClick={productId === 'usdc' ? handleRedeemUSDC : handleRedeemTshirt}
                 className="w-full flex items-center justify-center px-6 py-4 text-white font-semibold rounded-xl transition-all shadow-lg hover:opacity-90 hover:scale-[1.02]"
                 style={{ backgroundColor: '#1db954' }}
               >
-                <ShoppingCart className="h-5 w-5 mr-2" />
-                Redeem for {product.price} PEAR
+                {productId === 'usdc' ? (
+                  <>
+                    <Wallet className="h-5 w-5 mr-2" />
+                    Redeem USDC
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="h-5 w-5 mr-2" />
+                    Redeem for {product.price} PEAR
+                  </>
+                )}
               </button>
 
               {/* Insufficient Balance Error */}
@@ -301,7 +405,7 @@ const ProductDetail = () => {
                   isDarkMode ? 'bg-red-900/20 border-red-800' : 'bg-red-50 border-red-200'
                 }`}>
                   <p className={`text-sm font-medium ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>
-                    Insufficient balance! You need {TSHIRT_PRICE} PEAR tokens to redeem this item.
+                    Insufficient balance! You need {productId === 'usdc' ? USDC_MIN_PRICE : TSHIRT_PRICE} PEAR tokens to redeem this item.
                   </p>
                   <button 
                     onClick={() => { setInsufficientBalanceError(false); handleStartEarning(); }}
@@ -319,7 +423,9 @@ const ProductDetail = () => {
 
               {/* Features */}
               <div className={`p-5 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-50'}`}>
-                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Product Features</h3>
+                <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  {productId === 'usdc' ? 'How It Works' : 'Product Features'}
+                </h3>
                 <ul className="space-y-2">
                   {product.features.map((feature, index) => (
                     <li key={index} className="flex items-center gap-2">
@@ -332,16 +438,28 @@ const ProductDetail = () => {
                 </ul>
               </div>
 
-              {/* Shipping */}
-              <div className={`p-4 rounded-xl border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-                <div className="flex items-center gap-3 mb-2">
-                  <Truck className="h-5 w-5" style={{ color: '#1db954' }} />
-                  <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Free Shipping</span>
+              {/* Shipping (T-shirt) or Wallet Info (USDC) */}
+              {productId === 'usdc' ? (
+                <div className={`p-4 rounded-xl border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <Wallet className="h-5 w-5" style={{ color: '#1db954' }} />
+                    <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Base Network</span>
+                  </div>
+                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    USDC will be sent to your Ethereum wallet on Base L2 for fast, low-cost transactions.
+                  </p>
                 </div>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Worldwide delivery in 7-14 days
-                </p>
-              </div>
+              ) : (
+                <div className={`p-4 rounded-xl border ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-3 mb-2">
+                    <Truck className="h-5 w-5" style={{ color: '#1db954' }} />
+                    <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Free Shipping</span>
+                  </div>
+                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Worldwide delivery in 7-14 days
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -379,6 +497,15 @@ const ProductDetail = () => {
         itemPrice={TSHIRT_PRICE}
         availableBalance={availableBalance}
         onRedemptionSuccess={handleRedemptionSuccess}
+      />
+
+      {/* USDC Redemption Modal */}
+      <USDCRedemptionModal
+        isOpen={isUSDCRedemptionModalOpen}
+        onClose={() => setIsUSDCRedemptionModalOpen(false)}
+        user={user}
+        availableBalance={availableBalance}
+        onRedemptionSuccess={handleUSDCRedemptionSuccess}
       />
     </div>
   );
