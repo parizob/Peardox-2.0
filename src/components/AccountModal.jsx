@@ -696,11 +696,13 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
   if (loading) {
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-2xl border border-gray-100">
+        <div className={`rounded-2xl p-8 max-w-md w-full text-center shadow-2xl border ${
+          isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-100'
+        }`}>
           <div className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#1db954' }}>
             <div className="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent"></div>
           </div>
-          <p className="text-gray-600 font-medium">Loading your account...</p>
+          <p className={`font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Loading your account...</p>
         </div>
       </div>
     );
@@ -1313,15 +1315,17 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
         {/* Reset Confirmation Modal */}
         {showResetConfirm && (
           <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
-              <h3 className="text-lg font-bold text-gray-900 mb-3">Reset Research Interests?</h3>
-              <p className="text-gray-600 text-sm mb-4">
+            <div className={`rounded-2xl p-6 max-w-md w-full shadow-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+              <h3 className={`text-lg font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Reset Research Interests?</h3>
+              <p className={`text-sm mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 This will replace your current interests with the default 5 categories.
               </p>
               <div className="flex space-x-3">
                 <button
                   onClick={() => setShowResetConfirm(false)}
-                  className="flex-1 px-4 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition-colors text-sm"
+                  className={`flex-1 px-4 py-2.5 rounded-xl font-medium transition-colors text-sm ${
+                    isDarkMode ? 'text-gray-300 bg-gray-700 hover:bg-gray-600' : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
+                  }`}
                 >
                   Cancel
                 </button>
@@ -1342,26 +1346,30 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
   // Not authenticated - show sign in/up forms
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-hidden shadow-2xl border border-gray-100">
+      <div className={`rounded-2xl max-w-md w-full max-h-[90vh] overflow-hidden shadow-2xl border ${
+        isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-100'
+      }`}>
         {/* Header */}
-        <div className="p-6 border-b border-gray-100">
+        <div className={`p-6 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
                 {authMode === 'signin' ? <LogIn className="h-5 w-5 text-white" /> : authMode === 'forgot' ? <Mail className="h-5 w-5 text-white" /> : <UserPlus className="h-5 w-5 text-white" />}
               </div>
-              <h2 className="text-xl font-bold text-gray-900">
+              <h2 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {authMode === 'signin' ? 'Welcome Back' : authMode === 'forgot' ? 'Reset Password' : 'Join Pearadox'}
               </h2>
             </div>
             <button
               onClick={onClose}
-              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-colors"
+              className={`p-2 rounded-xl transition-colors ${
+                isDarkMode ? 'text-gray-400 hover:text-gray-200 hover:bg-gray-700' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-100'
+              }`}
             >
               <X className="h-5 w-5" />
             </button>
           </div>
-          <p className="text-gray-500 text-sm">
+          <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
             {authMode === 'signin' 
               ? 'Sign in to access your research hub'
               : authMode === 'forgot'
@@ -1372,38 +1380,44 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
         </div>
 
         {/* Auth Form */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+        <div className={`p-6 overflow-y-auto max-h-[calc(90vh-140px)] ${isDarkMode ? 'bg-gray-900' : ''}`}>
           <form onSubmit={handleAuthSubmit} className="space-y-4">
             {authMode === 'signup' && (
               <>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
+                  <label className={`block text-sm font-medium mb-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Full Name</label>
                   <input
                     type="text"
                     required
                     value={authForm.name}
                     onChange={(e) => setAuthForm(prev => ({ ...prev, name: e.target.value }))}
-                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none text-sm transition-all"
+                    className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none text-sm transition-all ${
+                      isDarkMode ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-500' : 'border-gray-200'
+                    }`}
                     placeholder="Dr. Jane Smith"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Professional Title</label>
+                  <label className={`block text-sm font-medium mb-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Professional Title</label>
                   <input
                     type="text"
                     value={authForm.title}
                     onChange={(e) => setAuthForm(prev => ({ ...prev, title: e.target.value }))}
-                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none text-sm transition-all"
+                    className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none text-sm transition-all ${
+                      isDarkMode ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-500' : 'border-gray-200'
+                    }`}
                     placeholder="Research Scientist"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Institution</label>
+                  <label className={`block text-sm font-medium mb-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Institution</label>
                   <input
                     type="text"
                     value={authForm.institution}
                     onChange={(e) => setAuthForm(prev => ({ ...prev, institution: e.target.value }))}
-                    className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none text-sm transition-all"
+                    className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none text-sm transition-all ${
+                      isDarkMode ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-500' : 'border-gray-200'
+                    }`}
                     placeholder="Stanford University"
                   />
                 </div>
@@ -1411,13 +1425,15 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
+              <label className={`block text-sm font-medium mb-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Email</label>
               <input
                 type="email"
                 required
                 value={authForm.email}
                 onChange={(e) => setAuthForm(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none text-sm transition-all"
+                className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none text-sm transition-all ${
+                  isDarkMode ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-500' : 'border-gray-200'
+                }`}
                 placeholder="you@example.com"
               />
             </div>
@@ -1426,7 +1442,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
               <>
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <label className="block text-sm font-medium text-gray-700">Password</label>
+                    <label className={`block text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Password</label>
                     {authMode === 'signin' && (
                       <button
                         type="button"
@@ -1447,14 +1463,16 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
                       required
                       value={authForm.password}
                       onChange={(e) => setAuthForm(prev => ({ ...prev, password: e.target.value }))}
-                      className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none pr-10 text-sm transition-all"
+                      className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none pr-10 text-sm transition-all ${
+                        isDarkMode ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-500' : 'border-gray-200'
+                      }`}
                       placeholder="••••••••"
                       minLength={6}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${isDarkMode ? 'text-gray-500 hover:text-gray-300' : 'text-gray-400 hover:text-gray-600'}`}
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -1463,13 +1481,15 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
 
                 {authMode === 'signup' && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Confirm Password</label>
+                    <label className={`block text-sm font-medium mb-1.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Confirm Password</label>
                     <input
                       type={showPassword ? 'text' : 'password'}
                       required
                       value={authForm.confirmPassword}
                       onChange={(e) => setAuthForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                      className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none text-sm transition-all"
+                      className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none text-sm transition-all ${
+                        isDarkMode ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-500' : 'border-gray-200'
+                      }`}
                       placeholder="••••••••"
                       minLength={6}
                     />
@@ -1481,8 +1501,8 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
             {authError && authError.trim() && (
               <div className={`p-3 rounded-xl text-sm ${
                 authError.includes('successfully') || authError.includes('sent')
-                  ? 'bg-green-50 text-green-800 border border-green-100'
-                  : 'bg-red-50 text-red-800 border border-red-100'
+                  ? isDarkMode ? 'bg-green-900/50 text-green-300 border border-green-700' : 'bg-green-50 text-green-800 border border-green-100'
+                  : isDarkMode ? 'bg-red-900/50 text-red-300 border border-red-700' : 'bg-red-50 text-red-800 border border-red-100'
               }`}>
                 {authError}
               </div>
@@ -1520,7 +1540,7 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
               </div>
             )}
 
-            <div className="text-center pt-4 border-t border-gray-100">
+            <div className={`text-center pt-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
               <button
                 type="button"
                 onClick={() => {
@@ -1551,15 +1571,17 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
       {/* Reset Confirmation Modal */}
       {showResetConfirm && (
         <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl">
-            <h3 className="text-lg font-bold text-gray-900 mb-3">Reset Research Interests?</h3>
-            <p className="text-gray-600 text-sm mb-4">
+          <div className={`rounded-2xl p-6 max-w-md w-full shadow-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+            <h3 className={`text-lg font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Reset Research Interests?</h3>
+            <p className={`text-sm mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               This will replace your current interests with the default 5 categories.
             </p>
             <div className="flex space-x-3">
               <button
                 onClick={() => setShowResetConfirm(false)}
-                className="flex-1 px-4 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition-colors text-sm"
+                className={`flex-1 px-4 py-2.5 rounded-xl font-medium transition-colors text-sm ${
+                  isDarkMode ? 'text-gray-300 bg-gray-700 hover:bg-gray-600' : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
+                }`}
               >
                 Cancel
               </button>

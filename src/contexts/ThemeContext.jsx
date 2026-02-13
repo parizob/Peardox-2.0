@@ -15,9 +15,9 @@ export const ThemeProvider = ({ children }) => {
   // Track current user ID - set by AccountModal
   const userIdRef = useRef(null);
   
-  // Dark mode state
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const isDarkModeRef = useRef(false);
+  // Dark mode state - default to dark mode
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const isDarkModeRef = useRef(true);
 
   // Keep isDarkModeRef in sync
   useEffect(() => {
@@ -51,36 +51,39 @@ export const ThemeProvider = ({ children }) => {
           
           // Load from localStorage first for authenticated users
           const savedMode = localStorage.getItem('pearadox-theme');
-          if (savedMode === 'dark') {
+          if (savedMode === 'light') {
+            setIsDarkMode(false);
+            isDarkModeRef.current = false;
+          } else {
+            // Default to dark mode
             setIsDarkMode(true);
             isDarkModeRef.current = true;
           }
         } else {
-          // No session - ensure we're in light mode
+          // No session - default to dark mode
           userIdRef.current = null;
-          setIsDarkMode(false);
-          isDarkModeRef.current = false;
-          localStorage.removeItem('pearadox-theme');
+          setIsDarkMode(true);
+          isDarkModeRef.current = true;
         }
       } catch (e) {
         console.log('ThemeContext: Error loading initial theme');
-        // On error, default to light mode
-        setIsDarkMode(false);
-        isDarkModeRef.current = false;
+        // On error, default to dark mode
+        setIsDarkMode(true);
+        isDarkModeRef.current = true;
       }
     };
     
     loadInitialTheme();
   }, []);
 
-  // Listen for sign out events to revert to light mode
+  // Listen for sign out events to revert to dark mode (default)
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_OUT') {
-        console.log('ThemeContext: User signed out - reverting to light mode');
+        console.log('ThemeContext: User signed out - reverting to dark mode (default)');
         userIdRef.current = null;
-        setIsDarkMode(false);
-        isDarkModeRef.current = false;
+        setIsDarkMode(true);
+        isDarkModeRef.current = true;
         localStorage.removeItem('pearadox-theme');
       }
     });
@@ -141,9 +144,9 @@ export const ThemeProvider = ({ children }) => {
     userIdRef.current = uid;
     
     if (!uid) {
-      // User signed out - reset to light mode
-      setIsDarkMode(false);
-      isDarkModeRef.current = false;
+      // User signed out - reset to dark mode (default)
+      setIsDarkMode(true);
+      isDarkModeRef.current = true;
       localStorage.removeItem('pearadox-theme');
     }
   }, []);
