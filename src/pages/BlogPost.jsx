@@ -440,9 +440,9 @@ const BlogPost = () => {
                     <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>2</span>
                     <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Moravec's Paradox</h3>
                   </div>
-                  <div className={`border-l-4 p-4 mb-6 ${isDarkMode ? 'bg-purple-900/20 border-purple-500' : 'bg-purple-50 border-purple-500'}`}>
-                    <p className={`font-medium italic ${isDarkMode ? 'text-purple-300' : 'text-purple-800'}`}>
-                      "In the world of AI, the hard problems are easy, and the easy problems are incredibly hard."
+                  <div className={`border-l-4 p-4 mb-6 ${isDarkMode ? 'bg-blue-900/20 border-blue-500' : 'bg-blue-50 border-blue-500'}`}>
+                    <p className={`font-medium italic ${isDarkMode ? 'text-blue-300' : 'text-blue-800'}`}>
+                      "In the world of AI, the hard problems are easy, and the easy problems are incredibly hard." — Hans Moravec
                     </p>
                   </div>
                   
@@ -586,11 +586,9 @@ const BlogPost = () => {
                     <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>5</span>
                     <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Automation Paradox (Ironies of Automation)</h3>
                   </div>
-                  <div className={`border-l-4 p-4 mb-6 ${isDarkMode ? 'bg-orange-900/20 border-orange-500' : 'bg-orange-50 border-orange-500'}`}>
-                    <p className={`font-medium ${isDarkMode ? 'text-orange-300' : 'text-orange-800'}`}>
-                      The more reliable an automated system becomes, the less capable human operators are of stepping in when it inevitably fails.
-                    </p>
-                  </div>
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    The more reliable an automated system becomes, the less capable human operators are of stepping in when it inevitably fails.
+                  </p>
                   
                   {/* Automation Paradox Diagram - HTML/CSS version */}
                   <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
@@ -820,13 +818,8 @@ const BlogPost = () => {
                     <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>10</span>
                     <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Control Paradox (The Gorilla Problem)</h3>
                   </div>
-                  <div className={`border-l-4 p-4 mb-6 ${isDarkMode ? 'bg-red-900/20 border-red-500' : 'bg-red-50 border-red-500'}`}>
-                    <p className={`font-medium ${isDarkMode ? 'text-red-300' : 'text-red-800'}`}>
-                      The ultimate contradiction of AI safety.
-                    </p>
-                  </div>
                   <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    To ensure a powerful system is safe, we must maintain strict control over it. However, the more intelligent, capable, and autonomous that system becomes, the less practically and mathematically possible it is to control. The best way to understand this is through the <strong>"Gorilla Problem"</strong> thought experiment:
+                    The ultimate contradiction of AI safety: to ensure a powerful system is safe, we must maintain strict control over it. However, the more intelligent, capable, and autonomous that system becomes, the less practically and mathematically possible it is to control. The best way to understand this is through the <strong>"Gorilla Problem"</strong> thought experiment:
                   </p>
                   
                   {/* Gorilla Problem Diagram */}
@@ -876,10 +869,8 @@ const BlogPost = () => {
                       </div>
                       
                       {/* The parallel */}
-                      <div className={`text-center p-3 rounded-lg mt-2 ${isDarkMode ? 'bg-amber-900/30 border border-amber-500/50' : 'bg-amber-50 border border-amber-300'}`}>
-                        <div className={`text-sm ${isDarkMode ? 'text-amber-300' : 'text-amber-700'}`}>
-                          <strong>The parallel:</strong> If we create superintelligent AI, we become the gorillas.
-                        </div>
+                      <div className={`text-center mt-3 text-sm font-medium ${isDarkMode ? 'text-amber-400' : 'text-amber-600'}`}>
+                        <strong>The parallel:</strong> If we create superintelligent AI, we become the gorillas.
                       </div>
                     </div>
                   </div>
