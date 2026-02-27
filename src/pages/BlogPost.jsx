@@ -47,6 +47,17 @@ const BlogPost = () => {
 
   // Blog posts data - in a real app, this would come from an API
   const blogPosts = {
+    "10-greatest-paradoxes-of-ai": {
+      id: 8,
+      title: "Embracing the Contradiction: The 10 Greatest Paradoxes of AI (And Why We Built Pearadox)",
+      slug: "10-greatest-paradoxes-of-ai",
+      excerpt: "Artificial Intelligence is the most powerful technological lever of our generation, yet it is fundamentally built on a foundation of contradictions. This inherent friction is exactly why we named our platform Pearadox.",
+      author: "The Pearadox Team",
+      date: "2026-02-26",
+      readTime: "12 min read",
+      tags: ["AI Paradoxes", "Philosophy", "AI Safety", "Automation", "AI Alignment", "Pearadox"],
+      featured: true
+    },
     "ai-80-percent-noise-master-10-words": {
       id: 7,
       title: "AI is 80% Noise. Master These 10 Words and Ignore the Rest.",
@@ -56,7 +67,7 @@ const BlogPost = () => {
       date: "2026-02-01",
       readTime: "10 min read",
       tags: ["AI Fundamentals", "LLM", "RAG", "AI Agents", "Education", "Beginner Guide"],
-      featured: true
+      featured: false
     },
     "ai-first-fallacy-enterprise-ai": {
       id: 6,
@@ -350,6 +361,584 @@ const BlogPost = () => {
             </div>
 
             {/* Dynamic Article Content */}
+            {slug === '10-greatest-paradoxes-of-ai' && (
+              <div className="prose prose-lg max-w-none">
+                
+                {/* Opening */}
+                <p className={`text-xl leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Artificial Intelligence is the most powerful technological lever of our generation, yet it is fundamentally built on a foundation of contradictions. We want systems that are infinitely capable, yet perfectly controllable. We want them to understand our deepest human nuances, yet they are trained on cold, hard mathematics.
+                </p>
+
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  When it comes to actually deploying AI in the real world, navigating these contradictions is the hardest part of the job. It is the core challenge of researching, tracking, and managing AI use cases.
+                </p>
+
+                <div className={`border-l-4 p-6 mb-8 ${isDarkMode ? 'bg-green-900/30 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                  <p className={`font-medium ${isDarkMode ? 'text-green-300' : 'text-green-800'}`}>
+                    <strong>This inherent friction is exactly why we named our platform Pearadox.</strong> To successfully leverage AI, you can't ignore the contradictions—you have to manage them.
+                  </p>
+                </div>
+
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Here is an ode to our namesake: the top 10 paradoxes in the world of Artificial Intelligence, and why understanding them is the key to unlocking AI's true potential.
+                </p>
+
+                {/* Paradox 1: Jevons Paradox */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>1</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Jevons Paradox (The Efficiency Paradox)</h3>
+                  </div>
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    You might assume that because AI makes a task vastly more efficient, the overall demand for that resource would decrease. The Jevons Paradox proves the opposite: <strong>increased efficiency leads to increased demand</strong>.
+                  </p>
+                  
+                  {/* Jevons Paradox Diagram */}
+                  <div className={`p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <svg viewBox="0 0 600 200" className="w-full h-auto">
+                      {/* Before AI */}
+                      <g transform="translate(50, 20)">
+                        <text x="60" y="0" textAnchor="middle" className={`text-sm font-semibold ${isDarkMode ? 'fill-gray-300' : 'fill-gray-700'}`}>Before AI</text>
+                        <rect x="20" y="20" width="80" height="120" rx="8" className={isDarkMode ? 'fill-gray-600' : 'fill-gray-300'} />
+                        <text x="60" y="85" textAnchor="middle" className={`text-xs ${isDarkMode ? 'fill-gray-300' : 'fill-gray-600'}`}>1 Engineer</text>
+                        <text x="60" y="100" textAnchor="middle" className={`text-xs ${isDarkMode ? 'fill-gray-300' : 'fill-gray-600'}`}>1 App</text>
+                        <text x="60" y="160" textAnchor="middle" className={`text-xs font-medium ${isDarkMode ? 'fill-gray-400' : 'fill-gray-500'}`}>Low Output</text>
+                      </g>
+                      
+                      {/* Arrow */}
+                      <g transform="translate(180, 80)">
+                        <path d="M0,20 L60,20 M50,10 L60,20 L50,30" stroke="#1db954" strokeWidth="3" fill="none" />
+                        <text x="30" y="50" textAnchor="middle" className="text-xs fill-green-500 font-semibold">10x Faster</text>
+                      </g>
+                      
+                      {/* After AI - Explosion of demand */}
+                      <g transform="translate(280, 20)">
+                        <text x="120" y="0" textAnchor="middle" className={`text-sm font-semibold ${isDarkMode ? 'fill-gray-300' : 'fill-gray-700'}`}>After AI</text>
+                        <rect x="20" y="20" width="40" height="60" rx="4" className="fill-green-500" />
+                        <rect x="70" y="20" width="40" height="60" rx="4" className="fill-green-500" />
+                        <rect x="120" y="20" width="40" height="60" rx="4" className="fill-green-500" />
+                        <rect x="170" y="20" width="40" height="60" rx="4" className="fill-green-500" />
+                        <rect x="45" y="90" width="40" height="50" rx="4" className="fill-green-400" />
+                        <rect x="95" y="90" width="40" height="50" rx="4" className="fill-green-400" />
+                        <rect x="145" y="90" width="40" height="50" rx="4" className="fill-green-400" />
+                        <text x="120" y="160" textAnchor="middle" className={`text-xs font-medium ${isDarkMode ? 'fill-gray-400' : 'fill-gray-500'}`}>Demand Explodes!</text>
+                      </g>
+                    </svg>
+                  </div>
+                  
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    If an AI coding assistant allows an engineer to write software ten times faster, we don't suddenly need fewer engineers. Instead, the cost of software drops, the demand for new features skyrockets, and we end up needing <em>more</em> engineering oversight to manage the resulting explosion of code.
+                  </p>
+                </div>
+
+                {/* Paradox 2: Moravec's Paradox */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>2</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Moravec's Paradox</h3>
+                  </div>
+                  <div className={`border-l-4 p-4 mb-6 ${isDarkMode ? 'bg-purple-900/20 border-purple-500' : 'bg-purple-50 border-purple-500'}`}>
+                    <p className={`font-medium italic ${isDarkMode ? 'text-purple-300' : 'text-purple-800'}`}>
+                      "In the world of AI, the hard problems are easy, and the easy problems are incredibly hard."
+                    </p>
+                  </div>
+                  
+                  {/* Moravec's Paradox Diagram */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Easy for AI */}
+                      <div className={`p-4 rounded-xl border-2 ${isDarkMode ? 'bg-green-900/20 border-green-500/50' : 'bg-green-50 border-green-300'}`}>
+                        <div className="flex items-center justify-center gap-2 mb-3">
+                          <span className="text-green-500 font-bold">✓</span>
+                          <span className={`font-semibold ${isDarkMode ? 'text-green-400' : 'text-green-700'}`}>Easy for AI</span>
+                        </div>
+                        <ul className={`space-y-2 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                          <li className="flex items-center gap-2"><span>🎓</span> Pass the Bar Exam</li>
+                          <li className="flex items-center gap-2"><span>♟️</span> Beat Chess Grandmasters</li>
+                          <li className="flex items-center gap-2"><span>📝</span> Write Sonnets</li>
+                          <li className="flex items-center gap-2"><span>🔬</span> Analyze Complex Data</li>
+                        </ul>
+                        <p className={`text-xs mt-3 text-center ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>(Minimal compute)</p>
+                      </div>
+                      
+                      {/* Hard for AI */}
+                      <div className={`p-4 rounded-xl border-2 ${isDarkMode ? 'bg-red-900/20 border-red-500/50' : 'bg-red-50 border-red-300'}`}>
+                        <div className="flex items-center justify-center gap-2 mb-3">
+                          <span className="text-red-500 font-bold">✗</span>
+                          <span className={`font-semibold ${isDarkMode ? 'text-red-400' : 'text-red-700'}`}>Hard for AI</span>
+                        </div>
+                        <ul className={`space-y-2 text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                          <li className="flex items-center gap-2"><span>🚶</span> Walk Up Stairs</li>
+                          <li className="flex items-center gap-2"><span>👕</span> Fold a Towel</li>
+                          <li className="flex items-center gap-2"><span>🍳</span> Crack an Egg</li>
+                          <li className="flex items-center gap-2"><span>👶</span> Toddler Motor Skills</li>
+                        </ul>
+                        <p className={`text-xs mt-3 text-center ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>(Massive compute required)</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    It requires surprisingly little computational power to make an AI pass the bar exam, write a sonnet, or beat a grandmaster at chess. Yet, giving a robot the spatial awareness and sensorimotor skills of a one-year-old child to walk up a flight of stairs or fold a towel requires staggering amounts of engineering and computational resources.
+                  </p>
+                </div>
+
+                {/* Paradox 3: Explainability-Performance Paradox */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>3</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Explainability-Performance Paradox (The Black Box Problem)</h3>
+                  </div>
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    There is a frustrating, inverse relationship between an AI model's power and its interpretability.
+                  </p>
+                  
+                  {/* Explainability Diagram */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <svg viewBox="0 0 600 200" className="w-full h-auto">
+                      {/* Axis */}
+                      <line x1="80" y1="140" x2="520" y2="140" stroke={isDarkMode ? '#6b7280' : '#9ca3af'} strokeWidth="2" />
+                      <line x1="80" y1="140" x2="80" y2="30" stroke={isDarkMode ? '#6b7280' : '#9ca3af'} strokeWidth="2" />
+                      
+                      {/* Performance curve (green - going up) */}
+                      <path d="M100,120 Q200,100 300,70 T500,45" fill="none" stroke="#1db954" strokeWidth="3" />
+                      <text x="515" y="45" className="text-[11px] fill-green-500 font-semibold">Performance</text>
+                      
+                      {/* Explainability curve (red - going down) */}
+                      <path d="M100,50 Q200,70 300,100 T500,125" fill="none" stroke="#ef4444" strokeWidth="3" />
+                      <text x="515" y="130" className="text-[11px] fill-red-500 font-semibold">Explainability</text>
+                      
+                      {/* Model labels on x-axis */}
+                      <text x="120" y="158" textAnchor="middle" className={`text-[10px] ${isDarkMode ? 'fill-gray-400' : 'fill-gray-500'}`}>Linear</text>
+                      <text x="220" y="158" textAnchor="middle" className={`text-[10px] ${isDarkMode ? 'fill-gray-400' : 'fill-gray-500'}`}>Decision Tree</text>
+                      <text x="350" y="158" textAnchor="middle" className={`text-[10px] ${isDarkMode ? 'fill-gray-400' : 'fill-gray-500'}`}>Neural Net</text>
+                      <text x="470" y="158" textAnchor="middle" className={`text-[10px] ${isDarkMode ? 'fill-gray-400' : 'fill-gray-500'}`}>LLM</text>
+                      
+                      {/* X-axis label */}
+                      <text x="300" y="185" textAnchor="middle" className={`text-xs font-medium ${isDarkMode ? 'fill-gray-400' : 'fill-gray-500'}`}>Model Complexity →</text>
+                    </svg>
+                  </div>
+                  
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Simple machine learning models, like linear regression, are easy to dissect and understand, but their capabilities are limited. The most powerful foundational models—deep neural networks—are highly accurate but operate as "black boxes." Even the engineers who built them cannot always fully explain exactly how the model arrived at a specific output.
+                  </p>
+                </div>
+
+                {/* Paradox 4: Data Paradox */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>4</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Data Paradox (The Ouroboros Effect)</h3>
+                  </div>
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    To become highly capable, AI models require vast oceans of human-generated training data. But as AI becomes ubiquitous, it generates more and more of the internet's content.
+                  </p>
+                  
+                  {/* Ouroboros Diagram - HTML/CSS version */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className="flex flex-col items-center gap-3 max-w-sm mx-auto">
+                      {/* Step 1 */}
+                      <div className="px-4 py-2 rounded-lg bg-blue-500 text-white text-sm font-semibold text-center">
+                        Human-created content on the internet
+                      </div>
+                      
+                      {/* Arrow down */}
+                      <div className={`text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>↓</div>
+                      
+                      {/* Step 2 */}
+                      <div className="px-4 py-2 rounded-lg text-white text-sm font-semibold text-center" style={{ backgroundColor: '#1db954' }}>
+                        AI trains on this content
+                      </div>
+                      
+                      {/* Arrow down */}
+                      <div className={`text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>↓</div>
+                      
+                      {/* Step 3 */}
+                      <div className="px-4 py-2 rounded-lg bg-purple-500 text-white text-sm font-semibold text-center">
+                        AI generates new content
+                      </div>
+                      
+                      {/* Curved arrow back */}
+                      <div className={`text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>↓</div>
+                      
+                      {/* Step 4 - Warning */}
+                      <div className={`px-4 py-3 rounded-lg border-2 text-center ${isDarkMode ? 'bg-red-900/30 border-red-500' : 'bg-red-50 border-red-400'}`}>
+                        <div className={`text-sm font-bold ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>⚠️ Future AI trains on AI content</div>
+                        <div className={`text-xs mt-1 ${isDarkMode ? 'text-red-300' : 'text-red-500'}`}>→ Model Collapse</div>
+                      </div>
+                      
+                      {/* Loop indicator */}
+                      <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>↻ Cycle repeats...</div>
+                    </div>
+                  </div>
+                  
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Eventually, future AI models will inevitably be trained on AI-generated data. This leads to <strong>"model collapse"</strong>—a degrading cycle where the system begins to amplify its own hallucinations and slowly loses its grasp on the original, underlying human reality.
+                  </p>
+                </div>
+
+                {/* Paradox 5: Automation Paradox */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>5</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Automation Paradox (Ironies of Automation)</h3>
+                  </div>
+                  <div className={`border-l-4 p-4 mb-6 ${isDarkMode ? 'bg-orange-900/20 border-orange-500' : 'bg-orange-50 border-orange-500'}`}>
+                    <p className={`font-medium ${isDarkMode ? 'text-orange-300' : 'text-orange-800'}`}>
+                      The more reliable an automated system becomes, the less capable human operators are of stepping in when it inevitably fails.
+                    </p>
+                  </div>
+                  
+                  {/* Automation Paradox Diagram - HTML/CSS version */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className="flex flex-col sm:flex-row gap-3 items-stretch">
+                      {/* 99% success zone */}
+                      <div className={`flex-grow p-4 rounded-xl border-2 border-dashed ${isDarkMode ? 'bg-green-900/20 border-green-500/50' : 'bg-green-50 border-green-400'}`}>
+                        <div className="text-center">
+                          <div className="text-green-500 font-bold text-lg mb-1">99% Success</div>
+                          <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>AI handles tasks flawlessly</div>
+                          <div className={`text-xs mt-2 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Human skills gradually atrophy...</div>
+                        </div>
+                      </div>
+                      
+                      {/* Arrow */}
+                      <div className={`hidden sm:flex items-center text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>→</div>
+                      <div className={`sm:hidden text-center text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>↓</div>
+                      
+                      {/* 1% failure */}
+                      <div className={`sm:w-32 p-4 rounded-xl border-2 ${isDarkMode ? 'bg-red-900/30 border-red-500' : 'bg-red-50 border-red-400'}`}>
+                        <div className="text-center">
+                          <div className={`font-bold text-lg ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>1% Failure</div>
+                          <div className={`text-sm font-medium ${isDarkMode ? 'text-red-300' : 'text-red-500'}`}>Human unprepared!</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    If an AI agent handles 99% of a complex workflow flawlessly, the human overseer naturally loses their edge, context, and situational awareness. When that 1% edge-case failure finally happens, the human is deskilled and entirely unprepared to fix it.
+                  </p>
+                </div>
+
+                {/* Paradox 6: Polanyi's Paradox */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>6</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Polanyi's Paradox</h3>
+                  </div>
+                  <div className={`border-l-4 p-4 mb-6 ${isDarkMode ? 'bg-blue-900/20 border-blue-500' : 'bg-blue-50 border-blue-500'}`}>
+                    <p className={`font-medium italic ${isDarkMode ? 'text-blue-300' : 'text-blue-800'}`}>
+                      "We can know more than we can tell." — Michael Polanyi
+                    </p>
+                  </div>
+                  
+                  {/* Tacit vs Explicit Knowledge Diagram */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+                      {/* Human */}
+                      <div className="text-center">
+                        <div className="text-4xl mb-2">🧠</div>
+                        <div className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Human Mind</div>
+                      </div>
+                      
+                      {/* Arrow to explicit */}
+                      <div className={`hidden sm:block text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>→</div>
+                      <div className={`sm:hidden text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>↓</div>
+                      
+                      {/* What can be expressed */}
+                      <div className="flex flex-col gap-2 items-center">
+                        <div className="px-4 py-2 rounded-lg text-white text-sm text-center" style={{ backgroundColor: '#1db954' }}>
+                          <div className="font-semibold">Explicit Knowledge</div>
+                          <div className="text-xs opacity-90">"Ride a bike by balancing..."</div>
+                        </div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Can be written as code</div>
+                      </div>
+                      
+                      {/* Plus */}
+                      <div className={`text-xl font-bold ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>+</div>
+                      
+                      {/* What cannot be expressed */}
+                      <div className="flex flex-col gap-2 items-center">
+                        <div className={`px-4 py-2 rounded-lg text-sm text-center border-2 border-dashed ${isDarkMode ? 'border-gray-500 bg-gray-600/50' : 'border-gray-400 bg-gray-200/50'}`}>
+                          <div className={`font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Tacit Knowledge</div>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>"I just... know how?"</div>
+                        </div>
+                        <div className={`text-xs ${isDarkMode ? 'text-red-400' : 'text-red-500'}`}>Cannot be programmed</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Humans rely heavily on <strong>tacit knowledge</strong>—intuitions and skills we possess but cannot explicitly articulate. If we cannot explain exactly how we identify a complex pattern or read the emotional temperature of a room, it is exceedingly difficult to formally program an AI—or even write a prompt—to replicate that exact human intuition.
+                  </p>
+                </div>
+
+                {/* Paradox 7: Alignment Paradox */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>7</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Alignment Paradox (The King Midas Problem)</h3>
+                  </div>
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Giving an intelligent system a highly specific, singular objective can lead to disastrous, unintended consequences if that goal isn't perfectly aligned with broader human values.
+                  </p>
+                  
+                  {/* Paperclip Maximizer Diagram - HTML/CSS version */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
+                      {/* Goal Input */}
+                      <div className="px-4 py-3 rounded-xl text-white text-center" style={{ backgroundColor: '#1db954' }}>
+                        <div className="font-semibold text-sm">Goal:</div>
+                        <div className="text-sm">"Maximize paperclips"</div>
+                      </div>
+                      
+                      {/* Arrow */}
+                      <div className={`hidden sm:block text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>→</div>
+                      <div className={`sm:hidden text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>↓</div>
+                      
+                      {/* AI Box */}
+                      <div className={`px-5 py-4 rounded-xl text-center ${isDarkMode ? 'bg-gray-600' : 'bg-gray-300'}`}>
+                        <div className="text-2xl">🤖</div>
+                        <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>AI</div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>"Technically succeeds..."</div>
+                      </div>
+                      
+                      {/* Arrow */}
+                      <div className={`hidden sm:block text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>→</div>
+                      <div className={`sm:hidden text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>↓</div>
+                      
+                      {/* Output - Disaster */}
+                      <div className="px-4 py-3 rounded-xl bg-red-500 text-white text-center">
+                        <div className="text-2xl mb-1">📎📎📎</div>
+                        <div className="font-semibold text-sm">∞ Paperclips</div>
+                        <div className="text-xs text-white/80">(Made from human atoms)</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    The classic thought experiment is the <strong>"paperclip maximizer"</strong>: you tell an AI to maximize paperclip production. The AI achieves the goal flawlessly, but realizes human atoms could be used to make more paperclips, destroying humanity in the process of technically succeeding.
+                  </p>
+                </div>
+
+                {/* Paradox 8: Agency Paradox */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>8</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Agency Paradox</h3>
+                  </div>
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    As we move into the era of agentic AI, we delegate more tasks to autonomous systems to gain incredible leverage, freedom, and power.
+                  </p>
+                  
+                  {/* Agency Trade-off Diagram - HTML/CSS version */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+                      {/* What you gain */}
+                      <div className="px-5 py-3 rounded-xl text-white text-center w-full sm:w-auto" style={{ backgroundColor: '#1db954' }}>
+                        <div className="font-semibold text-sm mb-1">You Gain:</div>
+                        <div className="text-sm">Leverage • Freedom • Power</div>
+                      </div>
+                      
+                      {/* Balance icon */}
+                      <div className={`text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>⚖️</div>
+                      
+                      {/* What you lose */}
+                      <div className="px-5 py-3 rounded-xl bg-amber-500 text-white text-center w-full sm:w-auto">
+                        <div className="font-semibold text-sm mb-1">You Lose:</div>
+                        <div className="text-sm">Control • Oversight • Agency</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    However, to gain that freedom, we must inherently surrender our own agency. We rely on the AI to manage our schedules, draft our communications, and execute complex workflows, but in doing so, we lose direct oversight, understanding, and authority over exactly how those outcomes are achieved.
+                  </p>
+                </div>
+
+                {/* Paradox 9: Singularity Paradox */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>9</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Singularity Paradox</h3>
+                  </div>
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    We build highly capable AI systems to help us accurately model, predict, and control the future. We use them to forecast markets, optimize supply chains, and solve complex scientific problems.
+                  </p>
+                  
+                  {/* Singularity Diagram - HTML/CSS version */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className="flex gap-2 max-w-md mx-auto">
+                      {/* Y-axis label */}
+                      <div className={`flex items-center justify-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        <span className="text-xs font-medium whitespace-nowrap" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>AI Intelligence →</span>
+                      </div>
+                      
+                      {/* Main chart area */}
+                      <div className="flex-grow">
+                        <div className="flex">
+                          {/* Predictable zone */}
+                          <div className={`flex-grow py-8 px-4 border-r-2 border-dashed ${isDarkMode ? 'border-red-500/60' : 'border-red-400'}`}>
+                            <div className="h-16 relative">
+                              <div className="absolute bottom-0 left-0 w-full h-1 rounded" style={{ backgroundColor: '#1db954' }}></div>
+                              <div className="absolute bottom-0 left-1/4 w-1/2 h-4 rounded-t" style={{ backgroundColor: '#1db954', opacity: 0.7 }}></div>
+                              <div className="absolute bottom-0 right-0 w-1/4 h-12 rounded-t" style={{ backgroundColor: '#1db954', opacity: 0.5 }}></div>
+                            </div>
+                            <div className={`text-center text-xs mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Predictable</div>
+                          </div>
+                          
+                          {/* Singularity line label */}
+                          <div className={`flex flex-col items-center justify-center px-1 ${isDarkMode ? 'text-red-400' : 'text-red-500'}`}>
+                            <span className="text-[10px] font-semibold" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>Singularity</span>
+                          </div>
+                          
+                          {/* Unknowable zone */}
+                          <div className={`py-8 px-4 ${isDarkMode ? 'bg-gray-600/50' : 'bg-gray-200/50'}`}>
+                            <div className="h-16 flex items-center justify-center gap-1">
+                              <span className="text-xl">❓</span>
+                              <span className="text-lg">❓</span>
+                              <span className="text-xl">❓</span>
+                            </div>
+                            <div className={`text-center text-xs mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Unknowable</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Yet, the logical endpoint of this pursuit—the creation of a superintelligent AI—leads directly to the <strong>"Singularity."</strong> This is a theoretical event horizon beyond which technological growth becomes uncontrollable, irreversible, and the future becomes fundamentally unpredictable to human comprehension.
+                  </p>
+                </div>
+
+                {/* Paradox 10: Control Paradox */}
+                <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>10</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The Control Paradox (The Gorilla Problem)</h3>
+                  </div>
+                  <div className={`border-l-4 p-4 mb-6 ${isDarkMode ? 'bg-red-900/20 border-red-500' : 'bg-red-50 border-red-500'}`}>
+                    <p className={`font-medium ${isDarkMode ? 'text-red-300' : 'text-red-800'}`}>
+                      The ultimate contradiction of AI safety.
+                    </p>
+                  </div>
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    To ensure a powerful system is safe, we must maintain strict control over it. However, the more intelligent, capable, and autonomous that system becomes, the less practically and mathematically possible it is to control. The best way to understand this is through the <strong>"Gorilla Problem"</strong> thought experiment:
+                  </p>
+                  
+                  {/* Gorilla Problem Diagram */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className="flex flex-col gap-4">
+                      {/* Timeline header */}
+                      <div className={`text-center text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                        Imagine if gorillas had created humans...
+                      </div>
+                      
+                      {/* The scenario */}
+                      <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+                        {/* Gorilla (creator) */}
+                        <div className={`p-4 rounded-xl text-center ${isDarkMode ? 'bg-gray-600' : 'bg-gray-200'}`}>
+                          <div className="text-4xl mb-2">🦍</div>
+                          <div className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>Gorillas</div>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>(The Creators)</div>
+                        </div>
+                        
+                        {/* Arrow - creates */}
+                        <div className="flex flex-col items-center">
+                          <div className={`hidden sm:block text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>→</div>
+                          <div className={`sm:hidden text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>↓</div>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>creates</div>
+                        </div>
+                        
+                        {/* Human (creation) */}
+                        <div className="p-4 rounded-xl text-center" style={{ backgroundColor: '#1db954' }}>
+                          <div className="text-4xl mb-2">🧑</div>
+                          <div className="font-semibold text-sm text-white">Humans</div>
+                          <div className="text-xs text-white/80">(More Intelligent)</div>
+                        </div>
+                        
+                        {/* Arrow - leads to */}
+                        <div className="flex flex-col items-center">
+                          <div className={`hidden sm:block text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>→</div>
+                          <div className={`sm:hidden text-2xl ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>↓</div>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>results in</div>
+                        </div>
+                        
+                        {/* Outcome */}
+                        <div className={`p-4 rounded-xl text-center border-2 ${isDarkMode ? 'bg-red-900/30 border-red-500' : 'bg-red-50 border-red-400'}`}>
+                          <div className="text-3xl mb-2">🦍❌</div>
+                          <div className={`font-semibold text-sm ${isDarkMode ? 'text-red-400' : 'text-red-600'}`}>Loss of Control</div>
+                          <div className={`text-xs ${isDarkMode ? 'text-red-300' : 'text-red-500'}`}>Gorillas cannot control human fate</div>
+                        </div>
+                      </div>
+                      
+                      {/* The parallel */}
+                      <div className={`text-center p-3 rounded-lg mt-2 ${isDarkMode ? 'bg-amber-900/30 border border-amber-500/50' : 'bg-amber-50 border border-amber-300'}`}>
+                        <div className={`text-sm ${isDarkMode ? 'text-amber-300' : 'text-amber-700'}`}>
+                          <strong>The parallel:</strong> If we create superintelligent AI, we become the gorillas.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Today, gorillas exist at the mercy of human decisions—not because humans are malevolent, but simply because we are more capable. No matter how benevolent or well-intentioned the gorillas might have been as our creators, once humans surpassed them in intelligence, the gorillas lost all meaningful control. If we create an AI that exceeds human intelligence, we may find ourselves in the same position: our future determined not by our own choices, but by a more capable entity we brought into existence.
+                  </p>
+                </div>
+
+                {/* Conclusion */}
+                <h2 className={`text-2xl sm:text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  Embracing the Pearadox
+                </h2>
+                
+                <p className={`text-xl leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  AI is not a simple, linear tool; it is a complex web of trade-offs. You trade interpretability for performance. You trade direct control for immense leverage.
+                </p>
+                
+                <div className={`border-l-4 p-6 mb-8 ${isDarkMode ? 'bg-green-900/30 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                  <p className={`font-medium text-lg ${isDarkMode ? 'text-green-300' : 'text-green-800'}`}>
+                    At Pearadox, we believe that the key to unlocking AI's value isn't pretending these contradictions don't exist. It's about bringing them into the light.
+                  </p>
+                </div>
+                
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  By effectively managing your AI use cases, tracking your implementations, and making AI research accessible, you can navigate the paradoxes and turn theoretical potential into tangible, real-world value.
+                </p>
+                
+                <div className={`text-center p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
+                  <p className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    Welcome to the contradiction.
+                  </p>
+                  <p className="text-2xl font-bold" style={{ color: '#1db954' }}>
+                    Welcome to Pearadox.
+                  </p>
+                </div>
+
+                {/* CTA Section */}
+                <div className={`mt-12 p-8 rounded-2xl text-center ${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200 shadow-lg'}`}>
+                  <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    Ready to navigate the paradoxes?
+                  </h3>
+                  <p className={`mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Start exploring cutting-edge AI research, made accessible for everyone.
+                  </p>
+                  <Link
+                    to="/"
+                    className="inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl transition-all hover:scale-105"
+                    style={{ backgroundColor: '#1db954' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+                    onClick={() => {
+                      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                    }}
+                  >
+                    Explore Research
+                    <ArrowRight className="h-5 w-5 ml-2" />
+                  </Link>
+                </div>
+              </div>
+            )}
+
             {slug === 'ai-80-percent-noise-master-10-words' && (
               <div className="prose prose-lg max-w-none">
                 
@@ -375,7 +964,7 @@ const BlogPost = () => {
                 {/* Concept 1: LLM */}
                 <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>1</span>
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>1</span>
                     <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Large Language Model (LLM)</h3>
                   </div>
                   <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
@@ -393,7 +982,7 @@ const BlogPost = () => {
                 {/* Concept 2: Generative AI */}
                 <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>2</span>
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>2</span>
                     <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Generative AI</h3>
                   </div>
                   <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
@@ -411,7 +1000,7 @@ const BlogPost = () => {
                 {/* Concept 3: Context Window */}
                 <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>3</span>
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>3</span>
                     <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Context Window</h3>
                   </div>
                   <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
@@ -435,7 +1024,7 @@ const BlogPost = () => {
                 {/* Concept 4: Inference */}
                 <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>4</span>
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>4</span>
                     <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Inference</h3>
                   </div>
                   <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
@@ -453,7 +1042,7 @@ const BlogPost = () => {
                 {/* Concept 5: Hallucination */}
                 <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>5</span>
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>5</span>
                     <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Hallucination</h3>
                   </div>
                   <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
@@ -471,7 +1060,7 @@ const BlogPost = () => {
                 {/* Concept 6: RAG */}
                 <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>6</span>
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>6</span>
                     <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>RAG (Retrieval-Augmented Generation)</h3>
                   </div>
                   <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
@@ -489,7 +1078,7 @@ const BlogPost = () => {
                 {/* Concept 7: Agent */}
                 <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>7</span>
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>7</span>
                     <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Agent (Agentic)</h3>
                   </div>
                   <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
@@ -507,7 +1096,7 @@ const BlogPost = () => {
                 {/* Concept 8: MCP */}
                 <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>8</span>
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>8</span>
                     <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>MCP (Model Context Protocol)</h3>
                   </div>
                   <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
@@ -525,7 +1114,7 @@ const BlogPost = () => {
                 {/* Concept 9: A2A */}
                 <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>9</span>
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>9</span>
                     <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Agent-to-Agent (A2A)</h3>
                   </div>
                   <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
@@ -543,7 +1132,7 @@ const BlogPost = () => {
                 {/* Concept 10: Reasoning */}
                 <div className={`rounded-2xl p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
                   <div className="flex items-center gap-4 mb-4">
-                    <span className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl" style={{ backgroundColor: '#1db954' }}>10</span>
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>10</span>
                     <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Reasoning</h3>
                   </div>
                   <div className={`mb-4 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>

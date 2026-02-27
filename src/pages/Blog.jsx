@@ -90,6 +90,18 @@ const Blog = () => {
   // Blog posts data
   const blogPosts = [
     {
+      id: 8,
+      title: "Embracing the Contradiction: The 10 Greatest Paradoxes of AI (And Why We Built Pearadox)",
+      slug: "10-greatest-paradoxes-of-ai",
+      excerpt: "Artificial Intelligence is the most powerful technological lever of our generation, yet it is fundamentally built on a foundation of contradictions. This inherent friction is exactly why we named our platform Pearadox.",
+      content: ``,
+      author: "The Pearadox Team",
+      date: "2026-02-26",
+      readTime: "12 min read",
+      tags: ["AI Paradoxes", "Philosophy", "AI Safety", "Automation", "AI Alignment", "Pearadox"],
+      featured: true
+    },
+    {
       id: 7,
       title: "AI is 80% Noise. Master These 10 Words and Ignore the Rest.",
       slug: "ai-80-percent-noise-master-10-words",
@@ -99,7 +111,7 @@ const Blog = () => {
       date: "2026-02-01",
       readTime: "10 min read",
       tags: ["AI Fundamentals", "LLM", "RAG", "AI Agents", "Education", "Beginner Guide"],
-      featured: true
+      featured: false
     },
     {
       id: 6,
