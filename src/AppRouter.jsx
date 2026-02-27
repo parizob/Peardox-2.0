@@ -6,6 +6,7 @@ import App from './App';
 import AboutUs from './pages/AboutUs';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import Podcasts from './pages/Podcasts';
 import Submit from './pages/Submit';
 import UpdatePassword from './pages/UpdatePassword';
 import Store from './pages/Store';
@@ -22,6 +23,7 @@ const AppRouter = () => {
             <Route path="/aboutus" element={<AboutUs />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/podcasts" element={<Podcasts />} />
             <Route path="/submit" element={<Submit />} />
             <Route path="/update-password" element={<UpdatePassword />} />
             <Route path="/store" element={<Store />} />

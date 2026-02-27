@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ChevronDown, Filter, X, Bookmark, User, Info, BookOpen, Upload, Menu, ShoppingBag } from 'lucide-react';
+import { Search, ChevronDown, Filter, X, Bookmark, User, Info, BookOpen, Upload, Menu, ShoppingBag, Headphones } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 
@@ -292,6 +292,25 @@ const Header = ({
                     </Link>
                     
                     <Link
+                      to="/podcasts"
+                      className={`flex items-center px-4 py-3 transition-colors ${
+                        isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsMenuOpen(false);
+                        if (isSearchExpanded) setIsSearchExpanded(false);
+                        setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                      }}
+                    >
+                      <Headphones className={`h-4 w-4 mr-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                      <div>
+                        <div className="text-sm font-medium">Podcasts</div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>Curated for curious minds</div>
+                      </div>
+                    </Link>
+                    
+                    <Link
                       to="/store"
                       className={`flex items-center px-4 py-3 transition-colors ${
                         isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'
@@ -410,6 +429,22 @@ const Header = ({
                       >
                         <BookOpen className={`h-4 w-4 mr-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
                         <span className="text-sm font-medium">Blog</span>
+                      </Link>
+                      
+                      <Link
+                        to="/podcasts"
+                        className={`flex items-center px-4 py-3 transition-colors ${
+                          isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'
+                        }`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsMenuOpen(false);
+                          if (isSearchExpanded) setIsSearchExpanded(false);
+                          setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                        }}
+                      >
+                        <Headphones className={`h-4 w-4 mr-3 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`} />
+                        <span className="text-sm font-medium">Podcasts</span>
                       </Link>
                       
                       <Link
