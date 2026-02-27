@@ -22,6 +22,9 @@ const Store = () => {
     handleResearchInterestsChange,
   } = useUser();
   
+  // Entrance animation state
+  const [isVisible, setIsVisible] = useState({});
+  
   const [pearTokenCount, setPearTokenCount] = useState(0);
   const [totalRedeemed, setTotalRedeemed] = useState(0);
   const [isLoadingTokens, setIsLoadingTokens] = useState(false);
@@ -120,6 +123,15 @@ const Store = () => {
     }, 0);
   };
   
+  // Handle entrance animations
+  useEffect(() => {
+    setIsVisible({
+      hero: true,
+      products: true,
+      cta: true
+    });
+  }, []);
+
   // Fetch PEAR tokens and redemptions
   useEffect(() => {
     const loadPearTokens = async () => {
@@ -166,7 +178,9 @@ const Store = () => {
 
       <main className="relative z-10">
         {/* Compact Hero with Balance */}
-        <section className="pt-6 pb-4 sm:pt-8 sm:pb-6 relative overflow-hidden">
+        <section className={`pt-6 pb-4 sm:pt-8 sm:pb-6 relative overflow-hidden transform transition-all duration-1000 ${
+          isVisible.hero ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+        }`}>
           {/* Background decorations */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className={`absolute top-10 left-10 w-64 h-64 rounded-full blur-3xl opacity-30 ${isDarkMode ? 'bg-green-900/30' : 'bg-green-100'}`}></div>
@@ -277,7 +291,9 @@ const Store = () => {
         </section>
 
         {/* Products Section - Main Focus */}
-        <section className="py-8 sm:py-10">
+        <section className={`py-8 sm:py-10 transform transition-all duration-1000 delay-200 ${
+          isVisible.products ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+        }`}>
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <div className="mb-6">
               <h2 className={`text-xl sm:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Available Rewards</h2>

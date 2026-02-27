@@ -13,6 +13,14 @@ const UpdatePassword = () => {
   const [success, setSuccess] = useState(false);
   const [isValidSession, setIsValidSession] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
+  
+  // Entrance animation state
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Trigger entrance animation
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   useEffect(() => {
     // Check if user arrived via a valid password reset link
@@ -151,7 +159,9 @@ const UpdatePassword = () => {
   // Password update form
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden">
+      <div className={`bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden transform transition-all duration-1000 ${
+        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+      }`}>
         {/* Header */}
         <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-6 text-white">
           <div className="flex items-center space-x-3 mb-2">

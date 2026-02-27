@@ -23,6 +23,9 @@ const ProductDetail = () => {
     handleResearchInterestsChange,
   } = useUser();
   
+  // Entrance animation state
+  const [isVisible, setIsVisible] = useState({});
+  
   const [pearTokenCount, setPearTokenCount] = useState(0);
   const [totalRedeemed, setTotalRedeemed] = useState(0);
   const [isLoadingTokens, setIsLoadingTokens] = useState(false);
@@ -103,9 +106,12 @@ const ProductDetail = () => {
     }, 100);
   };
 
-  // Scroll to top on mount
+  // Scroll to top on mount and trigger entrance animations
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
+    setIsVisible({
+      content: true
+    });
   }, []);
   
   // Product data
@@ -227,7 +233,9 @@ const ProductDetail = () => {
       <div className="h-24 sm:h-20"></div>
 
       <main className="relative z-10 py-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className={`max-w-6xl mx-auto px-4 sm:px-6 transform transition-all duration-1000 ${
+          isVisible.content ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+        }`}>
           {/* Back Button */}
           <Link 
             to="/store"

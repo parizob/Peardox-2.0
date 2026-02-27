@@ -26,6 +26,10 @@ const Submit = () => {
     favorites,
     handleToggleFavorite
   } = useUser();
+  
+  // Entrance animation state
+  const [isVisible, setIsVisible] = useState({});
+  
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -41,6 +45,14 @@ const Submit = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Handle entrance animations
+  useEffect(() => {
+    setIsVisible({
+      hero: true,
+      form: true
+    });
+  }, []);
 
   // Fetch categories from database
   useEffect(() => {
@@ -287,7 +299,9 @@ const Submit = () => {
         </button>
 
         {/* Header Section */}
-        <div className="text-center mb-12">
+        <div className={`text-center mb-12 transform transition-all duration-1000 ${
+          isVisible.hero ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+        }`}>
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-6 shadow-lg" style={{ backgroundColor: '#1db954' }}>
             <FileText className="h-10 w-10 text-white" />
           </div>
@@ -302,7 +316,9 @@ const Submit = () => {
         {/* Authentication Check */}
         {!user ? (
           // Not Authenticated - Show Sign In Message
-          <div className={`rounded-3xl shadow-xl border p-8 sm:p-12 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+          <div className={`rounded-3xl shadow-xl border p-8 sm:p-12 transform transition-all duration-1000 delay-200 ${
+            isVisible.form ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+          } ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
             <div className="text-center max-w-2xl mx-auto">
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-6" style={{ backgroundColor: '#1db954' }}>
                 <Lock className="h-10 w-10 text-white" />
@@ -364,7 +380,9 @@ const Submit = () => {
           </div>
         ) : (
           // Authenticated - Show Form or Loading State
-          <div className={`rounded-3xl shadow-xl border p-8 sm:p-12 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+          <div className={`rounded-3xl shadow-xl border p-8 sm:p-12 transform transition-all duration-1000 delay-200 ${
+            isVisible.form ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+          } ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
           {submitStatus === 'success' ? (
             // Success State - Celebration
             <div ref={loadingContainerRef} className="flex flex-col items-center justify-center py-20">
