@@ -12,7 +12,7 @@ import { viewedArticlesAPI } from '../lib/supabase';
 
 const BlogPost = () => {
   const { slug } = useParams();
-  const [isVisible, setIsVisible] = useState({});
+  const [isVisible, setIsVisible] = useState({ content: false });
   
   // Modal states
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
@@ -38,11 +38,14 @@ const BlogPost = () => {
     handleToggleFavorite
   } = useUser();
 
-  // Handle scroll animations
+  // Handle entrance animations - use requestAnimationFrame for reliable triggering
   useEffect(() => {
-    setIsVisible({
-      content: true
+    const timer = requestAnimationFrame(() => {
+      setIsVisible({
+        content: true
+      });
     });
+    return () => cancelAnimationFrame(timer);
   }, []);
 
   // Blog posts data - in a real app, this would come from an API

@@ -135,12 +135,16 @@ const Header = ({
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       scrollY > 10 
         ? isDarkMode 
-          ? 'bg-gray-900/95 backdrop-blur-lg shadow-lg border-b border-gray-800' 
+          ? 'bg-gray-900 backdrop-blur-lg shadow-lg border-b border-gray-800' 
           : 'bg-white/95 backdrop-blur-lg shadow-lg' 
         : isDarkMode 
-          ? 'bg-gray-900/90 backdrop-blur-sm' 
+          ? 'bg-gray-900' 
           : 'bg-white/90 backdrop-blur-sm'
     }`}>
+      {/* Anti-gap element to prevent white line during scroll in dark mode */}
+      {isDarkMode && (
+        <div className="absolute inset-x-0 -bottom-1 h-2 bg-gray-900 pointer-events-none" />
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
         <div className="relative flex items-center justify-between min-w-0">
           

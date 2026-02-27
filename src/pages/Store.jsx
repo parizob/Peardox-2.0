@@ -23,7 +23,7 @@ const Store = () => {
   } = useUser();
   
   // Entrance animation state
-  const [isVisible, setIsVisible] = useState({});
+  const [isVisible, setIsVisible] = useState({ hero: false, products: false, cta: false });
   
   const [pearTokenCount, setPearTokenCount] = useState(0);
   const [totalRedeemed, setTotalRedeemed] = useState(0);
@@ -123,13 +123,16 @@ const Store = () => {
     }, 0);
   };
   
-  // Handle entrance animations
+  // Handle entrance animations - use requestAnimationFrame for reliable triggering
   useEffect(() => {
-    setIsVisible({
-      hero: true,
-      products: true,
-      cta: true
+    const timer = requestAnimationFrame(() => {
+      setIsVisible({
+        hero: true,
+        products: true,
+        cta: true
+      });
     });
+    return () => cancelAnimationFrame(timer);
   }, []);
 
   // Fetch PEAR tokens and redemptions

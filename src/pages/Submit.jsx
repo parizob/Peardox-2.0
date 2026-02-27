@@ -28,7 +28,7 @@ const Submit = () => {
   } = useUser();
   
   // Entrance animation state
-  const [isVisible, setIsVisible] = useState({});
+  const [isVisible, setIsVisible] = useState({ hero: false, form: false });
   
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
@@ -46,12 +46,15 @@ const Submit = () => {
   const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Handle entrance animations
+  // Handle entrance animations - use requestAnimationFrame for reliable triggering
   useEffect(() => {
-    setIsVisible({
-      hero: true,
-      form: true
+    const timer = requestAnimationFrame(() => {
+      setIsVisible({
+        hero: true,
+        form: true
+      });
     });
+    return () => cancelAnimationFrame(timer);
   }, []);
 
   // Fetch categories from database

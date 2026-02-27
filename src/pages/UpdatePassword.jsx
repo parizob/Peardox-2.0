@@ -17,9 +17,12 @@ const UpdatePassword = () => {
   // Entrance animation state
   const [isVisible, setIsVisible] = useState(false);
 
-  // Trigger entrance animation
+  // Trigger entrance animation - use requestAnimationFrame for reliable triggering
   useEffect(() => {
-    setIsVisible(true);
+    const timer = requestAnimationFrame(() => {
+      setIsVisible(true);
+    });
+    return () => cancelAnimationFrame(timer);
   }, []);
 
   useEffect(() => {

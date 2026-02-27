@@ -11,7 +11,20 @@ import { useTheme } from '../contexts/ThemeContext';
 import { viewedArticlesAPI } from '../lib/supabase';
 
 const AboutUs = () => {
-  const [isVisible, setIsVisible] = useState({});
+  const [isVisible, setIsVisible] = useState({
+    stats: false,
+    story: false,
+    'story-visual': false,
+    'value-0': false,
+    'value-1': false,
+    'value-2': false,
+    'value-3': false,
+    'team-0': false,
+    'team-1': false,
+    'team-2': false,
+    impact: false,
+    contact: false
+  });
   
   // Modal states
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
@@ -37,23 +50,25 @@ const AboutUs = () => {
     handleToggleFavorite
   } = useUser();
 
-  // Handle scroll animations
+  // Handle entrance animations - use requestAnimationFrame for reliable triggering
   useEffect(() => {
-    // Simplified - just set all sections as visible
-    setIsVisible({
-      stats: true,
-      story: true,
-      'story-visual': true,
-      'value-0': true,
-      'value-1': true,
-      'value-2': true,
-      'value-3': true,
-      'team-0': true,
-      'team-1': true,
-      'team-2': true,
-      impact: true,
-      contact: true
+    const timer = requestAnimationFrame(() => {
+      setIsVisible({
+        stats: true,
+        story: true,
+        'story-visual': true,
+        'value-0': true,
+        'value-1': true,
+        'value-2': true,
+        'value-3': true,
+        'team-0': true,
+        'team-1': true,
+        'team-2': true,
+        impact: true,
+        contact: true
+      });
     });
+    return () => cancelAnimationFrame(timer);
   }, []);
 
   // Modal handlers

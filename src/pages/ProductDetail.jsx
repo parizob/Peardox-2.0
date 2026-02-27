@@ -24,7 +24,7 @@ const ProductDetail = () => {
   } = useUser();
   
   // Entrance animation state
-  const [isVisible, setIsVisible] = useState({});
+  const [isVisible, setIsVisible] = useState({ content: false });
   
   const [pearTokenCount, setPearTokenCount] = useState(0);
   const [totalRedeemed, setTotalRedeemed] = useState(0);
@@ -106,12 +106,15 @@ const ProductDetail = () => {
     }, 100);
   };
 
-  // Scroll to top on mount and trigger entrance animations
+  // Scroll to top on mount and trigger entrance animations - use requestAnimationFrame for reliable triggering
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-    setIsVisible({
-      content: true
+    const timer = requestAnimationFrame(() => {
+      setIsVisible({
+        content: true
+      });
     });
+    return () => cancelAnimationFrame(timer);
   }, []);
   
   // Product data

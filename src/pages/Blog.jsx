@@ -11,7 +11,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { viewedArticlesAPI } from '../lib/supabase';
 
 const Blog = () => {
-  const [isVisible, setIsVisible] = useState({});
+  const [isVisible, setIsVisible] = useState({ hero: false, posts: false });
   
   // Modal states
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
@@ -37,13 +37,15 @@ const Blog = () => {
     handleToggleFavorite
   } = useUser();
 
-  // Handle scroll animations
+  // Handle entrance animations - use requestAnimationFrame for reliable triggering
   useEffect(() => {
-    // Simplified - just set all sections as visible
-    setIsVisible({
-      hero: true,
-      posts: true
+    const timer = requestAnimationFrame(() => {
+      setIsVisible({
+        hero: true,
+        posts: true
+      });
     });
+    return () => cancelAnimationFrame(timer);
   }, []);
 
   // Modal handlers

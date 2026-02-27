@@ -11,7 +11,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { viewedArticlesAPI } from '../lib/supabase';
 
 const Podcasts = () => {
-  const [isVisible, setIsVisible] = useState({});
+  const [isVisible, setIsVisible] = useState({ hero: false, podcasts: false });
   
   // Modal states
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
@@ -37,12 +37,15 @@ const Podcasts = () => {
     handleToggleFavorite
   } = useUser();
 
-  // Handle scroll animations
+  // Handle entrance animations - use requestAnimationFrame for reliable triggering
   useEffect(() => {
-    setIsVisible({
-      hero: true,
-      podcasts: true
+    const timer = requestAnimationFrame(() => {
+      setIsVisible({
+        hero: true,
+        podcasts: true
+      });
     });
+    return () => cancelAnimationFrame(timer);
   }, []);
 
   // Modal handlers
