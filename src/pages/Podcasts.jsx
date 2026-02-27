@@ -91,7 +91,7 @@ const Podcasts = () => {
       title: 'Ben Horowitz: xAI Executive Exodus, Apple\'s AI Crisis, The Page of AI',
       podcast: 'Moonshots With Peter Diamandis',
       description: 'Ben Horowitz and Peter Diamandis argue that AI\'s acceleration is outstripping terrestrial infrastructure, shifting the strategic focus toward off-planet energy solutions and specialized hardware to sustain recursive self-improvement. They suggest that the rapid closing of the "uncanny valley" and the rise of autonomous agents are forcing massive geopolitical bets that transcend simple software updates and move into the realm of global transformation.',
-      tags: ['AI Investing', 'Silicon Valley', 'Compute'],
+      tags: ['AI Investing', 'Silicon Valley', 'Compute', 'Tech Evolution'],
       duration: '1.5+ hours',
     },
     {
@@ -100,7 +100,7 @@ const Podcasts = () => {
       title: 'Dario Amodei - "We are near the end of exponential"',
       podcast: 'Dwarkesh Podcast',
       description: 'Dario Amodei posits that the industry is rapidly approaching a "country of geniuses" through scaling laws, shifting the strategic focus from raw model capabilities to the massive economic diffusion of intelligence. He argues that the true challenge lies in the timing and allocation of immense compute resources, where multi-billion-dollar bets on agents and infrastructure will ultimately decide how quickly global power and productivity compound.',
-      tags: ['AI', 'Foundation Models', 'Anthropic'],
+      tags: ['AI', 'Foundation Models', 'Anthropic', 'Future of AI', 'Scaling Laws'],
       duration: '2+ hours',
     },
     {
@@ -109,7 +109,7 @@ const Podcasts = () => {
       title: 'Bill Gurley',
       podcast: 'Tetragamamton',
       description: 'Bill Gurley draws on his deep background in tech economics to analyze how AI represents a complex intersection of market hype and a genuine platform shift that reshapes power dynamics. He emphasizes that enduring success in this era requires first-principles thinking, the courage to take long-term risks, and a wary eye toward regulatory capture and misaligned incentives.',
-      tags: ['Tech', 'Career Advice', 'Investing'],
+      tags: ['Tech', 'Career Advice', 'Investing', 'Risk Taking'],
       duration: '1.5+ hours',
     },
     {
@@ -118,7 +118,7 @@ const Podcasts = () => {
       title: 'Marc Andreessen on Why This Is the Most Important Moment in Tech History',
       podcast: 'The A16Z Show',
       description: 'Marc Andreessen argues that the current era represents a fundamental structural reset where AI acts as a vital solution to global economic stagnation and shifting demographics. The conversation shifts the focus from mere technical execution to the compounding power of human judgment and taste, enabling "super-empowered" individuals to build massive value with unprecedented leverage.',
-      tags: ['AI', 'Macroeconomics', 'Work'],
+      tags: ['AI', 'Macroeconomics', 'Work', 'Tech Investing'],
       duration: '1.5+ hours',
     },
     {
@@ -127,7 +127,7 @@ const Podcasts = () => {
       title: 'Kevin Kelly: Excellet Advice for Living',
       podcast: 'Founders',
       description: 'This isn’t an AI episode. But it is about the foundations that determine whether AI becomes leverage or noise. What makes this episode stand out is clarity. The advice strips away tactics and trends — the same discipline required to separate signal from noise in AI research.',
-      tags: ['Life Advice', 'Leverage', 'Founders'],
+      tags: ['Life Advice', 'Leverage', 'Founders', 'Comapny Building'],
       duration: '30+ minutes',
     },
   ];
