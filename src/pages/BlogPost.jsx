@@ -52,7 +52,7 @@ const BlogPost = () => {
   const blogPosts = {
     "10-greatest-paradoxes-of-ai": {
       id: 8,
-      title: "Embracing the Contradiction: The 10 Greatest Paradoxes of AI (And Why We Built Pearadox)",
+      title: "Embracing the Contradiction: The 10 Greatest Paradoxes of AI",
       slug: "10-greatest-paradoxes-of-ai",
       excerpt: "Artificial Intelligence is the most powerful technological lever of our generation, yet it is fundamentally built on a foundation of contradictions. This inherent friction is exactly why we named our platform Pearadox.",
       author: "The Pearadox Team",
