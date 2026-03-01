@@ -42,6 +42,14 @@
     {
       "source": "/store",
       "destination": "/index.html"
+    },
+    {
+      "source": "/store/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/podcasts",
+      "destination": "/index.html"
     }
   ],
   "buildCommand": "npm run build",

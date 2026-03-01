@@ -1,8 +1,13 @@
 # SPA fallback for client-side routing
-/article/*  /index.html  200
-/aboutus    /index.html  200
-/blog       /index.html  200
-/blog/*     /index.html  200
+/article/*        /index.html  200
+/aboutus          /index.html  200
+/blog             /index.html  200
+/blog/*           /index.html  200
+/podcasts         /index.html  200
+/submit           /index.html  200
+/update-password  /index.html  200
+/store            /index.html  200
+/store/*          /index.html  200
 
 # API routes should go to serverless functions
 /api/*      /api/:splat  200
