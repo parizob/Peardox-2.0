@@ -90,6 +90,24 @@ const Podcasts = () => {
   const podcastEpisodes = [
     {
       id: 1,
+      spotifyId: '6vdzNB18F6Jpkw1TMsZUks',
+      title: "Haseeb Qureshi: Crypto's Not Made for Humans—It's for AI",
+      podcast: 'Bankless',
+      description: "Haseeb Qureshi outlines a radical thesis: blockchains and smart contracts are fundamentally machine-readable systems built for AI agents, not humans. A must-listen blueprint for understanding the incoming 'Botconomy' and the future of agent-driven commerce.",
+      tags: ['Web3', 'Agentic AI', 'Crypto', 'DeFi'],
+      duration: '1+ hour',
+    },
+    {
+      id: 2,
+      spotifyId: '3fuz0q5vlIQE1DB6JmKZ8B',
+      title: 'Building Claude Code with Boris Cherny',
+      podcast: 'The Pragmatic Engineer',
+      description: "A deep dive into what it takes to build frontier AI development tools. Boris Cherny maps out the evolution of Claude Code, breaking down the shifting landscape of software engineering when agents, rather than humans, write most of the code.",
+      tags: ['AI Engineering', 'Agentic AI', 'Claude Code', 'Software Engineering'],
+      duration: '1+ hour',
+    },
+    {
+      id: 3,
       spotifyId: '5jeJswyEc60bXqR72RdvJo',
       title: 'Greg Brockman (Part 2)',
       podcast: 'Tetragrammaton',
@@ -98,7 +116,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 2,
+      id: 4,
       spotifyId: '6sCZIcIRRNyt7bI1I4Kdej',
       title: 'Greg Brockman (Part 1)',
       podcast: 'Tetragrammaton',
@@ -107,7 +125,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 3,
+      id: 5,
       spotifyId: '72djm6TCuLtVyuIMJyOjIK',
       title: 'Ben Horowitz: xAI Executive Exodus, Apple\'s AI Crisis, The Page of AI',
       podcast: 'Moonshots With Peter Diamandis',
@@ -116,7 +134,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 4,
+      id: 6,
       spotifyId: '2ZNrpVSrgZMlDwQinl20Ay',
       title: 'Dario Amodei - "We are near the end of exponential"',
       podcast: 'Dwarkesh Podcast',
@@ -125,7 +143,7 @@ const Podcasts = () => {
       duration: '2+ hours',
     },
     {
-      id: 5,
+      id: 7,
       spotifyId: '0JngRfN8UnFunkzrGUj9AS',
       title: 'Bill Gurley',
       podcast: 'Tetragrammaton',
@@ -134,7 +152,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 6,
+      id: 8,
       spotifyId: '5boGa1dClc7EKdLIrnsAD9',
       title: 'Marc Andreessen on Why This Is the Most Important Moment in Tech History',
       podcast: 'The A16Z Show',
@@ -143,7 +161,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 7,
+      id: 9,
       spotifyId: '5ilZL35OkcOBadelSce6KS',
       title: 'Kevin Kelly: Excellet Advice for Living',
       podcast: 'Founders',
