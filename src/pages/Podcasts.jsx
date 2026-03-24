@@ -90,7 +90,7 @@ const Podcasts = () => {
   const podcastEpisodes = [
     {
       id: 1,
-      spotifyId: 'REPLACE_WITH_SPOTIFY_ID',
+      spotifyId: '3u1XHEsAuK1VXRr81RzQDV',
       title: 'Andrej Karpathy: The Loopy Era of AI and AutoResearch',
       podcast: 'No Priors',
       description: 'Andrej Karpathy explores a new paradigm where AI agents close the full research loop, designing experiments, generating data, and improving autonomously. From coding agents to AutoResearch, this episode is a deep dive into how engineering, education, and the job market are being reshaped by self-improving, agent-driven systems.',
