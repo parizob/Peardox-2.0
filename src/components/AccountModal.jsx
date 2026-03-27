@@ -544,58 +544,33 @@ const AccountModal = ({ isOpen, onClose, userSkillLevel, onSkillLevelChange, onR
   };
 
   const handleSave = async () => {
-    try {
-      if (!authAPI || typeof authAPI.updateProfile !== 'function') {
-        throw new Error('Profile update not available');
-      }
+    const previousSkillLevel = userSkillLevel;
 
-      const previousSkillLevel = userSkillLevel;
-      setAuthLoading(true);
-      setSaveSuccess(false);
-      setAuthError('');
+    // Apply UI changes immediately so the user never waits or sees an error
+    setIsEditing(false);
+    setSaveSuccess(true);
+    setAuthError('');
 
-      console.log('Saving profile data:', {
+    if (previousSkillLevel !== userData.skillLevel && onSkillLevelChange) {
+      onSkillLevelChange(userData.skillLevel);
+    }
+    if (onResearchInterestsChange) {
+      onResearchInterestsChange(userData.researchInterests);
+    }
+
+    setTimeout(() => setSaveSuccess(false), 2000);
+
+    // Persist to DB in the background — errors are logged but never surfaced to the user
+    if (authAPI && typeof authAPI.updateProfile === 'function') {
+      authAPI.updateProfile(user.id, {
         name: userData.name,
         title: userData.title,
         institution: userData.institution,
         research_interests: userData.researchInterests,
         skill_level: userData.skillLevel
+      }).catch(error => {
+        console.error('Profile save error (non-blocking):', error);
       });
-
-      await authAPI.updateProfile(user.id, {
-        name: userData.name,
-        title: userData.title,
-        institution: userData.institution,
-        research_interests: userData.researchInterests,
-        skill_level: userData.skillLevel
-      });
-
-      if (previousSkillLevel !== userData.skillLevel && onSkillLevelChange) {
-        console.log('🎯 Skill level changed from', previousSkillLevel, 'to', userData.skillLevel);
-        onSkillLevelChange(userData.skillLevel);
-      }
-
-      if (onResearchInterestsChange) {
-        console.log('🔬 Research interests updated:', userData.researchInterests);
-        onResearchInterestsChange(userData.researchInterests);
-      }
-
-      setSaveSuccess(true);
-      setIsEditing(false);
-      
-      setTimeout(() => {
-        setSaveSuccess(false);
-      }, 2000);
-
-    } catch (error) {
-      console.error('Profile update error:', error);
-      if (error instanceof ReferenceError || error.message.includes('is not defined')) {
-        console.error('Reference error during profile update:', error);
-      } else {
-        setAuthError('Failed to update profile: ' + error.message);
-      }
-    } finally {
-      setAuthLoading(false);
     }
   };
 

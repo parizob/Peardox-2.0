@@ -701,25 +701,16 @@ export const authAPI = {
     console.log('🔍 User object:', data.user);
     console.log('🔍 Session object:', data.session);
     
-    // Store userData for profile creation after email verification
-    if (data.user && userData.name) {
+    // Always attempt profile creation so every user has a row from the start
+    if (data.user) {
       try {
         console.log('📝 Creating profile for user:', data.user.id);
-        console.log('📝 Profile data to be saved:', {
-          name: userData.name,
-          title: userData.title,
-          institution: userData.institution,
-          researchInterests: userData.researchInterests
-        });
-        
         const profileResult = await this.createProfile(data.user.id, userData);
         console.log('✅ Profile created successfully during signup:', profileResult);
       } catch (profileError) {
-        console.error('❌ Error creating profile during signup:', profileError);
-        console.error('❌ Profile error details:', profileError.message);
-        console.error('❌ Profile error code:', profileError.code);
+        console.error('❌ Error creating profile during signup:', profileError.message);
         
-        // Store signup data for later profile creation
+        // Store signup data for later profile creation (e.g. email confirmation required)
         try {
           const signupData = {
             userId: data.user.id,
@@ -735,10 +726,6 @@ export const authAPI = {
           console.error('❌ Error storing signup data:', storageError);
         }
       }
-    } else {
-      console.log('⚠️ No userData.name provided or no user created, skipping profile creation');
-      console.log('⚠️ data.user:', !!data.user);
-      console.log('⚠️ userData.name:', userData.name);
     }
     
     return data;
@@ -867,20 +854,20 @@ export const authAPI = {
   async updateProfile(userId, updates) {
     console.log('📝 Updating profile for userId:', userId, 'with updates:', updates);
     
-    const profileUpdates = {
-      full_name: updates.name,
-      professional_title: updates.title,
-      institution: updates.institution,
-      research_interests: updates.research_interests,
-      skill_level: updates.skill_level
-    };
+    // Only include defined fields so partial updates don't overwrite unrelated columns
+    const profileUpdates = { id: userId };
+    if (updates.name !== undefined) profileUpdates.full_name = updates.name;
+    if (updates.title !== undefined) profileUpdates.professional_title = updates.title;
+    if (updates.institution !== undefined) profileUpdates.institution = updates.institution;
+    if (updates.research_interests !== undefined) profileUpdates.research_interests = updates.research_interests;
+    if (updates.skill_level !== undefined) profileUpdates.skill_level = updates.skill_level;
     
-    console.log('📝 Updating with data:', profileUpdates);
+    console.log('📝 Upserting with data:', profileUpdates);
     
+    // Use upsert so this works even if the profile row doesn't exist yet
     const { data, error } = await supabase
       .from('profiles')
-      .update(profileUpdates)
-      .eq('id', userId)
+      .upsert(profileUpdates, { onConflict: 'id' })
       .select()
       .single();
     
@@ -907,10 +894,10 @@ export const authAPI = {
     
     console.log('🌓 Updating mode for userId:', userId, 'to:', mode);
     
+    // Use upsert so this works even if the profile row doesn't exist yet
     const { data, error } = await supabase
       .from('profiles')
-      .update({ mode })
-      .eq('id', userId)
+      .upsert({ id: userId, mode }, { onConflict: 'id' })
       .select('mode')
       .single();
     
