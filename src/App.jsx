@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, ArrowDown, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle, Sparkles, Shuffle } from 'lucide-react';
+import { motion, useInView } from 'framer-motion';
+import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, ArrowDown, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle, Sparkles, Shuffle, GraduationCap, Coins, Play } from 'lucide-react';
 import { useTheme } from './contexts/ThemeContext';
 import Header from './components/Header';
 import ArticleCard from './components/ArticleCard';
@@ -15,7 +16,22 @@ import FieldQuizButton from './components/FieldQuizButton';
 import { useUser } from './contexts/UserContext';
 import { arxivAPI, authAPI, savedArticlesAPI, viewedArticlesAPI, quizAPI, redemptionAPI, supabase } from './lib/supabase';
 
-// Comprehensive category to icon mapping
+function RevealOnScroll({ children, delay = 0, className = '' }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: '-80px' });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 40 }}
+      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay, ease: 'easeOut' }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 const getCategoryIcon = (categoryName) => {
   const iconMap = {
     // AI & Machine Learning
@@ -1488,490 +1504,550 @@ function App() {
 
         
 
-        {/* Main Hero Section with CTA */}
+        {/* ═══════ REDESIGNED HOME PAGE ═══════ */}
         {!error && !searchTerm && (
-          <div className="pt-8 sm:pt-2 pb-12 sm:pb-20 mb-8 sm:mb-12">
-            <div className="mx-auto max-w-6xl px-4 sm:px-6">
-              <div className="text-center mb-8 sm:mb-12">
-                <h2 className={`font-sans text-4xl sm:text-5xl md:text-6xl font-bold mb-3 sm:mb-4 leading-tight px-2 ${
-                  isDarkMode ? 'text-white' : 'text-gray-900'
-                }`}>
-                Unlock the Future
-                </h2>
-                <p className={`text-base sm:text-lg max-w-3xl mx-auto leading-relaxed px-4 ${
-                  isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                }`}>
-                Learn, Earn, and Discover — the fastest way to understand AI research
-                </p>
-              </div>
+          <>
+            {/* ── SECTION 1: CINEMATIC HERO ── */}
+            <section className="relative pt-4 sm:pt-8 pb-16 sm:pb-24 overflow-hidden">
+              <div className={`absolute inset-0 ${isDarkMode ? 'dot-grid' : 'dot-grid-light'} opacity-40`} />
+              <div className="absolute top-20 left-1/4 w-72 h-72 rounded-full blur-[120px] animate-glow-pulse" style={{ background: 'rgba(29,185,84,0.12)' }} />
+              <div className="absolute bottom-10 right-1/4 w-96 h-96 rounded-full blur-[140px] animate-glow-pulse" style={{ background: 'rgba(245,158,11,0.08)', animationDelay: '1.5s' }} />
 
-              {/* Research Of The Day Spotlight - Side by side with Start Exploring */}
-              <div id="spotlight-section" className="mb-8 sm:mb-12">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6">
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    {/* Spotlight Article - Takes 8 columns on large screens */}
-                    <div className="lg:col-span-8 flex">
-                  {!spotlightArticle || !spotlightTypingComplete ? (
-                    <div className={`relative rounded-2xl shadow-lg border overflow-hidden w-full lg:h-full min-h-[220px] sm:min-h-[260px] lg:min-h-[300px] ${
-                      isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+              <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[420px] sm:min-h-[480px]">
+                  {/* Left -- Headline + CTAs */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.7, ease: 'easeOut' }}
+                  >
+                    <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-[1.1] tracking-tight mb-5 ${
+                      isDarkMode ? 'text-gradient-hero' : 'text-gradient-hero-light'
                     }`}>
-                      <div className="relative h-full flex flex-col p-6 sm:p-8 lg:p-10 justify-center items-center">
-                        <div className="text-center px-2">
-                          <h3 className={`text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold mb-2 overflow-hidden whitespace-nowrap border-r-2 pr-1 animate-typing ${
-                            isDarkMode ? 'text-white border-gray-400' : 'text-gray-900 border-gray-800'
-                          }`} style={{ fontFamily: "'Fira Code', 'JetBrains Mono', 'Source Code Pro', 'Consolas', monospace" }}>
-                            Welcome to <span className="animate-syntaxHighlight">Pearadox</span>
-                          </h3>
-                          <p className={`text-sm animate-fadeInDelayed opacity-0 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                            Discovering today's spotlight...
-                          </p>
-                        </div>
-                      </div>
-                      {/* Typing animation styles */}
-                      <style>{`
-                        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
-                        @keyframes typing {
-                          from { width: 0 }
-                          to { width: 100% }
-                        }
-                        @keyframes blink {
-                          50% { border-color: transparent }
-                        }
-                        @keyframes syntaxHighlight {
-                          0%, 60% { color: #111827 }
-                          100% { color: #1db954 }
-                        }
-                        @keyframes fadeInDelayed {
-                          0%, 60% { opacity: 0 }
-                          100% { opacity: 1 }
-                        }
-                        .animate-typing {
-                          display: inline-block;
-                          animation: typing 2s steps(19, end) forwards, blink 0.75s step-end infinite;
-                        }
-                        .animate-fadeInDelayed {
-                          animation: fadeInDelayed 2.5s ease-out forwards;
-                        }
-                        .animate-syntaxHighlight {
-                          animation: syntaxHighlight 2s ease-out forwards;
-                        }
-                      `}</style>
-                    </div>
-                  ) : (
-                    <div className="w-full" style={{ animation: 'spotlightFadeIn 1s ease-out forwards' }}>
-                      <style>{`
-                        @keyframes spotlightFadeIn {
-                          0% { opacity: 0; transform: translateY(15px); }
-                          100% { opacity: 1; transform: translateY(0); }
-                        }
-                      `}</style>
-                      <div 
-                        className={`relative rounded-2xl shadow-lg border hover:shadow-xl transition-all duration-300 cursor-pointer group overflow-hidden lg:h-full min-h-[220px] sm:min-h-[260px] lg:min-h-[300px] ${
-                          isDarkMode 
-                            ? 'bg-gray-800 border-gray-700 hover:border-amber-500' 
-                            : 'bg-white border-gray-200 hover:border-amber-300'
+                      AI Research,{' '}
+                      <span className="text-gradient-pear">Simplified.</span>
+                    </h1>
+
+                    <p className={`text-base sm:text-lg leading-relaxed max-w-lg mb-8 ${
+                      isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                    }`}>
+                      Browse thousands of cutting-edge papers, learn with AI-powered summaries, and earn rewards&nbsp;for&nbsp;what you discover.
+                    </p>
+
+                    <div className="flex flex-wrap gap-3">
+                      <button
+                        onClick={scrollToArticles}
+                        className="inline-flex items-center px-6 py-3 text-sm font-semibold text-white rounded-xl transition-all hover:shadow-lg hover:shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98]"
+                        style={{ backgroundColor: '#1db954' }}
+                      >
+                        Explore Papers
+                        <ArrowDown className="ml-2 w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={handleOpenFieldQuiz}
+                        className={`inline-flex items-center px-6 py-3 text-sm font-semibold rounded-xl border transition-all hover:shadow-md hover:scale-[1.02] active:scale-[0.98] ${
+                          isDarkMode
+                            ? 'border-gray-700 text-gray-200 hover:bg-gray-800'
+                            : 'border-gray-300 text-gray-700 hover:bg-gray-50'
                         }`}
+                      >
+                        <Sparkles className="mr-2 w-4 h-4" style={{ color: '#1db954' }} />
+                        Personalize Feed
+                      </button>
+                    </div>
+
+                    {/* Floating stat pills */}
+                    <div className="flex flex-wrap gap-3 mt-8">
+                      {[
+                        { label: 'Papers', value: '10k+' },
+                        { label: 'Authors', value: '1M+' },
+                        { label: 'Access', value: 'Free' },
+                      ].map((stat, i) => (
+                        <motion.div
+                          key={stat.label}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.5 + i * 0.12, duration: 0.5 }}
+                          className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border text-sm ${
+                            isDarkMode
+                              ? 'bg-gray-800/70 border-gray-700 text-gray-300'
+                              : 'bg-white/80 border-gray-200 text-gray-700 shadow-sm'
+                          }`}
+                        >
+                          <span className="font-bold" style={{ color: '#1db954' }}>{stat.value}</span>
+                          <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{stat.label}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+
+                  {/* Right -- Spotlight Paper Card */}
+                  <motion.div
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
+                    className="flex justify-center lg:justify-end"
+                  >
+                    {!spotlightArticle || !spotlightTypingComplete ? (
+                      <div className={`relative rounded-2xl border overflow-hidden w-full min-h-[280px] ${
+                        isDarkMode ? 'bg-gray-800/80 border-gray-700' : 'bg-white/80 border-gray-200'
+                      } ${isDarkMode ? 'glass' : 'glass-light'}`}>
+                        <div className="h-full flex flex-col p-8 justify-center items-center">
+                          <div className="text-center">
+                            <h3 className={`text-xl sm:text-2xl font-bold mb-2 overflow-hidden whitespace-nowrap border-r-2 pr-1 animate-typing ${
+                              isDarkMode ? 'text-white border-gray-400' : 'text-gray-900 border-gray-800'
+                            }`} style={{ fontFamily: "'Fira Code', monospace" }}>
+                              Welcome to <span className="animate-syntaxHighlight">Pearadox</span>
+                            </h3>
+                            <p className={`text-sm animate-fadeInDelayed opacity-0 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                              Discovering today's spotlight...
+                            </p>
+                          </div>
+                        </div>
+                        <style>{`
+                          @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
+                          @keyframes typing { from { width: 0 } to { width: 100% } }
+                          @keyframes blink { 50% { border-color: transparent } }
+                          @keyframes syntaxHighlight { 0%, 60% { color: inherit } 100% { color: #1db954 } }
+                          @keyframes fadeInDelayed { 0%, 60% { opacity: 0 } 100% { opacity: 1 } }
+                          .animate-typing { display: inline-block; animation: typing 2s steps(19, end) forwards, blink 0.75s step-end infinite; }
+                          .animate-fadeInDelayed { animation: fadeInDelayed 2.5s ease-out forwards; }
+                          .animate-syntaxHighlight { animation: syntaxHighlight 2s ease-out forwards; }
+                        `}</style>
+                      </div>
+                    ) : (
+                      <div
+                        className={`relative rounded-2xl border overflow-hidden w-full cursor-pointer group transition-all duration-300 hover:-translate-y-1 ${
+                          isDarkMode
+                            ? 'bg-gray-800/80 border-amber-600/40 hover:border-amber-500 glow-amber'
+                            : 'bg-white/90 border-amber-200 hover:border-amber-400 shadow-lg hover:shadow-xl'
+                        } ${isDarkMode ? 'glass' : 'glass-light'}`}
                         onClick={() => handleArticleClick(spotlightArticle)}
                       >
-                        {/* Subtle accent bar */}
-                        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 to-orange-400"></div>
-                        
-                        {/* Content area */}
-                        <div className="relative h-full flex flex-col p-5 sm:p-6 lg:p-8 justify-between">
-                          {/* Top section - badges */}
-                          <div className="flex flex-wrap items-center gap-2 mb-4">
-                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-400" />
+
+                        <div className="p-5 sm:p-6 flex flex-col h-full">
+                          <div className="flex items-center gap-2 mb-4">
+                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${
                               isDarkMode ? 'bg-amber-900/50 text-amber-300' : 'bg-amber-100 text-amber-700'
                             }`}>
-                              ⭐ Today's Spotlight
+                              <Sparkles className="w-3 h-3" /> Today's Spotlight
                             </span>
-                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                            <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
                               isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'
                             }`}>
                               {spotlightArticle.category}
                             </span>
                           </div>
-                          
-                          {/* Middle section - title and description */}
-                          <div className="flex-1 mb-4">
-                            <h4 className={`text-xl sm:text-2xl font-bold mb-3 leading-tight group-hover:text-amber-500 transition-colors line-clamp-2 ${
-                              isDarkMode ? 'text-white' : 'text-gray-900'
-                            }`}>
-                              {spotlightArticle.title}
-                            </h4>
-                            <p className={`text-sm sm:text-base leading-relaxed line-clamp-3 ${
-                              isDarkMode ? 'text-gray-400' : 'text-gray-600'
-                            }`}>
-                              {spotlightArticle.shortDescription}
-                            </p>
-                          </div>
-                        
-                          {/* Bottom section - metadata and CTA */}
-                          <div className={`flex items-center justify-between pt-4 border-t gap-3 ${
+
+                          <h4 className={`text-lg sm:text-xl font-bold leading-tight mb-3 line-clamp-2 group-hover:text-amber-500 transition-colors ${
+                            isDarkMode ? 'text-white' : 'text-gray-900'
+                          }`}>
+                            {spotlightArticle.title}
+                          </h4>
+
+                          <p className={`text-sm leading-relaxed line-clamp-3 mb-4 flex-1 ${
+                            isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                          }`}>
+                            {spotlightArticle.shortDescription}
+                          </p>
+
+                          <div className={`flex items-center justify-between pt-3 border-t ${
                             isDarkMode ? 'border-gray-700' : 'border-gray-100'
                           }`}>
-                            <div className={`flex items-center text-xs sm:text-sm min-w-0 flex-1 ${
-                              isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                            }`}>
-                              <User className="h-3 w-3 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 flex-shrink-0" />
-                              <span className="truncate">{spotlightArticle.authors?.split(',')[0]}{spotlightArticle.authors?.split(',').length > 1 ? ' et al.' : ''}</span>
-                              <span className="mx-2 hidden sm:inline">•</span>
-                              <span className="hidden sm:inline">{spotlightArticle.publishedDate}</span>
+                            <div className={`flex items-center text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                              <User className="w-3 h-3 mr-1.5" />
+                              <span className="truncate max-w-[140px]">{spotlightArticle.authors?.split(',')[0]}{spotlightArticle.authors?.split(',').length > 1 ? ' et al.' : ''}</span>
                             </div>
-                            <button className="flex-shrink-0 inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium text-xs sm:text-sm transition-colors">
-                              <span className="hidden sm:inline">Read Article</span>
-                              <span className="sm:hidden">Read</span>
-                              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 ml-1.5 sm:ml-2" />
-                            </button>
+                            <span className="inline-flex items-center px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-medium text-xs transition-colors">
+                              Read <ArrowRight className="w-3 h-3 ml-1.5" />
+                            </span>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                    </div>
-                          
-                    {/* Start Exploring Section - Takes 4 columns on large screens */}
-                    <div className="lg:col-span-4 flex">
-                      <div className={`rounded-2xl shadow-lg border p-5 sm:p-6 w-full lg:h-full lg:min-h-[300px] flex flex-col justify-between ${
-                        isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-                      }`}>
-                        <div>
-                          {/* Header */}
-                          <div className="flex items-center gap-3 mb-4">
-                            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
-                              <Eye className="h-5 w-5 text-white" />
-                            </div>
-                            <div>
-                              <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Start Exploring</h3>
-                              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Free access to all research</p>
-                            </div>
-                          </div>
-                          
-                          <p className={`text-sm leading-relaxed mb-5 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            Dive into cutting-edge AI research. Browse thousands of simplified papers from top researchers.
-                          </p>
-                          
-                          {/* Stats */}
-                          <div className="grid grid-cols-3 gap-2 mb-5">
-                            <div className={`text-center p-2.5 rounded-xl border ${
-                              isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-100'
-                            }`}>
-                              <div className="text-lg font-bold" style={{ color: '#1db954' }}>1M+</div>
-                              <div className={`text-[10px] font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Authors</div>
-                            </div>
-                            <div className={`text-center p-2.5 rounded-xl border ${
-                              isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-100'
-                            }`}>
-                              <div className="text-lg font-bold" style={{ color: '#1db954' }}>10k+</div>
-                              <div className={`text-[10px] font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Papers</div>
-                            </div>
-                            <div className={`text-center p-2.5 rounded-xl border ${
-                              isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-100'
-                            }`}>
-                              <div className="text-lg font-bold" style={{ color: '#1db954' }}>Free</div>
-                              <div className={`text-[10px] font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Access</div>
-                            </div>
-                          </div>
-                        </div>
-                      
-                        {/* CTA Button */}
-                        <button
-                          onClick={scrollToArticles}
-                          className="w-full inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white rounded-xl transition-all hover:opacity-90"
-                          style={{ backgroundColor: '#1db954' }}
-                        >
-                          Explore Now
-                          <ArrowDown className="ml-2 w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
+                    )}
+                  </motion.div>
                 </div>
               </div>
-            </div>
+            </section>
 
-            {/* Second row - Research Hub, PEAR Wallet, and Testimonials */}
-            <div className="mb-8 sm:mb-12">
-              <div className="mx-auto max-w-7xl px-4 sm:px-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Left Column - Research Hub + PEAR Wallet stacked */}
-                  <div className="flex flex-col gap-6">
-                    {/* Personalize Section */}
-                    <div className={`relative rounded-3xl shadow-xl border p-6 overflow-hidden group hover:shadow-2xl transition-all duration-500 ${
-                      isDarkMode 
-                        ? 'bg-gradient-to-br from-gray-800 via-gray-800 to-gray-800/90 border-gray-700' 
-                        : 'bg-gradient-to-br from-white via-green-50/30 to-emerald-50/50 border-green-100'
-                    }`}>
-                      {/* Decorative elements */}
-                      <div className={`absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl ${
-                        isDarkMode ? 'bg-green-900/20' : 'bg-gradient-to-br from-green-200/20 to-emerald-200/10'
-                      }`}></div>
-                      <div className={`absolute -bottom-10 -left-10 w-32 h-32 rounded-full blur-2xl ${
-                        isDarkMode ? 'bg-green-900/10' : 'bg-gradient-to-br from-green-100/30 to-transparent'
-                      }`}></div>
-                      
-                      <div className="relative">
-                        <div className="flex items-center gap-4 mb-4">
-                          <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style={{ backgroundColor: '#1db954' }}>
-                            <User className="h-6 w-6 text-white" />
+            {/* ── SECTION 2: TRUSTED BY MARQUEE ── */}
+            <RevealOnScroll>
+              <section className="py-8 sm:py-10 overflow-hidden">
+                <p className={`text-center text-xs font-semibold tracking-widest uppercase mb-5 ${
+                  isDarkMode ? 'text-gray-500' : 'text-gray-400'
+                }`}>
+                  Trusted by professionals at
+                </p>
+                <div className="relative">
+                  <div className={`absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none ${
+                    isDarkMode ? 'bg-gradient-to-r from-gray-950 to-transparent' : 'bg-gradient-to-r from-gray-50 to-transparent'
+                  }`} />
+                  <div className={`absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none ${
+                    isDarkMode ? 'bg-gradient-to-l from-gray-950 to-transparent' : 'bg-gradient-to-l from-gray-50 to-transparent'
+                  }`} />
+                  <div className="marquee-track gap-6">
+                    {[...Array(2)].flatMap((_, dupeIdx) =>
+                      ['Google', 'Microsoft', 'Verizon', 'MIT', 'UCF', 'Cresta', 'J.P. Morgan', 'American Express'].map((company) => (
+                        <span
+                          key={`${company}-${dupeIdx}`}
+                          className={`flex-shrink-0 px-5 py-2 rounded-full border text-sm font-medium whitespace-nowrap ${
+                            isDarkMode
+                              ? 'bg-gray-800 border-gray-700 text-gray-400'
+                              : 'bg-white border-gray-200 text-gray-600'
+                          }`}
+                        >
+                          {company}
+                        </span>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </section>
+            </RevealOnScroll>
+
+            {/* ── SECTION 3: HOW IT WORKS ── */}
+            <RevealOnScroll>
+              <section className="py-12 sm:py-16">
+                <div className="mx-auto max-w-5xl px-4 sm:px-6">
+                  <div className="text-center mb-10 sm:mb-14">
+                    <h2 className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      How It Works
+                    </h2>
+                    <p className={`text-sm sm:text-base max-w-xl mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                      From complex papers to real understanding — in three steps
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+                    {[
+                      {
+                        icon: BookOpen,
+                        title: 'Browse',
+                        desc: '10,000+ papers simplified for any skill level. Filter by topic and discover research that matters to you.',
+                        accent: '#1db954',
+                      },
+                      {
+                        icon: GraduationCap,
+                        title: 'Learn',
+                        desc: 'AI-generated summaries break down complex findings. Quizzes test and reinforce what you learn.',
+                        accent: '#3b82f6',
+                      },
+                      {
+                        icon: Coins,
+                        title: 'Earn',
+                        desc: 'Answer quiz questions correctly to earn PEAR tokens. Redeem them in the store for real rewards.',
+                        accent: '#f59e0b',
+                      },
+                    ].map((step, i) => (
+                      <motion.div
+                        key={step.title}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-60px' }}
+                        transition={{ delay: i * 0.15, duration: 0.5 }}
+                        className={`relative rounded-2xl border p-6 sm:p-8 text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group ${
+                          isDarkMode ? 'bg-gray-800/70 border-gray-700' : 'bg-white border-gray-200'
+                        }`}
+                      >
+                        <div className="absolute -top-px left-1/2 -translate-x-1/2 w-12 h-1 rounded-b-full" style={{ backgroundColor: step.accent }} />
+                        <div
+                          className="w-14 h-14 rounded-2xl mx-auto mb-5 flex items-center justify-center transition-transform group-hover:scale-110"
+                          style={{ backgroundColor: `${step.accent}15` }}
+                        >
+                          <step.icon className="w-7 h-7" style={{ color: step.accent }} />
+                        </div>
+                        <div className={`text-xs font-bold uppercase tracking-wider mb-2 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                          Step {i + 1}
+                        </div>
+                        <h3 className={`text-lg font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{step.title}</h3>
+                        <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{step.desc}</p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            </RevealOnScroll>
+
+            {/* ── SECTION 4: FEATURED PAPERS GRID ── */}
+            {!isLoading && filteredArticles.length >= 6 && (
+              <RevealOnScroll>
+                <section className="py-12 sm:py-16">
+                  <div className="mx-auto max-w-7xl px-4 sm:px-6">
+                    <div className="flex items-end justify-between mb-8 sm:mb-10">
+                      <div>
+                        <h2 className={`text-2xl sm:text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          Featured Research
+                        </h2>
+                        <p className={`text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          Hand-picked papers from today's feed
+                        </p>
+                      </div>
+                      <button
+                        onClick={scrollToArticles}
+                        className={`hidden sm:inline-flex items-center gap-1.5 text-sm font-medium transition-colors ${
+                          isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'
+                        }`}
+                      >
+                        View all <ArrowRight className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                      {filteredArticles.slice(0, 6).map((article, i) => (
+                        <motion.div
+                          key={article.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: i * 0.08, duration: 0.5 }}
+                          className="cursor-pointer group"
+                          onClick={() => handleArticleClick(article)}
+                        >
+                          <div className={`rounded-2xl border p-5 sm:p-6 h-full flex flex-col transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 ${
+                            isDarkMode ? 'bg-gray-800/80 border-gray-700 hover:border-gray-600' : 'bg-white border-gray-200 hover:border-gray-300'
+                          }`}>
+                            <div className="flex flex-wrap gap-1.5 mb-3">
+                              {article.categories?.filter(c => !c.includes('.') && !c.includes(',')).slice(0, 2).map((cat, ci) => (
+                                <span key={ci} className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                                  isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'
+                                }`}>{cat}</span>
+                              ))}
+                            </div>
+                            <h4 className={`text-base font-bold leading-snug mb-2 line-clamp-2 group-hover:text-emerald-500 transition-colors ${
+                              isDarkMode ? 'text-white' : 'text-gray-900'
+                            }`}>{article.title}</h4>
+                            <p className={`text-sm leading-relaxed line-clamp-2 mb-4 flex-1 ${
+                              isDarkMode ? 'text-gray-400' : 'text-gray-600'
+                            }`}>{article.shortDescription}</p>
+                            <div className={`flex items-center justify-between pt-3 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
+                              <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>{article.publishedDate}</span>
+                              <span className="text-xs font-semibold" style={{ color: '#1db954' }}>Read →</span>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+              </RevealOnScroll>
+            )}
+
+            {/* ── SECTION 5: PEAR TOKENS + RESEARCH HUB (COMBINED) ── */}
+            <RevealOnScroll>
+              <section className="py-12 sm:py-16">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6">
+                  <div className={`relative rounded-3xl border overflow-hidden ${
+                    isDarkMode
+                      ? 'bg-gradient-to-br from-gray-800 via-gray-800/95 to-gray-900 border-gray-700'
+                      : 'bg-gradient-to-br from-white via-amber-50/30 to-emerald-50/20 border-gray-200'
+                  }`}>
+                    <div className="absolute top-0 right-0 w-60 h-60 rounded-full blur-[100px] opacity-30" style={{ background: 'rgba(245,158,11,0.25)' }} />
+                    <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full blur-[80px] opacity-20" style={{ background: 'rgba(29,185,84,0.2)' }} />
+
+                    <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-0">
+                      {/* Left -- PEAR Tokens */}
+                      <div className={`p-6 sm:p-8 lg:p-10 ${isDarkMode ? '' : ''}`}>
+                        <div className="flex items-center gap-3 mb-5">
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center shadow-md">
+                            <Coins className="w-5 h-5 text-white" />
+                          </div>
+                          <h3 className="text-xl font-bold bg-gradient-to-r from-amber-500 to-yellow-500 bg-clip-text text-transparent">PEAR Tokens</h3>
+                        </div>
+
+                        {user ? (
+                          <div className="space-y-5">
+                            <div className="flex items-center gap-4">
+                              <div className="relative group/token cursor-pointer flex-shrink-0">
+                                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-md opacity-60 group-hover/token:opacity-100 animate-pulse" />
+                                <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 opacity-30 blur-sm" />
+                                <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center shadow-lg border-2 border-yellow-300/50 group-hover/token:scale-110 transition-transform duration-300">
+                                  <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent" />
+                                  <div className="absolute inset-0 rounded-full overflow-hidden">
+                                    <div className="absolute -inset-full bg-gradient-to-r from-transparent via-white/30 to-transparent rotate-45 translate-x-[-100%] group-hover/token:translate-x-[200%] transition-transform duration-1000" />
+                                  </div>
+                                  <span className="relative text-2xl font-bold text-white drop-shadow-md">
+                                    {isLoadingTokens ? '...' : availableBalance}
+                                  </span>
+                                </div>
+                              </div>
+                              <div>
+                                <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Available Balance</div>
+                                <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Earn more by answering quizzes correctly</div>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => { navigate('/store'); setTimeout(() => window.scrollTo({ top: 0, behavior: 'instant' }), 0); }}
+                              className="inline-flex items-center px-5 py-2.5 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+                            >
+                              Redeem in Store
+                              <ArrowRight className="ml-2 w-4 h-4" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="space-y-4">
+                            <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              Answer quiz questions to earn PEAR tokens and unlock exclusive rewards in the store.
+                            </p>
+                            <button
+                              onClick={() => setIsAccountOpen(true)}
+                              className="inline-flex items-center px-5 py-2.5 text-sm font-semibold text-white rounded-xl bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-lg"
+                            >
+                              Start Earning <ArrowRight className="ml-2 w-4 h-4" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Right -- Research Hub */}
+                      <div className={`p-6 sm:p-8 lg:p-10 border-t lg:border-t-0 lg:border-l ${
+                        isDarkMode ? 'border-gray-700' : 'border-gray-200'
+                      }`}>
+                        <div className="flex items-center gap-3 mb-5">
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-md" style={{ backgroundColor: '#1db954' }}>
+                            <User className="w-5 h-5 text-white" />
                           </div>
                           <div>
                             <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                               {user ? 'Your Research Hub' : 'Personalize Your Feed'}
                             </h3>
-                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                              {user 
-                                ? `Welcome back, ${userProfile?.full_name || user.email?.split('@')[0] || 'researcher'}!`
-                                : 'Track your learning journey'
-                              }
+                            <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                              {user ? `Welcome back, ${userProfile?.full_name || user.email?.split('@')[0] || 'researcher'}` : 'Track your learning journey'}
                             </p>
                           </div>
                         </div>
-                        
+
                         {user ? (
-                          <div className="grid grid-cols-3 gap-2">
-                            <div className={`backdrop-blur-sm rounded-xl p-2.5 text-center border shadow-sm ${
-                              isDarkMode ? 'bg-gray-700/80 border-gray-600' : 'bg-white/80 border-green-100'
-                            }`}>
-                              <div className="text-xl font-bold" style={{ color: '#1db954' }}>{analyticsData?.totalViews || 0}</div>
-                              <div className={`text-[9px] font-medium mt-0.5 leading-tight ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total Papers Read</div>
-                            </div>
-                            <div className={`backdrop-blur-sm rounded-xl p-2.5 text-center border shadow-sm ${
-                              isDarkMode ? 'bg-gray-700/80 border-gray-600' : 'bg-white/80 border-green-100'
-                            }`}>
-                              <div className="text-xl font-bold" style={{ color: '#1db954' }}>{analyticsData?.categoriesViewed?.length || 0}</div>
-                              <div className={`text-[9px] font-medium mt-0.5 leading-tight ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Total Topics Covered</div>
-                            </div>
-                            <div className={`backdrop-blur-sm rounded-xl p-2.5 text-center border shadow-sm ${
-                              isDarkMode ? 'bg-gray-700/80 border-gray-600' : 'bg-white/80 border-green-100'
-                            }`}>
-                              <div className="text-xl font-bold" style={{ color: '#1db954' }}>{weeklyData.reduce((sum, day) => sum + day.views, 0)}</div>
-                              <div className={`text-[9px] font-medium mt-0.5 leading-tight ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Papers This Week</div>
-                            </div>
+                          <div className="grid grid-cols-3 gap-3">
+                            {[
+                              { value: analyticsData?.totalViews || 0, label: 'Papers Read' },
+                              { value: analyticsData?.categoriesViewed?.length || 0, label: 'Topics Covered' },
+                              { value: weeklyData.reduce((sum, day) => sum + day.views, 0), label: 'This Week' },
+                            ].map((stat) => (
+                              <div key={stat.label} className={`rounded-xl p-3 text-center border ${
+                                isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-white/70 border-gray-100'
+                              }`}>
+                                <div className="text-2xl font-bold" style={{ color: '#1db954' }}>{stat.value}</div>
+                                <div className={`text-[10px] font-medium mt-0.5 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{stat.label}</div>
+                              </div>
+                            ))}
                           </div>
                         ) : (
-                          <div className="space-y-3">
-                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                              Create a free account to save articles and track progress.
+                          <div className="space-y-4">
+                            <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              Create a free account to save articles, track your reading stats, and get personalized recommendations.
                             </p>
                             <button
                               onClick={handleShowAccount}
-                              className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white rounded-lg transition-all hover:shadow-lg"
+                              className="inline-flex items-center px-5 py-2.5 text-sm font-semibold text-white rounded-xl transition-all hover:shadow-lg hover:shadow-emerald-500/20"
                               style={{ backgroundColor: '#1db954' }}
-                              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
-                              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
                             >
-                              Get Started Free
-                              <ArrowRight className="ml-2 w-4 h-4" />
+                              Get Started Free <ArrowRight className="ml-2 w-4 h-4" />
                             </button>
                           </div>
                         )}
                       </div>
                     </div>
-
-                    {/* PEAR Tokens Section */}
-                    <div className={`relative rounded-3xl shadow-xl border p-6 overflow-hidden group hover:shadow-2xl transition-all duration-500 ${
-                      isDarkMode 
-                        ? 'bg-gradient-to-br from-gray-800 via-amber-900/20 to-gray-800 border-amber-700/50' 
-                        : 'bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50/30 border-amber-200'
-                    }`}>
-                      {/* Decorative elements */}
-                      <div className={`absolute top-0 right-0 w-40 h-40 rounded-full blur-3xl ${
-                        isDarkMode ? 'bg-amber-900/30' : 'bg-gradient-to-br from-amber-200/30 to-yellow-200/20'
-                      }`}></div>
-                      <div className={`absolute -bottom-10 -left-10 w-32 h-32 rounded-full blur-2xl ${
-                        isDarkMode ? 'bg-orange-900/20' : 'bg-gradient-to-br from-orange-100/30 to-transparent'
-                      }`}></div>
-                      
-                      <div className="relative">
-                        {user ? (
-                          <div className="flex items-center gap-4">
-                            {/* PEAR Token Coin with count */}
-                            <div className="relative group/token cursor-pointer flex-shrink-0">
-                              {/* Outer glow ring - pulses */}
-                              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 blur-md opacity-60 group-hover/token:opacity-100 animate-pulse"></div>
-                              {/* Secondary glow */}
-                              <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 opacity-30 group-hover/token:opacity-50 blur-sm transition-opacity"></div>
-                              {/* Main token */}
-                              <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 flex items-center justify-center shadow-lg border-2 border-yellow-300/50 group-hover/token:scale-110 transition-transform duration-300">
-                                {/* Inner highlight */}
-                                <div className="absolute inset-1 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent"></div>
-                                {/* Shimmer effect */}
-                                <div className="absolute inset-0 rounded-full overflow-hidden">
-                                  <div className="absolute -inset-full bg-gradient-to-r from-transparent via-white/30 to-transparent rotate-45 translate-x-[-100%] group-hover/token:translate-x-[200%] transition-transform duration-1000"></div>
-                                </div>
-                                {/* Token count */}
-                                <span className="relative text-xl font-bold text-white drop-shadow-md">
-                                  {isLoadingTokens ? '...' : availableBalance}
-                                </span>
-                              </div>
-                            </div>
-                            
-                            {/* Desktop: PEAR Tokens label */}
-                            <div className="hidden sm:flex flex-col flex-1">
-                              <div className="text-xl font-bold bg-gradient-to-r from-amber-500 to-yellow-500 bg-clip-text text-transparent">PEAR Tokens</div>
-                              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Redeem in the store for rewards</div>
-                            </div>
-                            
-                            <button
-                              onClick={() => {
-                                navigate('/store');
-                                setTimeout(() => {
-                                  window.scrollTo({ top: 0, behavior: 'instant' });
-                                }, 0);
-                              }}
-                              className="flex-1 sm:flex-none inline-flex items-center justify-center px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-lg hover:scale-105 transform"
-                            >
-                              <span className="sm:hidden text-center leading-tight">Redeem<br/>PEAR Tokens</span>
-                              <span className="hidden sm:inline">Store</span>
-                              <ArrowRight className="hidden sm:block ml-1.5 w-4 h-4" />
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="space-y-3">
-                            <h3 className="text-xl font-bold bg-gradient-to-r from-amber-500 to-yellow-500 bg-clip-text text-transparent">Earn PEAR Tokens</h3>
-                            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                              Answer quiz questions to earn tokens and unlock rewards.
-                            </p>
-                            <button
-                              onClick={() => setIsAccountOpen(true)}
-                              className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-amber-500 to-yellow-600 transition-all hover:shadow-lg"
-                            >
-                              Start Earning
-                              <ArrowRight className="ml-2 w-4 h-4" />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Column - Testimonials */}
-                  <div className="h-full">
-                    <TestimonialCarousel />
                   </div>
                 </div>
-              </div>
-            </div>
+              </section>
+            </RevealOnScroll>
 
-            {/* Trusted By Section */}
-            <div className="mb-8 sm:mb-12">
-              <div className="mx-auto max-w-7xl px-4 sm:px-6">
-                <div className={`text-center py-6 px-4 rounded-2xl border shadow-sm ${
-                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'
-                }`}>
-                  <p className={`text-sm mb-4 font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Trusted by professionals at</p>
-                  <div className="flex flex-wrap justify-center items-center gap-3">
-                    {['Google', 'Microsoft', 'Verizon', 'MIT', 'UCF', 'Cresta', 'J.P. Morgan', 'American Express'].map((company) => (
-                      <span key={company} className={`px-4 py-1.5 rounded-full border text-sm font-medium transition-colors ${
-                        isDarkMode 
-                          ? 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600' 
-                          : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
-                      }`}>
-                        {company}
+            {/* ── SECTION 6: TESTIMONIALS MARQUEE ── */}
+            <RevealOnScroll>
+              <section className="py-12 sm:py-16">
+                <div className="mx-auto max-w-7xl">
+                  <TestimonialCarousel />
+                </div>
+              </section>
+            </RevealOnScroll>
+
+            {/* ── SECTION 7: FIELD QUIZ + BROWSE BY TOPIC ── */}
+            <RevealOnScroll>
+              <section className="py-12 sm:py-16">
+                <div id="quiz-section" className="mb-8">
+                  <FieldQuizButton onClick={handleOpenFieldQuiz} />
+                </div>
+
+                <div id="categories-section" className="text-center mb-6 sm:mb-8">
+                  <h3 className={`text-xl sm:text-2xl font-bold mb-2 px-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    Browse by Topic
+                  </h3>
+                  <p className={`text-sm sm:text-base px-4 max-w-xl mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    Select a research area to filter articles
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 max-w-5xl mx-auto px-4 mb-8">
+                  {displayResearchInterests.map((researchInterest, index) => {
+                    const Icon = getCategoryIcon(researchInterest);
+                    const isSelected = selectedCategory === researchInterest;
+
+                    return (
+                      <motion.button
+                        key={researchInterest}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-40px' }}
+                        transition={{ delay: index * 0.04, duration: 0.4 }}
+                        onClick={() => setSelectedCategory(isSelected ? '' : researchInterest)}
+                        className={`group relative p-4 sm:p-5 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
+                          isSelected
+                            ? 'bg-gray-900 border-gray-900 shadow-lg'
+                            : isDarkMode
+                              ? 'bg-gray-800 border-gray-700 hover:border-gray-600'
+                              : 'bg-white border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="flex flex-col items-center justify-center space-y-2 sm:space-y-3">
+                          <div className={`p-2.5 sm:p-3 rounded-xl transition-colors ${
+                            isSelected
+                              ? 'bg-white/10'
+                              : isDarkMode
+                                ? 'bg-gray-700 group-hover:bg-gray-600'
+                                : 'bg-gray-100 group-hover:bg-gray-200'
+                          }`}>
+                            <Icon className={`h-5 w-5 sm:h-6 sm:w-6 transition-colors ${
+                              isSelected ? 'text-white' : isDarkMode ? 'text-gray-300' : 'text-gray-600'
+                            }`} />
+                          </div>
+                          <span className={`text-xs sm:text-sm font-semibold leading-tight text-center ${
+                            isSelected ? 'text-white' : isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                          }`}>
+                            {shortenCategoryName(researchInterest)}
+                          </span>
+                        </div>
+                        {isSelected && (
+                          <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
+                            <CheckCircle className="h-3 w-3 text-white" />
+                          </div>
+                        )}
+                      </motion.button>
+                    );
+                  })}
+
+                  <button
+                    onClick={handleRandomCategory}
+                    className={`group relative p-4 rounded-xl border-2 border-dashed transition-all duration-200 sm:hidden ${
+                      isDarkMode
+                        ? 'border-gray-600 bg-gray-800 hover:bg-gray-700 hover:border-gray-500'
+                        : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400'
+                    }`}
+                  >
+                    <div className="flex flex-col items-center justify-center space-y-2">
+                      <div className={`p-2.5 rounded-xl ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
+                        <Shuffle className={`h-5 w-5 group-hover:rotate-180 transition-transform duration-300 ${
+                          isDarkMode ? 'text-gray-400' : 'text-gray-500'
+                        }`} />
+                      </div>
+                      <span className={`text-xs font-semibold ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        Surprise Me
                       </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-              {/* Simple Section Divider */}
-              <div className="my-8 sm:my-10">
-                <div className="mx-auto max-w-xl px-4">
-                  <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
-                </div>
-              </div>
-
-              {/* Field Quiz Button - Compact */}
-              <div id="quiz-section" className="mb-6">
-                <FieldQuizButton onClick={handleOpenFieldQuiz} />
-              </div>
-
-              {/* Categories Section Header */}
-              <div id="categories-section" className="text-center mb-6 sm:mb-8">
-                <h3 className={`text-xl sm:text-2xl font-bold mb-2 px-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  Browse by Topic
-                </h3>
-                <p className={`text-sm sm:text-base px-4 max-w-xl mx-auto ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  Select a research area to filter articles
-                </p>
-              </div>
-
-              {/* Category Grid - Clean Design */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 max-w-5xl mx-auto px-4 mb-8">
-                {displayResearchInterests.map((researchInterest, index) => {
-                  const Icon = getCategoryIcon(researchInterest);
-                  const isSelected = selectedCategory === researchInterest;
-
-                  return (
-                    <button
-                      key={researchInterest}
-                      onClick={() => {
-                        setSelectedCategory(isSelected ? '' : researchInterest);
-                      }}
-                      className={`group relative p-4 sm:p-5 rounded-xl border-2 transition-all duration-200 hover:shadow-md ${
-                        isSelected
-                          ? 'bg-gray-900 border-gray-900 shadow-lg'
-                          : isDarkMode 
-                            ? 'bg-gray-800 border-gray-700 hover:border-gray-600' 
-                            : 'bg-white border-gray-200 hover:border-gray-300'
-                      }`}
-                    >
-                      <div className="flex flex-col items-center justify-center space-y-2 sm:space-y-3">
-                        {/* Icon */}
-                        <div className={`p-2.5 sm:p-3 rounded-xl transition-colors ${
-                          isSelected 
-                            ? 'bg-white/10' 
-                            : isDarkMode 
-                              ? 'bg-gray-700 group-hover:bg-gray-600' 
-                              : 'bg-gray-100 group-hover:bg-gray-200'
-                        }`}>
-                          <Icon className={`h-5 w-5 sm:h-6 sm:w-6 transition-colors ${
-                            isSelected ? 'text-white' : isDarkMode ? 'text-gray-300' : 'text-gray-600'
-                          }`} />
-                        </div>
-
-                        {/* Category name */}
-                        <span className={`text-xs sm:text-sm font-semibold leading-tight text-center ${
-                          isSelected ? 'text-white' : isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                        }`}>
-                          {shortenCategoryName(researchInterest)}
-                        </span>
-                      </div>
-
-                      {/* Selected checkmark */}
-                      {isSelected && (
-                        <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: '#1db954' }}>
-                          <CheckCircle className="h-3 w-3 text-white" />
-                        </div>
-                      )}
-                    </button>
-                  );
-                })}
-                
-                {/* Random Category Button - Mobile only */}
-                <button
-                  onClick={handleRandomCategory}
-                  className={`group relative p-4 rounded-xl border-2 border-dashed transition-all duration-200 sm:hidden ${
-                    isDarkMode 
-                      ? 'border-gray-600 bg-gray-800 hover:bg-gray-700 hover:border-gray-500' 
-                      : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400'
-                  }`}
-                >
-                  <div className="flex flex-col items-center justify-center space-y-2">
-                    <div className={`p-2.5 rounded-xl ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
-                      <Shuffle className={`h-5 w-5 group-hover:rotate-180 transition-transform duration-300 ${
-                        isDarkMode ? 'text-gray-400' : 'text-gray-500'
-                      }`} />
                     </div>
-                    <span className={`text-xs font-semibold ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Surprise Me
-                    </span>
-                  </div>
-                </button>
-              </div>
-            </div>
-          </div>
+                  </button>
+                </div>
+              </section>
+            </RevealOnScroll>
+          </>
         )}
 
         {/* Loading State - Appears below Pick a Category */}
@@ -2008,14 +2084,21 @@ function App() {
         {!isLoading && !error && filteredArticles.length > 0 ? (
           <div id="articles-grid" className="px-4 sm:px-0 scroll-mt-24">
             <div className="grid gap-4 sm:gap-6 md:gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {currentArticles.map(article => (
-                <ArticleCard 
-                  key={article.id} 
-                  article={article} 
-                  onClick={handleArticleClick}
-                  isFavorite={favorites.has(article.id)}
-                  onToggleFavorite={handleToggleFavorite}
-                />
+              {currentArticles.map((article, i) => (
+                <motion.div
+                  key={article.id}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ delay: Math.min(i * 0.05, 0.4), duration: 0.45 }}
+                >
+                  <ArticleCard
+                    article={article}
+                    onClick={handleArticleClick}
+                    isFavorite={favorites.has(article.id)}
+                    onToggleFavorite={handleToggleFavorite}
+                  />
+                </motion.div>
               ))}
             </div>
 

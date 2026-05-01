@@ -12,7 +12,7 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
 
   return (
     <div 
-      className={`group relative border rounded-2xl p-5 sm:p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${
+      className={`group relative border rounded-2xl p-5 sm:p-6 cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 h-full flex flex-col ${
         isDarkMode 
           ? 'bg-gray-800 border-gray-700 hover:border-gray-600' 
           : 'bg-white border-gray-200 hover:border-gray-300'
@@ -48,7 +48,7 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
       </h3>
 
       {/* Description */}
-      <p className={`leading-relaxed line-clamp-3 text-sm sm:text-[15px] mb-4 ${
+      <p className={`leading-relaxed line-clamp-3 text-sm sm:text-[15px] mb-4 flex-1 ${
         isDarkMode ? 'text-gray-400' : 'text-gray-600'
       }`}>
         {article.shortDescription}
@@ -98,7 +98,7 @@ const ArticleCard = ({ article, onClick, isFavorite, onToggleFavorite }) => {
       </div>
 
       {/* Footer */}
-      <div className={`flex items-center justify-between pt-4 border-t ${
+      <div className={`flex items-center justify-between pt-4 border-t mt-auto ${
         isDarkMode ? 'border-gray-700' : 'border-gray-100'
       }`}>
         <div className={`flex items-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>

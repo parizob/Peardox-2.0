@@ -112,7 +112,6 @@
 }
 
 @layer utilities {
-  /* Utility classes for dark mode */
   .bg-theme-primary {
     background-color: var(--bg-primary);
   }
@@ -143,5 +142,73 @@
 
   .border-theme-secondary {
     border-color: var(--border-secondary);
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-light {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .dot-grid {
+    background-image: radial-gradient(circle, rgba(29, 185, 84, 0.12) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .dot-grid-light {
+    background-image: radial-gradient(circle, rgba(29, 185, 84, 0.08) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  .text-gradient-pear {
+    background: linear-gradient(135deg, #1db954 0%, #22c55e 50%, #16a34a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-hero {
+    background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 50%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-hero-light {
+    background: linear-gradient(135deg, #111827 0%, #1f2937 50%, #374151 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 30s linear infinite;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  .glow-green {
+    box-shadow: 0 0 20px rgba(29, 185, 84, 0.15), 0 0 60px rgba(29, 185, 84, 0.05);
+  }
+
+  .glow-amber {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.2), 0 0 60px rgba(245, 158, 11, 0.06);
   }
 }
