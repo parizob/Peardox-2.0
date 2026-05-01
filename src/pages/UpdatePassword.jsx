@@ -103,7 +103,7 @@ const UpdatePassword = () => {
   // Loading state while checking session
   if (checkingSession) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#f5f0e8] via-[#faf7f2] to-[#ede8df] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Verifying your reset link...</p>
@@ -115,8 +115,8 @@ const UpdatePassword = () => {
   // Success state
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#f5f0e8] via-[#faf7f2] to-[#ede8df] flex items-center justify-center p-4">
+        <div className="bg-[#faf7f2] rounded-2xl shadow-xl max-w-md w-full p-8 text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="h-8 w-8 text-green-500" />
           </div>
@@ -138,8 +138,8 @@ const UpdatePassword = () => {
   // Invalid/expired link state
   if (!isValidSession && error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#f5f0e8] via-[#faf7f2] to-[#ede8df] flex items-center justify-center p-4">
+        <div className="bg-[#faf7f2] rounded-2xl shadow-xl max-w-md w-full p-8 text-center">
           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <AlertCircle className="h-8 w-8 text-red-500" />
           </div>
@@ -161,8 +161,8 @@ const UpdatePassword = () => {
 
   // Password update form
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center p-4">
-      <div className={`bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden transform transition-all duration-1000 ${
+    <div className="min-h-screen bg-gradient-to-br from-[#f5f0e8] via-[#faf7f2] to-[#ede8df] flex items-center justify-center p-4">
+      <div className={`bg-[#faf7f2] rounded-2xl shadow-xl max-w-md w-full overflow-hidden transform transition-all duration-1000 ${
         isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
       }`}>
         {/* Header */}

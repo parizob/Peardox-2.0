@@ -87,10 +87,10 @@ const FadeEdge = ({ side, isDarkMode }) => (
       side === 'left'
         ? isDarkMode
           ? 'bg-gradient-to-r from-gray-950 via-gray-950/50 to-transparent'
-          : 'bg-gradient-to-r from-gray-50 via-gray-50/50 to-transparent'
+          : 'bg-gradient-to-r from-[#f5f0e8] via-[#f5f0e8]/50 to-transparent'
         : isDarkMode
           ? 'bg-gradient-to-l from-gray-950 via-gray-950/50 to-transparent'
-          : 'bg-gradient-to-l from-gray-50 via-gray-50/50 to-transparent'
+          : 'bg-gradient-to-l from-[#f5f0e8] via-[#f5f0e8]/50 to-transparent'
     }`}
   />
 );

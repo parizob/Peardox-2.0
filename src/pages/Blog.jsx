@@ -1159,7 +1159,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
   ];
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-gray-50'}`}>
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-[#f5f0e8] via-[#faf7f2] to-[#ede8df]'}`}>
       <Header 
         searchTerm=""
         onSearchChange={() => {}}

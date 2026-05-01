@@ -202,7 +202,7 @@ const ProductDetail = () => {
   // Handle 404 for unknown products
   if (!product) {
     return (
-      <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+      <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-[#f5f0e8]'}`}>
         <div className="text-center">
           <h1 className={`text-4xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Product Not Found</h1>
           <p className={`mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>The product you're looking for doesn't exist.</p>
@@ -220,7 +220,7 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-gray-50'}`}>
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-[#f5f0e8] via-[#faf7f2] to-[#ede8df]'}`}>
       <Header 
         searchTerm=""
         onSearchChange={() => {}}

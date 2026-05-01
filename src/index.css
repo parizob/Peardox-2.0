@@ -5,10 +5,10 @@
 @layer base {
   /* Light mode (default) */
   :root {
-    --bg-primary: #f9fafb;
-    --bg-secondary: #ffffff;
-    --bg-tertiary: #f3f4f6;
-    --bg-accent: #ecfdf5;
+    --bg-primary: #f5f0e8;
+    --bg-secondary: #faf7f2;
+    --bg-tertiary: #ede8df;
+    --bg-accent: #e8f5ee;
     
     --text-primary: #111827;
     --text-secondary: #4b5563;
@@ -152,10 +152,10 @@
   }
 
   .glass-light {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(250, 247, 242, 0.75);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(210, 195, 170, 0.3);
   }
 
   .dot-grid {

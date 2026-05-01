@@ -1451,7 +1451,7 @@ function App() {
     <div className={`min-h-screen relative overflow-hidden transition-colors duration-300 ${
       isDarkMode 
         ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' 
-        : 'bg-gradient-to-br from-gray-50 via-white to-blue-50/30'
+        : 'bg-gradient-to-br from-[#f5f0e8] via-[#faf7f2] to-[#ede8df]'
     }`}>
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -1599,25 +1599,25 @@ function App() {
                       <div className={`relative rounded-2xl border overflow-hidden w-full min-h-[280px] ${
                         isDarkMode ? 'bg-gray-800/80 border-gray-700' : 'bg-white/80 border-gray-200'
                       } ${isDarkMode ? 'glass' : 'glass-light'}`}>
-                        <div className="h-full flex flex-col p-8 justify-center items-center">
-                          <div className="text-center">
-                            <h3 className={`text-xl sm:text-2xl font-bold mb-2 overflow-hidden whitespace-nowrap border-r-2 pr-1 animate-typing ${
+                        <div className="h-full flex flex-col p-8 justify-center items-center min-h-[280px]">
+                          <div className="text-center w-full">
+                            <h3 className={`text-xl sm:text-2xl font-bold mb-3 overflow-hidden whitespace-nowrap border-r-2 pr-1 animate-typing mx-auto ${
                               isDarkMode ? 'text-white border-gray-400' : 'text-gray-900 border-gray-800'
                             }`} style={{ fontFamily: "'Fira Code', monospace" }}>
                               Welcome to <span className="animate-syntaxHighlight">Pearadox</span>
                             </h3>
-                            <p className={`text-sm animate-fadeInDelayed opacity-0 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                              Discovering today's spotlight...
+                            <p className={`text-sm animate-fadeInDelayed opacity-0 italic ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                              Surfacing something worth reading...
                             </p>
                           </div>
                         </div>
                         <style>{`
                           @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap');
-                          @keyframes typing { from { width: 0 } to { width: 100% } }
-                          @keyframes blink { 50% { border-color: transparent } }
+                          @keyframes typing { from { width: 0ch } to { width: 19ch } }
+                          @keyframes blink { 0%, 100% { border-color: transparent } 50% { border-color: currentColor } }
                           @keyframes syntaxHighlight { 0%, 60% { color: inherit } 100% { color: #1db954 } }
                           @keyframes fadeInDelayed { 0%, 60% { opacity: 0 } 100% { opacity: 1 } }
-                          .animate-typing { display: inline-block; animation: typing 2s steps(19, end) forwards, blink 0.75s step-end infinite; }
+                          .animate-typing { display: inline-block; width: 0ch; overflow: hidden; animation: typing 2s steps(19, end) forwards, blink 0.75s step-end 4; }
                           .animate-fadeInDelayed { animation: fadeInDelayed 2.5s ease-out forwards; }
                           .animate-syntaxHighlight { animation: syntaxHighlight 2s ease-out forwards; }
                         `}</style>

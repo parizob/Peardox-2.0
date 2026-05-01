@@ -268,7 +268,7 @@ const Submit = () => {
   };
 
   return (
-    <div className={`min-h-screen relative overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-green-50/30'}`}>
+    <div className={`min-h-screen relative overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-[#f5f0e8] via-[#faf7f2] to-[#ede8df]/30'}`}>
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className={`absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl ${isDarkMode ? 'bg-green-900/20' : 'bg-gradient-to-bl from-green-400/10 to-transparent'}`}></div>

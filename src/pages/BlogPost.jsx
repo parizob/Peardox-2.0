@@ -209,7 +209,7 @@ const BlogPost = () => {
   // Return 404 if post not found
   if (!blogPost) {
         return (
-      <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-gray-50'}`}>
+      <div className={`min-h-screen flex items-center justify-center ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-[#f5f0e8] via-[#faf7f2] to-[#ede8df]'}`}>
         <div className="text-center">
           <h1 className={`text-4xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Post Not Found</h1>
           <p className={`mb-8 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>The blog post you're looking for doesn't exist.</p>
@@ -229,7 +229,7 @@ const BlogPost = () => {
   }
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-gray-50 via-white to-gray-50'}`}>
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-[#f5f0e8] via-[#faf7f2] to-[#ede8df]'}`}>
       <Header 
         searchTerm=""
         onSearchChange={() => {}}
