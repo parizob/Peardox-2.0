@@ -15,9 +15,9 @@ export const ThemeProvider = ({ children }) => {
   // Track current user ID - set by AccountModal
   const userIdRef = useRef(null);
   
-  // Dark mode state - default to dark mode
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const isDarkModeRef = useRef(true);
+  // Dark mode state - default to light mode
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const isDarkModeRef = useRef(false);
 
   // Keep isDarkModeRef in sync
   useEffect(() => {
@@ -51,39 +51,42 @@ export const ThemeProvider = ({ children }) => {
           
           // Load from localStorage first for authenticated users
           const savedMode = localStorage.getItem('pearadox-theme');
-          if (savedMode === 'light') {
+          if (savedMode === 'dark') {
+            setIsDarkMode(true);
+            isDarkModeRef.current = true;
+          } else if (savedMode === 'light') {
             setIsDarkMode(false);
             isDarkModeRef.current = false;
           } else {
-            // Default to dark mode
-            setIsDarkMode(true);
-            isDarkModeRef.current = true;
+            // No saved preference - default to light mode
+            setIsDarkMode(false);
+            isDarkModeRef.current = false;
           }
         } else {
-          // No session - default to dark mode
+          // No session - default to light mode
           userIdRef.current = null;
-          setIsDarkMode(true);
-          isDarkModeRef.current = true;
+          setIsDarkMode(false);
+          isDarkModeRef.current = false;
         }
       } catch (e) {
         console.log('ThemeContext: Error loading initial theme');
-        // On error, default to dark mode
-        setIsDarkMode(true);
-        isDarkModeRef.current = true;
+        // On error, default to light mode
+        setIsDarkMode(false);
+        isDarkModeRef.current = false;
       }
     };
     
     loadInitialTheme();
   }, []);
 
-  // Listen for sign out events to revert to dark mode (default)
+  // Listen for sign out events to revert to light mode (default)
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_OUT') {
-        console.log('ThemeContext: User signed out - reverting to dark mode (default)');
+        console.log('ThemeContext: User signed out - reverting to light mode (default)');
         userIdRef.current = null;
-        setIsDarkMode(true);
-        isDarkModeRef.current = true;
+        setIsDarkMode(false);
+        isDarkModeRef.current = false;
         localStorage.removeItem('pearadox-theme');
       }
     });
@@ -144,9 +147,9 @@ export const ThemeProvider = ({ children }) => {
     userIdRef.current = uid;
     
     if (!uid) {
-      // User signed out - reset to dark mode (default)
-      setIsDarkMode(true);
-      isDarkModeRef.current = true;
+      // User signed out - reset to light mode (default)
+      setIsDarkMode(false);
+      isDarkModeRef.current = false;
       localStorage.removeItem('pearadox-theme');
     }
   }, []);

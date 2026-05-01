@@ -1830,7 +1830,7 @@ function App() {
                   <div className={`relative rounded-3xl border overflow-hidden ${
                     isDarkMode
                       ? 'bg-gradient-to-br from-gray-800 via-gray-800/95 to-gray-900 border-gray-700'
-                      : 'bg-gradient-to-br from-white via-amber-50/30 to-emerald-50/20 border-gray-200'
+                      : 'bg-white border-gray-300 shadow-md'
                   }`}>
                     <div className="absolute top-0 right-0 w-60 h-60 rounded-full blur-[100px] opacity-30" style={{ background: 'rgba(245,158,11,0.25)' }} />
                     <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full blur-[80px] opacity-20" style={{ background: 'rgba(29,185,84,0.2)' }} />
@@ -1915,7 +1915,7 @@ function App() {
                               { value: weeklyData.reduce((sum, day) => sum + day.views, 0), label: 'This Week' },
                             ].map((stat) => (
                               <div key={stat.label} className={`rounded-xl p-3 text-center border ${
-                                isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-white/70 border-gray-100'
+                                isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200 shadow-sm'
                               }`}>
                                 <div className="text-2xl font-bold" style={{ color: '#1db954' }}>{stat.value}</div>
                                 <div className={`text-[10px] font-medium mt-0.5 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{stat.label}</div>
