@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { BookOpen, Loader2, AlertCircle, Search, Filter, Bookmark, Brain, Eye, Bot, Wrench, Code, ChevronLeft, ChevronRight, Cpu, Zap, Shield, Microscope, Network, Database, Globe, Smartphone, Camera, FileText, Users, TrendingUp, BarChart, Settings, Lightbulb, Atom, Dna, Activity, Monitor, Wifi, ArrowRight, ArrowDown, User, UserPlus, Unlock, Target, Clock, Building2, MessageCircle, Smartphone as SmartphoneIcon, CheckCircle, Sparkles, Shuffle, GraduationCap, Coins, Play } from 'lucide-react';
 import { useTheme } from './contexts/ThemeContext';
 import Header from './components/Header';
@@ -1588,7 +1588,14 @@ function App() {
                     transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
                     className="flex justify-center lg:justify-end"
                   >
+                    <AnimatePresence mode="wait">
                     {!spotlightArticle || !spotlightTypingComplete ? (
+                      <motion.div
+                        key="loading"
+                        exit={{ opacity: 0, y: -8 }}
+                        transition={{ duration: 0.35 }}
+                        className="w-full"
+                      >
                       <div className={`relative rounded-2xl border overflow-hidden w-full min-h-[280px] ${
                         isDarkMode ? 'bg-gray-800/80 border-gray-700' : 'bg-white/80 border-gray-200'
                       } ${isDarkMode ? 'glass' : 'glass-light'}`}>
@@ -1615,7 +1622,15 @@ function App() {
                           .animate-syntaxHighlight { animation: syntaxHighlight 2s ease-out forwards; }
                         `}</style>
                       </div>
+                      </motion.div>
                     ) : (
+                      <motion.div
+                        key="spotlight"
+                        initial={{ opacity: 0, y: 12 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, ease: 'easeOut' }}
+                        className="w-full"
+                      >
                       <div
                         className={`relative rounded-2xl border overflow-hidden w-full cursor-pointer group transition-all duration-300 hover:-translate-y-1 ${
                           isDarkMode
@@ -1665,43 +1680,19 @@ function App() {
                           </div>
                         </div>
                       </div>
+                      </motion.div>
                     )}
+                    </AnimatePresence>
                   </motion.div>
                 </div>
               </div>
             </section>
 
-            {/* ── SECTION 2: TRUSTED BY MARQUEE ── */}
+            {/* ── SECTION 2: SOCIAL PROOF (TESTIMONIALS + TRUSTED BY) ── */}
             <RevealOnScroll>
-              <section className="py-8 sm:py-10 overflow-hidden">
-                <p className={`text-center text-xs font-semibold tracking-widest uppercase mb-5 ${
-                  isDarkMode ? 'text-gray-500' : 'text-gray-400'
-                }`}>
-                  Trusted by professionals at
-                </p>
-                <div className="relative">
-                  <div className={`absolute left-0 top-0 bottom-0 w-20 z-10 pointer-events-none ${
-                    isDarkMode ? 'bg-gradient-to-r from-gray-950 to-transparent' : 'bg-gradient-to-r from-gray-50 to-transparent'
-                  }`} />
-                  <div className={`absolute right-0 top-0 bottom-0 w-20 z-10 pointer-events-none ${
-                    isDarkMode ? 'bg-gradient-to-l from-gray-950 to-transparent' : 'bg-gradient-to-l from-gray-50 to-transparent'
-                  }`} />
-                  <div className="marquee-track gap-6">
-                    {[...Array(2)].flatMap((_, dupeIdx) =>
-                      ['Google', 'Microsoft', 'Verizon', 'MIT', 'UCF', 'Cresta', 'J.P. Morgan', 'American Express'].map((company) => (
-                        <span
-                          key={`${company}-${dupeIdx}`}
-                          className={`flex-shrink-0 px-5 py-2 rounded-full border text-sm font-medium whitespace-nowrap ${
-                            isDarkMode
-                              ? 'bg-gray-800 border-gray-700 text-gray-400'
-                              : 'bg-white border-gray-200 text-gray-600'
-                          }`}
-                        >
-                          {company}
-                        </span>
-                      ))
-                    )}
-                  </div>
+              <section className="py-10 sm:py-14 overflow-hidden">
+                <div className="mx-auto max-w-7xl">
+                  <TestimonialCarousel />
                 </div>
               </section>
             </RevealOnScroll>
@@ -1952,16 +1943,7 @@ function App() {
               </section>
             </RevealOnScroll>
 
-            {/* ── SECTION 6: TESTIMONIALS MARQUEE ── */}
-            <RevealOnScroll>
-              <section className="py-12 sm:py-16">
-                <div className="mx-auto max-w-7xl">
-                  <TestimonialCarousel />
-                </div>
-              </section>
-            </RevealOnScroll>
-
-            {/* ── SECTION 7: FIELD QUIZ + BROWSE BY TOPIC ── */}
+            {/* ── SECTION 6: FIELD QUIZ + BROWSE BY TOPIC ── */}
             <RevealOnScroll>
               <section className="py-12 sm:py-16">
                 <div id="quiz-section" className="mb-8">
