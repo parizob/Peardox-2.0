@@ -1195,6 +1195,26 @@ function App() {
     return sortedFiltered;
   }, [articles, searchTerm, selectedCategory]);
 
+  // Featured articles: for authenticated users with interests, filter to their categories.
+  // Falls back to filteredArticles so search/category header filters still apply.
+  const featuredArticles = useMemo(() => {
+    if (user && userResearchInterests && userResearchInterests.length > 0) {
+      const interestsLower = userResearchInterests.map(i => i.toLowerCase());
+      const personalised = filteredArticles.filter(article =>
+        article.categories?.some(cat =>
+          interestsLower.some(interest => cat.toLowerCase().includes(interest) || interest.includes(cat.toLowerCase()))
+        )
+      );
+      // Only use personalised list if it has enough articles; otherwise fall back
+      if (personalised.length >= 6) return personalised;
+      // Pad with remaining filteredArticles not already included
+      const personalIds = new Set(personalised.map(a => a.id));
+      const rest = filteredArticles.filter(a => !personalIds.has(a.id));
+      return [...personalised, ...rest];
+    }
+    return filteredArticles;
+  }, [filteredArticles, user, userResearchInterests]);
+
   // Calculate pagination
   const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
   const startIndex = (currentPage - 1) * articlesPerPage;
@@ -1760,7 +1780,7 @@ function App() {
             </RevealOnScroll>
 
             {/* ── SECTION 4: FEATURED PAPERS GRID ── */}
-            {!isLoading && filteredArticles.length >= 6 && (
+            {!isLoading && featuredArticles.length >= 6 && (
               <RevealOnScroll>
                 <section className="py-12 sm:py-16">
                   <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -1770,7 +1790,9 @@ function App() {
                           Featured Research
                         </h2>
                         <p className={`text-sm sm:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                          Hand-picked papers from today's feed
+                          {user && userResearchInterests?.length > 0
+                            ? 'Picked from your research interests'
+                            : "Hand-picked papers from today's feed"}
                         </p>
                       </div>
                       <button
@@ -1784,7 +1806,7 @@ function App() {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                      {filteredArticles.slice(0, 6).map((article, i) => (
+                      {featuredArticles.slice(0, 6).map((article, i) => (
                         <motion.div
                           key={article.id}
                           initial={{ opacity: 0, y: 20 }}
