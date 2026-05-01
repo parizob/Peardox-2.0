@@ -1508,7 +1508,7 @@ function App() {
         {!error && !searchTerm && (
           <>
             {/* ── SECTION 1: CINEMATIC HERO ── */}
-            <section className="relative pt-4 sm:pt-8 pb-16 sm:pb-24 overflow-hidden">
+            <section className="relative pt-10 sm:pt-8 pb-16 sm:pb-24 overflow-hidden">
               <div className={`absolute inset-0 ${isDarkMode ? 'dot-grid' : 'dot-grid-light'} opacity-40`} />
               <div className="absolute top-20 left-1/4 w-72 h-72 rounded-full blur-[120px] animate-glow-pulse" style={{ background: 'rgba(29,185,84,0.12)' }} />
               <div className="absolute bottom-10 right-1/4 w-96 h-96 rounded-full blur-[140px] animate-glow-pulse" style={{ background: 'rgba(245,158,11,0.08)', animationDelay: '1.5s' }} />

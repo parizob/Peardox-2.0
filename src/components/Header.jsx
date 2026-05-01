@@ -494,7 +494,7 @@ const Header = ({
               <div className="hidden md:block w-48 md:w-64">
                 {isSearchExpanded ? (
                   <div className={`flex items-center border rounded-lg px-2 sm:px-3 py-2 shadow-md w-full ${
-                    isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-[#f5f0e8] border-gray-200'
+                    isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white/80 border-gray-200'
                   }`}>
                     <Search className={`h-4 w-4 mr-2 flex-shrink-0 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                     <input
@@ -578,7 +578,7 @@ const Header = ({
             {/* Search Bar - Full width */}
             <div className="flex-1 min-w-0">
               <div className={`flex items-center border rounded-lg px-3 py-2.5 shadow-sm min-w-0 ${
-                isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-[#f5f0e8] border-gray-200'
+                isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white/80 border-gray-200'
               }`}>
                 <Search className={`h-4 w-4 mr-2 flex-shrink-0 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`} />
                 <input
