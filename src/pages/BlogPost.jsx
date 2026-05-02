@@ -50,6 +50,17 @@ const BlogPost = () => {
 
   // Blog posts data - in a real app, this would come from an API
   const blogPosts = {
+    "universal-scaling-law-biology-cities-ai": {
+      id: 9,
+      title: "From Elephant Hearts to AI Agents: The Universal Law That Connects Biology, Cities, and Intelligence",
+      slug: "universal-scaling-law-biology-cities-ai",
+      excerpt: "Why does an elephant's heart beat slower than a mouse's? Why does New York out-innovate small towns by 15% per doubling? Why did the internet send creativity supernova? One mathematical pattern — the power law of scale — connects biology, cities, the internet, and the agent revolution about to reshape everything.",
+      author: "The Pearadox Team",
+      date: "2026-05-02",
+      readTime: "9 min read",
+      tags: ["Scaling Laws", "Biology", "Urban Science", "AI Agents", "Networks", "Innovation"],
+      featured: true
+    },
     "10-greatest-paradoxes-of-ai": {
       id: 8,
       title: "Embracing the Contradiction: The 10 Greatest Paradoxes of AI",
@@ -59,7 +70,7 @@ const BlogPost = () => {
       date: "2026-02-26",
       readTime: "12 min read",
       tags: ["AI Paradoxes", "Philosophy", "AI Safety", "Automation", "AI Alignment", "Pearadox"],
-      featured: true
+      featured: false
     },
     "ai-80-percent-noise-master-10-words": {
       id: 7,
@@ -915,6 +926,496 @@ const BlogPost = () => {
                   </h3>
                   <p className={`mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Start exploring cutting-edge AI research, made accessible for everyone.
+                  </p>
+                  <Link
+                    to="/"
+                    className="inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl transition-all hover:scale-105"
+                    style={{ backgroundColor: '#1db954' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
+                    onClick={() => {
+                      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                    }}
+                  >
+                    Explore Research
+                    <ArrowRight className="h-5 w-5 ml-2" />
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {slug === 'universal-scaling-law-biology-cities-ai' && (
+              <div className="prose prose-lg max-w-none">
+
+                {/* Opening */}
+                <p className={`text-xl leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  An elephant's heart beats about <strong>30 times per minute</strong>. A mouse's beats <strong>600</strong>. They live wildly different lives — and yet, plot every mammal on a chart and they all sit on the same line. One equation predicts them all.
+                </p>
+
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Now do the same with cities. Double a city's population and — without fail — you get roughly <strong>15% more</strong> patents, wages, and walking speed <em>per person</em>. Half a planet away, a city you've never heard of obeys the same rule.
+                </p>
+
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Then the internet showed up and acted like one giant city for every mind on Earth. And now, agents are doing it again — but for cognition itself.
+                </p>
+
+                <div className={`border-l-4 p-6 mb-10 ${isDarkMode ? 'bg-green-900/30 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                  <p className={`font-medium ${isDarkMode ? 'text-green-300' : 'text-green-800'}`}>
+                    <strong>Same math. Opposite directions. Same destination.</strong> The power law of scale is the hidden engine behind biology, civilization, and the AI revolution about to fold into itself.
+                  </p>
+                </div>
+
+                {/* Section 1: Kleiber's Law */}
+                <div className={`rounded-2xl p-6 sm:p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>1</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Kleiber's Law: Bigger animals slow down</h3>
+                  </div>
+
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    In 1932, biologist Max Kleiber noticed something strange: an animal's metabolic rate doesn't grow in lockstep with its body size — it grows at the <strong>3/4 power</strong> of mass. Double an animal's weight and its metabolism only goes up by ~68%, not 100%.
+                  </p>
+
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Translation: every cell in an elephant works <em>less hard</em> than every cell in a mouse. The elephant's heart beats slower, it lives longer, it ages more gently. Bigger means more efficient, but also <strong>slower</strong>.
+                  </p>
+
+                  {/* Kleiber's Law Diagram */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <svg viewBox="0 0 600 280" className="w-full h-auto">
+                      {/* Axes */}
+                      <line x1="70" y1="220" x2="540" y2="220" stroke={isDarkMode ? '#9ca3af' : '#6b7280'} strokeWidth="2" />
+                      <line x1="70" y1="220" x2="70" y2="40" stroke={isDarkMode ? '#9ca3af' : '#6b7280'} strokeWidth="2" />
+
+                      {/* Axis labels */}
+                      <text x="305" y="260" textAnchor="middle" className={`text-xs font-medium ${isDarkMode ? 'fill-gray-300' : 'fill-gray-600'}`}>Body Mass (log scale) →</text>
+                      <text x="20" y="130" textAnchor="middle" transform="rotate(-90 20 130)" className={`text-xs font-medium ${isDarkMode ? 'fill-gray-300' : 'fill-gray-600'}`}>Metabolic Rate (log) →</text>
+
+                      {/* The 3/4 power line */}
+                      <line x1="100" y1="200" x2="510" y2="60" stroke="#1db954" strokeWidth="3" />
+                      <text x="510" y="50" textAnchor="end" className="text-xs fill-green-500 font-bold">slope = 3/4</text>
+
+                      {/* Animals as points */}
+                      <circle cx="120" cy="195" r="6" className="fill-green-500" />
+                      <text x="120" y="215" textAnchor="middle" className={`text-[11px] ${isDarkMode ? 'fill-gray-300' : 'fill-gray-700'}`}>🐭 Mouse</text>
+                      <text x="155" y="195" className={`text-[10px] ${isDarkMode ? 'fill-gray-400' : 'fill-gray-500'}`}>600 bpm</text>
+
+                      <circle cx="220" cy="160" r="7" className="fill-green-500" />
+                      <text x="220" y="180" textAnchor="middle" className={`text-[11px] ${isDarkMode ? 'fill-gray-300' : 'fill-gray-700'}`}>🐰 Rabbit</text>
+                      <text x="255" y="160" className={`text-[10px] ${isDarkMode ? 'fill-gray-400' : 'fill-gray-500'}`}>200 bpm</text>
+
+                      <circle cx="320" cy="125" r="8" className="fill-green-500" />
+                      <text x="320" y="145" textAnchor="middle" className={`text-[11px] ${isDarkMode ? 'fill-gray-300' : 'fill-gray-700'}`}>🧑 Human</text>
+                      <text x="355" y="125" className={`text-[10px] ${isDarkMode ? 'fill-gray-400' : 'fill-gray-500'}`}>70 bpm</text>
+
+                      <circle cx="430" cy="85" r="9" className="fill-green-500" />
+                      <text x="430" y="105" textAnchor="middle" className={`text-[11px] ${isDarkMode ? 'fill-gray-300' : 'fill-gray-700'}`}>🐘 Elephant</text>
+                      <text x="465" y="85" className={`text-[10px] ${isDarkMode ? 'fill-gray-400' : 'fill-gray-500'}`}>30 bpm</text>
+
+                      {/* Insight box */}
+                      <text x="305" y="25" textAnchor="middle" className={`text-sm font-bold ${isDarkMode ? 'fill-white' : 'fill-gray-900'}`}>Bigger = More Efficient = Slower = Longer Life</text>
+                    </svg>
+                  </div>
+
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    This same 3/4 line predicts heart rate, lifespan, and the diameter of an animal's aorta — across <em>every</em> mammal, from a 2-gram shrew to a 200-ton blue whale. <strong>It's the most accurate law in all of biology.</strong> And it's <em>sublinear</em>: the bigger you get, the more the system holds you back.
+                  </p>
+                </div>
+
+                {/* Section 2: Urban Scaling */}
+                <div className={`rounded-2xl p-6 sm:p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>2</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Cities flip the law upside down</h3>
+                  </div>
+
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    In the 2000s, physicist Geoffrey West and his collaborators ran the same exercise on cities. They expected biology's pattern to repeat: bigger cities should slow down, just like bigger animals.
+                  </p>
+
+                  <div className={`border-l-4 p-4 mb-6 ${isDarkMode ? 'bg-blue-900/20 border-blue-500' : 'bg-blue-50 border-blue-500'}`}>
+                    <p className={`font-medium italic ${isDarkMode ? 'text-blue-300' : 'text-blue-800'}`}>
+                      "Cities don't follow Kleiber's Law. They invert it. Every time a city doubles in size, you get a 15% bonus on everything socioeconomic — wages, patents, restaurants, GDP." — Geoffrey West
+                    </p>
+                  </div>
+
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Cities scale at the <strong>1.15 power</strong> — they're <em>superlinear</em>. Doubling a city's population doesn't just give you twice the output; it gives you <strong>more than twice</strong>. Tokyo isn't just a bigger version of a small town — it's a fundamentally faster, denser, more inventive substrate.
+                  </p>
+
+                  {/* Urban Scaling Diagram */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className={`text-center text-xs font-semibold mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Output per capita as cities grow
+                    </div>
+                    <div className="grid grid-cols-3 gap-3 sm:gap-4 items-end max-w-2xl mx-auto" style={{ minHeight: '180px' }}>
+                      {/* Small town */}
+                      <div className="flex flex-col items-center">
+                        <div className="text-xs font-bold mb-1 text-green-500">100%</div>
+                        <div className="w-full rounded-t-lg" style={{ backgroundColor: '#1db954', opacity: 0.5, height: '60px' }}></div>
+                        <div className={`w-full text-center py-2 rounded-b-lg ${isDarkMode ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-800'}`}>
+                          <div className="text-2xl">🏘️</div>
+                          <div className="text-xs font-medium">Small Town</div>
+                          <div className={`text-[10px] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>~50K</div>
+                        </div>
+                      </div>
+                      {/* Mid city */}
+                      <div className="flex flex-col items-center">
+                        <div className="text-xs font-bold mb-1 text-green-500">115%</div>
+                        <div className="w-full rounded-t-lg" style={{ backgroundColor: '#1db954', opacity: 0.7, height: '90px' }}></div>
+                        <div className={`w-full text-center py-2 rounded-b-lg ${isDarkMode ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-800'}`}>
+                          <div className="text-2xl">🏙️</div>
+                          <div className="text-xs font-medium">Mid City</div>
+                          <div className={`text-[10px] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>~500K</div>
+                        </div>
+                      </div>
+                      {/* Metropolis */}
+                      <div className="flex flex-col items-center">
+                        <div className="text-xs font-bold mb-1 text-green-500">132%</div>
+                        <div className="w-full rounded-t-lg" style={{ backgroundColor: '#1db954', height: '140px' }}></div>
+                        <div className={`w-full text-center py-2 rounded-b-lg ${isDarkMode ? 'bg-gray-600 text-white' : 'bg-gray-300 text-gray-800'}`}>
+                          <div className="text-2xl">🌆</div>
+                          <div className="text-xs font-medium">Metropolis</div>
+                          <div className={`text-[10px] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>~10M+</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={`text-center text-[11px] mt-4 italic ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                      +15% per capita on patents, wages, restaurants, walking speed — every doubling
+                    </div>
+                  </div>
+
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    The catch? The same +15% applies to crime, disease, and burnout. Cities are accelerators in <em>every</em> direction. They speed up the good and the bad. The pace of life literally quickens — people walk faster in big cities, and they always have.
+                  </p>
+                </div>
+
+                {/* Section 3: Why Networks Matter */}
+                <div className={`rounded-2xl p-6 sm:p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>3</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The hidden cause: network shape</h3>
+                  </div>
+
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Why do biology and cities scale in opposite directions? Both are networks — but the shape of the network determines everything.
+                  </p>
+
+                  {/* Networks comparison diagram */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Biology side */}
+                      <div className={`p-4 rounded-xl border-2 ${isDarkMode ? 'bg-red-900/20 border-red-500/50' : 'bg-red-50 border-red-300'}`}>
+                        <div className="text-center mb-3">
+                          <div className="text-2xl mb-1">🫀</div>
+                          <div className={`font-semibold ${isDarkMode ? 'text-red-400' : 'text-red-700'}`}>Biology: Branching</div>
+                          <div className={`text-[11px] ${isDarkMode ? 'text-red-300' : 'text-red-600'}`}>Sublinear (3/4)</div>
+                        </div>
+                        <svg viewBox="0 0 200 100" className="w-full h-auto">
+                          <line x1="100" y1="10" x2="100" y2="40" stroke={isDarkMode ? '#fca5a5' : '#ef4444'} strokeWidth="2.5" />
+                          <line x1="100" y1="40" x2="60" y2="60" stroke={isDarkMode ? '#fca5a5' : '#ef4444'} strokeWidth="2" />
+                          <line x1="100" y1="40" x2="140" y2="60" stroke={isDarkMode ? '#fca5a5' : '#ef4444'} strokeWidth="2" />
+                          <line x1="60" y1="60" x2="40" y2="80" stroke={isDarkMode ? '#fca5a5' : '#ef4444'} strokeWidth="1.5" />
+                          <line x1="60" y1="60" x2="80" y2="80" stroke={isDarkMode ? '#fca5a5' : '#ef4444'} strokeWidth="1.5" />
+                          <line x1="140" y1="60" x2="120" y2="80" stroke={isDarkMode ? '#fca5a5' : '#ef4444'} strokeWidth="1.5" />
+                          <line x1="140" y1="60" x2="160" y2="80" stroke={isDarkMode ? '#fca5a5' : '#ef4444'} strokeWidth="1.5" />
+                          {[100, 60, 140, 40, 80, 120, 160].map((x, i) => (
+                            <circle key={i} cx={x} cy={i < 1 ? 10 : i < 3 ? 60 : 80} r="3" className={isDarkMode ? 'fill-red-400' : 'fill-red-500'} />
+                          ))}
+                        </svg>
+                        <p className={`text-xs mt-3 leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          Vasculature must reach every cell. Branches get thinner, energy gets harder to push. Physics caps you.
+                        </p>
+                      </div>
+
+                      {/* Cities side */}
+                      <div className={`p-4 rounded-xl border-2 ${isDarkMode ? 'bg-green-900/20 border-green-500/50' : 'bg-green-50 border-green-300'}`}>
+                        <div className="text-center mb-3">
+                          <div className="text-2xl mb-1">🌐</div>
+                          <div className={`font-semibold ${isDarkMode ? 'text-green-400' : 'text-green-700'}`}>Cities: Recombinant</div>
+                          <div className={`text-[11px] ${isDarkMode ? 'text-green-300' : 'text-green-600'}`}>Superlinear (1.15)</div>
+                        </div>
+                        <svg viewBox="0 0 200 100" className="w-full h-auto">
+                          {[
+                            [50, 25], [100, 20], [150, 30],
+                            [40, 60], [90, 55], [140, 60], [170, 75],
+                            [70, 85], [120, 80]
+                          ].map(([x, y], i, arr) => (
+                            <g key={i}>
+                              <circle cx={x} cy={y} r="3.5" className="fill-green-500" />
+                              {arr.slice(i + 1).map(([x2, y2], j) => {
+                                const dist = Math.sqrt((x - x2) ** 2 + (y - y2) ** 2);
+                                if (dist < 70) {
+                                  return <line key={j} x1={x} y1={y} x2={x2} y2={y2} stroke={isDarkMode ? '#86efac' : '#22c55e'} strokeWidth="1" opacity="0.6" />;
+                                }
+                                return null;
+                              })}
+                            </g>
+                          ))}
+                        </svg>
+                        <p className={`text-xs mt-3 leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          People connect to anyone. Every new mind multiplies the possible combinations. Ideas compound.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Biology is bound by <strong>physics</strong>: arteries can only branch so far before pressure collapses. Cities are bound by <strong>geography</strong>: but not nearly as tightly, because two strangers in Manhattan can still meet, mate ideas, and start a company by Tuesday. The more recombinations a network allows, the more it accelerates.
+                  </p>
+                </div>
+
+                {/* Section 4: The Internet */}
+                <div className={`rounded-2xl p-6 sm:p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>4</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>The internet: one giant city for minds</h3>
+                  </div>
+
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    For most of history, your "effective city" was the city you lived in. Your network of recombinations was bounded by who you could physically meet. Then, in the 1990s, geography stopped mattering.
+                  </p>
+
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    The internet collapsed the planet into one network. Suddenly, a developer in Lagos could collaborate with a designer in Berlin and a biologist in São Paulo before lunch. The "city" became <strong>everyone, everywhere</strong>.
+                  </p>
+
+                  {/* Internet timeline diagram */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className={`text-center text-xs font-semibold mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Your "effective city size" through history
+                    </div>
+                    <div className="space-y-2 max-w-2xl mx-auto">
+                      {/* Pre-history */}
+                      <div className="flex items-center gap-3">
+                        <div className={`w-32 text-right text-xs ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Hunter-gatherer</div>
+                        <div className="flex-1 h-6 rounded-r relative" style={{ backgroundColor: '#1db954', opacity: 0.3, width: '3%' }}></div>
+                        <div className={`text-[10px] w-20 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>~150 people</div>
+                      </div>
+                      {/* Village */}
+                      <div className="flex items-center gap-3">
+                        <div className={`w-32 text-right text-xs ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Medieval village</div>
+                        <div className="flex-1 h-6 rounded-r relative" style={{ backgroundColor: '#1db954', opacity: 0.45, width: '6%' }}></div>
+                        <div className={`text-[10px] w-20 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>~1K</div>
+                      </div>
+                      {/* Industrial city */}
+                      <div className="flex items-center gap-3">
+                        <div className={`w-32 text-right text-xs ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>1900 city</div>
+                        <div className="flex-1 h-6 rounded-r relative" style={{ backgroundColor: '#1db954', opacity: 0.6 }}>
+                          <div style={{ width: '15%', height: '100%', backgroundColor: '#1db954' }}></div>
+                        </div>
+                        <div className={`text-[10px] w-20 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>~1M</div>
+                      </div>
+                      {/* Modern megacity */}
+                      <div className="flex items-center gap-3">
+                        <div className={`w-32 text-right text-xs ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>Modern megacity</div>
+                        <div className="flex-1 h-6 rounded-r relative" style={{ backgroundColor: '#1db954', opacity: 0.75 }}>
+                          <div style={{ width: '30%', height: '100%', backgroundColor: '#1db954' }}></div>
+                        </div>
+                        <div className={`text-[10px] w-20 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>~30M</div>
+                      </div>
+                      {/* Internet */}
+                      <div className="flex items-center gap-3">
+                        <div className={`w-32 text-right text-xs font-bold ${isDarkMode ? 'text-green-400' : 'text-green-700'}`}>Internet (you)</div>
+                        <div className="flex-1 h-6 rounded-r relative" style={{ backgroundColor: '#1db954' }}>
+                          <div className="absolute inset-0 flex items-center justify-center text-white text-[10px] font-bold">5+ BILLION 🌍</div>
+                        </div>
+                        <div className={`text-[10px] w-20 font-bold ${isDarkMode ? 'text-green-400' : 'text-green-700'}`}>~5B</div>
+                      </div>
+                    </div>
+                    <div className={`text-center text-[11px] mt-4 italic ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                      In 30 years, your effective city grew 150,000x. The 1.15 exponent went hyperbolic.
+                    </div>
+                  </div>
+
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Wikipedia, GitHub, arXiv, YouTube, Stack Overflow — these are the streets and cafés of the global city. Knowledge stopped doubling every century and started doubling every few years. The pace of innovation hockey-sticked because the network of minds finally went planetary. <strong>And it still wasn't done scaling.</strong>
+                  </p>
+                </div>
+
+                {/* Section 5: Brain → Agents */}
+                <div className={`rounded-2xl p-6 sm:p-8 mb-8 shadow-lg border-2 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="w-12 h-12 min-w-12 rounded-full flex items-center justify-center text-white font-bold text-xl flex-shrink-0" style={{ backgroundColor: '#1db954' }}>5</span>
+                    <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>From mapping the brain to building agents</h3>
+                  </div>
+
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    There is one biological network that breaks Kleiber's pattern: the <strong>brain</strong>. It's the densest, most recombinant network in the known universe — 86 billion neurons, ~100 trillion connections. Each neuron is a tiny city. The whole thing is the ultimate metropolis.
+                  </p>
+
+                  <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    For decades, neuroscientists have been mapping this network — first in the worm <em>C. elegans</em> (302 neurons, fully mapped in 1986), then a fruit fly (~140K neurons, mapped 2024), now a cubic millimeter of human brain (~57,000 neurons, mapped 2024 by Google &amp; Harvard). The "connectome" is a wiring diagram — and it turned out to be the blueprint for AI.
+                  </p>
+
+                  {/* Connectome to Agents diagram */}
+                  <div className={`p-4 sm:p-6 rounded-xl mb-6 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                    <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-4 items-center">
+                      {/* Connectome side */}
+                      <div className={`p-4 rounded-xl border-2 ${isDarkMode ? 'bg-purple-900/20 border-purple-500/50' : 'bg-purple-50 border-purple-300'}`}>
+                        <div className="text-center mb-3">
+                          <div className="text-2xl mb-1">🧠</div>
+                          <div className={`font-semibold ${isDarkMode ? 'text-purple-300' : 'text-purple-700'}`}>Biological Brain</div>
+                          <div className={`text-[11px] ${isDarkMode ? 'text-purple-200' : 'text-purple-600'}`}>Neurons + synapses</div>
+                        </div>
+                        <svg viewBox="0 0 200 120" className="w-full h-auto">
+                          {(() => {
+                            const nodes = [
+                              [40, 30], [80, 20], [130, 35], [170, 25],
+                              [30, 70], [70, 60], [110, 75], [150, 65], [180, 80],
+                              [50, 100], [100, 105], [140, 100]
+                            ];
+                            const edges = [
+                              [0,1],[1,2],[2,3],[0,4],[1,5],[2,6],[3,7],[4,5],[5,6],[6,7],[7,8],
+                              [4,9],[5,10],[6,10],[7,11],[8,11],[9,10],[10,11],[1,6],[2,7]
+                            ];
+                            return (
+                              <>
+                                {edges.map(([a, b], i) => (
+                                  <line key={i} x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]} stroke={isDarkMode ? '#c084fc' : '#a855f7'} strokeWidth="1" opacity="0.5" />
+                                ))}
+                                {nodes.map(([x, y], i) => (
+                                  <circle key={i} cx={x} cy={y} r="3.5" className={isDarkMode ? 'fill-purple-400' : 'fill-purple-500'} />
+                                ))}
+                              </>
+                            );
+                          })()}
+                        </svg>
+                        <p className={`text-[11px] mt-2 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          1,000+ years of neuroscience
+                        </p>
+                      </div>
+
+                      {/* Arrow */}
+                      <div className="flex flex-col items-center justify-center py-4 sm:py-0">
+                        <div className={`hidden sm:block text-3xl ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>→</div>
+                        <div className={`sm:hidden text-3xl ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>↓</div>
+                        <div className={`text-[10px] mt-1 px-2 py-1 rounded ${isDarkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-200 text-gray-600'}`}>same architecture</div>
+                        <div className={`text-[10px] mt-1 px-2 py-1 rounded ${isDarkMode ? 'bg-gray-600 text-gray-300' : 'bg-gray-200 text-gray-600'}`}>new substrate</div>
+                      </div>
+
+                      {/* Agent mesh side */}
+                      <div className={`p-4 rounded-xl border-2 ${isDarkMode ? 'bg-green-900/20 border-green-500/50' : 'bg-green-50 border-green-300'}`}>
+                        <div className="text-center mb-3">
+                          <div className="text-2xl mb-1">🤖</div>
+                          <div className={`font-semibold ${isDarkMode ? 'text-green-400' : 'text-green-700'}`}>Agent Mesh</div>
+                          <div className={`text-[11px] ${isDarkMode ? 'text-green-300' : 'text-green-600'}`}>LLMs + tools + memory</div>
+                        </div>
+                        <svg viewBox="0 0 200 120" className="w-full h-auto">
+                          {(() => {
+                            const nodes = [
+                              [40, 30], [100, 20], [160, 30],
+                              [30, 70], [80, 60], [120, 65], [170, 70],
+                              [60, 100], [110, 105], [150, 95]
+                            ];
+                            const edges = [
+                              [0,1],[1,2],[0,3],[1,4],[1,5],[2,6],[3,4],[4,5],[5,6],[3,7],[4,8],[5,8],[6,9],[7,8],[8,9],[0,4],[2,5]
+                            ];
+                            return (
+                              <>
+                                {edges.map(([a, b], i) => (
+                                  <line key={i} x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]} stroke="#1db954" strokeWidth="1.2" opacity="0.6" />
+                                ))}
+                                {nodes.map(([x, y], i) => (
+                                  <circle key={i} cx={x} cy={y} r="4" className="fill-green-500" />
+                                ))}
+                              </>
+                            );
+                          })()}
+                        </svg>
+                        <p className={`text-[11px] mt-2 text-center ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                          Built in &lt; 5 years
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className={`leading-relaxed mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Modern neural networks are literally named after neurons. Every LLM is a stack of layers passing signals like a cortical column. And now, with <strong>agents</strong>, we've moved up another level: each agent is itself a node — talking to other agents, calling tools, writing to shared memory. We're not just imitating one brain anymore. <em>We're building the connectome of an entirely new kind of mind.</em>
+                  </p>
+
+                  <p className={`leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    And here's the kicker: agent networks don't have to obey biology's constraints. No vasculature. No skull. No physical handshake required. They run on a substrate engineered for recombination — fiber optics, GPUs, JSON. The 1.15 exponent of cities? <strong>Agents will blow past it.</strong>
+                  </p>
+                </div>
+
+                {/* Conclusion */}
+                <h2 className={`text-2xl sm:text-3xl font-bold mt-12 mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  The pattern that explains everything
+                </h2>
+
+                <p className={`leading-relaxed mb-6 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Each scaling layer is constrained by the one below it — and each one finds a way to break free:
+                </p>
+
+                {/* Final summary diagram */}
+                <div className={`p-4 sm:p-6 rounded-xl mb-8 ${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200 shadow-md'}`}>
+                  <div className="space-y-3">
+                    <div className={`flex items-center gap-3 p-3 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                      <div className="text-2xl flex-shrink-0">🐘</div>
+                      <div className="flex-grow">
+                        <div className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Biology</div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Bound by <strong>physics</strong> — vasculature, gravity, cell chemistry</div>
+                      </div>
+                      <div className={`text-xs font-mono px-2 py-1 rounded ${isDarkMode ? 'bg-red-900/40 text-red-300' : 'bg-red-50 text-red-700'}`}>×0.75</div>
+                    </div>
+
+                    <div className={`flex items-center gap-3 p-3 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                      <div className="text-2xl flex-shrink-0">🏙️</div>
+                      <div className="flex-grow">
+                        <div className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Cities</div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Bound by <strong>geography</strong> — your body has to be there</div>
+                      </div>
+                      <div className={`text-xs font-mono px-2 py-1 rounded ${isDarkMode ? 'bg-green-900/40 text-green-300' : 'bg-green-50 text-green-700'}`}>×1.15</div>
+                    </div>
+
+                    <div className={`flex items-center gap-3 p-3 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-50'}`}>
+                      <div className="text-2xl flex-shrink-0">🌐</div>
+                      <div className="flex-grow">
+                        <div className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Internet</div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Bound by <strong>humans</strong> — our reading speed, attention, sleep</div>
+                      </div>
+                      <div className={`text-xs font-mono px-2 py-1 rounded ${isDarkMode ? 'bg-green-900/40 text-green-300' : 'bg-green-50 text-green-700'}`}>×1.5+</div>
+                    </div>
+
+                    <div className={`flex items-center gap-3 p-3 rounded-lg border-2 ${isDarkMode ? 'bg-green-900/20 border-green-500' : 'bg-green-50 border-green-400'}`}>
+                      <div className="text-2xl flex-shrink-0">🤖</div>
+                      <div className="flex-grow">
+                        <div className={`font-bold text-sm ${isDarkMode ? 'text-green-300' : 'text-green-800'}`}>Agents</div>
+                        <div className={`text-xs ${isDarkMode ? 'text-green-200' : 'text-green-700'}`}>Bound by <strong>almost nothing</strong> — they don't sleep, forget, or sit in traffic</div>
+                      </div>
+                      <div className={`text-xs font-mono px-2 py-1 rounded font-bold ${isDarkMode ? 'bg-green-700 text-white' : 'bg-green-600 text-white'}`}>×?</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={`border-l-4 p-6 mb-8 ${isDarkMode ? 'bg-green-900/30 border-green-500' : 'bg-green-50 border-green-500'}`}>
+                  <p className={`font-medium text-lg ${isDarkMode ? 'text-green-300' : 'text-green-800'}`}>
+                    The same equation that made elephants slow made cities fast. The same logic that made cities fast made the internet faster. And the same logic is about to do it again — with agents as the new neurons in a network nobody has ever built before.
+                  </p>
+                </div>
+
+                <p className={`leading-relaxed mb-8 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  We've spent 4 billion years trapped in Kleiber's law. We've spent 10,000 years inverting it with cities. We've spent 30 years compounding it with the internet. The next chapter — agents recombining knowledge at machine speed, on machine time — is the logical next term in the series. Not magic. Just the universal law of scale, finally untethered.
+                </p>
+
+                <div className={`text-center p-8 rounded-2xl ${isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
+                  <p className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    Same math.
+                  </p>
+                  <p className="text-2xl font-bold" style={{ color: '#1db954' }}>
+                    New substrate.
+                  </p>
+                </div>
+
+                {/* CTA Section */}
+                <div className={`mt-12 p-8 rounded-2xl text-center ${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200 shadow-lg'}`}>
+                  <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    Stay ahead of the curve
+                  </h3>
+                  <p className={`mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Pearadox tracks the cutting-edge research that's powering the next exponent — distilled to be readable, not impenetrable.
                   </p>
                   <Link
                     to="/"
