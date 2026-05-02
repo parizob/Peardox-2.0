@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Headphones, ExternalLink, Sparkles } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowLeft, Headphones, ExternalLink, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -12,6 +12,9 @@ import { viewedArticlesAPI } from '../lib/supabase';
 
 const Podcasts = () => {
   const [isVisible, setIsVisible] = useState({ hero: false, podcasts: false });
+  const [currentPage, setCurrentPage] = useState(1);
+  const EPISODES_PER_PAGE = 10;
+  const pageTopRef = useRef(null);
   
   // Modal states
   const [isSavedArticlesOpen, setIsSavedArticlesOpen] = useState(false);
@@ -47,6 +50,16 @@ const Podcasts = () => {
     });
     return () => cancelAnimationFrame(timer);
   }, []);
+
+  // Scroll to top of podcast list whenever page changes
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    pageTopRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [currentPage]);
 
   // Modal handlers
   const handleShowSavedArticles = () => {
@@ -117,15 +130,6 @@ const Podcasts = () => {
     },
     {
       id: 4,
-      spotifyId: '3u1XHEsAuK1VXRr81RzQDV',
-      title: 'Andrej Karpathy: The Loopy Era of AI and AutoResearch',
-      podcast: 'No Priors',
-      description: 'Andrej Karpathy explores a new paradigm where AI agents close the full research loop, designing experiments, generating data, and improving autonomously. From coding agents to AutoResearch, this episode is a deep dive into how engineering, education, and the job market are being reshaped by self-improving, agent-driven systems.',
-      tags: ['AI', 'Agentic AI', 'Machine Learning', 'Future of Work'],
-      duration: '1+ hour',
-    },
-    {
-      id: 5,
       spotifyId: '6vdzNB18F6Jpkw1TMsZUks',
       title: "Haseeb Qureshi: Crypto's Not Made for Humans—It's for AI",
       podcast: 'Bankless',
@@ -134,7 +138,7 @@ const Podcasts = () => {
       duration: '1+ hour',
     },
     {
-      id: 6,
+      id: 5,
       spotifyId: '3fuz0q5vlIQE1DB6JmKZ8B',
       title: 'Building Claude Code with Boris Cherny',
       podcast: 'The Pragmatic Engineer',
@@ -143,7 +147,7 @@ const Podcasts = () => {
       duration: '1+ hour',
     },
     {
-      id: 7,
+      id: 6,
       spotifyId: '5jeJswyEc60bXqR72RdvJo',
       title: 'Greg Brockman (Part 2)',
       podcast: 'Tetragrammaton',
@@ -152,7 +156,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 8,
+      id: 7,
       spotifyId: '6sCZIcIRRNyt7bI1I4Kdej',
       title: 'Greg Brockman (Part 1)',
       podcast: 'Tetragrammaton',
@@ -161,7 +165,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 9,
+      id: 8,
       spotifyId: '72djm6TCuLtVyuIMJyOjIK',
       title: 'Ben Horowitz: xAI Executive Exodus, Apple\'s AI Crisis, The Page of AI',
       podcast: 'Moonshots With Peter Diamandis',
@@ -170,7 +174,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 10,
+      id: 9,
       spotifyId: '2ZNrpVSrgZMlDwQinl20Ay',
       title: 'Dario Amodei - "We are near the end of exponential"',
       podcast: 'Dwarkesh Podcast',
@@ -179,7 +183,7 @@ const Podcasts = () => {
       duration: '2+ hours',
     },
     {
-      id: 11,
+      id: 10,
       spotifyId: '0JngRfN8UnFunkzrGUj9AS',
       title: 'Bill Gurley',
       podcast: 'Tetragrammaton',
@@ -188,7 +192,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 12,
+      id: 11,
       spotifyId: '5boGa1dClc7EKdLIrnsAD9',
       title: 'Marc Andreessen on Why This Is the Most Important Moment in Tech History',
       podcast: 'The A16Z Show',
@@ -197,7 +201,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 13,
+      id: 12,
       spotifyId: '5ilZL35OkcOBadelSce6KS',
       title: 'Kevin Kelly: Excellet Advice for Living',
       podcast: 'Founders',
@@ -222,7 +226,7 @@ const Podcasts = () => {
       />
       
       {/* Content Spacer for Fixed Header */}
-      <div className="h-24 sm:h-20"></div>
+      <div ref={pageTopRef} className="h-24 sm:h-20"></div>
 
       <main className="relative z-10">
         {/* Hero Section */}
@@ -271,7 +275,7 @@ const Podcasts = () => {
               }`}
             >
               <div className="space-y-6 sm:space-y-8">
-                {podcastEpisodes.map((episode, index) => (
+                {podcastEpisodes.slice((currentPage - 1) * EPISODES_PER_PAGE, currentPage * EPISODES_PER_PAGE).map((episode, index) => (
                   <article 
                     key={episode.id} 
                     className={`rounded-xl sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 ${
@@ -348,7 +352,43 @@ const Podcasts = () => {
                 ))}
               </div>
               
+              {/* Pagination */}
+              {podcastEpisodes.length > EPISODES_PER_PAGE && (
+                <div className="flex items-center justify-center gap-4 py-6">
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      currentPage === 1
+                        ? isDarkMode ? 'bg-gray-800 text-gray-600 cursor-not-allowed' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : isDarkMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-white text-gray-700 hover:bg-gray-50 shadow-sm border border-gray-200'
+                    }`}
+                  >
+                    <ChevronLeft className="h-4 w-4 mr-1" />
+                    Previous
+                  </button>
+
+                  <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Page {currentPage} of {Math.ceil(podcastEpisodes.length / EPISODES_PER_PAGE)}
+                  </span>
+
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(Math.ceil(podcastEpisodes.length / EPISODES_PER_PAGE), p + 1))}
+                    disabled={currentPage === Math.ceil(podcastEpisodes.length / EPISODES_PER_PAGE)}
+                    className={`inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      currentPage === Math.ceil(podcastEpisodes.length / EPISODES_PER_PAGE)
+                        ? isDarkMode ? 'bg-gray-800 text-gray-600 cursor-not-allowed' : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : isDarkMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-white text-gray-700 hover:bg-gray-50 shadow-sm border border-gray-200'
+                    }`}
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4 ml-1" />
+                  </button>
+                </div>
+              )}
+
               {/* Coming Soon */}
+              {currentPage === Math.ceil(podcastEpisodes.length / EPISODES_PER_PAGE) && (
               <div className="text-center py-12">
                 <div className={`inline-flex items-center px-6 py-3 rounded-xl ${isDarkMode ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-600'}`}>
                   <Headphones className="h-5 w-5 mr-2" />
@@ -365,6 +405,7 @@ const Podcasts = () => {
                   </a>
                 </p>
               </div>
+              )}
             </div>
           </div>
         </section>

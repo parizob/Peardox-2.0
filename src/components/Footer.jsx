@@ -22,15 +22,15 @@ const Footer = ({ onContactClick }) => {
       <footer className={`relative mt-16 overflow-hidden ${
         isDarkMode 
           ? 'bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 text-gray-200' 
-          : 'bg-gradient-to-br from-gray-50 via-green-50 to-emerald-50 text-gray-800'
+          : 'bg-gradient-to-br from-[#ede8df] via-[#e8e3d8] to-[#ddd7cc] text-gray-800'
       }`}>
         {/* Background decoration */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className={`absolute top-0 left-0 w-96 h-96 rounded-full blur-3xl ${
-            isDarkMode ? 'bg-gradient-to-br from-green-900/20 to-transparent' : 'bg-gradient-to-br from-green-200/20 to-transparent'
+            isDarkMode ? 'bg-gradient-to-br from-green-900/20 to-transparent' : 'bg-gradient-to-br from-[#c8bfad]/20 to-transparent'
           }`}></div>
           <div className={`absolute bottom-0 right-0 w-96 h-96 rounded-full blur-3xl ${
-            isDarkMode ? 'bg-gradient-to-tl from-emerald-900/20 to-transparent' : 'bg-gradient-to-tl from-emerald-200/20 to-transparent'
+            isDarkMode ? 'bg-gradient-to-tl from-emerald-900/20 to-transparent' : 'bg-gradient-to-tl from-[#c8bfad]/20 to-transparent'
           }`}></div>
         </div>
 
@@ -132,7 +132,7 @@ const Footer = ({ onContactClick }) => {
                     className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-all duration-200 transform hover:scale-110 ${
                       isDarkMode 
                         ? 'bg-gray-800 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600' 
-                        : 'bg-white border-gray-200 text-gray-600 hover:text-gray-900 hover:shadow-md'
+                        : 'bg-[#f5f0e8] border-[#ccc7bc] text-gray-600 hover:text-gray-900 hover:shadow-md'
                     }`}
                   >
                     <Twitter className="h-4 w-4" />
@@ -144,7 +144,7 @@ const Footer = ({ onContactClick }) => {
                     className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-all duration-200 transform hover:scale-110 ${
                       isDarkMode 
                         ? 'bg-gray-800 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600' 
-                        : 'bg-white border-gray-200 text-gray-600 hover:text-gray-900 hover:shadow-md'
+                        : 'bg-[#f5f0e8] border-[#ccc7bc] text-gray-600 hover:text-gray-900 hover:shadow-md'
                     }`}
                   >
                     <Instagram className="h-4 w-4" />
@@ -156,7 +156,7 @@ const Footer = ({ onContactClick }) => {
                     className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-all duration-200 transform hover:scale-110 ${
                       isDarkMode 
                         ? 'bg-gray-800 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600' 
-                        : 'bg-white border-gray-200 text-gray-600 hover:text-gray-900 hover:shadow-md'
+                        : 'bg-[#f5f0e8] border-[#ccc7bc] text-gray-600 hover:text-gray-900 hover:shadow-md'
                     }`}
                   >
                     <Linkedin className="h-4 w-4" />
@@ -168,7 +168,7 @@ const Footer = ({ onContactClick }) => {
                     className={`w-10 h-10 rounded-lg border flex items-center justify-center transition-all duration-200 transform hover:scale-110 ${
                       isDarkMode 
                         ? 'bg-gray-800 border-gray-700 text-gray-400 hover:text-white hover:border-gray-600' 
-                        : 'bg-white border-gray-200 text-gray-600 hover:text-gray-900 hover:shadow-md'
+                        : 'bg-[#f5f0e8] border-[#ccc7bc] text-gray-600 hover:text-gray-900 hover:shadow-md'
                     }`}
                   >
                     <Facebook className="h-4 w-4" />
@@ -179,7 +179,7 @@ const Footer = ({ onContactClick }) => {
           </div>
 
           {/* Bottom Section */}
-          <div className={`mt-12 pt-8 border-t ${isDarkMode ? 'border-gray-800' : 'border-gray-200'}`}>
+          <div className={`mt-12 pt-8 border-t ${isDarkMode ? 'border-gray-800' : 'border-[#ccc7bc]'}`}>
             <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
               <div className="text-center sm:text-left">
                 <p className={`text-sm ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
