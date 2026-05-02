@@ -90,21 +90,21 @@ const Podcasts = () => {
   const podcastEpisodes = [
     {
       id: 1,
-      spotifyId: '0vEHKeqVwDzsaWoD9q7iSn',
-      title: 'Tony Xu, DoorDash',
-      podcast: 'Founders (David Senra)',
-      description: 'Tony Xu explores the brutal realities of scaling, detailing how to survive the "Thousand Days of Hell" and maintain sanity as a CEO. From ignoring stock prices and running dual operating systems to implementing internal venture stage gates, he shares how peer learning, mindset, and AI are reshaping the foundational business loop.',
-      tags: ['Startups', 'Entrepreneurship', 'Logistics', 'Customer Experience', 'Execution'],
-      duration: '1.5+ hours',
+      spotifyId: '4TMAVjvGRqpTstHCfYFeY5',
+      title: '#863: Elad Gil, Consigliere to Empire Builders — How to Spot Billion-Dollar Companies Before Everyone Else, The Misty AI Frontier, How Coke Beat Pepsi, When Consensus Pays, And Much More',
+      podcast: 'The Tim Ferriss Show',
+      description: 'Elad Gil explores the AI frontier, sharing insights on spotting billion-dollar companies, power laws in venture capital, high-growth scaling, and practical frameworks for founders and investors. From AI compute bottlenecks to longevity and bioelectric medicine, Elad provides actionable advice on technology and decision-making.',
+      tags: ['Startups', 'AI', 'Investing', 'Venture Capital', 'Longevity', 'Entrepreneurship'],
+      duration: '1.75+ hours',
     },
     {
       id: 2,
-      spotifyId: '3u1XHEsAuK1VXRr81RzQDV',
-      title: 'Andrej Karpathy: The Loopy Era of AI and AutoResearch',
-      podcast: 'No Priors',
-      description: 'Andrej Karpathy explores a new paradigm where AI agents close the full research loop, designing experiments, generating data, and improving autonomously. From coding agents to AutoResearch, this episode is a deep dive into how engineering, education, and the job market are being reshaped by self-improving, agent-driven systems.',
-      tags: ['AI', 'Agentic AI', 'Machine Learning', 'Future of Work'],
-      duration: '1+ hour',
+      spotifyId: '0vEHKeqVwDzsaWoD9q7iSn',
+      title: 'Tony Xu, DoorDash',
+      podcast: 'David Senra',
+      description: 'Tony Xu explores the brutal realities of scaling, detailing how to survive the "Thousand Days of Hell" and maintain sanity as a CEO. From ignoring stock prices and running dual operating systems to implementing internal venture stage gates, he shares how peer learning, mindset, and AI are reshaping the foundational business loop.',
+      tags: ['Startups', 'Entrepreneurship', 'Logistics', 'Customer Experience', 'Execution'],
+      duration: '1.5+ hours',
     },
     {
       id: 3,
@@ -117,6 +117,15 @@ const Podcasts = () => {
     },
     {
       id: 4,
+      spotifyId: '3u1XHEsAuK1VXRr81RzQDV',
+      title: 'Andrej Karpathy: The Loopy Era of AI and AutoResearch',
+      podcast: 'No Priors',
+      description: 'Andrej Karpathy explores a new paradigm where AI agents close the full research loop, designing experiments, generating data, and improving autonomously. From coding agents to AutoResearch, this episode is a deep dive into how engineering, education, and the job market are being reshaped by self-improving, agent-driven systems.',
+      tags: ['AI', 'Agentic AI', 'Machine Learning', 'Future of Work'],
+      duration: '1+ hour',
+    },
+    {
+      id: 5,
       spotifyId: '6vdzNB18F6Jpkw1TMsZUks',
       title: "Haseeb Qureshi: Crypto's Not Made for Humans—It's for AI",
       podcast: 'Bankless',
@@ -125,7 +134,7 @@ const Podcasts = () => {
       duration: '1+ hour',
     },
     {
-      id: 5,
+      id: 6,
       spotifyId: '3fuz0q5vlIQE1DB6JmKZ8B',
       title: 'Building Claude Code with Boris Cherny',
       podcast: 'The Pragmatic Engineer',
@@ -134,7 +143,7 @@ const Podcasts = () => {
       duration: '1+ hour',
     },
     {
-      id: 6,
+      id: 7,
       spotifyId: '5jeJswyEc60bXqR72RdvJo',
       title: 'Greg Brockman (Part 2)',
       podcast: 'Tetragrammaton',
@@ -143,7 +152,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 7,
+      id: 8,
       spotifyId: '6sCZIcIRRNyt7bI1I4Kdej',
       title: 'Greg Brockman (Part 1)',
       podcast: 'Tetragrammaton',
@@ -152,7 +161,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 8,
+      id: 9,
       spotifyId: '72djm6TCuLtVyuIMJyOjIK',
       title: 'Ben Horowitz: xAI Executive Exodus, Apple\'s AI Crisis, The Page of AI',
       podcast: 'Moonshots With Peter Diamandis',
@@ -161,7 +170,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 9,
+      id: 10,
       spotifyId: '2ZNrpVSrgZMlDwQinl20Ay',
       title: 'Dario Amodei - "We are near the end of exponential"',
       podcast: 'Dwarkesh Podcast',
@@ -170,7 +179,7 @@ const Podcasts = () => {
       duration: '2+ hours',
     },
     {
-      id: 10,
+      id: 11,
       spotifyId: '0JngRfN8UnFunkzrGUj9AS',
       title: 'Bill Gurley',
       podcast: 'Tetragrammaton',
@@ -179,7 +188,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 11,
+      id: 12,
       spotifyId: '5boGa1dClc7EKdLIrnsAD9',
       title: 'Marc Andreessen on Why This Is the Most Important Moment in Tech History',
       podcast: 'The A16Z Show',
@@ -188,7 +197,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 12,
+      id: 13,
       spotifyId: '5ilZL35OkcOBadelSce6KS',
       title: 'Kevin Kelly: Excellet Advice for Living',
       podcast: 'Founders',
