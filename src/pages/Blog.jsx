@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, User, ArrowLeft, BookOpen, Zap, Lightbulb, ArrowRight } from 'lucide-react';
+import { Calendar, Clock, User, ArrowLeft, BookOpen, Lightbulb, ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import SavedArticles from '../components/SavedArticles';
@@ -1189,30 +1190,32 @@ The knowledge exists. The tools are available. The only question is: are you rea
 
       <main className="relative z-10">
         {/* Hero Section */}
-        <section className="pt-8 pb-4 sm:pt-12 sm:pb-6">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-            <div 
+        <section className="pt-8 pb-4 sm:pt-12 sm:pb-6 relative overflow-hidden">
+          {/* Background glow blobs (matches home page) */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-10 left-1/4 w-72 h-72 rounded-full blur-[120px] opacity-30" style={{ background: 'rgba(29,185,84,0.15)' }} />
+            <div className="absolute top-20 right-1/4 w-80 h-80 rounded-full blur-[140px] opacity-25" style={{ background: 'rgba(245,158,11,0.1)' }} />
+          </div>
+
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center relative">
+            <div
               className={`transform transition-all duration-1000 ${
                 isVisible.hero ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
               }`}
             >
-              <div className="max-w-5xl mx-auto">
-                {/* Main Header */}
-                <div className="text-center">
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 shadow-lg" style={{ backgroundColor: '#1db954' }}>
-                    <BookOpen className="h-7 w-7 text-white" />
-                  </div>
-                  
-                  <h1 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    <span>Pearadox</span>
-                    <span> Blog</span>
-                  </h1>
-                  
-                  <p className={`text-base sm:text-lg max-w-2xl mx-auto leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Insights, perspectives, and stories about democratizing AI research and making complex science accessible to everyone.
-                  </p>
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 shadow-lg" style={{ backgroundColor: '#1db954' }}>
+                  <BookOpen className="h-7 w-7 text-white" />
                 </div>
 
+                <h1 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <span>Pearadox</span>
+                  <span> Blog</span>
+                </h1>
+
+                <p className={`text-base sm:text-lg max-w-2xl mx-auto leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Insights, perspectives, and stories about democratizing AI research and making complex science accessible to everyone.
+                </p>
               </div>
             </div>
           </div>
@@ -1220,102 +1223,201 @@ The knowledge exists. The tools are available. The only question is: are you rea
 
         {/* Blog Posts Section */}
         <section className="py-6 sm:py-8">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <div 
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
+            <div
               className={`transform transition-all duration-1000 ${
                 isVisible.posts ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
               }`}
             >
-              {blogPosts.map((post) => (
-                <article key={post.id} className={`mb-8 sm:mb-16 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ${
-                  isDarkMode ? 'bg-gray-800' : 'bg-white'
-                }`}>
-                  {/* Featured Badge */}
-                  {post.featured && (
-                    <div className="px-6 py-2" style={{ backgroundColor: '#1db954' }}>
-                      <span className="text-white text-sm font-medium flex items-center">
-                        <Zap className="h-4 w-4 mr-2" />
-                        Featured Post
-                      </span>
+              {/* ── FEATURED POST: hero card ── */}
+              {blogPosts.filter(p => p.featured).map((post) => (
+                <motion.article
+                  key={post.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                  className={`relative rounded-3xl border overflow-hidden mb-12 sm:mb-16 max-w-5xl mx-auto group ${
+                    isDarkMode
+                      ? 'bg-gradient-to-br from-gray-800 via-gray-800/95 to-gray-900 border-gray-700'
+                      : 'bg-white border-gray-200 shadow-xl'
+                  }`}
+                >
+                  {/* Top accent stripe */}
+                  <div className="absolute top-0 left-0 right-0 h-1.5" style={{ background: 'linear-gradient(90deg, #1db954, #16a14a, #1db954)' }} />
+
+                  {/* Glow blobs */}
+                  <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full blur-[100px] opacity-30 pointer-events-none" style={{ background: 'rgba(29,185,84,0.3)' }} />
+                  <div className="absolute -bottom-10 -left-10 w-56 h-56 rounded-full blur-[90px] opacity-20 pointer-events-none" style={{ background: 'rgba(245,158,11,0.2)' }} />
+
+                  <div className="relative p-6 sm:p-10 lg:p-14">
+                    {/* Featured badge */}
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold mb-5 shadow-md" style={{ backgroundColor: '#1db954', color: 'white' }}>
+                      <Sparkles className="h-3.5 w-3.5" />
+                      FEATURED POST
                     </div>
-                  )}
-                  
-                  {/* Post Header */}
-                  <div className="p-4 sm:p-8 pb-4 sm:pb-6">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 space-y-2 sm:space-y-0">
-                      <div className={`flex items-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        <Calendar className="h-4 w-4 mr-2" />
-                        <span className="hidden sm:inline">{new Date(post.date).toLocaleDateString('en-US', { 
-                          year: 'numeric', 
-                          month: 'long', 
-                          day: 'numeric' 
-                        })}</span>
-                        <span className="sm:hidden">{new Date(post.date).toLocaleDateString('en-US', { 
-                          month: 'short', 
-                          day: 'numeric',
-                          year: 'numeric'
-                        })}</span>
-                        <span className="mx-2">•</span>
-                        <Clock className="h-4 w-4 mr-2" />
+
+                    {/* Meta */}
+                    <div className={`flex flex-wrap items-center gap-x-4 gap-y-2 text-sm mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                      <div className="flex items-center">
+                        <Calendar className="h-4 w-4 mr-1.5" />
+                        <span>{new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                      </div>
+                      <span className="opacity-40">•</span>
+                      <div className="flex items-center">
+                        <Clock className="h-4 w-4 mr-1.5" />
                         <span>{post.readTime}</span>
                       </div>
-                      <div className={`flex items-center text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                        <User className="h-4 w-4 mr-2" />
+                      <span className="opacity-40">•</span>
+                      <div className="flex items-center">
+                        <User className="h-4 w-4 mr-1.5" />
                         <span>{post.author}</span>
                       </div>
                     </div>
-                    
-                    <h2 className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+
+                    {/* Title */}
+                    <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-5 leading-[1.15] tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       {post.title}
                     </h2>
-                    
-                    <p className={`text-base sm:text-lg mb-6 leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+
+                    {/* Excerpt */}
+                    <p className={`text-base sm:text-lg lg:text-xl mb-6 leading-relaxed max-w-3xl ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                       {post.excerpt}
                     </p>
-                    
+
                     {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-6">
+                    <div className="flex flex-wrap gap-2 mb-8">
                       {post.tags.map((tag, index) => (
-                        <span 
+                        <span
                           key={index}
-                          className={`px-2 sm:px-3 py-1 text-xs sm:text-sm rounded-full font-medium ${
-                            isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+                          className={`px-3 py-1 text-xs sm:text-sm rounded-full font-medium ${
+                            isDarkMode ? 'bg-gray-700/80 text-gray-300' : 'bg-gray-100 text-gray-700'
                           }`}
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
-                  </div>
-                  
-                  {/* Read More Button */}
-                  <div className="px-4 sm:px-8 pb-4 sm:pb-8">
-                    <Link 
+
+                    {/* CTA */}
+                    <Link
                       to={`/blog/${post.slug}`}
-                      className="inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                      className="inline-flex items-center px-7 py-3.5 text-white font-semibold rounded-xl shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 transform hover:scale-[1.03]"
                       style={{ backgroundColor: '#1db954' }}
                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
                       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
                       onClick={async () => {
-                        // Track blog post preview click
                         try {
                           await viewedArticlesAPI.recordBlogPostView(user?.id, post, 'blog_preview');
                         } catch (error) {
                           console.error('Error recording blog post preview view:', error);
                         }
-                        // Scroll to top when navigating to blog post
                         setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
                       }}
                     >
-                      Read Full Post
+                      Read Featured Post
                       <ArrowRight className="h-5 w-5 ml-2" />
                     </Link>
                   </div>
-                </article>
+                </motion.article>
               ))}
-              
+
+              {/* ── MORE POSTS HEADER ── */}
+              {blogPosts.filter(p => !p.featured).length > 0 && (
+                <div className="max-w-6xl mx-auto mb-6 sm:mb-8 px-1">
+                  <h3 className={`text-xl sm:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    More from Pearadox
+                  </h3>
+                  <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                    The full archive of insights and ideas
+                  </p>
+                </div>
+              )}
+
+              {/* ── NON-FEATURED POSTS: square grid ── */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-w-6xl mx-auto">
+                {blogPosts.filter(p => !p.featured).map((post, i) => (
+                  <motion.article
+                    key={post.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-50px' }}
+                    transition={{ delay: i * 0.06, duration: 0.5 }}
+                    className={`group rounded-2xl border overflow-hidden flex flex-col h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
+                      isDarkMode
+                        ? 'bg-gray-800/80 border-gray-700 hover:border-gray-600'
+                        : 'bg-white border-gray-200 hover:border-gray-300 shadow-sm'
+                    }`}
+                  >
+                    <div className="p-5 sm:p-6 flex flex-col flex-1">
+                      {/* Meta */}
+                      <div className={`flex items-center gap-2 text-xs mb-3 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                        <Calendar className="h-3.5 w-3.5" />
+                        <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                        <span className="opacity-50">•</span>
+                        <Clock className="h-3.5 w-3.5" />
+                        <span>{post.readTime}</span>
+                      </div>
+
+                      {/* Title */}
+                      <h4 className={`text-lg sm:text-xl font-bold leading-snug mb-3 line-clamp-3 group-hover:text-emerald-500 transition-colors ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        {post.title}
+                      </h4>
+
+                      {/* Excerpt */}
+                      <p className={`text-sm leading-relaxed mb-4 line-clamp-3 flex-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        {post.excerpt}
+                      </p>
+
+                      {/* Tags (compact) */}
+                      <div className="flex flex-wrap gap-1.5 mb-4">
+                        {post.tags.slice(0, 2).map((tag, index) => (
+                          <span
+                            key={index}
+                            className={`px-2 py-0.5 text-[11px] rounded-full font-medium ${
+                              isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'
+                            }`}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                        {post.tags.length > 2 && (
+                          <span className={`text-[11px] py-0.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                            +{post.tags.length - 2}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Footer */}
+                      <div className={`flex items-center justify-between pt-3 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
+                        <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                          {post.author}
+                        </span>
+                        <Link
+                          to={`/blog/${post.slug}`}
+                          className="inline-flex items-center text-sm font-semibold transition-colors group/link"
+                          style={{ color: '#1db954' }}
+                          onMouseEnter={(e) => e.currentTarget.style.color = '#16a14a'}
+                          onMouseLeave={(e) => e.currentTarget.style.color = '#1db954'}
+                          onClick={async () => {
+                            try {
+                              await viewedArticlesAPI.recordBlogPostView(user?.id, post, 'blog_preview');
+                            } catch (error) {
+                              console.error('Error recording blog post preview view:', error);
+                            }
+                            setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+                          }}
+                        >
+                          Read
+                          <ArrowRight className="h-4 w-4 ml-1 group-hover/link:translate-x-0.5 transition-transform" />
+                        </Link>
+                      </div>
+                    </div>
+                  </motion.article>
+                ))}
+              </div>
+
               {/* Coming Soon */}
-              <div className="text-center py-12">
+              <div className="text-center py-12 mt-4">
                 <div className={`inline-flex items-center px-6 py-3 rounded-xl ${isDarkMode ? 'bg-gray-800 text-gray-400' : 'bg-gray-100 text-gray-600'}`}>
                   <Lightbulb className="h-5 w-5 mr-2" />
                   <span className="font-medium">More insights coming soon...</span>
