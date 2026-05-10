@@ -1236,60 +1236,58 @@ The knowledge exists. The tools are available. The only question is: are you rea
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, ease: 'easeOut' }}
-                  className={`relative rounded-3xl border overflow-hidden mb-12 sm:mb-16 max-w-5xl mx-auto group ${
+                  className={`relative rounded-3xl border overflow-hidden mb-10 sm:mb-12 max-w-6xl mx-auto group ${
                     isDarkMode
                       ? 'bg-gradient-to-br from-gray-800 via-gray-800/95 to-gray-900 border-gray-700'
                       : 'bg-white border-gray-200 shadow-xl'
                   }`}
                 >
-                  {/* Top accent stripe */}
-                  <div className="absolute top-0 left-0 right-0 h-1.5" style={{ background: 'linear-gradient(90deg, #1db954, #16a14a, #1db954)' }} />
-
                   {/* Glow blobs */}
                   <div className="absolute -top-10 -right-10 w-64 h-64 rounded-full blur-[100px] opacity-30 pointer-events-none" style={{ background: 'rgba(29,185,84,0.3)' }} />
                   <div className="absolute -bottom-10 -left-10 w-56 h-56 rounded-full blur-[90px] opacity-20 pointer-events-none" style={{ background: 'rgba(245,158,11,0.2)' }} />
 
-                  <div className="relative p-6 sm:p-10 lg:p-14">
-                    {/* Featured badge */}
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold mb-5 shadow-md" style={{ backgroundColor: '#1db954', color: 'white' }}>
-                      <Sparkles className="h-3.5 w-3.5" />
-                      FEATURED POST
-                    </div>
+                  {/* Full-width green banner */}
+                  <div className="flex items-center gap-2 px-6 sm:px-8 lg:px-10 py-3" style={{ backgroundColor: '#1db954' }}>
+                    <Sparkles className="h-4 w-4 text-white" />
+                    <span className="text-white text-sm font-bold tracking-wide">Featured Post</span>
+                  </div>
 
+                  <div className="relative p-6 sm:p-8 lg:p-10">
                     {/* Meta */}
-                    <div className={`flex flex-wrap items-center gap-x-4 gap-y-2 text-sm mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                      <div className="flex items-center">
-                        <Calendar className="h-4 w-4 mr-1.5" />
-                        <span>{new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                    <div className={`flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm mb-4 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+                        <div className="flex items-center">
+                          <Calendar className="h-3.5 w-3.5 mr-1.5" />
+                          <span>{new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                        </div>
+                        <span className="opacity-40">•</span>
+                        <div className="flex items-center">
+                          <Clock className="h-3.5 w-3.5 mr-1.5" />
+                          <span>{post.readTime}</span>
+                        </div>
                       </div>
-                      <span className="opacity-40">•</span>
                       <div className="flex items-center">
-                        <Clock className="h-4 w-4 mr-1.5" />
-                        <span>{post.readTime}</span>
-                      </div>
-                      <span className="opacity-40">•</span>
-                      <div className="flex items-center">
-                        <User className="h-4 w-4 mr-1.5" />
+                        <User className="h-3.5 w-3.5 mr-1.5" />
                         <span>{post.author}</span>
                       </div>
                     </div>
 
                     {/* Title */}
-                    <h2 className={`text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-5 leading-[1.15] tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <h2 className={`text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-4 leading-[1.15] tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       {post.title}
                     </h2>
 
                     {/* Excerpt */}
-                    <p className={`text-base sm:text-lg lg:text-xl mb-6 leading-relaxed max-w-3xl ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <p className={`text-base sm:text-lg mb-5 leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                       {post.excerpt}
                     </p>
 
                     {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-8">
+                    <div className="flex flex-wrap gap-2 mb-6">
                       {post.tags.map((tag, index) => (
                         <span
                           key={index}
-                          className={`px-3 py-1 text-xs sm:text-sm rounded-full font-medium ${
+                          className={`px-2.5 py-1 text-xs rounded-full font-medium ${
                             isDarkMode ? 'bg-gray-700/80 text-gray-300' : 'bg-gray-100 text-gray-700'
                           }`}
                         >
@@ -1301,7 +1299,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
                     {/* CTA */}
                     <Link
                       to={`/blog/${post.slug}`}
-                      className="inline-flex items-center px-7 py-3.5 text-white font-semibold rounded-xl shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 transform hover:scale-[1.03]"
+                      className="inline-flex items-center px-6 py-3 text-white font-semibold rounded-xl shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 transform hover:scale-[1.03]"
                       style={{ backgroundColor: '#1db954' }}
                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#16a14a'}
                       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1db954'}
@@ -1315,7 +1313,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
                       }}
                     >
                       Read Featured Post
-                      <ArrowRight className="h-5 w-5 ml-2" />
+                      <ArrowRight className="h-4 w-4 ml-2" />
                     </Link>
                   </div>
                 </motion.article>
@@ -1333,8 +1331,8 @@ The knowledge exists. The tools are available. The only question is: are you rea
                 </div>
               )}
 
-              {/* ── NON-FEATURED POSTS: square grid ── */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-w-6xl mx-auto">
+              {/* ── NON-FEATURED POSTS: 2-col rectangle grid ── */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6 max-w-6xl mx-auto">
                 {blogPosts.filter(p => !p.featured).map((post, i) => (
                   <motion.article
                     key={post.id}
@@ -1342,7 +1340,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-50px' }}
                     transition={{ delay: i * 0.06, duration: 0.5 }}
-                    className={`group rounded-2xl border overflow-hidden flex flex-col h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
+                    className={`group rounded-2xl border overflow-hidden flex flex-col transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
                       isDarkMode
                         ? 'bg-gray-800/80 border-gray-700 hover:border-gray-600'
                         : 'bg-white border-gray-200 hover:border-gray-300 shadow-sm'
@@ -1359,7 +1357,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
                       </div>
 
                       {/* Title */}
-                      <h4 className={`text-lg sm:text-xl font-bold leading-snug mb-3 line-clamp-3 group-hover:text-emerald-500 transition-colors ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <h4 className={`text-lg sm:text-xl font-bold leading-snug mb-2.5 line-clamp-2 group-hover:text-emerald-500 transition-colors ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {post.title}
                       </h4>
 
@@ -1370,7 +1368,7 @@ The knowledge exists. The tools are available. The only question is: are you rea
 
                       {/* Tags (compact) */}
                       <div className="flex flex-wrap gap-1.5 mb-4">
-                        {post.tags.slice(0, 2).map((tag, index) => (
+                        {post.tags.slice(0, 3).map((tag, index) => (
                           <span
                             key={index}
                             className={`px-2 py-0.5 text-[11px] rounded-full font-medium ${
@@ -1380,9 +1378,9 @@ The knowledge exists. The tools are available. The only question is: are you rea
                             {tag}
                           </span>
                         ))}
-                        {post.tags.length > 2 && (
+                        {post.tags.length > 3 && (
                           <span className={`text-[11px] py-0.5 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                            +{post.tags.length - 2}
+                            +{post.tags.length - 3}
                           </span>
                         )}
                       </div>
