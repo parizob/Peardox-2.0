@@ -103,6 +103,15 @@ const Podcasts = () => {
   const podcastEpisodes = [
     {
       id: 1,
+      spotifyId: '0riUR4tqoRbmm6pw5hROID',
+      title: "Stanford Neuroscientist: Can't Remember Your Dreams? Your Brain May Be Warning You! — Dr. David Eagleman",
+      podcast: 'The Diary Of A CEO with Steven Bartlett',
+      description: 'Stanford neuroscientist Dr. David Eagleman explores the "Livewired" nature of the human brain, revealing how we are multiple identities in one. He discusses the science of habit formation, why early retirement can be a health risk, the biological necessity of dreaming, and how to strategically use AI to enhance rather than diminish our cognitive abilities.',
+      tags: ['Neuroscience', 'Psychology', 'AI', 'Brain Plasticity', 'Dreams', 'Personal Development'],
+      duration: '1.5+ hours',
+    },
+    {
+      id: 2,
       spotifyId: '4TMAVjvGRqpTstHCfYFeY5',
       title: '#863: Elad Gil, Consigliere to Empire Builders — How to Spot Billion-Dollar Companies Before Everyone Else, The Misty AI Frontier, How Coke Beat Pepsi, When Consensus Pays, And Much More',
       podcast: 'The Tim Ferriss Show',
@@ -111,7 +120,7 @@ const Podcasts = () => {
       duration: '1.75+ hours',
     },
     {
-      id: 2,
+      id: 3,
       spotifyId: '0vEHKeqVwDzsaWoD9q7iSn',
       title: 'Tony Xu, DoorDash',
       podcast: 'David Senra',
@@ -120,7 +129,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 3,
+      id: 4,
       spotifyId: '3u1XHEsAuK1VXRr81RzQDV',
       title: 'Andrej Karpathy: The Loopy Era of AI and AutoResearch',
       podcast: 'No Priors',
@@ -129,7 +138,7 @@ const Podcasts = () => {
       duration: '1+ hour',
     },
     {
-      id: 4,
+      id: 5,
       spotifyId: '6vdzNB18F6Jpkw1TMsZUks',
       title: "Haseeb Qureshi: Crypto's Not Made for Humans—It's for AI",
       podcast: 'Bankless',
@@ -138,7 +147,7 @@ const Podcasts = () => {
       duration: '1+ hour',
     },
     {
-      id: 5,
+      id: 6,
       spotifyId: '3fuz0q5vlIQE1DB6JmKZ8B',
       title: 'Building Claude Code with Boris Cherny',
       podcast: 'The Pragmatic Engineer',
@@ -147,7 +156,7 @@ const Podcasts = () => {
       duration: '1+ hour',
     },
     {
-      id: 6,
+      id: 7,
       spotifyId: '5jeJswyEc60bXqR72RdvJo',
       title: 'Greg Brockman (Part 2)',
       podcast: 'Tetragrammaton',
@@ -156,7 +165,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 7,
+      id: 8,
       spotifyId: '6sCZIcIRRNyt7bI1I4Kdej',
       title: 'Greg Brockman (Part 1)',
       podcast: 'Tetragrammaton',
@@ -165,7 +174,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 8,
+      id: 9,
       spotifyId: '72djm6TCuLtVyuIMJyOjIK',
       title: 'Ben Horowitz: xAI Executive Exodus, Apple\'s AI Crisis, The Page of AI',
       podcast: 'Moonshots With Peter Diamandis',
@@ -174,7 +183,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 9,
+      id: 10,
       spotifyId: '2ZNrpVSrgZMlDwQinl20Ay',
       title: 'Dario Amodei - "We are near the end of exponential"',
       podcast: 'Dwarkesh Podcast',
@@ -183,7 +192,7 @@ const Podcasts = () => {
       duration: '2+ hours',
     },
     {
-      id: 10,
+      id: 11,
       spotifyId: '0JngRfN8UnFunkzrGUj9AS',
       title: 'Bill Gurley',
       podcast: 'Tetragrammaton',
@@ -192,7 +201,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 11,
+      id: 12,
       spotifyId: '5boGa1dClc7EKdLIrnsAD9',
       title: 'Marc Andreessen on Why This Is the Most Important Moment in Tech History',
       podcast: 'The A16Z Show',
@@ -201,7 +210,7 @@ const Podcasts = () => {
       duration: '1.5+ hours',
     },
     {
-      id: 12,
+      id: 13,
       spotifyId: '5ilZL35OkcOBadelSce6KS',
       title: 'Kevin Kelly: Excellet Advice for Living',
       podcast: 'Founders',
