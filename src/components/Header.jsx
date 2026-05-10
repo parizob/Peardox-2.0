@@ -154,7 +154,7 @@ const Header = ({
             <div className="hidden md:flex items-center space-x-3" ref={dropdownRef}>
             <div className="relative">
               <button
-                onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                onClick={() => { setIsCategoryDropdownOpen(prev => !prev); setIsMenuOpen(false); }}
                 className={`flex items-center space-x-2 px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   selectedCategory
                     ? 'text-white shadow-md'
@@ -173,7 +173,7 @@ const Header = ({
 
               {isCategoryDropdownOpen && (
                 <div className={`absolute top-full left-0 mt-2 w-80 border rounded-lg shadow-xl z-50 ${
-                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-[#f5f0e8] border-gray-200'
+                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
                 }`}>
                   <div className={`p-4 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
                     <div className="relative">
@@ -187,7 +187,7 @@ const Header = ({
                         className={`w-full pl-10 pr-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${
                           isDarkMode 
                             ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                            : 'bg-[#faf7f2] border-gray-200 text-gray-900 placeholder-gray-400'
+                            : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
                         }`}
                       />
                     </div>
@@ -240,7 +240,7 @@ const Header = ({
             {/* Menu Dropdown */}
             <div className="relative" ref={menuDropdownRef}>
               <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                onClick={() => { setIsMenuOpen(prev => !prev); setIsCategoryDropdownOpen(false); setCategorySearchTerm(''); }}
                 className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                   isMenuOpen
                     ? isDarkMode ? 'bg-gray-700 text-white' : 'bg-white border border-gray-300 text-gray-900 shadow-sm'
@@ -254,7 +254,7 @@ const Header = ({
 
               {isMenuOpen && (
                 <div className={`absolute top-full left-0 mt-2 w-56 border rounded-xl shadow-xl z-50 overflow-hidden ${
-                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-[#f5f0e8] border-gray-200'
+                  isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
                 }`}>
                   <div className="py-2">
                     <Link
@@ -371,7 +371,7 @@ const Header = ({
               {/* Mobile Filter Button */}
               <div className="relative" ref={mobileDropdownRef}>
                 <button
-                  onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                  onClick={() => { setIsCategoryDropdownOpen(prev => !prev); setIsMenuOpen(false); }}
                   className={`flex items-center justify-center p-2 rounded-lg transition-colors flex-shrink-0 ${
                     selectedCategory
                       ? 'text-white'
@@ -387,7 +387,7 @@ const Header = ({
               {/* Mobile Menu Button */}
               <div className="relative" ref={mobileMenuDropdownRef}>
                 <button
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  onClick={() => { setIsMenuOpen(prev => !prev); setIsCategoryDropdownOpen(false); setCategorySearchTerm(''); }}
                   className={`flex items-center justify-center p-2 rounded-lg transition-colors flex-shrink-0 ${
                     isMenuOpen
                       ? isDarkMode ? 'bg-gray-700 text-white' : 'bg-white border border-gray-300 text-gray-900 shadow-sm'
@@ -400,7 +400,7 @@ const Header = ({
 
                 {isMenuOpen && (
                   <div className={`absolute top-full left-0 mt-2 w-52 border rounded-xl shadow-xl z-50 overflow-hidden ${
-                    isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-[#f5f0e8] border-gray-200'
+                    isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
                   }`}>
                     <div className="py-2">
                       <Link
@@ -625,7 +625,7 @@ const Header = ({
         {!isAboutPage && !isBlogPage && isCategoryDropdownOpen && (
           <div className="md:hidden" ref={mobileDropdownContentRef}>
             <div className={`mx-4 mt-2 border rounded-lg shadow-lg z-50 ${
-              isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-[#f5f0e8] border-gray-200'
+              isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
             }`}>
               <div className={`p-3 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
                 <div className="relative">
@@ -639,7 +639,7 @@ const Header = ({
                     className={`w-full pl-10 pr-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500 ${
                       isDarkMode 
                         ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                        : 'bg-[#faf7f2] border-gray-200 text-gray-900 placeholder-gray-400'
+                        : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
                     }`}
                   />
                 </div>
